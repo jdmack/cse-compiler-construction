@@ -1,1 +1,7 @@
+# extensions
 *.class
+
+#files
+RC
+parser.java
+sym.java
