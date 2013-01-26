@@ -63,7 +63,11 @@ class SymbolTable
 		Scope		scope;
 		STO		stoReturn = null;	
 
-		for (Enumeration<Scope> e = m_stkScopes.elements(); e.hasMoreElements(); )
+
+        stk.addAll(m_stkScopes);
+        Collections.reverse(stk);
+
+		for (Enumeration<Scope> e = stk.elements(); e.hasMoreElements(); )
 		{
 			scope = e.nextElement();
 			if ((stoReturn = scope.access (strName)) != null)
