@@ -33,6 +33,7 @@ terminal
     T_CONST,
     T_CONTINUE,
     T_COUT,
+    T_DELETE,
     T_DOT,
     T_ELSE,
     T_ENDL,
@@ -58,6 +59,7 @@ terminal
     T_MINUSMINUS,
     T_MOD,
     T_NEQ,
+    T_NEW,
     T_NOT,
     T_NULLPTR,
     T_OR,
@@ -126,6 +128,8 @@ non terminal
     ReturnStmt,
     ReadStmt,
     WriteStmt,
+    NewStmt,
+    DeleteStmt,
     WritePairList,
     WritePair,
     ConstExpr,
@@ -377,6 +381,8 @@ Stmt ::=        VarDecl
     |               ReturnStmt
     |               ReadStmt
     |               WriteStmt
+    |               NewStmt
+    |               DeleteStmt
     ;
 
 
@@ -500,6 +506,12 @@ ReadStmt ::=        T_CIN T_ISTREAM Designator T_SEMI
 
 
 WriteStmt ::=       T_COUT T_OSTREAM WritePairList T_SEMI
+    ;
+
+NewStmt ::=       T_NEW Designator T_SEMI
+    ;
+
+DeleteStmt ::=       T_DELETE Designator T_SEMI
     ;
 
 
