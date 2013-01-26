@@ -400,6 +400,24 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
+    DoDesignator3_GlobalID (String strID)
+    {
+        STO        sto;
+
+        if ((sto = m_symtab.accessGlobal (strID)) == null)
+        {
+            m_nNumErrors++;
+             m_errors.print (Formatter.toString(ErrorMsg.error0g_Scope, strID));    
+            sto = new ErrorSTO (strID);
+        }
+        return (sto);
+    }
+
+
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
+    STO
     DoDesignator3_ID (String strID)
     {
         STO        sto;
