@@ -653,6 +653,10 @@ Expr8 ::=        Expr8:_1 MulOp:_2 Designator:_3
     ;
 
 
+UnarySign ::=     T_PLUS
+    |               T_MINUS
+    ;
+
 Equality ::=     T_EQU
     |               T_NEQ
     ;
