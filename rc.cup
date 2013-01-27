@@ -134,9 +134,6 @@ non terminal
     WritePair,
     ConstExpr,
     ExprList,
-    UnarySign,
-    Equality,
-    Relation,
     OptInit,
     ArrElemsList,
     OptModifierList,
@@ -147,9 +144,12 @@ non terminal
 
 non terminal String    
     AddOp,
+    Equality,
     MulOp,
     IncDecOp,
-    ParamDecl
+    ParamDecl,
+    Relation,
+    UnarySign
     ;
 
 non terminal STO
