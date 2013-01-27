@@ -465,7 +465,7 @@ class MyParser extends parser
     {
         STO sto;
         // Check #1 - Modulus - both int
-        if(op.equal("%"))
+        if(op.equals("%"))
         {
             // Check left operand to be int
             if((!operand1.getType().isInt()))
@@ -485,7 +485,7 @@ class MyParser extends parser
             sto = new ExprSTO("DoBinaryOp Result", new IntType());
         }
 
-        else if(op.equal("+") || op.equal("-") || op.equal("*") || op.equal("/") || op.equal(">") || op.equal("<") || op.equal(">=") || op.equal("<="))
+        else if(op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/") || op.equals(">") || op.equals("<") || op.equals(">=") || op.equals("<="))
         {
 
             // Check #1 - Both operands numeric
@@ -506,7 +506,7 @@ class MyParser extends parser
             
             // Check successful, determine result type
             // Plus, Minus, Star, Slash - Int if both int, Float otherwise
-            if(op.equal("+") || op.equal("-") || op.equal("*") || op.equal("/"))
+            if(op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/"))
             {
                 if(operand1.getType().isInt() && operand2.getType().isInt())
                 {
@@ -519,7 +519,7 @@ class MyParser extends parser
             }
 
             // Relation operators
-            else if(op.equal(">") || op.equal("<") || op.equal(">=") || op.equal("<="))
+            else if(op.equals(">") || op.equals("<") || op.equals(">=") || op.equals("<="))
             {
                 sto = new ExprSTO("DoBinaryOp Result", new BoolType());
             }
