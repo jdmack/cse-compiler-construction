@@ -35,6 +35,7 @@ rc: $(SOURCES) parser.java sym.java
 
 warnings: $(SOURCES) parser.java sym.java
 	make clean
+	make parser.java
 	javac -Xlint -sourcepath .:./Type:./STO:./Opeartor -d bin RC.java
 	cp RC.sh RC
 	chmod 755 RC
