@@ -6,14 +6,14 @@ SOURCES = \
 	Token.java \
 	LineNumberPushbackStream.java \
 	Lexer.java \
-	STO.java \
-	ExprSTO.java \
-	ConstSTO.java \
-	VarSTO.java \
-	FuncSTO.java \
-	TypedefSTO.java \
-	ErrorSTO.java \
-	Type.java \
+	STO/STO.java \
+	STO/ExprSTO.java \
+	STO/ConstSTO.java \
+	STO/VarSTO.java \
+	STO/FuncSTO.java \
+	STO/TypedefSTO.java \
+	STO/ErrorSTO.java \
+	Type/Type.java \
 	Scope.java \
 	SymbolTable.java \
 	MyParser.java \
@@ -29,12 +29,12 @@ debug:
 	make rcdbg
 
 rc: $(SOURCES) parser.java sym.java
-	javac RC.java
+	javac -sourcepath .:./Type:./STO:./Opeartor -d bin RC.java
 	cp RC.sh RC
 	chmod 755 RC
 
 rcdbg: $(SOURCES) parser.java sym.java
-	javac RCdbg.java
+	javac -sourcepath .:./Type:./STO:./Opeartor -d bin RCdbg.java
 	cp RCdbg.sh RC
 	chmod 755 RC
 
