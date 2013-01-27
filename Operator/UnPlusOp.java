@@ -2,13 +2,13 @@
 //
 //---------------------------------------------------------------------
 
-class DecOp extends UnaryOp
+class UnPlusOp extends UnaryOp
 {
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    DecOp(strName)
+    UnPlusOp(strName)
     {
         super(strName);
     }
@@ -19,6 +19,6 @@ class DecOp extends UnaryOp
     public STO
     checkOperand(STO op)
     {
-        return (new ErrorSTO("DecOp.checkOperands()"));
+        return (new ErrorSTO("UnPlusOp.checkOperands()"));
     }
 }

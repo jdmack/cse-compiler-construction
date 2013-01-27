@@ -17,7 +17,7 @@ class NotOp extends UnaryOp
     //      Methods
     //---------------------------------------------------------------------
     public STO
-    checkOperands(STO op1, STO op2)
+    checkOperand(STO op)
     {
         return (new ErrorSTO("NotOp.checkOperands()"));
     }

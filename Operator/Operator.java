@@ -34,9 +34,11 @@ abstract class Operator
         m_typeName = str;
     }
 
-    public STO 
+// Decided this should go in BinaryOp then Unary Op gets checkOperand
+/*  public STO 
     checkOperands(STO op1, STO op2)
     {
         return (new ErrorSTO("Operator: abstract class")); 
     }
+*/
 }
