@@ -5,4 +5,4 @@
 # same as the C++ executables.  The "RC.sh" file is used in case a grader
 # deleted the "RC" file thinking it was an executable.
 
-java RC $*
+java -classpath $CLASSPATH:./bin:../bin RC $*

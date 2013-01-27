@@ -42,7 +42,7 @@ parser.java: rc.cup
 	javacup < rc.cup
 
 clean:
-	rm -f *.class RC parser.java sym.java a.out core rc.s
+	rm -f *.class bin/*.class RC parser.java sym.java a.out core rc.s
 
 tar:
 	tar cvf rc.tar $(SOURCES) Makefile RC.sh

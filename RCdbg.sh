@@ -5,4 +5,4 @@
 # same as the C++ executables.  The "RCdbg.sh" file is used in case a grader
 # deleted the "RC" file thinking it was an executable.
 
-java RCdbg $*
+java -classpath $CLASSPATH:./bin:../bin RCdbg $*
