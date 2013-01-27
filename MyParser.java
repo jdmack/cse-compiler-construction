@@ -482,6 +482,7 @@ class MyParser extends parser
                 return (new ErrorSTO (operand2.getName()));
             }
 
+            sto = new ExprSTO("DoArithOp Result", new IntType());
         }
 
         // Check #1 - Plus, Minus, Star, Slash - Both operands numeric
@@ -503,13 +504,12 @@ class MyParser extends parser
         // Check successful, determine result type
         if(operand1.getType().isInt() && operand2.getType().isInt())
         {
-            sto = new ExprSTO("DoAddOp Result", new IntType());
+            sto = new ExprSTO("DoArithOp Result", new IntType());
         }
         else
         {
-            sto = new ExprSTO("DoAddOp Result", new FloatType());
+            sto = new ExprSTO("DoArithOp Result", new FloatType());
         }
-
 
         return (sto);
     }
