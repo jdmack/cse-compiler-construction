@@ -25,16 +25,12 @@ class ArithmeticOp extends BinaryOp
         // Check left operand to be numeric
         if(!operand1.getType().isNumeric())
         {
-            m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op));    
-            return (new ErrorSTO (operand1.getName()));
+            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op)) );
         }
         // Check right operand to be numeric
         else if((!operand2.getType().isNumeric()))
         {
-            m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op));    
-            return (new ErrorSTO (operand2.getName()));
+            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op)));
         }
         
         // Check successful, determine result type

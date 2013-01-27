@@ -16,7 +16,7 @@ abstract class Type
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    Type (String strName, int size)
+    Type(String strName, int size)
     {
         setName(strName);
         setSize(size);
@@ -26,25 +26,25 @@ abstract class Type
     //      Methods
     //---------------------------------------------------------------------
     public String
-    getName ()
+    getName()
     {
         return m_typeName;
     }
 
     private void
-    setName (String str)
+    setName(String str)
     {
         m_typeName = str;
     }
 
     public int
-    getSize ()
+    getSize()
     {
         return m_size;
     }
 
     private void
-    setSize (int size)
+    setSize(int size)
     {
         m_size = size;
     }

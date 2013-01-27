@@ -4,8 +4,9 @@
 
 class FloatType extends NumericType
 {
-
-    // Constants
+    //---------------------------------------------------------------------
+    //      Constants
+    //---------------------------------------------------------------------
     private static final String FLOAT_NAME = "float";
     private static final int FLOAT_SIZE    = 4;
 
@@ -13,19 +14,19 @@ class FloatType extends NumericType
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    FloatType ()
+    FloatType()
     {
         this(FLOAT_NAME, FLOAT_SIZE);
     }
 
     public 
-    FloatType (String strName)
+    FloatType(String strName)
     {
         this(strName, FLOAT_SIZE);
     }
 
     public 
-    FloatType (String strName, int size)
+    FloatType(String strName, int size)
     {
         super(strName, size);
     }

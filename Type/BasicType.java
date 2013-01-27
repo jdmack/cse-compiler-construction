@@ -2,14 +2,13 @@
 // 
 //---------------------------------------------------------------------
 
-
 class BasicType extends Type
 {
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    BasicType (String strName, int size)
+    BasicType(String strName, int size)
     {
         super(strName, size);
     }

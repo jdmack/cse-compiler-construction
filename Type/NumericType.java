@@ -2,14 +2,13 @@
 // 
 //---------------------------------------------------------------------
 
-
 class NumericType extends BasicType
 {
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    NumericType (String strName, int size)
+    NumericType(String strName, int size)
     {
         super(strName, size);
     }

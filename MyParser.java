@@ -12,10 +12,21 @@ class MyParser extends parser
 {
 
     //----------------------------------------------------------------
+    //    Instance variables
+    //----------------------------------------------------------------
+    private Lexer        m_lexer;
+    private ErrorPrinter m_errors;
+    private int          m_nNumErrors;
+    private String       m_strLastLexeme;
+    private boolean      m_bSyntaxError = true;
+    private int          m_nSavedLineNum;
+    private SymbolTable  m_symtab;
+
+    //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     public 
-    MyParser (Lexer lexer, ErrorPrinter errors)
+    MyParser(Lexer lexer, ErrorPrinter errors)
     {
         m_lexer = lexer;
         m_symtab = new SymbolTable ();
@@ -28,7 +39,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     public boolean
-    Ok ()
+    Ok()
     {
         return (m_nNumErrors == 0);
     }
@@ -38,13 +49,13 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     public Symbol
-    scan ()
+    scan()
     {
-        Token        t = m_lexer.GetToken ();
+        Token t = m_lexer.GetToken ();
 
-        //    We'll save the last token read for error messages.
-        //    Sometimes, the token is lost reading for the next
-        //    token which can be null.
+        // We'll save the last token read for error messages.
+        // Sometimes, the token is lost reading for the next
+        // token which can be null.
         m_strLastLexeme = t.GetLexeme ();
 
         switch (t.GetCode ())
@@ -66,7 +77,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     public void
-    syntax_error (Symbol s)
+    syntax_error(Symbol s)
     {
     }
 
@@ -463,104 +474,26 @@ class MyParser extends parser
     STO
     DoBinaryOp (String op, STO operand1, STO operand2)
     {
-        STO sto;
-        // Check #1 - Modulus - both int
-        if(op.equals("%"))
+        // Check for previous errors in line and short circuit
+        if(operand1.isError())
         {
-            // Check left operand to be int
-            if((!operand1.getType().isInt()))
-            {
-                m_nNumErrors++;
-                m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op, "int"));    
-                return (new ErrorSTO (operand1.getName()));
-            }
-            // Check right operand to be int
-            else if((!operand2.getType().isInt()))
-            {
-                m_nNumErrors++;
-                m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op, "int"));    
-                return (new ErrorSTO (operand2.getName()));
-            }
-
-            sto = new ExprSTO("DoBinaryOp Result", new IntType());
+            return operand1;
+        }
+        if(operand2.isError())
+        {
+            return operand2;
         }
 
-        else if(op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/") || op.equals(">") || op.equals("<") || op.equals(">=") || op.equals("<="))
+        // Use Operator.checkOperands() to perform error checks
+        STO resultSTO = op.checkOperands(operand1, operand2);
+
+        // Process/Print errors
+        if(resultSTO.isError())
         {
-
-            // Check #1 - Both operands numeric
-            // Check left operand to be numeric
-            if((!operand1.getType().isNumeric()))
-            {
-                m_nNumErrors++;
-                m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op));    
-                return (new ErrorSTO (operand1.getName()));
-            }
-            // Check right operand to be numeric
-            else if((!operand2.getType().isNumeric()))
-            {
-                m_nNumErrors++;
-                m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op));    
-                return (new ErrorSTO (operand2.getName()));
-            }
-            
-            // Check successful, determine result type
-            // Plus, Minus, Star, Slash - Int if both int, Float otherwise
-            if(op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/"))
-            {
-                if(operand1.getType().isInt() && operand2.getType().isInt())
-                {
-                    sto = new ExprSTO("DoBinaryOp Result", new IntType());
-                }
-                else
-                {
-                    sto = new ExprSTO("DoBinaryOp Result", new FloatType());
-                }
-            }
-
-            // Relation operators
-            else if(op.equals(">") || op.equals("<") || op.equals(">=") || op.equals("<="))
-            {
-                sto = new ExprSTO("DoBinaryOp Result", new BoolType());
-            }
-            else
-            {
-                sto = new ErrorSTO("DoBinaryOp Bad Operator");
-            }
+            m_nNumErrors++;
+            m_errors.print(resultSTO.getName());
         }
 
-        else if(op.equals("==") || op.equals("!="))
-        {
-            if((!(operand1.getType().isNumeric() && operand2.getType().isNumeric())) && (!(operand1.getType().isBool() && operand2.getType().isBool())))
-            {
-                m_nNumErrors++;
-                m_errors.print (Formatter.toString(ErrorMsg.error1b_Expr, operand1.getType().getName(), op, operand2.getType().getName()));    
-                return (new ErrorSTO (operand1.getName()));
-            }
-            else
-            {
-                sto = new ExprSTO("DoBinaryOp Result", new BoolType());   
-            }
-        }
-
-        else
-        {
-            sto = new ErrorSTO("DoBinaryOp Bad Operator");
-        }
-
-        return (sto);
+        return resultSTO;
     }
-
-
-//----------------------------------------------------------------
-//    Instance variables
-//----------------------------------------------------------------
-    private Lexer            m_lexer;
-    private ErrorPrinter        m_errors;
-    private int             m_nNumErrors;
-    private String            m_strLastLexeme;
-    private boolean            m_bSyntaxError = true;
-    private int            m_nSavedLineNum;
-
-    private SymbolTable        m_symtab;
 }
