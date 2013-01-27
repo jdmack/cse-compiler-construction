@@ -457,12 +457,11 @@ class MyParser extends parser
         return (sto);
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     STO
-    DoAddOp (String op, STO operand1, STO operand2)
+    DoArithOp (String op, STO operand1, STO operand2)
     {
         STO sto;
 
