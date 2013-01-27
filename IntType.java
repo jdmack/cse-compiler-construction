@@ -5,8 +5,8 @@
 class IntType extends NumericType
 {
     // Constants
-    public static final String INT_NAME = "int";
-    public static final int INT_SIZE    = 4;
+    private static final String INT_NAME = "int";
+    private static final int INT_SIZE    = 4;
 
     //----------------------------------------------------------------
     //
@@ -14,13 +14,13 @@ class IntType extends NumericType
     public 
     IntType ()
     {
-        IntType(INT_NAME, INT_SIZE);
+        this(INT_NAME, INT_SIZE);
     }
 
     public 
     IntType (String strName)
     {
-        IntType(strName, INT_SIZE);
+        this(strName, INT_SIZE);
     }
 
     public

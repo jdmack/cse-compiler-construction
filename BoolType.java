@@ -5,8 +5,8 @@
 class BoolType extends BasicType
 {
     // constants
-    public static final String BOOL_NAME = "bool";
-    public static final int BOOL_SIZE    = 1;
+    private static final String BOOL_NAME = "bool";
+    private static final int BOOL_SIZE    = 1;
 
     //----------------------------------------------------------------
     //
@@ -14,13 +14,13 @@ class BoolType extends BasicType
     public 
     BoolType ()
     {
-        BoolType(BOOL_NAME, BOOL_SIZE);
+        this(BOOL_NAME, BOOL_SIZE);
     }
 
     public 
     BoolType (String strName)
     {
-        BoolType(strName, BOOL_SIZE);
+        this(strName, BOOL_SIZE);
     }
 
     public 
