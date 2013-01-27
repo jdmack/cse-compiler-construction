@@ -16,13 +16,13 @@ abstract class STO
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    STO (String strName)
+    STO(String strName)
     {
         this(strName, null);
     }
 
     public 
-    STO (String strName, Type typ)
+    STO(String strName, Type typ)
     {
         setName(strName);
         setType(typ);
@@ -34,25 +34,25 @@ abstract class STO
     //      Methods
     //---------------------------------------------------------------------
     public String
-    getName ()
+    getName()
     {
         return m_strName;
     }
 
     private void
-    setName (String str)
+    setName(String str)
     {
         m_strName = str;
     }
 
     public Type
-    getType ()
+    getType()
     {
         return m_type;
     }
 
     private void
-    setType (Type type)
+    setType(Type type)
     {
         m_type = type;
     }
@@ -65,13 +65,13 @@ abstract class STO
     // have an address.
     //----------------------------------------------------------------
     public boolean
-    getIsAddressable ()
+    getIsAddressable()
     {
-        return    m_isAddressable;
+        return m_isAddressable;
     }
 
     private void
-    setIsAddressable (boolean addressable)
+    setIsAddressable(boolean addressable)
     {
         m_isAddressable = addressable;
     }
@@ -80,13 +80,13 @@ abstract class STO
     // You shouldn't need to use these two routines directly
     //----------------------------------------------------------------
     private boolean
-    getIsModifiable ()
+    getIsModifiable()
     {
         return m_isModifiable;
     }
 
     private void
-    setIsModifiable (boolean modifiable)
+    setIsModifiable(boolean modifiable)
     {
         m_isModifiable = modifiable;
     }
@@ -97,13 +97,13 @@ abstract class STO
     // are not modifiable L-values.
     //----------------------------------------------------------------
     public boolean
-    isModLValue ()
+    isModLValue()
     {
         return getIsModifiable() && getIsAddressable();
     }
 
     private void
-    setIsModLValue (boolean m)
+    setIsModLValue(boolean m)
     {
         setIsModifiable(m);
         setIsAddressable(m);
@@ -115,12 +115,12 @@ abstract class STO
     //    will allow more flexibility (ErrorSTO is an example of the
     //    flexibility needed).
     //----------------------------------------------------------------
-    public boolean isVar ()     { return false; }
-    public boolean isConst ()   { return false; }
-    public boolean isExpr ()    { return false; }
-    public boolean isFunc ()    { return false; }
-    public boolean isTypedef () { return false; }
-    public boolean isError ()   { return false; }
+    public boolean isVar()     { return false; }
+    public boolean isConst()   { return false; }
+    public boolean isExpr()    { return false; }
+    public boolean isFunc()    { return false; }
+    public boolean isTypedef() { return false; }
+    public boolean isError()   { return false; }
 
 
 }
