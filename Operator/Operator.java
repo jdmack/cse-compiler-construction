@@ -4,7 +4,7 @@
 
 abstract class Operator
 {
-    // class members
+    // members
     private String m_opName;
 
 

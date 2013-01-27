@@ -4,21 +4,16 @@
 
 class BinaryOp extends Operator
 {
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
+    // constructors
     public 
-    BinaryOp ()
+    BinaryOp(strName)
     {
-        super();
+        super(strName);
     }
 
-
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
+    // methods
     public STO
-    checkOperands (STO a, STO b)
+    checkOperands(STO op1, STO op2)
     {
         return (new ErrorSTO("BinaryOp.checkOperands()"));
     }
