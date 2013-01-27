@@ -620,9 +620,9 @@ Expr5 ::=           Expr5:_1 Equality Expr6
     ;
 
 
-Expr6 ::=           Expr6:_1 Relation Expr7
+Expr6 ::=           Expr6:_1 Relation:_2 Expr7:_3
                     {:
-                        RESULT = _1;
+                        RESULT = ((MyParser) parser).DoBinaryOp(_2, _1, _3);
                     :}
     |               Expr7:_1
                     {:
@@ -633,7 +633,7 @@ Expr6 ::=           Expr6:_1 Relation Expr7
 
 Expr7 ::=           Expr7:_1 AddOp:_2 Expr8:_3
                     {:
-                        RESULT = ((MyParser) parser).DoArithOp(_2, _1, _3);
+                        RESULT = ((MyParser) parser).DoBinaryOp(_2, _1, _3);
                     :}
     |               Expr8:_1
                     {:
@@ -644,7 +644,7 @@ Expr7 ::=           Expr7:_1 AddOp:_2 Expr8:_3
 
 Expr8 ::=        Expr8:_1 MulOp:_2 Designator:_3
                     {:
-                        RESULT = ((MyParser) parser).DoArithOp(_2, _1, _3);
+                        RESULT = ((MyParser) parser).DoBinaryOp(_2, _1, _3);
                     :}
     |               Designator:_1
                     {:
@@ -654,18 +654,18 @@ Expr8 ::=        Expr8:_1 MulOp:_2 Designator:_3
 
 
 UnarySign ::=     T_PLUS
-    |               T_MINUS
+    |             T_MINUS
     ;
 
 Equality ::=     T_EQU
-    |               T_NEQ
+    |            T_NEQ
     ;
 
 
 Relation ::=     T_LT
-    |               T_GT
-    |               T_LTE
-    |               T_GTE
+    |            T_GT
+    |            T_LTE
+    |            T_GTE
     ;
 
 
@@ -673,7 +673,7 @@ AddOp ::=       T_PLUS
                     {:
                         RESULT = "+";
                     :}
-    |               T_MINUS
+    |           T_MINUS
                     {:
                         RESULT = "-";
                     :}
@@ -684,11 +684,11 @@ MulOp ::=       T_STAR
                     {:
                         RESULT = "*";
                     :}
-    |               T_SLASH
+    |           T_SLASH
                     {:
                         RESULT = "/";
                     :}
-    |               T_MOD
+    |           T_MOD
                     {:
                         RESULT = "%";
                     :}

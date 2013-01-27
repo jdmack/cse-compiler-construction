@@ -461,7 +461,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoArithOp (String op, STO operand1, STO operand2)
+    DoBinaryOp (String op, STO operand1, STO operand2)
     {
         STO sto;
         // Check #1 - Modulus - both int
@@ -482,33 +482,47 @@ class MyParser extends parser
                 return (new ErrorSTO (operand2.getName()));
             }
 
-            sto = new ExprSTO("DoArithOp Result", new IntType());
+            sto = new ExprSTO("DoBinaryOp Result", new IntType());
         }
 
-        // Check #1 - Plus, Minus, Star, Slash - Both operands numeric
-        // Check left operand to be numeric
-        if((!operand1.getType().isNumeric()))
+        else if(op.equal("+") || op.equal("-") || op.equal("*") || op.equal("/") || op.equal(">") || op.equal("<") || op.equal(">=") || op.equal("<="))
         {
-            m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op));    
-            return (new ErrorSTO (operand1.getName()));
-        }
-        // Check right operand to be numeric
-        else if((!operand2.getType().isNumeric()))
-        {
-            m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op));    
-            return (new ErrorSTO (operand2.getName()));
-        }
-        
-        // Check successful, determine result type
-        if(operand1.getType().isInt() && operand2.getType().isInt())
-        {
-            sto = new ExprSTO("DoArithOp Result", new IntType());
-        }
-        else
-        {
-            sto = new ExprSTO("DoArithOp Result", new FloatType());
+
+            // Check #1 - Both operands numeric
+            // Check left operand to be numeric
+            if((!operand1.getType().isNumeric()))
+            {
+                m_nNumErrors++;
+                m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op));    
+                return (new ErrorSTO (operand1.getName()));
+            }
+            // Check right operand to be numeric
+            else if((!operand2.getType().isNumeric()))
+            {
+                m_nNumErrors++;
+                m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op));    
+                return (new ErrorSTO (operand2.getName()));
+            }
+            
+            // Check successful, determine result type
+            // Plus, Minus, Star, Slash - Int if both int, Float otherwise
+            if(op.equal("+") || op.equal("-") || op.equal("*") || op.equal("/"))
+            {
+                if(operand1.getType().isInt() && operand2.getType().isInt())
+                {
+                    sto = new ExprSTO("DoBinaryOp Result", new IntType());
+                }
+                else
+                {
+                    sto = new ExprSTO("DoBinaryOp Result", new FloatType());
+                }
+            }
+
+            // Relation operators
+            else if(op.equal(">") || op.equal("<") || op.equal(">=") || op.equal("<="))
+            {
+                sto = new ExprSTO("DoBinaryOp Result", new BoolType());
+            }
         }
 
         return (sto);
