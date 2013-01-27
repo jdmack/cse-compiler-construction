@@ -5,7 +5,9 @@
 
 class TypedefSTO extends STO
 {
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     TypedefSTO (String strName)
     {
@@ -18,7 +20,9 @@ class TypedefSTO extends STO
         super (strName, typ);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean
     isTypedef ()
     {

@@ -4,13 +4,17 @@
 
 class ArrayType extends CompositeType
 {
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     ArrayType (String strName, int size)
     {
         super(strName, size);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean isArray() { return true; }
 }

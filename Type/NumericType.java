@@ -5,14 +5,18 @@
 
 class NumericType extends BasicType
 {
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     NumericType (String strName, int size)
     {
         super(strName, size);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean isNumeric() { return true; }
 
 }

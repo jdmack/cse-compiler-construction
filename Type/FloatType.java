@@ -9,7 +9,9 @@ class FloatType extends NumericType
     private static final String FLOAT_NAME = "float";
     private static final int FLOAT_SIZE    = 4;
 
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     FloatType ()
     {
@@ -28,7 +30,9 @@ class FloatType extends NumericType
         super(strName, size);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean isFloat() { return true; }
 
 }

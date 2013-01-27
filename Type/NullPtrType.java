@@ -5,14 +5,18 @@
 
 class NullPtrType extends PointerType
 {
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     NullPtrType (String strName, int size)
     {
         super(strName, size);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean isNullPtr() { return true; }
 
 }

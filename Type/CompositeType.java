@@ -5,14 +5,18 @@
 
 class CompositeType extends Type
 {
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     CompositeType (String strName, int size)
     {
         super(strName, size);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean isComposite() { return true; }
 
 }

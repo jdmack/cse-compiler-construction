@@ -4,7 +4,9 @@
 
 class ErrorSTO extends STO
 {
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     ErrorSTO (String strName)
     {
@@ -22,7 +24,9 @@ class ErrorSTO extends STO
     //    instanceof operator would not have been appropriate.)
     //----------------------------------------------------------------
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean  isVar ()              { return true; }
     public boolean  isConst ()            { return true; }
     public boolean  isExpr ()             { return true; }

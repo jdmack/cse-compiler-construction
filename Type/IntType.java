@@ -8,7 +8,9 @@ class IntType extends NumericType
     private static final String INT_NAME = "int";
     private static final int INT_SIZE    = 4;
 
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     IntType ()
     {
@@ -27,7 +29,9 @@ class IntType extends NumericType
         super(strName, size);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean isInt()     { return true; }
 
 }

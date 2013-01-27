@@ -5,7 +5,9 @@
 class ConstSTO extends STO
 {
 
-    // members
+    //---------------------------------------------------------------------
+    //      Instance Variables
+    //---------------------------------------------------------------------
     //----------------------------------------------------------------
     //    Constants have a value, so you should store them here.
     //    Note: We suggest using Java's Double class, which can hold
@@ -16,7 +18,9 @@ class ConstSTO extends STO
     //----------------------------------------------------------------
     private Double m_value;
 
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     ConstSTO (String strName)
     {
@@ -35,7 +39,9 @@ class ConstSTO extends STO
                 // fields as necessary
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean
     isConst () 
     {

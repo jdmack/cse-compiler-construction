@@ -4,11 +4,15 @@
 
 class BoolType extends BasicType
 {
-    // constants
+    //---------------------------------------------------------------------
+    //      Constants
+    //---------------------------------------------------------------------
     private static final String BOOL_NAME = "bool";
     private static final int BOOL_SIZE    = 1;
 
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     BoolType ()
     {
@@ -27,7 +31,9 @@ class BoolType extends BasicType
         super(strName, size);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean isBool() { return true; }
 
 }

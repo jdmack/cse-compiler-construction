@@ -4,13 +4,17 @@
 
 abstract class STO
 {
-    // members
+    //---------------------------------------------------------------------
+    //      Instance Variables
+    //---------------------------------------------------------------------
     private String  m_strName;
     private Type    m_type;
     private boolean m_isAddressable;
     private boolean m_isModifiable;
 
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     STO (String strName)
     {
@@ -26,7 +30,9 @@ abstract class STO
         setIsModifiable(false);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public String
     getName ()
     {

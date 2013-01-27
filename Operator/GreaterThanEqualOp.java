@@ -4,14 +4,18 @@
 
 class GreaterThanEqualOp extends ComparisonOp
 {
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     GreaterThanEqualOp(strName)
     {
         super(strName);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public STO
     checkOperands(STO op1, STO op2)
     {

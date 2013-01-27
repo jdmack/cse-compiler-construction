@@ -4,14 +4,18 @@
 
 class FuncPtrType extends PtrGrpType
 {
-    // constructors
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
     public 
     FuncPtrType (String strName, int size)
     {
         super(strName, size);
     }
 
-    // methods
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
     public boolean isFuncPtr() { return true; }
 
 }
