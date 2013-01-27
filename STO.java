@@ -44,7 +44,7 @@ abstract class STO
     public Type
     getType ()
     {
-        return    m_type;
+        return m_type;
     }
 
     private void
@@ -78,7 +78,7 @@ abstract class STO
     private boolean
     getIsModifiable ()
     {
-        return    m_isModifiable;
+        return m_isModifiable;
     }
 
     private void
@@ -96,7 +96,7 @@ abstract class STO
     public boolean
     isModLValue ()
     {
-        return    getIsModifiable() && getIsAddressable();
+        return getIsModifiable() && getIsAddressable();
     }
 
     private void
@@ -113,19 +113,19 @@ abstract class STO
     //    will allow more flexibility (ErrorSTO is an example of the
     //    flexibility needed).
     //----------------------------------------------------------------
-    public boolean    isVar ()     { return false; }
-    public boolean    isConst ()    { return false; }
-    public boolean    isExpr ()    { return false; }
-    public boolean    isFunc ()     { return false; }
-    public boolean    isTypedef ()     { return false; }
-    public boolean    isError ()     { return false; }
+    public boolean isVar ()     { return false; }
+    public boolean isConst ()   { return false; }
+    public boolean isExpr ()    { return false; }
+    public boolean isFunc ()    { return false; }
+    public boolean isTypedef () { return false; }
+    public boolean isError ()   { return false; }
 
 
     //----------------------------------------------------------------
     // 
     //----------------------------------------------------------------
-    private String      m_strName;
-    private Type        m_type;
-    private boolean        m_isAddressable;
-    private boolean        m_isModifiable;
+    private String  m_strName;
+    private Type    m_type;
+    private boolean m_isAddressable;
+    private boolean m_isModifiable;
 }
