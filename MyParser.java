@@ -464,8 +464,27 @@ class MyParser extends parser
     DoArithOp (String op, STO operand1, STO operand2)
     {
         STO sto;
+        // Check #1 - Modulus - both int
+        if(op.equal("%"))
+        {
+            // Check left operand to be int
+            if((!operand1.getType().isInt()))
+            {
+                m_nNumErrors++;
+                m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op, "int"));    
+                return (new ErrorSTO (operand1.getName()));
+            }
+            // Check right operand to be int
+            else if((!operand2.getType().isInt()))
+            {
+                m_nNumErrors++;
+                m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op, "int"));    
+                return (new ErrorSTO (operand2.getName()));
+            }
 
-        // Check #1 - Both operands numeric
+        }
+
+        // Check #1 - Plus, Minus, Star, Slash - Both operands numeric
         // Check left operand to be numeric
         if((!operand1.getType().isNumeric()))
         {
