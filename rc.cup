@@ -633,7 +633,7 @@ Expr6 ::=           Expr6:_1 Relation Expr7
 
 Expr7 ::=           Expr7:_1 AddOp:_2 Expr8:_3
                     {:
-                        RESULT = _1;
+                        RESULT = ((MyParser) parser).DoAddOp(_2, _1, _3);
                     :}
     |               Expr8:_1
                     {:

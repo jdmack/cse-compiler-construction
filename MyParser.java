@@ -183,7 +183,7 @@ class MyParser extends parser
                 m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
             }
 
-            VarSTO         sto = new VarSTO (id);
+            VarSTO sto = new VarSTO (id);
             m_symtab.insert (sto);
         }
     }
@@ -205,7 +205,7 @@ class MyParser extends parser
                 m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
             }
 
-            VarSTO         sto = new VarSTO (id);
+            VarSTO sto = new VarSTO (id);
             m_symtab.insert (sto);
         }
     }
@@ -227,7 +227,7 @@ class MyParser extends parser
                 m_errors.print (Formatter.toString (ErrorMsg.redeclared_id, id));
             }
         
-            ConstSTO     sto = new ConstSTO (id);
+            ConstSTO sto = new ConstSTO (id);
             m_symtab.insert (sto);
         }
     }
@@ -249,7 +249,7 @@ class MyParser extends parser
                 m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
             }
         
-            TypedefSTO     sto = new TypedefSTO (id);
+            TypedefSTO sto = new TypedefSTO (id);
             m_symtab.insert (sto);
         }
     }
@@ -267,7 +267,7 @@ class MyParser extends parser
             m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
         }
         
-        TypedefSTO     sto = new TypedefSTO (id);
+        TypedefSTO sto = new TypedefSTO (id);
         m_symtab.insert (sto);
     }
 
@@ -402,7 +402,7 @@ class MyParser extends parser
     STO
     DoDesignator3_GlobalID (String strID)
     {
-        STO        sto;
+        STO sto;
 
         if ((sto = m_symtab.accessGlobal (strID)) == null)
         {
@@ -420,7 +420,7 @@ class MyParser extends parser
     STO
     DoDesignator3_ID (String strID)
     {
-        STO        sto;
+        STO sto;
 
         if ((sto = m_symtab.access (strID)) == null)
         {
@@ -438,7 +438,7 @@ class MyParser extends parser
     STO
     DoQualIdent (String strID)
     {
-        STO        sto;
+        STO sto;
 
         if ((sto = m_symtab.access (strID)) == null)
         {
@@ -462,25 +462,36 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoAddOp (String operator, STO operand1, STO operand2)
+    DoAddOp (String op, STO operand1, STO operand2)
     {
-        STO        sto;
-        /*
+        STO sto;
 
-        if ((sto = m_symtab.access (strID)) == null)
+        // Check #1 - Both operands numeric
+        // Check left operand to be numeric
+        if((!operand1.getType().isNumeric()))
         {
             m_nNumErrors++;
-             m_errors.print (Formatter.toString(ErrorMsg.undeclared_id, strID));    
-            return (new ErrorSTO (strID));
+            m_errors.print (Formatter.toString(ErrorMsg.error1n_Expr, operand1.getName()));    
+            return (new ErrorSTO (operand1.getName()));
         }
-
-        if (!sto.isTypedef())
+        // Check right operand to be numeric
+        else if((!operand2.getType().isNumeric()))
         {
             m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.not_type, sto.getName ()));
-            return (new ErrorSTO (sto.getName ()));
+            m_errors.print (Formatter.toString(ErrorMsg.error1n_Expr, operand2.getName()));    
+            return (new ErrorSTO (operand2.getName()));
         }
-        */
+        
+        // Check successful, determine result type
+        if(operand1.getType().isInt() && operand2.getType().isInt())
+        {
+            sto = new ExprSTO("DoAddOp Result", new IntType());
+        }
+        else
+        {
+            sto = new ExprSTO("DoAddOp Result", new FloatType());
+        }
+
 
         return (sto);
     }
