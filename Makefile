@@ -29,12 +29,12 @@ debug:
 	make rcdbg
 
 rc: $(SOURCES) parser.java sym.java
-	javac -sourcepath .:./Type:./STO:./Opeartor -d bin RC.java
+	javac -Xlint -sourcepath .:./Type:./STO:./Opeartor -d bin RC.java
 	cp RC.sh RC
 	chmod 755 RC
 
 rcdbg: $(SOURCES) parser.java sym.java
-	javac -sourcepath .:./Type:./STO:./Opeartor -d bin RCdbg.java
+	javac -Xlint -sourcepath .:./Type:./STO:./Opeartor -d bin RCdbg.java
 	cp RCdbg.sh RC
 	chmod 755 RC
 
