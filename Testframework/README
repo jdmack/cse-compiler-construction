@@ -1,0 +1,150 @@
+Added 05/06/2012 Theresa Calderon =========================================
+The TestFramework has been setup for Project2! 
+
+testAll.sh has been modified to run the assembly code you generate
+
+Run it like this: ./testAll.sh [phase_number] [regex]
+
+testAllP1.sh can still be used to check project1 as before
+
+Now here's how you will add tests:
+
+Add your ucsd.edu e-mail address to your bitbucket account e-mails
+Delete your old CSE131TestFrameworkSP12
+
+Go here:
+https://bitbucket.org/[test_master_user_name]/[name_of_framework]
+
+And click fork.
+
+git clone git@bitbucket.org:[your_user_name]/[name_of_your_forked_repo].git
+git remote add upstream git@bitbucket.org:[test_master_user_name]/[name_of_framework].git
+
+1) Follow the naming convention!
+2) Make sure it is in the right folder!
+3) Make sure it will not offend most people!
+
+git add [specific_test_file_names]
+git commit -am "Tests for [check_number]"
+git push origin master
+
+Go to:
+https://bitbucket.org/[your_user_name]/[name_of_your_forked_repo]
+
+Click "Create Pull Request"
+Click "Send Pull Request"
+
+To Update your repo with the latest tests:
+git fetch upstream
+git merge origin upstream/master
+
+tdlr: Go back and read it or I'll kick out of the repo. Thanks! :}
+
+Added 04/10/2012 Theresa Calderon =========================================
+You can now run test all a subset of testcases as follows:
+
+./testAllP1.sh phase1 tcas  #runs all tests from tcas
+./testAllP1.sh phase1 check01  #runs all tests for check01
+
+Added 04/13/2012 Kevin Lin ================================================
+Eclipse users: Copy the Makefile-ForEclipse-Users in the test framework 
+folder into your project folder replacing the orignal. (Only have to do it
+the first time)
+Eclipse users: Copy the Makefile-ForEclipse-Users in the test framework 
+folder into your project folder replacing the orignal. (Only have to do it
+the first time)
+
+WARNING: If you are NOT using eclipse do NOT use the new Makefile. It will
+delete ALL your .java files. 
+
+Added 04/10/2012 Theresa Calderon =========================================
+Please include line numbers for your test files. The testAll.sh has been
+modified to run in debug mode. 
+
+Remember that anyone who does not contribute tests or help fix bugs will
+not be included in the TestFramework for Project 2 which is harder.
+
+Naming conventions:--------------------------------------------------------
+
+check00[team_initials]-[file_name].rc
+check00[team_initials]-[file_name].ans.out
+
+Example:
+
+check00tcas-undeclGlobal.rc
+check00tcas-undeclGlobal.ans.out
+
+How to use git:------------------------------------------------------------
+Register in  https://bitbucket.org/
+You will need to register your ssh keys for your account on the website:
+
+On a linux terminal, to generate and view them do:
+ssh-keygen -t rsa
+
+If you are on a windows machine, you can use an ssh program or a development
+environment like mingw32. 
+
+It will ask where you want to put it just press enter.
+Then enter your passphrase.
+
+cat ~/.ssh/id_rsa.pub
+
+This will show your entire key. You want to copy this key to your bitbucket
+account. Open the id_rsa.pub file with any text editor and copy it. Navigate
+to your bitbucket account settings, go to "ssh keys" on the left navigator,
+and paste your key there. This will allow you interact with your bitbucket
+account through git. 
+
+To get the Test Framework files do:
+
+git clone git@bitbuckets.org:[test_master_user_name]/[name_of_framework].git
+
+git add phase[phase_number]/*[your_initials]*
+git commit -am "Committing test for check [check_num]"
+git push origin master
+
+Example:
+git clone git@bitbuckets.org:[test_master_user_name]/[name_of_framework].git
+
+git pull origin master
+git add phase1/*tcas*
+git commit -am "Committing test for check 0"
+git push origin master
+
+To get the latest tests do:
+git pull origin master
+
+============================= ORIGINAL ====================================
+Place the entire dir "CSE131TestFrameworkSP12" inside your compiler folder. 
+(ie: if your project is in Workspace/compilerProject, place is in 
+Workspace/compilerProject/)
+
+Eclipse users: Copy the Makefile in the test framework folder into your
+project folder replacing the orignal. (Only have to do it the first time)
+WARNING: If you are NOT using eclipse do NOT use the new Makefile. It will
+delete ALL your .java files. 
+
+Place your own test files into CSE131TestFramework/phaseX
+Run with ./CSE131TestFrameworkSP12/testAll.sh [phaseX]
+Compare the diff's
+
+test.rc -> test file being tested
+
+test.ans.out -> answer file being diffed against
+
+test.my.out -> your compilers output
+
+To add to test's, create your own test file, run ./testAll.sh and 
+email your test master with a zip of your test.rc and your test.ans.out
+-> when you create a new test.rc, the output of your file will become
+the ans.out so send both to me so I can diff with mine and we can resolve 
+any problems before posting to everyone
+
+To run current tests, just download/clone the tests, run ./testAll.sh and 
+check the diffs. Email me if the answers are wrong and you think your 
+compiler is outputting the correct output so we can resolve the problem 
+and upload the correct answers for everyone else.
+
+DISCLAIMER: the "answer" file MAY be wrong, so if there is an error 
+make sure to check the ans.out, your my.out and the test.rc to make 
+sure it really is wrong.

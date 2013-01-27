@@ -1,0 +1,8 @@
+*.my.out
+*.s
+testAll.sh
+myans
+myansa
+mytemp
+mytempa
+core*
