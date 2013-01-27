@@ -458,6 +458,32 @@ class MyParser extends parser
     }
 
 
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
+    STO
+    DoAddOp (String operator, STO operand1, STO operand2)
+    {
+        STO        sto;
+
+        if ((sto = m_symtab.access (strID)) == null)
+        {
+            m_nNumErrors++;
+             m_errors.print (Formatter.toString(ErrorMsg.undeclared_id, strID));    
+            return (new ErrorSTO (strID));
+        }
+
+        if (!sto.isTypedef())
+        {
+            m_nNumErrors++;
+            m_errors.print (Formatter.toString(ErrorMsg.not_type, sto.getName ()));
+            return (new ErrorSTO (sto.getName ()));
+        }
+
+        return (sto);
+    }
+
+
 //----------------------------------------------------------------
 //    Instance variables
 //----------------------------------------------------------------
