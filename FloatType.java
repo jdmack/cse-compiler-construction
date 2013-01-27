@@ -1,12 +1,14 @@
 //---------------------------------------------------------------------
 // 
 //---------------------------------------------------------------------
-public static final String FLOAT_NAME = "float";
-public static final int FLOAT_SIZE    = 4;
-
 
 class FloatType extends NumericType
 {
+
+    // Constants
+    public static final String FLOAT_NAME = "float";
+    public static final int FLOAT_SIZE    = 4;
+
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------

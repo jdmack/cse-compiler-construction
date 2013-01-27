@@ -1,12 +1,13 @@
 //---------------------------------------------------------------------
 // 
 //---------------------------------------------------------------------
-public static final String BOOL_NAME = "bool";
-public static final int BOOL_SIZE    = 1;
-
 
 class BoolType extends BasicType
 {
+    // constants
+    public static final String BOOL_NAME = "bool";
+    public static final int BOOL_SIZE    = 1;
+
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------

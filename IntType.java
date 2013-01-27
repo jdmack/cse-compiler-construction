@@ -1,11 +1,13 @@
 //---------------------------------------------------------------------
 // 
 //---------------------------------------------------------------------
-public static final String INT_NAME = "int";
-public static final int INT_SIZE    = 4;
 
 class IntType extends NumericType
 {
+    // Constants
+    public static final String INT_NAME = "int";
+    public static final int INT_SIZE    = 4;
+
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
