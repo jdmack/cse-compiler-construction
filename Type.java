@@ -57,12 +57,23 @@ abstract class Type
     //    etc. Below is an example of isInt(). Feel free to
     //    change this around.
     //----------------------------------------------------------------
-    public boolean    isInt ()    { return false; }
-
+    public boolean isBasic()     { return false; }
+    public boolean isVoid()      { return false; }
+    public boolean isComposite() { return false; }
+    public boolean isNumeric()   { return false; }
+    public boolean isBool()      { return false; }
+    public boolean isInt()       { return false; }
+    public boolean isFloat()     { return false; }
+    public boolean isArray()     { return false; }
+    public boolean isStruct()    { return false; }
+    public boolean isPtrGrp()    { return false; }
+    public boolean isPointer()   { return false; }
+    public boolean isFuncPtr()   { return false; }
+    public boolean isNullPtr()   { return false; }
 
     //----------------------------------------------------------------
     //    Name of the Type (e.g., int, bool, or some typedef
     //----------------------------------------------------------------
-    private String      m_typeName;
-    private int        m_size;
+    private String m_typeName;
+    private int    m_size;
 }
