@@ -77,5 +77,5 @@ class ConstSTO extends STO
 //    type. Booleans/Ptrs can easily be handled by ints.
 //    Feel free to change this if you don't like it!
 //----------------------------------------------------------------
-        private Double        m_value;
+        private Double m_value;
 }
