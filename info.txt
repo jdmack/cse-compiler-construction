@@ -1,0 +1,15 @@
+OptExpr - binary operations
+Exp - Assignment
+Expr0 - Or
+Expr1 - And
+Expr2 - |
+Expr3 - ^
+Expr4 - &
+Expr5 - == !=
+Expr6 - > < >= <=
+Expr7 - + -
+Expr8 - * /
+Designator - *x &x +x -x !x sizeof(x) sizeof(type) (type) ++x --x
+Designator2 - x.y x[y] x->y x++ x-- x(y, .., z)
+Designator3 - (expr) int_constant float_constant char_constant string_constant true false nullptr this ::x x
+QualIdent - ?
