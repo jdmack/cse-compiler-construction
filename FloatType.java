@@ -1,6 +1,8 @@
 //---------------------------------------------------------------------
 // 
 //---------------------------------------------------------------------
+public static final String FLOAT_NAME = "float";
+public static final int FLOAT_SIZE    = 4;
 
 
 class FloatType extends NumericType
@@ -8,6 +10,18 @@ class FloatType extends NumericType
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
+    public 
+    FloatType ()
+    {
+        FloatType(FLOAT_NAME, FLOAT_SIZE);
+    }
+
+    public 
+    FloatType (String strName)
+    {
+        FloatType(strName, FLOAT_SIZE);
+    }
+
     public 
     FloatType (String strName, int size)
     {
