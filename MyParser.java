@@ -465,6 +465,7 @@ class MyParser extends parser
     DoAddOp (String operator, STO operand1, STO operand2)
     {
         STO        sto;
+        /*
 
         if ((sto = m_symtab.access (strID)) == null)
         {
@@ -479,6 +480,7 @@ class MyParser extends parser
             m_errors.print (Formatter.toString(ErrorMsg.not_type, sto.getName ()));
             return (new ErrorSTO (sto.getName ()));
         }
+        */
 
         return (sto);
     }
