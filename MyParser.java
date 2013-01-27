@@ -524,6 +524,10 @@ class MyParser extends parser
                 sto = new ExprSTO("DoBinaryOp Result", new BoolType());
             }
         }
+        else
+        {
+            sto = new ErrorSTO("DoBinaryOp Bad Operator");
+        }
 
         return (sto);
     }
