@@ -658,7 +658,13 @@ UnarySign ::=     T_PLUS
     ;
 
 Equality ::=     T_EQU
+                   {:
+                        RESULT = "==";
+                   :}
     |            T_NEQ
+                   {:
+                        RESULT = "!=";
+                   :}
     ;
 
 

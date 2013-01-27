@@ -528,6 +528,21 @@ class MyParser extends parser
                 sto = new ErrorSTO("DoBinaryOp Bad Operator");
             }
         }
+
+        else if(op.equals("==") || op.equals("!="))
+        {
+            if((!(operand1.getType().isNumeric() && operand2.getType().isNumeric())) && (!(operand1.getType().isBool() && operand2.getType().isBool())))
+            {
+                m_nNumErrors++;
+                m_errors.print (Formatter.toString(ErrorMsg.error1b_Expr, operand1.getType().getName(), op, operand2.getType().getName()));    
+                return (new ErrorSTO (operand1.getName()));
+            }
+            else
+            {
+                sto = new ExprSTO("DoBinaryOp Result", new BoolType());   
+            }
+        }
+
         else
         {
             sto = new ErrorSTO("DoBinaryOp Bad Operator");
