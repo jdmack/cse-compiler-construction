@@ -143,13 +143,19 @@ non terminal
     ;
 
 non terminal String    
+    ParamDecl,
+    ;
+
+non terminal BinaryOp    
     AddOp,
     Equality,
     Logical,
     MulOp,
-    IncDecOp,
-    ParamDecl,
     Relation,
+    ;
+
+non terminal UnaryOp    
+    IncDecOp,
     UnarySign
     ;
 
@@ -656,87 +662,87 @@ Expr8 ::=            Expr8:_1 MulOp:_2 Designator:_3
 
 UnarySign ::=       T_PLUS
                     {:
-                        RESULT = "+";
+                        RESULT = new UnPlusOp("+");
                     :}
     |               T_MINUS
                     {:
-                        RESULT = "-";
+                        RESULT = new UnMinusOp("-");
                     :}
     ;
 
 Logical ::=         T_OR
                     {:
-                        RESULT = "||";
+                        RESULT = new OrOp("||");
                     :}
     |               T_AND
                     {:
-                        RESULT = "&&";
+                        RESULT = new AndOp("&&");
                     :}
     ;
 
 Equality ::=        T_EQU
                     {:
-                        RESULT = "==";
+                        RESULT = new EqualToOp("==");
                     :}
     |               T_NEQ
                     {:
-                        RESULT = "!=";
+                        RESULT = new NEqualToOp("!=");
                     :}
     ;
 
 
 Relation ::=        T_LT
                     {:
-                        RESULT = "<";
+                        RESULT = new LessThanOp("<");
                     :}
     |               T_GT
                     {:
-                        RESULT = ">";
+                        RESULT = new GreaterThanOp(">");
                     :}
     |               T_LTE
                     {:
-                        RESULT = "<=";
+                        RESULT = new LessThanEqualOp("<=");
                     :}
     |               T_GTE
                     {:
-                        RESULT = ">=";
+                        RESULT = new GreaterThanEqualOp(">=");
                     :}
     ;
 
 
 AddOp ::=           T_PLUS
                     {:
-                        RESULT = "+";
+                        RESULT = new AddOp("+");
                     :}
     |               T_MINUS
                     {:
-                        RESULT = "-";
+                        RESULT = new MinusOp("-");
                     :}
     ;
 
 
 MulOp ::=           T_STAR
                     {:
-                        RESULT = "*";
+                        RESULT = new MulOp("*");
                     :}
     |               T_SLASH
                     {:
-                        RESULT = "/";
+                        RESULT = new DivOp("/");
                     :}
     |               T_MOD
                     {:
-                        RESULT = "%";
+                        RESULT = new ModOp("%");
                     :}
     ;
 
 
 IncDecOp ::=        T_PLUSPLUS
                     {:
-                        RESULT = "++";
+                        RESULT = new IncOp("++");
                     :}
     |               T_MINUSMINUS
                     {:
-                        RESULT = "--";
+                        RESULT = new DecOp("--");
                     :}
     ;
 
