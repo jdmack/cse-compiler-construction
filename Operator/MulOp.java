@@ -8,7 +8,7 @@ class MulOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    MulOp ()
+    MulOp()
     {
         super();
     }
@@ -16,9 +16,5 @@ class MulOp extends ArithmeticOp
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    checkOperands (STO op1, STO op2)
-    {
-        return (new ErrorSTO("MulOp.checkOperands()"));
-    }
+
 }

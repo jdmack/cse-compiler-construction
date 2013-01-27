@@ -8,7 +8,7 @@ class MinusOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    MinusOp ()
+    MinusOp()
     {
         super();
     }
@@ -16,9 +16,5 @@ class MinusOp extends ArithmeticOp
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    checkOperands (STO op1, STO op2)
-    {
-        return (new ErrorSTO("MinusOp.checkOperands()"));
-    }
+
 }

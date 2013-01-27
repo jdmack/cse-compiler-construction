@@ -8,7 +8,7 @@ class AddOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    AddOp ()
+    AddOp()
     {
         super();
     }
@@ -16,9 +16,5 @@ class AddOp extends ArithmeticOp
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    checkOperands (STO op1, STO op2)
-    {
-        return (new ErrorSTO("AddOp.checkOperands()"));
-    }
+
 }

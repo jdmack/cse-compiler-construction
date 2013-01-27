@@ -8,7 +8,7 @@ class DivOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    DivOp ()
+    DivOp()
     {
         super();
     }
@@ -16,9 +16,5 @@ class DivOp extends ArithmeticOp
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    checkOperands (STO op1, STO op2)
-    {
-        return (new ErrorSTO("DivOp.checkOperands()"));
-    }
+
 }
