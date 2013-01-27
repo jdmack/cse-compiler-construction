@@ -17,7 +17,7 @@ class AndOp extends BooleanOp
     //      Methods
     //---------------------------------------------------------------------
     public STO
-    checkOperands(STO op1, STO op2)
+    checkOperands(STO operand1, STO operand2)
     {
         return (new ErrorSTO("AndOp.checkOperands()"));
     }

@@ -17,7 +17,7 @@ class BitwiseOp extends BinaryOp
     //      Methods
     //---------------------------------------------------------------------
     public STO
-    checkOperands(STO op1, STO op2)
+    checkOperands(STO operand1, STO operand2)
     {
         return (new ErrorSTO("BitwiseOp.checkOperands()"));
     }

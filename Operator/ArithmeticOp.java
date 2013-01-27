@@ -17,20 +17,20 @@ class ArithmeticOp extends BinaryOp
     //      Methods
     //---------------------------------------------------------------------
     public STO
-    checkOperands(STO op1, STO op2)
+    checkOperands(STO operand1, STO operand2)
     {
         STO newSTO;
 
-        // Check #1 - Both operands numeric
+        // Check #1 - Plus, Minus, Mul, Div - Both operands numeric
         // Check left operand to be numeric
         if(!operand1.getType().isNumeric())
         {
-            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op)) );
+            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), this.getName())) );
         }
         // Check right operand to be numeric
         else if((!operand2.getType().isNumeric()))
         {
-            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op)));
+            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName())));
         }
         
         // Check successful, determine result type

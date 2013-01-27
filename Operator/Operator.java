@@ -36,7 +36,7 @@ abstract class Operator
 
 // Decided this should go in BinaryOp then Unary Op gets checkOperand
 /*  public STO 
-    checkOperands(STO op1, STO op2)
+    checkOperands(STO operand1, STO operand2)
     {
         return (new ErrorSTO("Operator: abstract class")); 
     }

@@ -8,7 +8,7 @@ class ModOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    ModOp ()
+    ModOp()
     {
         super();
     }
@@ -17,28 +17,24 @@ class ModOp extends ArithmeticOp
     //      Methods
     //---------------------------------------------------------------------
     public STO
-    checkOperands (STO op1, STO op2)
+    checkOperands(STO operand1, STO operand2)
     {
-        STO newSTO;
+        STO resultSTO;
 
-        // Check #1 - Modulus - both int
+        // Check #1 - Modulus - Both operands int
         // Check left operand to be int
         if((!operand1.getType().isInt()))
         {
-            m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op, "int"));    
-            return (new ErrorSTO (operand1.getName()));
+            return (new ErrorSTO (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), this.getName(), "int")));    
         }
         // Check right operand to be int
         else if((!operand2.getType().isInt()))
         {
-            m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op, "int"));    
-            return (new ErrorSTO (operand2.getName()));
+            return (new ErrorSTO (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName(), "int")));    
         }
 
-        newSTO = new ExprSTO("DoBinaryOp Result", new IntType());
+        resultSTO = new ExprSTO("DoBinaryOp Result", new IntType());
 
-        return newSTO;
+        return resultSTO;
     }
 }
