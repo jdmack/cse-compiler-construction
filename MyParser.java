@@ -489,14 +489,14 @@ class MyParser extends parser
         if((!operand1.getType().isNumeric()))
         {
             m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.error1n_Expr, operand1.getName()));    
+            m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), op));    
             return (new ErrorSTO (operand1.getName()));
         }
         // Check right operand to be numeric
         else if((!operand2.getType().isNumeric()))
         {
             m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.error1n_Expr, operand2.getName()));    
+            m_errors.print (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), op));    
             return (new ErrorSTO (operand2.getName()));
         }
         
