@@ -145,6 +145,7 @@ non terminal
 non terminal String    
     AddOp,
     Equality,
+    Logical,
     MulOp,
     IncDecOp,
     ParamDecl,
@@ -660,6 +661,16 @@ UnarySign ::=       T_PLUS
     |               T_MINUS
                     {:
                         RESULT = "-";
+                    :}
+    ;
+
+Logical ::=         T_OR
+                    {:
+                        RESULT = "||";
+                    :}
+    |               T_AND
+                    {:
+                        RESULT = "&&";
                     :}
     ;
 
