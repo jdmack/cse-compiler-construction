@@ -4,12 +4,13 @@
 // types, such as IntType, FloatType, ArrayType, etc.
 //---------------------------------------------------------------------
 
-
 abstract class Type
 {
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
+    // members
+    private String m_typeName;
+    private int    m_size;
+
+    // constructors
     public 
     Type (String strName, int size)
     {
@@ -17,10 +18,7 @@ abstract class Type
         setSize(size);
     }
 
-
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
+    // methods
     public String
     getName ()
     {
@@ -33,10 +31,6 @@ abstract class Type
         m_typeName = str;
     }
 
-
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
     public int
     getSize ()
     {
@@ -48,7 +42,6 @@ abstract class Type
     {
         m_size = size;
     }
-
 
     //----------------------------------------------------------------
     //    It will be helpful to ask a Type what specific Type it is.
@@ -71,9 +64,4 @@ abstract class Type
     public boolean isFuncPtr()   { return false; }
     public boolean isNullPtr()   { return false; }
 
-    //----------------------------------------------------------------
-    //    Name of the Type (e.g., int, bool, or some typedef
-    //----------------------------------------------------------------
-    private String m_typeName;
-    private int    m_size;
 }
