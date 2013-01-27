@@ -5,8 +5,11 @@
 class FuncSTO extends STO
 {
     //----------------------------------------------------------------
-    //
+    //    Instance variables.
     //----------------------------------------------------------------
+    private Type         m_returnType;
+
+    // constructors
     public 
     FuncSTO (String strName)
     {
@@ -17,9 +20,7 @@ class FuncSTO extends STO
     }
 
 
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
+    // methods
     public boolean
     isFunc () 
     { 
@@ -46,8 +47,4 @@ class FuncSTO extends STO
     }
 
 
-//----------------------------------------------------------------
-//    Instance variables.
-//----------------------------------------------------------------
-    private Type         m_returnType;
 }

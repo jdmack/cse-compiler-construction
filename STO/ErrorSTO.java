@@ -4,9 +4,7 @@
 
 class ErrorSTO extends STO
 {
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
+    // constructors
     public 
     ErrorSTO (String strName)
     {
@@ -23,6 +21,8 @@ class ErrorSTO extends STO
     //    for every check.  (This is an example of where the
     //    instanceof operator would not have been appropriate.)
     //----------------------------------------------------------------
+
+    // methods
     public boolean  isVar ()              { return true; }
     public boolean  isConst ()            { return true; }
     public boolean  isExpr ()             { return true; }

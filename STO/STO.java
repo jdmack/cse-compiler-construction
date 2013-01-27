@@ -4,9 +4,13 @@
 
 abstract class STO
 {
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
+    // members
+    private String  m_strName;
+    private Type    m_type;
+    private boolean m_isAddressable;
+    private boolean m_isModifiable;
+
+    // constructors
     public 
     STO (String strName)
     {
@@ -22,10 +26,7 @@ abstract class STO
         setIsModifiable(false);
     }
 
-
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
+    // methods
     public String
     getName ()
     {
@@ -38,9 +39,6 @@ abstract class STO
         m_strName = str;
     }
 
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
     public Type
     getType ()
     {
@@ -87,7 +85,6 @@ abstract class STO
         m_isModifiable = modifiable;
     }
 
-
     //----------------------------------------------------------------
     // A modifiable L-value is an object that is both addressable and
     // modifiable. Objects like constants are not modifiable, so they 
@@ -106,7 +103,6 @@ abstract class STO
         setIsAddressable(m);
     }
 
-
     //----------------------------------------------------------------
     //    It will be helpful to ask a STO what specific STO it is.
     //    The Java operator instanceof will do this, but these methods 
@@ -121,11 +117,4 @@ abstract class STO
     public boolean isError ()   { return false; }
 
 
-    //----------------------------------------------------------------
-    // 
-    //----------------------------------------------------------------
-    private String  m_strName;
-    private Type    m_type;
-    private boolean m_isAddressable;
-    private boolean m_isModifiable;
 }

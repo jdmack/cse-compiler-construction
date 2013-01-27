@@ -4,9 +4,19 @@
 
 class ConstSTO extends STO
 {
+
+    // members
     //----------------------------------------------------------------
-    //
+    //    Constants have a value, so you should store them here.
+    //    Note: We suggest using Java's Double class, which can hold
+    //    floats and ints. You can then do .floatValue() or 
+    //    .intValue() to get the corresponding value based on the
+    //    type. Booleans/Ptrs can easily be handled by ints.
+    //    Feel free to change this if you don't like it!
     //----------------------------------------------------------------
+    private Double m_value;
+
+    // constructors
     public 
     ConstSTO (String strName)
     {
@@ -25,19 +35,13 @@ class ConstSTO extends STO
                 // fields as necessary
     }
 
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
+    // methods
     public boolean
     isConst () 
     {
         return true;
     }
 
-
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
     private void
     setValue (double val) 
     {
@@ -68,14 +72,4 @@ class ConstSTO extends STO
         return (m_value.intValue() != 0);
     }
 
-
-//----------------------------------------------------------------
-//    Constants have a value, so you should store them here.
-//    Note: We suggest using Java's Double class, which can hold
-//    floats and ints. You can then do .floatValue() or 
-//    .intValue() to get the corresponding value based on the
-//    type. Booleans/Ptrs can easily be handled by ints.
-//    Feel free to change this if you don't like it!
-//----------------------------------------------------------------
-        private Double m_value;
 }
