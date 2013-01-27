@@ -19,7 +19,7 @@ class ArithmeticOp extends BinaryOp
     public STO
     checkOperands(STO operand1, STO operand2)
     {
-        STO newSTO;
+        STO resultSTO;
 
         // Check #1 - Plus, Minus, Mul, Div - Both operands numeric
         // Check left operand to be numeric
@@ -37,13 +37,13 @@ class ArithmeticOp extends BinaryOp
         // Plus, Minus, Star, Slash - Int if both int, Float otherwise
         if(operand1.getType().isInt() && operand2.getType().isInt())
         {
-            newSTO = new ExprSTO("DoBinaryOp Result", new IntType());
+            resultSTO = new ExprSTO("ArithmeticOp.checkOperands() Result", new IntType());
         }
         else
         {
-            newSTO = new ExprSTO("DoBinaryOp Result", new FloatType());
+            resultSTO = new ExprSTO("ArithmeticOp.checkOperands() Result", new FloatType());
         }
 
-        return (newSTO);
+        return resultSTO;
     }
 }

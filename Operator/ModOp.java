@@ -33,7 +33,7 @@ class ModOp extends ArithmeticOp
             return (new ErrorSTO (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName(), "int")));    
         }
 
-        resultSTO = new ExprSTO("DoBinaryOp Result", new IntType());
+        resultSTO = new ExprSTO("ModOp.checkOperands() Result", new IntType());
 
         return resultSTO;
     }
