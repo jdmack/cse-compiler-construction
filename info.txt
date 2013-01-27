@@ -13,3 +13,21 @@ Designator - *x &x +x -x !x sizeof(x) sizeof(type) (type) ++x --x
 Designator2 - x.y x[y] x->y x++ x-- x(y, .., z)
 Designator3 - (expr) int_constant float_constant char_constant string_constant true false nullptr this ::x x
 QualIdent - ?
+
+
+
+%O - operator
+%T - Type
+%D - number
+%S - identifier
+
+
+To Do
+-----
+
+Check #1 - Need to set isModifiable and isAddressable
+Possible bug in rc.cup:
+    Designator2:_1 T_LPAREN OptExprList T_RPAREN
+        DoFuncCall but RESULT is set to _1 instead of the result of FuncCall
+    Same for DoAssignExpr
+    
