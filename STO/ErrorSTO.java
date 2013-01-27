@@ -23,12 +23,12 @@ class ErrorSTO extends STO
     //    for every check.  (This is an example of where the
     //    instanceof operator would not have been appropriate.)
     //----------------------------------------------------------------
-        public boolean  isVar ()              { return true; }
-        public boolean  isConst ()            { return true; }
-        public boolean  isExpr ()             { return true; }
-        public boolean  isFunc ()             { return true; }
-        public boolean  isTypedef ()          { return true; }
-        public boolean  isError ()            { return true; }
+    public boolean  isVar ()              { return true; }
+    public boolean  isConst ()            { return true; }
+    public boolean  isExpr ()             { return true; }
+    public boolean  isFunc ()             { return true; }
+    public boolean  isTypedef ()          { return true; }
+    public boolean  isError ()            { return true; }
 
     public boolean  getIsAddressable ()   { return true; }
     public boolean  getIsModLValue ()     { return true; }
