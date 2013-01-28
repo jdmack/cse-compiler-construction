@@ -17,8 +17,19 @@ class NotOp extends UnaryOp
     //      Methods
     //---------------------------------------------------------------------
     public STO
-    checkOperand(STO op)
+    checkOperand(STO operand)
     {
-        return (new ErrorSTO("NotOp.checkOperands()"));
+        STO resultSTO;
+
+        // Check #1 - Not - operand bool
+        // Check operand
+        if(!operand.getType().isBool())
+        {
+            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1u_Expr, operand.getType().getName(), this.getName(), "bool"));
+        }
+
+        resultSTO = new ExprSTO("NEqualToOp.checkOperands() Result", new BoolType());
+
+        return resultSTO;
     }
 }
