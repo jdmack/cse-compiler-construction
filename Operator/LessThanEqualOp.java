@@ -16,9 +16,4 @@ class LessThanEqualOp extends ComparisonOp
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    checkOperands(STO operand1, STO operand2)
-    {
-        return (new ErrorSTO("LessThanEqualOp.checkOperands()"));
-    }
 }

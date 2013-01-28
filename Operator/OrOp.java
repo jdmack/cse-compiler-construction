@@ -16,9 +16,4 @@ class OrOp extends BooleanOp
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    checkOperands(STO operand1, STO operand2)
-    {
-        return (new ErrorSTO("OrOp.checkOperands()"));
-    }
 }
