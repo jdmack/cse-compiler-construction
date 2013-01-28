@@ -17,7 +17,7 @@ class UnMinusOp extends UnaryOp
     //      Methods
     //---------------------------------------------------------------------
     public STO
-    checkOperand(STO op)
+    checkOperand(STO operand)
     {
         return (new ErrorSTO("UnMinusOp.checkOperands()"));
     }
