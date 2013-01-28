@@ -19,6 +19,22 @@ class BitwiseOp extends BinaryOp
     public STO
     checkOperands(STO operand1, STO operand2)
     {
-        return (new ErrorSTO("BitwiseOp.checkOperands()"));
+        STO resultSTO;
+    
+        // Check #1 - %, ^, | - both operands int
+        // Check left operand to be int
+        if((!operand1.getType().isInt()))
+        {
+            return (new ErrorSTO (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), this.getName(), "int")));
+        }
+        // Check right operand to be int
+        else if((!operand2.getType().isInt()))
+        {
+            return (new ErrorSTO (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName(), "int")));
+        }
+
+        resultSTO = new ExprSTO("BitwiseOp.checkOperands() Result", new IntType());
+
+        return resultSTO;
     }
 }

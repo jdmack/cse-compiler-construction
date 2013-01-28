@@ -16,9 +16,4 @@ class OrBwOp extends BitwiseOp
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    checkOperands(STO operand1, STO operand2)
-    {
-        return (new ErrorSTO("OrBwOp.checkOperands()"));
-    }
 }
