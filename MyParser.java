@@ -469,7 +469,7 @@ class MyParser extends parser
     }
 
     //----------------------------------------------------------------
-    //
+    //      DoBinaryOp
     //----------------------------------------------------------------
     STO
     DoBinaryOp (BinaryOp op, STO operand1, STO operand2)
@@ -484,8 +484,33 @@ class MyParser extends parser
             return operand2;
         }
 
-        // Use Operator.checkOperands() to perform error checks
+        // Use BinaryOp.checkOperands() to perform error checks
         STO resultSTO = op.checkOperands(operand1, operand2);
+
+        // Process/Print errors
+        if(resultSTO.isError())
+        {
+            m_nNumErrors++;
+            m_errors.print(resultSTO.getName());
+        }
+
+        return resultSTO;
+    }
+
+    //----------------------------------------------------------------
+    //      DoUnaryOp
+    //----------------------------------------------------------------
+    STO
+    DoUnaryOp (UnaryOp op, STO operand)
+    {
+        // Check for previous errors in line and short circuit
+        if(operand.isError())
+        {
+            return operand;
+        }
+
+        // Use UnaryOp.checkOperand() to perform error checks
+        STO resultSTO = op.checkOperand(operand);
 
         // Process/Print errors
         if(resultSTO.isError())
