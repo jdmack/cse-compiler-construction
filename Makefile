@@ -29,19 +29,19 @@ debug:
 	make rcdbg
 
 rc: $(SOURCES) parser.java sym.java
-	javac -sourcepath .:./Type:./STO:./Operator -d bin RC.java
+	javac -sourcepath .:./Type:./STO:./Operator: -cp $CLASSPATH:/home/james/cse131/java-cup-v11a.jar -d bin RC.java
 	cp RC.sh RC
 	chmod 755 RC
 
 warnings: $(SOURCES) parser.java sym.java
 	make clean
 	make parser.java
-	javac -Xlint -sourcepath .:./Type:./STO:./Operator -d bin RC.java
+	javac -Xlint -sourcepath .:./Type:./STO:./Operator:.java-cup-v11a.jar -d bin RC.java
 	cp RC.sh RC
 	chmod 755 RC
 
 rcdbg: $(SOURCES) parser.java sym.java
-	javac -sourcepath .:./Type:./STO:./Operator -d bin RCdbg.java
+	javac -sourcepath .:./Type:./STO:./Operator:.java-cup-v11a.jar -d bin RCdbg.java
 	cp RCdbg.sh RC
 	chmod 755 RC
 
@@ -59,3 +59,7 @@ backup:
 	-@make clean
 	-@mkdir backups
 	tar cvf - $(SOURCES) Makefile RC.sh | compress > backups/`date +%m%d%R`.tar.Z
+
+compile:
+	javac -sourcepath .:./Type:./STO:./Operator -d bin RC.java
+

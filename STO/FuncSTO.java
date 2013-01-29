@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------
 //
 //---------------------------------------------------------------------
+import java.util.Vector;
 
 class FuncSTO extends STO
 {
@@ -15,6 +16,16 @@ class FuncSTO extends STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
+    public 
+    FuncSTO(String strName)
+    {
+        super(strName);
+        setNumOfParams(0);
+        setParameters(new Vector());        
+        setReturnByRef(false);
+        setReturnType (null);
+    }
+
     public 
     FuncSTO(String strName, Vector<ParamSTO> params, boolean retByRef)
     {
