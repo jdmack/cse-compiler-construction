@@ -561,6 +561,8 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
             return (new ErrorSTO("DoWhile error"));
         }
+
+        return stoExpr;
     }
 
     //----------------------------------------------------------------
@@ -582,6 +584,8 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
             return (new ErrorSTO("DoIf error"));
         }
+
+        return stoExpr;
     }
 
 }

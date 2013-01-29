@@ -491,7 +491,7 @@ ArrElemsList ::=    Expr
     |               ArrElemsList T_COMMA Expr
     ;
 
-IfStmt ::=          T_IF Expr CodeBlock OptElse
+IfStmt ::=          T_IF Expr:_1 CodeBlock OptElse
                     {:
                         RESULT = ((MyParser) parser).DoIfExpr(_1);
                     :}
