@@ -33,3 +33,4 @@ Possible bug in rc.cup:
     
 
 Need to handle ConstSTO values
+For Check #2, array's are not modifiable L-vals yet
