@@ -28,7 +28,7 @@ class NotOp extends UnaryOp
             return (new ErrorSTO(Formatter.toString(ErrorMsg.error1u_Expr, operand.getType().getName(), this.getName(), "bool")));
         }
 
-        resultSTO = new ExprSTO("NEqualToOp.checkOperands() Result", new BoolType());
+        resultSTO = new ExprSTO("NotOp.checkOperands() Result", new BoolType());
 
         return resultSTO;
     }
