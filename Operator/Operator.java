@@ -31,7 +31,7 @@ abstract class Operator
     public void
     setName(String str)
     {
-        m_typeName = str;
+        m_opName = str;
     }
 
 // Decided this should go in BinaryOp then Unary Op gets checkOperand
