@@ -355,11 +355,21 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoAssignExpr (STO stoDes)
+    DoAssignExpr (STO stoDes, STO stoValue)
     {
+        // Check #3a - illegal assignment - not modifiable L-value
         if (!stoDes.isModLValue())
         {
-            // Good place to do the assign checks
+            m_nNumErrors++;
+            m_errors.print(toString(ErrorMsg.error3a_Assign));
+            return (new ErrorSTO("DoAssignExpr Error - not mod-L-Value"));
+        }
+
+        if(!stoValue.isAssignable(stoDes.getType()))
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, stoValue.getType().getName(), stoDes.getType().getName()));
+            return (new ErrorSTO("DoAssignExpr Error - bad types"));
         }
         
         return stoDes;
