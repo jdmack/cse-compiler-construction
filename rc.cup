@@ -149,7 +149,6 @@ non terminal String
 non terminal BinaryOp    
     AddOp,
     Equality,
-    Logical,
     MulOp,
     Relation
     ;
@@ -682,16 +681,6 @@ UnarySign ::=       T_PLUS
     |               T_MINUS
                     {:
                         RESULT = new UnMinusOp("-");
-                    :}
-    ;
-
-Logical ::=         T_OR
-                    {:
-                        RESULT = new OrOp("||");
-                    :}
-    |               T_AND
-                    {:
-                        RESULT = new AndOp("&&");
                     :}
     ;
 
