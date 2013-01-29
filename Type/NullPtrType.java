@@ -9,7 +9,7 @@ class NullPtrType extends PointerType
     //      Constants
     //---------------------------------------------------------------------
     private static final String NULLPTR_NAME = "nullptr";
-    private static final int NULLPTR_SIZE    = "4";
+    private static final int NULLPTR_SIZE    = 4;
 
     //---------------------------------------------------------------------
     //      Constructors
