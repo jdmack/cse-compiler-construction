@@ -52,7 +52,7 @@ abstract class Type
     public boolean
     isEquivalent(Type type)
     {
-        if(this instanceof type.getClass())
+        if(this.getName().equals(type.getName()))
         {
             return true;
         }

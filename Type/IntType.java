@@ -44,14 +44,11 @@ class IntType extends NumericType
             return true;
         }
 
-        if(type instanceof FloatType)
+        if(type.getName().equals("float"))
         {
             return true;
         }
 
-    return false;
-    
+        return false;
     }
-
-
 }
