@@ -491,10 +491,11 @@ ArrElemsList ::=    Expr
     |               ArrElemsList T_COMMA Expr
     ;
 
-IfStmt ::=          T_IF Expr CodeBlock OptElse
+IfStmt ::=          T_IF Expr 
                     {:
                         RESULT = ((MyParser) parser).DoIfExpr(_1);
                     :}
+                    CodeBlock OptElse
     ;
 
 
@@ -502,10 +503,11 @@ OptElse ::=         T_ELSE CodeBlock
     |               /* empty */
     ;
 
-WhileStmt ::=       T_WHILE Expr:_1 CodeBlock
+WhileStmt ::=       T_WHILE Expr:_1 
                     {:
                         RESULT = ((MyParser) parser).DoWhileExpr(_1);
                     :}
+                    CodeBlock
     ;
 
 ForStmt ::=         T_FOR T_LPAREN OptExpr T_SEMI OptExpr T_SEMI OptExpr T_RPAREN CodeBlock
