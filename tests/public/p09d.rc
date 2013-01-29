@@ -1,0 +1,24 @@
+/* Check 9 (p09d.rc) */
+
+typedef int INTEGER;
+typedef float FLOAT;
+typedef bool BOOL;
+
+function : INTEGER foo () {
+    FLOAT f;
+    const INTEGER i = 10;
+    const INTEGER j = 20;
+    f = i + j;
+
+    return f;           // error
+}
+
+function : void main () {
+    const BOOL forever = true;
+    int x;
+
+    while( forever ){
+        x = foo();
+        x = foo()+1;
+    }
+}

@@ -1,0 +1,14 @@
+typedef int NODE;
+typedef NODE[10] LIST;
+typedef LIST[10] MAP;
+
+function : void main () {
+    MAP myMap;
+    NODE * nodeptr;
+
+    const int i = 9;
+    int j = 10;
+
+    nodeptr[100000] = myMap[i][i];
+    myMap[j][i] = myMap[i][j];
+}

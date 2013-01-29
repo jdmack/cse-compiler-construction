@@ -1,0 +1,6 @@
+/* Check 10 (p10a.rc) */
+
+typedef float[10] ARR;
+float[10] a;
+ARR b;
+ARR[2] c; // array of array

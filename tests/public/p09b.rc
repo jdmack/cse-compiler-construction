@@ -1,0 +1,20 @@
+/* Check 9 (p09b.rc) */
+
+typedef int CLASS;
+const CLASS Rogue = 5;
+const CLASS Mage = 5;
+const CLASS Warrior = 4;
+const CLASS Shaman = 4;
+
+typedef bool FACT;
+
+const FACT sadtruth = (Rogue + Mage) > (Warrior + Shaman);
+FACT nerf;
+
+function : int main() {
+    if(sadtruth)
+    {
+        nerf = true;
+    }
+    return 0;
+}

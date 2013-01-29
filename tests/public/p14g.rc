@@ -1,0 +1,15 @@
+/* Check 14 (p14g.rc) */
+
+structdef COMPILERSCLASS {
+    function : void failClass() {
+        // Do nothing
+    }
+};
+
+function : int main() {
+    COMPILERSCLASS compilersWI08;
+
+    compilersWI08.passClass();
+
+    return 0;
+}

@@ -1,0 +1,9 @@
+const int ci = 42;
+int[10] ai;
+
+function : int main() {
+    ai[5] = ai[ci];   
+    ai[5] = ai[-ci];
+    ai[5] = ai[-ci+50];
+    return 0;
+}

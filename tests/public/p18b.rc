@@ -1,0 +1,13 @@
+/* Check 18 (x18b.rc) */
+
+function : int func () {
+    return 2;
+}
+
+function : int main() {
+    funcptr : int () fp;
+
+    new fp;
+
+    return fp();
+}

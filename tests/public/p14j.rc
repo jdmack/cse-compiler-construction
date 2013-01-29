@@ -1,0 +1,32 @@
+/* Check 14 (p14j.rc) */
+
+structdef MYS {
+    int x, y;
+    int z;
+    
+    function : void foo( int y ) {
+        this.x = 8;
+        this.z = this.y;
+        this.y = 10;
+        
+        if ( this.y < y ) {
+            this.foo( this.x );
+        }
+    }
+    
+    function : void bar() {
+        this.foo( 420 );
+    }
+};
+
+typedef MYS* MPTR;
+
+function: int main() {
+    MYS mys;
+    MPTR mptr;
+    
+    mys.bar();
+    mptr->foo( 5 );
+    
+    return 0;
+}

@@ -1,0 +1,12 @@
+typedef int TNI;
+typedef float* RTPF;
+
+TNI b;
+float* pf;
+int* pi;
+const bool tr = true;
+
+function : int main() {
+    pf = (RTPF)pi;
+    return (int)(bool)(float)tr;
+}

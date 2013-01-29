@@ -1,0 +1,7 @@
+function : int main() {
+    int[2] arr;
+
+    delete arr;
+
+    return arr[0];
+}

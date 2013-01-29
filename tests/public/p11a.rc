@@ -1,0 +1,8 @@
+float r;
+float[10] ar;
+int i;
+
+function : int main() {
+    r = ar[i];
+    return 0;
+}

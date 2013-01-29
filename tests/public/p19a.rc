@@ -1,0 +1,14 @@
+
+typedef float FOO;
+int x;
+
+function : void main() {
+	int[4] arr;
+	
+	const int x1 = sizeof(FOO); // should be 4
+	arr[x1-0]=0;
+	
+	const int x5 = sizeof(x); // should be 4
+	arr[x5-0]=0;
+	
+}
