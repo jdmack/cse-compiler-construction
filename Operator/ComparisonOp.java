@@ -8,7 +8,7 @@ class ComparisonOp extends BinaryOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    ComparisonOp(strName)
+    ComparisonOp(String strName)
     {
         super(strName);
     }

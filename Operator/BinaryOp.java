@@ -8,7 +8,7 @@ class BinaryOp extends Operator
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    BinaryOp(strName)
+    BinaryOp(String strName)
     {
         super(strName);
     }

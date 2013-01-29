@@ -8,7 +8,7 @@ class BooleanOp extends BinaryOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    BooleanOp(strName)
+    BooleanOp(String strName)
     {
         super(strName);
     }

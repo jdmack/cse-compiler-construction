@@ -8,7 +8,7 @@ class LessThanOp extends ComparisonOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    LessThanOp(strName)
+    LessThanOp(String strName)
     {
         super(strName);
     }

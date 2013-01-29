@@ -8,7 +8,7 @@ class DecOp extends UnaryOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    DecOp(strName)
+    DecOp(String strName)
     {
         super(strName);
     }

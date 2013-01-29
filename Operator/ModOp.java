@@ -8,9 +8,9 @@ class ModOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    ModOp()
+    ModOp(String strName)
     {
-        super();
+        super(strName);
     }
 
     //---------------------------------------------------------------------

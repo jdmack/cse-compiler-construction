@@ -8,7 +8,7 @@ class OrOp extends BooleanOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    OrOp(strName)
+    OrOp(String strName)
     {
         super(strName);
     }

@@ -8,7 +8,7 @@ class UnaryOp extends Operator
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    UnaryOp(strName)
+    UnaryOp(String strName)
     {
         super(strName);
     }

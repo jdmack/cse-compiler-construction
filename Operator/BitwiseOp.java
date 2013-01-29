@@ -8,7 +8,7 @@ class BitwiseOp extends BinaryOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    BitwiseOp(strName)
+    BitwiseOp(String strName)
     {
         super(strName);
     }

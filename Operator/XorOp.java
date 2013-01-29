@@ -8,7 +8,7 @@ class XorOp extends BitwiseOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    XorOp(strName)
+    XorOp(String strName)
     {
         super(strName);
     }

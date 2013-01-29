@@ -8,7 +8,7 @@ class NotOp extends UnaryOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    NotOp(strName)
+    NotOp(String strName)
     {
         super(strName);
     }

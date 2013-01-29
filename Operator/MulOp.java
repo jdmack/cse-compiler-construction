@@ -8,9 +8,9 @@ class MulOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    MulOp()
+    MulOp(String strName)
     {
-        super();
+        super(strName);
     }
 
     //---------------------------------------------------------------------

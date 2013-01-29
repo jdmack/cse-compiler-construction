@@ -8,7 +8,7 @@ class AndBwOp extends BitwiseOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    AndBwOp(strName)
+    AndBwOp(String strName)
     {
         super(strName);
     }

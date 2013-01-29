@@ -8,7 +8,7 @@ class AndOp extends BooleanOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    AndOp(strName)
+    AndOp(String strName)
     {
         super(strName);
     }

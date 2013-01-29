@@ -8,7 +8,7 @@ class NEqualToOp extends ComparisonOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    NEqualToOp(strName)
+    NEqualToOp(String strName)
     {
         super(strName);
     }

@@ -8,7 +8,7 @@ class GreaterThanOp extends ComparisonOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    GreaterThanOp(strName)
+    GreaterThanOp(String strName)
     {
         super(strName);
     }

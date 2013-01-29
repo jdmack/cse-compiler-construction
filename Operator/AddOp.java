@@ -8,9 +8,9 @@ class AddOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    AddOp()
+    AddOp(String strName)
     {
-        super();
+        super(strName);
     }
 
     //---------------------------------------------------------------------

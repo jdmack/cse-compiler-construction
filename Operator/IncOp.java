@@ -8,7 +8,7 @@ class IncOp extends UnaryOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    IncOp(strName)
+    IncOp(String strName)
     {
         super(strName);
     }

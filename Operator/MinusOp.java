@@ -8,9 +8,9 @@ class MinusOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    MinusOp()
+    MinusOp(String strName)
     {
-        super();
+        super(strName);
     }
 
     //---------------------------------------------------------------------

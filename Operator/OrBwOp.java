@@ -8,7 +8,7 @@ class OrBwOp extends BitwiseOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    OrBwOp(strName)
+    OrBwOp(String strName)
     {
         super(strName);
     }

@@ -8,9 +8,9 @@ class DivOp extends ArithmeticOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    DivOp()
+    DivOp(String strName)
     {
-        super();
+        super(strName);
     }
 
     //---------------------------------------------------------------------

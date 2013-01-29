@@ -8,9 +8,9 @@ class ArithmeticOp extends BinaryOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    ArithmeticOp ()
+    ArithmeticOp (String strName)
     {
-        super();
+        super(strName);
     }
     
     //---------------------------------------------------------------------

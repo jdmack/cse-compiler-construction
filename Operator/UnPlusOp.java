@@ -8,7 +8,7 @@ class UnPlusOp extends UnaryOp
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    UnPlusOp(strName)
+    UnPlusOp(String strName)
     {
         super(strName);
     }
