@@ -357,6 +357,16 @@ class MyParser extends parser
     STO
     DoAssignExpr (STO stoDes, STO stoValue)
     {
+        // Check for previous errors in line and short circuit
+        if(stoDes.isError())
+        {
+            return stoDes;
+        }
+        if(stoValue.isError())
+        {
+            return stoValue;
+        }
+
         // Check #3a - illegal assignment - not modifiable L-value
         if (!stoDes.isModLValue())
         {
