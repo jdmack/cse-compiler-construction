@@ -182,7 +182,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoVarDecl (Vector<String> lstIDs)
+    DoVarDecl (Type type, Vector<String> lstIDs)
     {
         for (int i = 0; i < lstIDs.size (); i++)
         {
@@ -194,8 +194,8 @@ class MyParser extends parser
                 m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
             }
 
-            VarSTO sto = new VarSTO (id);
-            m_symtab.insert (sto);
+            VarSTO sto = new VarSTO(id, type);
+            m_symtab.insert(sto);
         }
     }
 

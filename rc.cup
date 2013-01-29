@@ -230,9 +230,9 @@ ExternDecl ::=      T_EXTERN Type IdList:_3 T_SEMI
                     :}
     ;
 
-VarDecl ::=         OptStatic UndecoratedType IdListWOptInit:_3 T_SEMI
+VarDecl ::=         OptStatic UndecoratedType:_2 IdListWOptInit:_3 T_SEMI
                     {:
-                        ((MyParser) parser).DoVarDecl (_3);
+                        ((MyParser) parser).DoVarDecl (_2, _3);
                     :}
     |               OptStatic T_AUTO T_ID T_ASSIGN Expr T_SEMI
 
@@ -312,18 +312,33 @@ Type ::=            SubType OptModifierList OptArrayDef
     |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
     ;
 
-UndecoratedType ::= SubType
+UndecoratedType ::= SubType:_1
+                    {:
+                        RESULT = _1;
+                    :}
     |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
     ;
 
 SubType ::=         QualIdent
-    |               BasicType
+    |               BasicType:_1
+                    {:
+                        RESULT = _1;
+                    :}
     ;
 
 
 BasicType ::=       T_INT 
+                    {:
+                        RESULT = new IntType();
+                    :}
     |               T_FLOAT
+                    {:
+                        RESULT = new FloatType();
+                    :}
     |               T_BOOL
+                    {:
+                        RESULT = new BoolType();
+                    :}
     |               T_CHAR
     ;
 
