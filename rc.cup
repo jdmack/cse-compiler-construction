@@ -492,6 +492,9 @@ ArrElemsList ::=    Expr
     ;
 
 IfStmt ::=          T_IF Expr CodeBlock OptElse
+                    {:
+                        ((MyParser) parser).DoIfExpr(_1);
+                    :}
     ;
 
 
@@ -499,7 +502,10 @@ OptElse ::=         T_ELSE CodeBlock
     |               /* empty */
     ;
 
-WhileStmt ::=       T_WHILE Expr CodeBlock
+WhileStmt ::=       T_WHILE Expr:_1 CodeBlock
+                    {:
+                        ((MyParser) parser).DoWhileExpr(_1);
+                    :}
     ;
 
 ForStmt ::=         T_FOR T_LPAREN OptExpr T_SEMI OptExpr T_SEMI OptExpr T_RPAREN CodeBlock

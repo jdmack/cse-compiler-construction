@@ -541,4 +541,47 @@ class MyParser extends parser
 
         return resultSTO;
     }
+
+    //----------------------------------------------------------------
+    //      DoWhileExpr
+    //----------------------------------------------------------------
+    void
+    DoWhileExpr (STO stoExpr)
+    {
+        // Check for previous errors in line and short circuit
+        if(stoExpr.isError())
+        {
+            return stoExpr;
+        }
+
+        // Check #4 - while expr - int or bool
+        if((!stoExpr.getType().isInt()) && (!stoExpr.getType().isBool()))
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
+            return (new ErrorSTO("DoWhile error"));
+        }
+    }
+
+    //----------------------------------------------------------------
+    //      DoIfExpr
+    //----------------------------------------------------------------
+    void
+    DoIfExpr (STO stoExpr)
+    {
+        // Check for previous errors in line and short circuit
+        if(stoExpr.isError())
+        {
+            return stoExpr;
+        }
+
+        // Check #4 - if expr - int or bool
+        if((!stoExpr.getType().isInt()) && (!stoExpr.getType().isBool()))
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
+            return (new ErrorSTO("DoIf error"));
+        }
+    }
+
 }
