@@ -143,7 +143,7 @@ non terminal
     ;
 
 non terminal String    
-    ParamDecl,
+    ParamDecl
     ;
 
 non terminal BinaryOp    
@@ -151,7 +151,7 @@ non terminal BinaryOp
     Equality,
     Logical,
     MulOp,
-    Relation,
+    Relation
     ;
 
 non terminal UnaryOp    
