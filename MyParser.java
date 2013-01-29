@@ -545,7 +545,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //      DoWhileExpr
     //----------------------------------------------------------------
-    void
+    STO
     DoWhileExpr (STO stoExpr)
     {
         // Check for previous errors in line and short circuit
@@ -566,7 +566,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //      DoIfExpr
     //----------------------------------------------------------------
-    void
+    STO
     DoIfExpr (STO stoExpr)
     {
         // Check for previous errors in line and short circuit

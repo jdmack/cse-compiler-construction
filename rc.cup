@@ -493,7 +493,7 @@ ArrElemsList ::=    Expr
 
 IfStmt ::=          T_IF Expr CodeBlock OptElse
                     {:
-                        ((MyParser) parser).DoIfExpr(_1);
+                        RESULT = ((MyParser) parser).DoIfExpr(_1);
                     :}
     ;
 
@@ -504,7 +504,7 @@ OptElse ::=         T_ELSE CodeBlock
 
 WhileStmt ::=       T_WHILE Expr:_1 CodeBlock
                     {:
-                        ((MyParser) parser).DoWhileExpr(_1);
+                        RESULT = ((MyParser) parser).DoWhileExpr(_1);
                     :}
     ;
 
