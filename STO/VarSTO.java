@@ -13,18 +13,14 @@ class VarSTO extends STO
         super(strName);
         // You may want to change the isModifiable and isAddressable 
         // fields as necessary
-        this.setIsModifiable(true);
-        this.setIsAddressable(true);
     }
 
     public 
     VarSTO(String strName, Type typ)
     {
-        super(strName, typ);
+        super(strName, typ, true);
         // You may want to change the isModifiable and isAddressable 
         // fields as necessary
-        this.setIsModifiable(true);
-        this.setIsAddressable(true);
     }
 
     //---------------------------------------------------------------------

@@ -30,6 +30,14 @@ abstract class STO
         setIsModifiable(false);
     }
 
+    public 
+    STO(String strName, Type typ, boolean isModLvalue)
+    {
+        setName(strName);
+        setType(typ);
+        setIsModLValue(isModLvalue);
+    }
+
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
