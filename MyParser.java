@@ -472,7 +472,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoBinaryOp (String op, STO operand1, STO operand2)
+    DoBinaryOp (BinaryOp op, STO operand1, STO operand2)
     {
         // Check for previous errors in line and short circuit
         if(operand1.isError())
