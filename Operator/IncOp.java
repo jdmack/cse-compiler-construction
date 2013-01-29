@@ -42,6 +42,10 @@ class IncOp extends UnaryOp
         {
             resultSTO = new ExprSTO("IncOp.checkOperand() Result", new FloatType());
         }
+        else
+        {
+            return (new ErrorSTO("This will never happen, making compiler happy"));
+        }
 
         return resultSTO;
     }
