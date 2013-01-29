@@ -36,4 +36,22 @@ class IntType extends NumericType
     //---------------------------------------------------------------------
     public boolean isInt()     { return true; }
 
+    public boolean 
+    isAssignable(Type type)
+    {
+        if(isEquivalent(type)) 
+        {
+            return true;
+        }
+
+        if(type instanceof FloatType)
+        {
+            return true;
+        }
+
+    return false;
+    
+    }
+
+
 }

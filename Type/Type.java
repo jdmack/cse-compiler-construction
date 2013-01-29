@@ -49,6 +49,28 @@ abstract class Type
         m_size = size;
     }
 
+    public boolean
+    isEquivalent(Type type)
+    {
+        if(this instanceof type)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean
+    isAssignable(Type type)
+    {
+        if(isEquivalent(type))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     //----------------------------------------------------------------
     //    It will be helpful to ask a Type what specific Type it is.
     //    The Java operator instanceof will do this, but you may
