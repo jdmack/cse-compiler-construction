@@ -835,11 +835,11 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
                     :}
     |               T_INT_LITERAL:_1
                     {:
-                        RESULT = new ConstSTO (_1);
+                        RESULT = new ConstSTO (_1, new IntType());
                     :}
     |               T_FLOAT_LITERAL:_1
                     {:
-                        RESULT = new ConstSTO (_1);
+                        RESULT = new ConstSTO (_1, new FloatType());
                     :}
     |               T_CHAR_LITERAL:_1
                     {:
@@ -851,15 +851,15 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
                     :}
     |               T_TRUE
                     {:
-                        RESULT = new ConstSTO ("true");
+                        RESULT = new ConstSTO ("true", new BoolType());
                     :}
     |               T_FALSE
                     {:
-                        RESULT = new ConstSTO ("false");
+                        RESULT = new ConstSTO ("false", new BoolType());
                     :}
     |               T_NULLPTR
                     {:
-                        RESULT = new ConstSTO ("nullptr");
+                        RESULT = new ConstSTO ("nullptr", new NullPtrType());
                     :}
     |               T_THIS
                     {:

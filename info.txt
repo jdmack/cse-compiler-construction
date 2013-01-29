@@ -31,3 +31,5 @@ Possible bug in rc.cup:
         DoFuncCall but RESULT is set to _1 instead of the result of FuncCall
     Same for DoAssignExpr
     
+
+Need to handle ConstSTO values
