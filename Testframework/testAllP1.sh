@@ -21,7 +21,7 @@ if [ -f $tname ]; then
     cd ..
     make debug
     cd $d
-    cp ../*.class .
+    cp ../bin/*.class .
 else 
     echo "Cannot find ${tname}"
     echo "Make sure you are inside the test framework directory."
