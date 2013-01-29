@@ -561,9 +561,9 @@ Expr ::=            Designator:_1 T_ASSIGN Expr
     ;
 
 
-Expr0 ::=           Expr0:_1 T_OR Expr1
+Expr0 ::=           Expr0:_1 T_OR Expr1:_2
                     {:
-			            RESULT = _1;
+			            RESULT = ((MyParser) parser).DoBinaryOp(new OrOp("||"), _1, _2);
                     :}
     |               Expr1:_1
                     {:
@@ -572,9 +572,9 @@ Expr0 ::=           Expr0:_1 T_OR Expr1
     ;
 
 
-Expr1 ::=           Expr1:_1 T_AND Expr2
+Expr1 ::=           Expr1:_1 T_AND Expr2:_2
                     {:
-			            RESULT = _1;
+			            RESULT = ((MyParser) parser).DoBinaryOp(new OrOp("&&"), _1, _2);
                     :}
     |               Expr2:_1
                     {:
@@ -583,9 +583,9 @@ Expr1 ::=           Expr1:_1 T_AND Expr2
     ;
 
 
-Expr2 ::=           Expr2:_1 T_BAR Expr3
+Expr2 ::=           Expr2:_1 T_BAR Expr3:_2
                     {:
-			            RESULT = _1;
+			            RESULT = ((MyParser) parser).DoBinaryOp(new OrOp("|"), _1, _2);
                     :}
     |               Expr3:_1
                     {:
@@ -594,9 +594,9 @@ Expr2 ::=           Expr2:_1 T_BAR Expr3
     ;
 
 
-Expr3 ::=           Expr3:_1 T_CARET Expr4
+Expr3 ::=           Expr3:_1 T_CARET Expr4:_2
                     {:
-			            RESULT = _1;
+			            RESULT = ((MyParser) parser).DoBinaryOp(new OrOp("^"), _1, _2);
                     :}
     |               Expr4:_1
                     {:
@@ -605,9 +605,9 @@ Expr3 ::=           Expr3:_1 T_CARET Expr4
     ;
 
 
-Expr4 ::=           Expr4:_1 T_AMPERSAND Expr5
+Expr4 ::=           Expr4:_1 T_AMPERSAND Expr5:_2
                     {:
-			            RESULT = _1;
+			            RESULT = ((MyParser) parser).DoBinaryOp(new OrOp("&"), _1, _2);
                     :}
     |               Expr5:_1
                     {:
@@ -616,9 +616,9 @@ Expr4 ::=           Expr4:_1 T_AMPERSAND Expr5
     ;
 
 
-Expr5 ::=           Expr5:_1 Equality Expr6
+Expr5 ::=           Expr5:_1 Equality:_2 Expr6:_3
                     {:
-                        RESULT = _1;
+			            RESULT = ((MyParser) parser).DoBinaryOp(_2, _1, _3);
                     :}
     |               Expr6:_1
                     {:
