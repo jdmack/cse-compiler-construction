@@ -25,12 +25,12 @@ class BooleanOp extends BinaryOp
         // Check operand1
         if(!operand1.getType().isBool())
         {
-            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), this.getName(), "bool"));
+            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), this.getName(), "bool")));
         }
         // Check operand2
         if(!operand2.getType().isBool())
         {
-            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName(), "bool"));
+            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName(), "bool")));
         }
 
         resultSTO = new ExprSTO("NEqualToOp.checkOperands() Result", new BoolType());

@@ -25,7 +25,7 @@ class NotOp extends UnaryOp
         // Check operand
         if(!operand.getType().isBool())
         {
-            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1u_Expr, operand.getType().getName(), this.getName(), "bool"));
+            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1u_Expr, operand.getType().getName(), this.getName(), "bool")));
         }
 
         resultSTO = new ExprSTO("NEqualToOp.checkOperands() Result", new BoolType());
