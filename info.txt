@@ -36,3 +36,5 @@ Need to handle ConstSTO values
 For Check #2, array's are not modifiable L-vals yet
 For Check #3, there are other assignments in grammar not being assigned
     - Also, only did int->float assignability
+
+Make sure action code is in the best place
