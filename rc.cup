@@ -276,7 +276,7 @@ FieldList ::=       Type IdList T_SEMI
     ;
 
 
-FuncDef ::=         T_FUNCTION T_COLON ReturnType:_1 OptRef:_3 T_ID:_2
+FuncDef ::=         T_FUNCTION T_COLON ReturnType OptRef: T_ID:_2
                     {:
                         ((MyParser) parser).SaveLineNum ();
                         ((MyParser) parser).DoFuncDecl_1(_2);
