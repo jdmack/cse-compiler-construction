@@ -429,8 +429,8 @@ ParamList ::=       ParamDecl:_1
                     :}
     |               ParamList:_1 T_COMMA ParamDecl:_2
                     {:
-                        RESULT = _2;
-                        RESULT.addElement(_1);   
+                        //RESULT = _2;
+                        //RESULT.addElement(_1);   
                     :}
     ;
 
