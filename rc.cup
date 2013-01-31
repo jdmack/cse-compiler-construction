@@ -142,7 +142,7 @@ non terminal
     OptArrayDef
     ;
 
-non terminal String    
+non terminal ParamSTO    
     ParamDecl
     ;
 
@@ -437,7 +437,8 @@ ParamList ::=       ParamDecl:_1
 
 ParamDecl ::=       Type:_1 OptRef:_2 T_ID:_3
                     {:
-                        RESULT = new ParamSTO(_3, _1, _3);
+                        //RESULT = new ParamSTO(_3, _1, _3);
+                        RESULT = new ParamSTO("test"); // just to get it compiling temporarily
                     :}
     ;
 
