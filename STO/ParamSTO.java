@@ -18,6 +18,12 @@ class ParamSTO extends STO
         super(strName, type);
 
     }
+    
+    public
+    ParamSTO(String strName)
+    {
+        super(strName);
+    }
 
     //---------------------------------------------------------------------
     //      Methods
