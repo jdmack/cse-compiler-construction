@@ -28,25 +28,27 @@ debug:
 	make clean
 	make rcdbg
 
+JAVACOPT=-sourcepath .:./Type:./STO:./Operator -classpath .
+
 rc: $(SOURCES) parser.java sym.java
-	javac -sourcepath .:./Type:./STO:./Operator -d bin RC.java
+	javac $(JAVACOPT) -d bin RC.java
 	cp RC.sh RC
 	chmod 755 RC
 
 warnings: $(SOURCES) parser.java sym.java
 	make clean
 	make parser.java
-	javac -Xlint -sourcepath .:./Type:./STO:./Operator -d bin RC.java
+	javac -Xlint $(JAVACOPT) -d bin RC.java
 	cp RC.sh RC
 	chmod 755 RC
 
 rcdbg: $(SOURCES) parser.java sym.java
-	javac -sourcepath .:./Type:./STO:./Operator -d bin RCdbg.java
+	javac $(JAVACOPT) -d bin RCdbg.java
 	cp RCdbg.sh RC
 	chmod 755 RC
 
 parser.java: rc.cup
-	javacup < rc.cup
+	./javacup < rc.cup
 
 clean:
 	rm -f *.class bin/*.class RC parser.java sym.java a.out core rc.s
