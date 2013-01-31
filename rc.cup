@@ -412,21 +412,44 @@ Stmt ::=            VarDecl
 
 
 OptParamList ::=    ParamList:_1
+                    {:
+                        RESULT = _1;
+                    :}
     |               /* empty */
+                    {:
+                        RESULT = new Vector<ParamSTO>();
+                    :}
     ;
 
 
-ParamList ::=       ParamDecl
-    |               ParamList:_1 T_COMMA ParamDecl
+ParamList ::=       ParamDecl:_1
+                    {:
+                        RESULT = new Vector<ParamSTO>();
+                        RESULT.addElement(_1);
+                    :}
+    |               ParamList:_1 T_COMMA ParamDecl:_2
+                    {:
+                        RESULT = _1;
+                        RESULT.addElement(_2);   
+                    :}
     ;
 
 
-ParamDecl ::=       Type OptRef T_ID
+ParamDecl ::=       Type:_1 OptRef:_2 T_ID:_3
+                    {:
+                        RESULT = new ParamSTO(_3, _1, _3);
+                    :}
     ;
 
 
 OptRef ::=          T_AMPERSAND
+                    {:
+                        RESULT = true;
+                    :}
     |               /* empty */
+                    {:
+                        RESULT = false;
+                    :}
     ;
 
 
