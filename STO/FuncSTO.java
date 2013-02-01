@@ -79,7 +79,7 @@ class FuncSTO extends STO
         return m_parameters;
     }
 
-    private void
+    public void
     setParameters(Vector<ParamSTO> params)
     {
         m_parameters = params;
