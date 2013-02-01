@@ -60,6 +60,7 @@ abstract class Type
         return false;
     }
 
+    // meaning: param = this
     public boolean
     isAssignable(Type type)
     {

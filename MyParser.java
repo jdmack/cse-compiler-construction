@@ -287,7 +287,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoFuncDecl_1 (String id)
+    DoFuncDecl_1(Type returnType, String id)
     {
         if (m_symtab.accessLocal (id) != null)
         {
@@ -296,6 +296,10 @@ class MyParser extends parser
         }
     
         FuncSTO sto = new FuncSTO (id);
+        
+        // Set return type
+        sto.setReturnType(returnType);
+
         m_symtab.insert (sto);
 
         m_symtab.openScope ();
@@ -307,7 +311,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoFuncDecl_2 ()
+    DoFuncDecl_2()
     {
         m_symtab.closeScope ();
         m_symtab.setFunc (null);
@@ -318,14 +322,15 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoFormalParams (Vector<ParamSTO> params)
+    DoFormalParams(Vector<ParamSTO> params)
     {
-        STO funcSTO;
+        FuncSTO funcSTO;
 
-        if (funcSTO = m_symtab.getFunc () == null)
+        if((funcSTO = m_symtab.getFunc()) == null)
         {
             m_nNumErrors++;
             m_errors.print ("internal: DoFormalParams says no proc!");
+            return;
         }
 
         // Insert parameters
@@ -337,7 +342,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoBlockOpen ()
+    DoBlockOpen()
     {
         // Open a scope.
         m_symtab.openScope ();
@@ -393,16 +398,79 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoFuncCall (STO sto)
+    DoFuncCall(STO sto, Vector<ExprSTO> args)
     {
         if (!sto.isFunc())
         {
             m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.not_function, sto.getName()));
-            return (new ErrorSTO (sto.getName ()));
+            m_errors.print(Formatter.toString(ErrorMsg.not_function, sto.getName()));
+            return (new ErrorSTO(sto.getName ()));
+        }
+    
+        // We know it's a function, do function call checks
+        FuncSTO funcSTO = (FuncSTO)sto;
+
+        // Check #5
+        // Check #5a - # args = # params
+        if(!(funcSTO.getNumOfParams() != args.size()))
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error5n_Call, args.size(), funcSTO.getNumOfParams()));
+            return (new ErrorSTO("DoFuncCall - # args"));
         }
 
-        return (sto);
+        // Now we check each arg individually, accepting one error per arg
+        
+        boolean error_flag = false;
+
+        for(int i = 0; i < args.size(); i++)
+        {
+            // For readability and shorter lines
+            ParamSTO thisParam = funcSTO.getParameters().elementAt(i);
+            ExprSTO thisArg = args.elementAt(i);
+
+            // Check #5b - non-assignable arg for pass-by-value param
+            if(!thisParam.isPassByReference())
+            {
+                if(!thisArg.getType().isAssignable(thisParam.getType()))
+                {
+                    m_nNumErrors++;
+                    m_errors.print(Formatter.toString(ErrorMsg.error5a_Call, thisArg.getType().getName(), thisParam.getName(), thisParam.getType().getName()));
+                    error_flag = true;
+                }
+            }
+
+            // Check #5c - arg type not equivalent to pass-by-ref param type
+            else if(thisParam.isPassByReference())
+            {
+                if(!thisArg.getType().isEquivalent(thisParam.getType()))
+                {
+                    m_nNumErrors++;
+                    m_errors.print(Formatter.toString(ErrorMsg.error5r_Call, thisArg.getType().getName(), thisParam.getName(), thisParam.getType().getName()));
+                    error_flag = true;
+                }
+            }
+
+            // Check #5d - arg not modifiable l-value for pass by ref param
+            else if(thisParam.isPassByReference())
+            {
+                if(!thisArg.isModLValue())
+                {
+                    m_nNumErrors++;
+                    m_errors.print(Formatter.toString(ErrorMsg.error5c_Call, thisArg.getName(), thisArg.getType().getName()));
+                    error_flag = true;
+                }
+            }
+        }
+
+        if(error_flag)
+        {
+            // Error occured in at least one arg, return error
+            return (new ErrorSTO("DoFuncCall - Check 5"));
+        }
+        else
+            // Func call legal, return function return type
+            return (new ExprSTO(funcSTO.getName() + " return type", funcSTO.getReturnType()));
     }
 
 

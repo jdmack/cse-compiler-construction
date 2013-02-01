@@ -117,7 +117,6 @@ non terminal
     StmtList,
     Stmt,
     CodeBlock,
-    OptExprList,
     IfStmt,
     OptElse,
     ForStmt,
@@ -133,7 +132,6 @@ non terminal
     WritePairList,
     WritePair,
     ConstExpr,
-    ExprList,
     OptInit,
     ArrElemsList,
     OptModifierList,
@@ -190,7 +188,9 @@ non terminal Vector
     IdListWOptInit,
     IdListWInit,
     OptParamList,
-    ParamList
+    ParamList,
+    OptExprList,
+    ExprList
     ;
 
 //--------------------------------------------------------------------
@@ -276,10 +276,10 @@ FieldList ::=       Type IdList T_SEMI
     ;
 
 
-FuncDef ::=         T_FUNCTION T_COLON ReturnType OptRef T_ID:_2
+FuncDef ::=         T_FUNCTION T_COLON ReturnType:_1 OptRef T_ID:_2
                     {:
                         ((MyParser) parser).SaveLineNum ();
-                        ((MyParser) parser).DoFuncDecl_1(_2);
+                        ((MyParser) parser).DoFuncDecl_1(_1, _2);
                     :}
                     T_LPAREN OptParamList:_3 T_RPAREN
                     {:
@@ -292,9 +292,9 @@ FuncDef ::=         T_FUNCTION T_COLON ReturnType OptRef T_ID:_2
     ;
 
 
-FuncDecl ::=        T_EXTERN T_FUNCTION T_COLON ReturnType T_ID:_2
+FuncDecl ::=        T_EXTERN T_FUNCTION T_COLON ReturnType:_1 T_ID:_2
                     {:
-                        ((MyParser) parser).DoFuncDecl_1(_2);
+                        ((MyParser) parser).DoFuncDecl_1(_1, _2);
                     :}
                     T_LPAREN OptParamList:_3 T_RPAREN
                     {:
@@ -361,12 +361,16 @@ OptArrayDef ::=     T_LBRACKET ConstExpr T_RBRACKET
     ;
 
 
-ReturnType ::=      SubType OptModifierList
+ReturnType ::=      SubType:_1 OptModifierList
                     {:
                         // You should determine the type and return it here
-                        RESULT = null;
+                        // Basic types right now, returned from SubType
+                        RESULT = _1;
                     :}
     |               T_VOID
+                    {:
+                        RESULT = new VoidType();
+                    :}
     ;
 
 
@@ -430,6 +434,7 @@ ParamList ::=       ParamDecl:_1
     |               ParamList:_1 T_COMMA ParamDecl:_2
                     {:
                         RESULT = _1;
+                        //((Vector<ParamSTO>)RESULT).addElement(_2);   
                         RESULT.addElement(_2);   
                     :}
     ;
@@ -581,13 +586,27 @@ ConstExpr ::=       Expr
     ;
 
 
-OptExprList ::=     ExprList
+OptExprList ::=     ExprList:_1
+                    {:
+                        RESULT = _1;
+                    :}
     |               /* empty */
+                    {:
+                        RESULT = new Vector<ExprSTO>();
+                    :}
     ;
 
 
-ExprList ::=        Expr
-    |               ExprList T_COMMA Expr
+ExprList ::=        Expr:_1
+                    {:
+                        RESULT = new Vector<ExprSTO>();
+                        RESULT.addElement(_1);
+                    :}
+    |               ExprList:_1 T_COMMA Expr:_2
+                    {:
+                        RESULT = (Vector<ExprSTO>)_1;
+                        RESULT.addElement(_2);
+                    :}
     ;
 
 OptExpr ::=         Expr
@@ -837,9 +856,9 @@ Designator2 ::=     Designator2:_1 T_DOT T_ID:_3
                     {:
 			            RESULT = ((MyParser) parser).DoUnaryOp(_2, _1);
                     :}
-    |               Designator2:_1 T_LPAREN OptExprList T_RPAREN
+    |               Designator2:_1 T_LPAREN OptExprList:_2 T_RPAREN
                     {:
-                        ((MyParser) parser).DoFuncCall (_1);
+                        ((MyParser) parser).DoFuncCall (_1, (Vector<ExprSTO>)_2);
                         RESULT = _1;
                     :}
     |               Designator3:_1

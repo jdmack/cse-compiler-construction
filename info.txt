@@ -38,3 +38,5 @@ For Check #3, there are other assignments in grammar not being assigned
     - Also, only did int->float assignability
 
 Make sure action code is in the best place
+
+For Check #5, two more complicated ReturnType instances not handled
