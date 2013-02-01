@@ -318,15 +318,18 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoFormalParams (Vector<String> params)
+    DoFormalParams (Vector<ParamSTO> params)
     {
-        if (m_symtab.getFunc () == null)
+        STO funcSTO;
+
+        if (funcSTO = m_symtab.getFunc () == null)
         {
             m_nNumErrors++;
             m_errors.print ("internal: DoFormalParams says no proc!");
         }
 
-        // insert parameters here
+        // Insert parameters
+        funcSTO.setParameters(params);
     }
 
 
