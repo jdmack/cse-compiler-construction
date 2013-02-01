@@ -429,27 +429,26 @@ ParamList ::=       ParamDecl:_1
                     :}
     |               ParamList:_1 T_COMMA ParamDecl:_2
                     {:
-                        //RESULT = _2;
-                        //RESULT.addElement(_1);   
+                        RESULT = _1;
+                        RESULT.addElement(_2);   
                     :}
     ;
 
 
 ParamDecl ::=       Type:_1 OptRef:_2 T_ID:_3
                     {:
-                        //RESULT = new ParamSTO(_3, _1, _2);
-                        RESULT = new ParamSTO("test"); // just to get it compiling temporarily
+                        RESULT = new ParamSTO(_3, _1, (Boolean)_2);
                     :}
     ;
 
 
 OptRef ::=          T_AMPERSAND
                     {:
-                        RESULT = true;
+                        RESULT = new Boolean(true);
                     :}
     |               /* empty */
                     {:
-                        RESULT = false;
+                        RESULT = new Boolean(false);
                     :}
     ;
 
