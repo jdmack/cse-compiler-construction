@@ -4,6 +4,14 @@
 //---------------------------------------------------------------------
 import java.util.*;
 
+    //----------------------------------------------------------------
+    //    Instance variables.
+    //----------------------------------------------------------------
+    private Stack<Scope> m_stkScopes;
+    private int          m_nLevel;
+    private Scope        m_scopeGlobal;
+    private FuncSTO      m_func = null;
+
 
 class SymbolTable
 {
@@ -122,12 +130,4 @@ class SymbolTable
     public FuncSTO getFunc ()            { return m_func; }
     public void    setFunc (FuncSTO sto) { m_func = sto; }
 
-
-//----------------------------------------------------------------
-//    Instance variables.
-//----------------------------------------------------------------
-    private Stack<Scope> m_stkScopes;
-    private int          m_nLevel;
-    private Scope        m_scopeGlobal;
-    private FuncSTO      m_func = null;
 }
