@@ -12,28 +12,28 @@ class Lexer
     //
     //----------------------------------------------------------------
     public 
-    Lexer (Vector<String> filenames)    
+    Lexer(Vector<String> filenames)    
     {
         //    We'll need to keep track of all files ever read to
         //    make sure no file is included twice.
-        m_lstFiles = new Vector<String> ();
+        m_lstFiles = new Vector<String>();
 
         //    These are the input files to read from
-        m_stkInputs = new Stack<LineNumberPushbackStream> ();
+        m_stkInputs = new Stack<LineNumberPushbackStream>();
 
         //    If there are no files in the stack, default to read
         //    from standard input.
-        if (filenames.isEmpty())
-            m_stkInputs.push (new LineNumberPushbackStream ());
+        if(filenames.isEmpty())
+            m_stkInputs.push(new LineNumberPushbackStream());
         else
         {
-            for (Enumeration<String> e = filenames.elements(); e.hasMoreElements(); )
-                addAFile (e.nextElement(), false);
+            for(Enumeration<String> e = filenames.elements(); e.hasMoreElements(); )
+                addAFile(e.nextElement(), false);
         }
 
         //    Finally, load up the RC keywords to compare against
         //    for IDs.
-        loadKeywords ();
+        loadKeywords();
     }
 
 
@@ -43,33 +43,33 @@ class Lexer
     //    that's what it wants.
     //----------------------------------------------------------------
     public Token
-    GetToken ()
+    GetToken()
     {
         Token        token = null;
 
-        while (token == null)
+        while(token == null)
         {
-            token = getAToken ();
+            token = getAToken();
 
             //    If not an ID, this can go out right away
-            if (token.GetCode () != sym.T_ID)
-                return (token);
+            if(token.GetCode() != sym.T_ID)
+                return(token);
 
             //    Otherwise, check for RC includes first
-            if (!token.GetLexeme ().equals ("INCLUDE"))
-                return (token);
+            if(!token.GetLexeme().equals("INCLUDE"))
+                return(token);
 
-            token = getAToken ();
-            if (token.GetCode () != sym.T_STR_LITERAL)
-                m_errors.print ("illegal include directive \"" +
-                        token.GetLexeme () + "\"");
+            token = getAToken();
+            if(token.GetCode() != sym.T_STR_LITERAL)
+                m_errors.print("illegal include directive \"" +
+                        token.GetLexeme() + "\"");
             else
-                addAFile (token.GetLexeme (), true);
+                addAFile(token.GetLexeme(), true);
 
             token = null;
         }
 
-        return (null);
+        return(null);
     }
 
 
@@ -77,36 +77,36 @@ class Lexer
     //
     //----------------------------------------------------------------
     private Token
-    getAToken ()
+    getAToken()
     {
         Token        token = null;
         char        c;
 
-        while (token == null)
+        while(token == null)
         {
-            c = getChar ();
+            c = getChar();
 
-            if (c == 0)
-                token = new Token (sym.EOF, "");
+            if(c == 0)
+                token = new Token(sym.EOF, "");
 
-            else if (Character.isDigit (c))
-                token = getNumToken (c);
+            else if(Character.isDigit(c))
+                token = getNumToken(c);
 
-            else if (Character.isLetter (c) || c == '_')
-                token = getAlphaToken (c);
+            else if(Character.isLetter(c) || c == '_')
+                token = getAlphaToken(c);
 
-            else if (c == '"' || c == '\'')
-                token = getStrLitToken (c);    
+            else if(c == '"' || c == '\'')
+                token = getStrLitToken(c);    
 
-            else if (c == '\n' || c == '\t' || c == ' ' || c == '\r')
+            else if(c == '\n' || c == '\t' || c == ' ' || c == '\r')
             {
                 //    Ignore all whitespace
             }
             else 
-                token = getPunctToken (c);
+                token = getPunctToken(c);
         }
 
-        return (token);
+        return(token);
     }
 
 
@@ -114,29 +114,29 @@ class Lexer
     //
     //----------------------------------------------------------------
     private Token
-    getAlphaToken (char cFirst)
+    getAlphaToken(char cFirst)
     {
-        StringBuffer        buffer = new StringBuffer (MAXIDLEN);
+        StringBuffer        buffer = new StringBuffer(MAXIDLEN);
         int             nCount = 0;
         char            c;
         boolean            bDone = false;
         String            strLexeme;
         int             nKeyword;
 
-        buffer.append (cFirst);
+        buffer.append(cFirst);
         nCount++;
-        while (!bDone)
+        while(!bDone)
         {
-            c = getChar ();
-            if (Character.isLetter (c) || Character.isDigit (c) || c == '_')
+            c = getChar();
+            if(Character.isLetter(c) || Character.isDigit(c) || c == '_')
             {
-                if (nCount < MAXIDLEN)
+                if(nCount < MAXIDLEN)
                 {
-                    buffer.append (c);
+                    buffer.append(c);
                 }
-                else if (nCount == MAXIDLEN)
+                else if(nCount == MAXIDLEN)
                 {
-                    m_errors.print ("identifier too long");
+                    m_errors.print("identifier too long");
                 }
                 else
                 {
@@ -145,18 +145,18 @@ class Lexer
             }
             else
             {
-                ungetChar (c);
+                ungetChar(c);
                 bDone = true;
             }
         }
 
-        strLexeme = new String (buffer);
-        if ((nKeyword = lookupKeyword (strLexeme)) != 0)
-            return (new Token (nKeyword, new String (buffer)));
-        else if (strLexeme.equals(strLexeme.toUpperCase()))    // all caps?
-            return (new Token (sym.T_ID_U, new String (buffer)));
+        strLexeme = new String(buffer);
+        if((nKeyword = lookupKeyword(strLexeme)) != 0)
+            return(new Token(nKeyword, new String(buffer)));
+        else if(strLexeme.equals(strLexeme.toUpperCase()))    // all caps?
+            return(new Token(sym.T_ID_U, new String(buffer)));
         else
-            return (new Token (sym.T_ID, new String (buffer)));
+            return(new Token(sym.T_ID, new String(buffer)));
     }
 
 
@@ -164,11 +164,11 @@ class Lexer
     //
     //----------------------------------------------------------------
     private Token
-    getNumToken (char cFirst)
+    getNumToken(char cFirst)
     {
         int             nState;
         char            c;
-        StringBuffer        buffer = new StringBuffer (20);
+        StringBuffer        buffer = new StringBuffer(20);
         int             nCount;
         int             nExpCount = 0;
         Token            token = null;
@@ -186,7 +186,7 @@ class Lexer
         final int        S_HEX = 9;
 
 
-        if (cFirst == '0')
+        if(cFirst == '0')
         {
             nState = S_ZEROES;
             nCount = 0;
@@ -195,118 +195,118 @@ class Lexer
         {
             nState = S_DIGITS;
 
-            buffer.append (cFirst);
+            buffer.append(cFirst);
             nCount = 1;
         }
 
-        while (token == null)
+        while(token == null)
         {
-            c = getChar ();
+            c = getChar();
             bAddChar = true;
 
       boolean switchThisChar = true;
 
-      if (nState == S_ZEROES)
+      if(nState == S_ZEROES)
       {
         switchThisChar = false;
 
-        while (c == '0')
+        while(c == '0')
         {
           c = getChar();
         }
         
-        if (c == '.')
+        if(c == '.')
         {
           nState = S_MANTISSA;
         }
-        else if (isOctal(c))
+        else if(isOctal(c))
         {
           buffer.append('0');
           switchThisChar = true;
           nState = S_OCTAL;
         }
-        else if (c == 'x' || c == 'X')
+        else if(c == 'x' || c == 'X')
         {
           buffer.append('0');
           nState = S_HEX;
         }
         else
         {
-          ungetChar (c);
-          token = new Token (sym.T_INT_LITERAL, "0");
+          ungetChar(c);
+          token = new Token(sym.T_INT_LITERAL, "0");
           break;
         }
       }
 
-      if (switchThisChar)
+      if(switchThisChar)
       {
-              switch (nState)
+              switch(nState)
         {
           case S_DIGITS:
 
-            if (c == '.')
+            if(c == '.')
             {
               nState = S_MANTISSA;
             }
-            else if (Character.isDigit (c))
+            else if(Character.isDigit(c))
             {
               nState = S_DIGITS;
             }
             else
             {
-              ungetChar (c);
-              token = new Token (sym.T_INT_LITERAL, 
-                  new String (buffer));
+              ungetChar(c);
+              token = new Token(sym.T_INT_LITERAL, 
+                  new String(buffer));
             }
             break;
 
 
           case S_MANTISSA:
             
-            if (c == 'E' || c == 'D')
+            if(c == 'E' || c == 'D')
             {
               nCount = 0;
               nState = S_EXP;
             }
-            else if (Character.isDigit (c))
+            else if(Character.isDigit(c))
             {
               nState = S_MANTISSA;
             }
             else
             {
-              ungetChar (c);
-              token = new Token (sym.T_FLOAT_LITERAL, 
-                  new String (buffer));
+              ungetChar(c);
+              token = new Token(sym.T_FLOAT_LITERAL, 
+                  new String(buffer));
             }
             break;
 
 
           case S_HEX:
             
-            if (Character.isDigit (c) || isHex (c))
+            if(Character.isDigit(c) || isHex(c))
             {
               nState = S_HEX;
             }
             else
             {
-              ungetChar (c);
-              token = new Token (sym.T_INT_LITERAL,
-                  new String (buffer));
+              ungetChar(c);
+              token = new Token(sym.T_INT_LITERAL,
+                  new String(buffer));
             }
             break;
 
 
           case S_OCTAL:
             
-            if (isOctal(c))
+            if(isOctal(c))
             {
               nState = S_OCTAL;
             }
             else
             {
-              ungetChar (c);
-              token = new Token (sym.T_INT_LITERAL,
-                  new String (buffer));
+              ungetChar(c);
+              token = new Token(sym.T_INT_LITERAL,
+                  new String(buffer));
             }
             break;
 
@@ -314,30 +314,30 @@ class Lexer
           case S_EXP:
             
             bAddChar = false;
-            if (c == '-' || c == '+')
+            if(c == '-' || c == '+')
             {
-              buffer.append (c);
+              buffer.append(c);
               nState = S_EXPSIGN;
             }
-            else if (c == '0')
+            else if(c == '0')
             {
               nState = S_EXPONENT;
               nExpCount = 0;
             }
-            else if (Character.isDigit (c))
+            else if(Character.isDigit(c))
             {
-              buffer.append (c);
+              buffer.append(c);
               nState = S_EXPONENT;
               nExpCount = 1;
             }
             else
             {
-              ungetChar (c);
-              c = buffer.charAt (buffer.length () - 1);
-              ungetChar (c);
-              buffer.deleteCharAt (buffer.length () - 1);
-              token = new Token (sym.T_FLOAT_LITERAL,
-                  new String (buffer));        
+              ungetChar(c);
+              c = buffer.charAt(buffer.length() - 1);
+              ungetChar(c);
+              buffer.deleteCharAt(buffer.length() - 1);
+              token = new Token(sym.T_FLOAT_LITERAL,
+                  new String(buffer));        
             }
             break;
 
@@ -345,28 +345,28 @@ class Lexer
           case S_EXPSIGN:
               
             bAddChar = false;
-            if (c == '0')
+            if(c == '0')
             {
               nState = S_EXPONENT;
               nExpCount = 0;
             }
-            else if (Character.isDigit (c))
+            else if(Character.isDigit(c))
             {
-              buffer.append (c);
+              buffer.append(c);
               nState = S_EXPONENT;
               nExpCount = 1;
             }
             else
             {
-              ungetChar (c);
-              c = buffer.charAt (buffer.length () - 1);
-              ungetChar (c);
-              buffer.deleteCharAt (buffer.length () - 1);
-              c = buffer.charAt (buffer.length () - 1);
-              ungetChar (c);
-              buffer.deleteCharAt (buffer.length () - 1);
-              token = new Token (sym.T_FLOAT_LITERAL,
-                  new String (buffer));        
+              ungetChar(c);
+              c = buffer.charAt(buffer.length() - 1);
+              ungetChar(c);
+              buffer.deleteCharAt(buffer.length() - 1);
+              c = buffer.charAt(buffer.length() - 1);
+              ungetChar(c);
+              buffer.deleteCharAt(buffer.length() - 1);
+              token = new Token(sym.T_FLOAT_LITERAL,
+                  new String(buffer));        
             }
             break;
 
@@ -374,16 +374,16 @@ class Lexer
           case S_EXPONENT:
 
             bAddChar = false;
-            if (c == '0' && nExpCount == 0)
+            if(c == '0' && nExpCount == 0)
             {
               nState = S_EXPONENT;
             }
-            else if (Character.isDigit (c))
+            else if(Character.isDigit(c))
             {
               nExpCount++;
-              if (nExpCount <= MAXEXPLEN)
+              if(nExpCount <= MAXEXPLEN)
               {
-                buffer.append (c);
+                buffer.append(c);
               }
               else
               {
@@ -392,22 +392,22 @@ class Lexer
             }
             else
             {
-              ungetChar (c);
-              if (nExpCount == 0)
-                buffer.append ('0');
-              token = new Token (sym.T_FLOAT_LITERAL,
-                  new String (buffer));        
+              ungetChar(c);
+              if(nExpCount == 0)
+                buffer.append('0');
+              token = new Token(sym.T_FLOAT_LITERAL,
+                  new String(buffer));        
             }
          }
       }
 
-            if (bAddChar)
+            if(bAddChar)
             {
-                if (nCount < MAXNUMLEN)
+                if(nCount < MAXNUMLEN)
                 {
-                    buffer.append (c);
+                    buffer.append(c);
                 }
-                else if (nCount == MAXNUMLEN)
+                else if(nCount == MAXNUMLEN)
                 {
                 }
                 else
@@ -419,28 +419,28 @@ class Lexer
         }
 
         
-        if (bError)
+        if(bError)
         {
-            if (token.GetCode () == sym.T_FLOAT_LITERAL)
+            if(token.GetCode() == sym.T_FLOAT_LITERAL)
             {
-                m_errors.print ("float literal (mantissa) too long");
+                m_errors.print("float literal(mantissa) too long");
             }
-            else if (token.GetCode () == sym.T_CHAR_LITERAL)
+            else if(token.GetCode() == sym.T_CHAR_LITERAL)
             {
-                m_errors.print ("character literal too long");
+                m_errors.print("character literal too long");
             }
             else
             {
-                m_errors.print ("integer literal too long");
+                m_errors.print("integer literal too long");
             }
         }
 
-        if (bExpError)
+        if(bExpError)
         {
-            m_errors.print ("float literal (exponent) too long");
+            m_errors.print("float literal(exponent) too long");
         }
         
-    return (token);
+    return(token);
     }
 
 
@@ -448,22 +448,22 @@ class Lexer
     //
     //----------------------------------------------------------------
     private Token
-    getPunctToken (char cFirst)
+    getPunctToken(char cFirst)
     {
         Token        token = null;
         char        c;
 
-        switch (cFirst)
+        switch(cFirst)
         {
             case '&':
-                if ((c = getChar ()) == '&')
+                if((c = getChar()) == '&')
                 {
-                    token = new Token (sym.T_AND, "&&");
+                    token = new Token(sym.T_AND, "&&");
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_AMPERSAND, "&");
+                    ungetChar(c);
+                    token = new Token(sym.T_AMPERSAND, "&");
                 }
                 break;
 
@@ -471,91 +471,91 @@ class Lexer
                 c = getChar();
                 if(c == ':')
                 {
-                    token = new Token (sym.T_COLONCOLON, "::");
+                    token = new Token(sym.T_COLONCOLON, "::");
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_COLON, ":");
+                    ungetChar(c);
+                    token = new Token(sym.T_COLON, ":");
                 }
                 break;
 
 
             case '=':
-                if ((c = getChar ()) == '=')
+                if((c = getChar()) == '=')
                 {
-                    token = new Token (sym.T_EQU, "==");
+                    token = new Token(sym.T_EQU, "==");
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_ASSIGN, "=");
+                    ungetChar(c);
+                    token = new Token(sym.T_ASSIGN, "=");
                 }
                 break;
 
             case '.':
-                token = new Token (sym.T_DOT, ".");
+                token = new Token(sym.T_DOT, ".");
                 break;
 
             case '|':
-                if ((c = getChar ()) == '|')
+                if((c = getChar()) == '|')
                 {
-                    token = new Token (sym.T_OR, "||");
+                    token = new Token(sym.T_OR, "||");
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_BAR, "|");
+                    ungetChar(c);
+                    token = new Token(sym.T_BAR, "|");
                 }
                 break;
 
             case ',':
-                token = new Token (sym.T_COMMA, ",");
+                token = new Token(sym.T_COMMA, ",");
                 break;
 
             case '>':
                 c = getChar();
                 if(c == '>')
                 {
-                    token = new Token (sym.T_ISTREAM, ">>");
+                    token = new Token(sym.T_ISTREAM, ">>");
                 }
-                else if (c == '=')
+                else if(c == '=')
                 {
-                    token = new Token (sym.T_GTE, ">=");
+                    token = new Token(sym.T_GTE, ">=");
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_GT, ">");
+                    ungetChar(c);
+                    token = new Token(sym.T_GT, ">");
                 }
                 break;
 
             case '{':
-                token = new Token (sym.T_LBRACE, "{");
+                token = new Token(sym.T_LBRACE, "{");
                 break;
 
             case '[':
-                token = new Token (sym.T_LBRACKET, "[");
+                token = new Token(sym.T_LBRACKET, "[");
                 break;
 
             case '(':
-                token = new Token (sym.T_LPAREN, "(");
+                token = new Token(sym.T_LPAREN, "(");
                 break;
 
             case '<':
                 c = getChar();
                 if(c == '<')
                 {
-                    token = new Token (sym.T_OSTREAM, "<<");
+                    token = new Token(sym.T_OSTREAM, "<<");
                 }
-                else if (c == '=')
+                else if(c == '=')
                 {
-                    token = new Token (sym.T_LTE, "<=");
+                    token = new Token(sym.T_LTE, "<=");
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_LT, "<");
+                    ungetChar(c);
+                    token = new Token(sym.T_LT, "<");
                 }
                 break;
 
@@ -563,16 +563,16 @@ class Lexer
                 c = getChar();
                 if(c == '>')
                 {
-                    token = new Token (sym.T_ARROW, "->");
+                    token = new Token(sym.T_ARROW, "->");
                 }
                 else if(c == '-')
                 {
-                    token = new Token (sym.T_MINUSMINUS, "--");
+                    token = new Token(sym.T_MINUSMINUS, "--");
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_MINUS, "-");
+                    ungetChar(c);
+                    token = new Token(sym.T_MINUS, "-");
                 }
                 break;
 
@@ -580,12 +580,12 @@ class Lexer
                 c = getChar();
                 if(c == '=')
                 {
-                    token = new Token (sym.T_NEQ, "!=");
+                    token = new Token(sym.T_NEQ, "!=");
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_NOT, "!");
+                    ungetChar(c);
+                    token = new Token(sym.T_NOT, "!");
                 }
                 break;
 
@@ -593,65 +593,65 @@ class Lexer
                 c = getChar();
                 if(c == '+')
                 {
-                    token = new Token (sym.T_PLUSPLUS, "++");
+                    token = new Token(sym.T_PLUSPLUS, "++");
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_PLUS, "+");
+                    ungetChar(c);
+                    token = new Token(sym.T_PLUS, "+");
                 }
                 break;
 
             case '}':
-                token = new Token (sym.T_RBRACE, "}");
+                token = new Token(sym.T_RBRACE, "}");
                 break;
 
             case ']':
-                token = new Token (sym.T_RBRACKET, "]");
+                token = new Token(sym.T_RBRACKET, "]");
                 break;
 
             case ')':
-                token = new Token (sym.T_RPAREN, ")");
+                token = new Token(sym.T_RPAREN, ")");
                 break;
 
             case ';':
-                token = new Token (sym.T_SEMI, ";");
+                token = new Token(sym.T_SEMI, ";");
                 break;
 
             case '/':
-                if ((c = getChar ()) == '*')
+                if((c = getChar()) == '*')
                 {
-                    readComment ();
+                    readComment();
                 }
-                else if (c == '/')
+                else if(c == '/')
                 {
-                    readCommentLn ();
+                    readCommentLn();
                 }
                 else
                 {
-                    ungetChar (c);
-                    token = new Token (sym.T_SLASH, "/");
+                    ungetChar(c);
+                    token = new Token(sym.T_SLASH, "/");
                 }
                 break;
 
             case '%':
-                token = new Token (sym.T_MOD, "%");
+                token = new Token(sym.T_MOD, "%");
                 break;
 
             case '*':
-                token = new Token (sym.T_STAR, "*");
+                token = new Token(sym.T_STAR, "*");
                 break;
 
             case '^':
-                token = new Token (sym.T_CARET, "^");
+                token = new Token(sym.T_CARET, "^");
                 break;
 
             default:
-                m_errors.print ("unknown character '" + cFirst + "'");
+                m_errors.print("unknown character '" + cFirst + "'");
                 break;
         }
 
-        return (token);
+        return(token);
     }
 
 
@@ -659,25 +659,25 @@ class Lexer
     //
     //----------------------------------------------------------------
     private void
-    readComment ()
+    readComment()
     {
         int         nCount = 1;
         boolean        bSlash = false, bStar = false;
         char        c;
 
-        while (nCount > 0)
+        while(nCount > 0)
         {
-            c = getChar ();
-            switch (c)
+            c = getChar();
+            switch(c)
             {
                 case 0:
-                    m_errors.print ("unterminated comment");
+                    m_errors.print("unterminated comment");
                     nCount = 0;
-                    ungetChar (c);
+                    ungetChar(c);
                     break;
 
                 case '/':
-                    if (bStar)
+                    if(bStar)
                     {
                         nCount--;
                     }
@@ -689,7 +689,7 @@ class Lexer
                     break;
 
                 case '*':
-                    if (bSlash)
+                    if(bSlash)
                     {
                         nCount++;
                         bStar = false;
@@ -713,13 +713,13 @@ class Lexer
     //
     //----------------------------------------------------------------
     private void
-    readCommentLn ()
+    readCommentLn()
     {
         char        c;
 
-        while (true)
+        while(true)
         {
-            c = getChar ();
+            c = getChar();
             if(c == '\n'  || c == '\0')
                 break;
         }
@@ -730,40 +730,40 @@ class Lexer
     //
     //----------------------------------------------------------------
     private Token
-    getStrLitToken (char cFirst)
+    getStrLitToken(char cFirst)
     {
         char            c;
         int             nCount = 0;
-        StringBuffer    buffer = new StringBuffer (MAXSTRLEN);
+        StringBuffer    buffer = new StringBuffer(MAXSTRLEN);
         boolean            bDone = false;
 
-        while (!bDone)
+        while(!bDone)
         {
-            c = getChar ();
+            c = getChar();
 
-            if (c == 0)
+            if(c == 0)
             {
-                m_errors.print ("EOF in string literal");
+                m_errors.print("EOF in string literal");
                 bDone = true;
             }
-            else if (c == '\n')
+            else if(c == '\n')
             {
-                m_errors.print ("newline in string literal", -1);
+                m_errors.print("newline in string literal", -1);
                 bDone = true;
             }
-            else if (c == cFirst)
+            else if(c == cFirst)
             {
                 bDone = true;
             }
             else
             {
-                if (nCount < MAXSTRLEN)
+                if(nCount < MAXSTRLEN)
                 {
-                    buffer.append (c);
+                    buffer.append(c);
                 }
-                else if (nCount == MAXSTRLEN)
+                else if(nCount == MAXSTRLEN)
                 {
-                    m_errors.print ("string literal too long");
+                    m_errors.print("string literal too long");
                 }
                 else
                 {
@@ -772,7 +772,7 @@ class Lexer
             }
         }
 
-        return (new Token (sym.T_STR_LITERAL, new String (buffer)));
+        return(new Token(sym.T_STR_LITERAL, new String(buffer)));
     }
 
 
@@ -780,10 +780,10 @@ class Lexer
     //
     //----------------------------------------------------------------
     private boolean
-    isHex (char c)
+    isHex(char c)
     {
     c = Character.toUpperCase(c);
-        return (c == 'A' || c == 'B' || c == 'C' ||
+        return(c == 'A' || c == 'B' || c == 'C' ||
                 c == 'D' || c == 'E' || c == 'F');
     }
 
@@ -791,9 +791,9 @@ class Lexer
     //
     //----------------------------------------------------------------
     private boolean
-    isOctal (char c)
+    isOctal(char c)
     {
-        return (c == '0' || c == '1' || c == '2' ||
+        return(c == '0' || c == '1' || c == '2' ||
                 c == '3' || c == '4' || c == '5' ||
                 c == '6' || c == '7');
     }
@@ -803,14 +803,14 @@ class Lexer
     //
     //----------------------------------------------------------------
     private int
-    lookupKeyword (String strLexeme)
+    lookupKeyword(String strLexeme)
     {
         Integer        n;
 
-        if ((n = m_htKeywords.get (strLexeme)) != null)
-            return (n.intValue ());
+        if((n = m_htKeywords.get(strLexeme)) != null)
+            return(n.intValue());
         else
-            return (0);
+            return(0);
     }
 
 
@@ -818,41 +818,41 @@ class Lexer
     //
     //----------------------------------------------------------------
     private void
-    loadKeywords ()
+    loadKeywords()
     {
-        m_htKeywords = new Hashtable<String, Integer> ();
+        m_htKeywords = new Hashtable<String, Integer>();
 
-        m_htKeywords.put ("bool", new Integer (sym.T_BOOL));
-        m_htKeywords.put ("break", new Integer (sym.T_BREAK));
-        m_htKeywords.put ("char", new Integer (sym.T_CHAR));
-        m_htKeywords.put ("cin", new Integer (sym.T_CIN));
-        m_htKeywords.put ("continue", new Integer (sym.T_CONTINUE));
-        m_htKeywords.put ("cout", new Integer (sym.T_COUT));
-        m_htKeywords.put ("const", new Integer (sym.T_CONST));
-        m_htKeywords.put ("delete", new Integer (sym.T_DELETE));
-        m_htKeywords.put ("else", new Integer (sym.T_ELSE));
-        m_htKeywords.put ("endl", new Integer (sym.T_ENDL));
-        m_htKeywords.put ("exit", new Integer (sym.T_EXIT));
-        m_htKeywords.put ("extern", new Integer (sym.T_EXTERN));
-        m_htKeywords.put ("false", new Integer (sym.T_FALSE));
-        m_htKeywords.put ("float", new Integer (sym.T_FLOAT));
-        m_htKeywords.put ("for", new Integer (sym.T_FOR));
-        m_htKeywords.put ("function", new Integer (sym.T_FUNCTION));
-        m_htKeywords.put ("funcptr", new Integer (sym.T_FUNCPTR));
-        m_htKeywords.put ("if", new Integer (sym.T_IF));
-        m_htKeywords.put ("int", new Integer (sym.T_INT));
-        m_htKeywords.put ("new", new Integer (sym.T_NEW));
-        m_htKeywords.put ("nullptr", new Integer (sym.T_NULLPTR));
-        m_htKeywords.put ("return", new Integer (sym.T_RETURN));
-        m_htKeywords.put ("sizeof", new Integer (sym.T_SIZEOF));
-        m_htKeywords.put ("static", new Integer (sym.T_STATIC));
-        m_htKeywords.put ("structdef", new Integer (sym.T_STRUCTDEF));
-        m_htKeywords.put ("this", new Integer (sym.T_THIS));
-        m_htKeywords.put ("true", new Integer (sym.T_TRUE));
-        m_htKeywords.put ("typedef", new Integer (sym.T_TYPEDEF));
-        m_htKeywords.put ("void", new Integer (sym.T_VOID));
-        m_htKeywords.put ("while", new Integer (sym.T_WHILE));
-        m_htKeywords.put ("auto", new Integer (sym.T_AUTO));
+        m_htKeywords.put("bool", new Integer(sym.T_BOOL));
+        m_htKeywords.put("break", new Integer(sym.T_BREAK));
+        m_htKeywords.put("char", new Integer(sym.T_CHAR));
+        m_htKeywords.put("cin", new Integer(sym.T_CIN));
+        m_htKeywords.put("continue", new Integer(sym.T_CONTINUE));
+        m_htKeywords.put("cout", new Integer(sym.T_COUT));
+        m_htKeywords.put("const", new Integer(sym.T_CONST));
+        m_htKeywords.put("delete", new Integer(sym.T_DELETE));
+        m_htKeywords.put("else", new Integer(sym.T_ELSE));
+        m_htKeywords.put("endl", new Integer(sym.T_ENDL));
+        m_htKeywords.put("exit", new Integer(sym.T_EXIT));
+        m_htKeywords.put("extern", new Integer(sym.T_EXTERN));
+        m_htKeywords.put("false", new Integer(sym.T_FALSE));
+        m_htKeywords.put("float", new Integer(sym.T_FLOAT));
+        m_htKeywords.put("for", new Integer(sym.T_FOR));
+        m_htKeywords.put("function", new Integer(sym.T_FUNCTION));
+        m_htKeywords.put("funcptr", new Integer(sym.T_FUNCPTR));
+        m_htKeywords.put("if", new Integer(sym.T_IF));
+        m_htKeywords.put("int", new Integer(sym.T_INT));
+        m_htKeywords.put("new", new Integer(sym.T_NEW));
+        m_htKeywords.put("nullptr", new Integer(sym.T_NULLPTR));
+        m_htKeywords.put("return", new Integer(sym.T_RETURN));
+        m_htKeywords.put("sizeof", new Integer(sym.T_SIZEOF));
+        m_htKeywords.put("static", new Integer(sym.T_STATIC));
+        m_htKeywords.put("structdef", new Integer(sym.T_STRUCTDEF));
+        m_htKeywords.put("this", new Integer(sym.T_THIS));
+        m_htKeywords.put("true", new Integer(sym.T_TRUE));
+        m_htKeywords.put("typedef", new Integer(sym.T_TYPEDEF));
+        m_htKeywords.put("void", new Integer(sym.T_VOID));
+        m_htKeywords.put("while", new Integer(sym.T_WHILE));
+        m_htKeywords.put("auto", new Integer(sym.T_AUTO));
     }
 
 
@@ -860,14 +860,14 @@ class Lexer
     //
     //----------------------------------------------------------------
     public int
-    getLineNumber ()
+    getLineNumber()
     {
-        if (m_stkInputs.isEmpty())
+        if(m_stkInputs.isEmpty())
             return 0;
 
         LineNumberPushbackStream        
-            input = m_stkInputs.peek ();
-        return (input.getLineNumber());
+            input = m_stkInputs.peek();
+        return(input.getLineNumber());
     }
 
 
@@ -875,14 +875,14 @@ class Lexer
     //
     //----------------------------------------------------------------
     public String
-    getEPFilename ()
+    getEPFilename()
     {
-        if (m_stkInputs.isEmpty())
+        if(m_stkInputs.isEmpty())
             return "";
         
         LineNumberPushbackStream        
-            input = m_stkInputs.peek ();
-        return (input.getName());
+            input = m_stkInputs.peek();
+        return(input.getName());
     }
 
 
@@ -890,73 +890,73 @@ class Lexer
     //
     //----------------------------------------------------------------
     private boolean
-    addAFile (String strFile, boolean bInclude)
+    addAFile(String strFile, boolean bInclude)
     {
         //    First, see if the file exists
         LineNumberPushbackStream        stream;
                 try
                 {
-                         stream = new LineNumberPushbackStream (strFile);
+                         stream = new LineNumberPushbackStream(strFile);
 
             //    Ok, now see if it has been included already
-            if (m_lstFiles.indexOf(strFile) > 0)
+            if(m_lstFiles.indexOf(strFile) > 0)
             {
-                if (bInclude)
-                    m_errors.print ("multiple included file \"" +
+                if(bInclude)
+                    m_errors.print("multiple included file \"" +
                             strFile + "\"");
                 else
-                    System.out.println ("multiple read file \"" +
+                    System.out.println("multiple read file \"" +
                             strFile + "\"");
-                return (false);
+                return(false);
             }
 
-            m_stkInputs.push (stream);
-            m_lstFiles.addElement (strFile);
+            m_stkInputs.push(stream);
+            m_lstFiles.addElement(strFile);
             
-                } catch (FileNotFoundException e)
+                } catch(FileNotFoundException e)
                 {
-            if (bInclude)
-                m_errors.print ("bad include file \"" +
+            if(bInclude)
+                m_errors.print("bad include file \"" +
                     strFile + "\"");
             else
-                System.out.println ("Error, " + 
+                System.out.println("Error, " + 
                     e.getMessage());
-            return    (false);
+            return  (false);
                 }
 
-        return    (true);
+        return  (true);
     }
 
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     private char
-    getChar ()
+    getChar()
     {
         int        c = 0;
         LineNumberPushbackStream    
                 input;
 
-        while (!m_stkInputs.isEmpty() && c <= 0)
+        while(!m_stkInputs.isEmpty() && c <= 0)
         {
-            input = m_stkInputs.peek ();
+            input = m_stkInputs.peek();
 
             try {
-                c = input.read ();
-            } catch (java.io.IOException e) {
+                c = input.read();
+            } catch(java.io.IOException e) {
                 e.printStackTrace();    
                 c = 0;
             }
             
             //    If at end of file, you can get rid of the file
-            if (c <= 0)
+            if(c <= 0)
                 m_stkInputs.pop();
         }
 
-        if (c < 0)
+        if(c < 0)
             c = 0;
 
-        return ((char)c);
+        return((char)c);
     }
 
 
@@ -964,17 +964,17 @@ class Lexer
     //
     //----------------------------------------------------------------
     private void
-    ungetChar (char c)
+    ungetChar(char c)
     {
-        if (m_stkInputs.isEmpty())
+        if(m_stkInputs.isEmpty())
             return;
 
         LineNumberPushbackStream     input = 
             m_stkInputs.peek();
 
         try {
-            input.unread (c);
-        } catch (java.io.IOException e) {
+            input.unread(c);
+        } catch(java.io.IOException e) {
             e.printStackTrace();    
         }
     }
@@ -984,7 +984,7 @@ class Lexer
     //
     //----------------------------------------------------------------
     public void
-    setErrorPrinter (ErrorPrinter ep)
+    setErrorPrinter(ErrorPrinter ep)
     {
         m_errors = ep;
     }

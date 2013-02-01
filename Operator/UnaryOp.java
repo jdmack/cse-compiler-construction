@@ -19,6 +19,6 @@ class UnaryOp extends Operator
     public STO
     checkOperand(STO operand)
     {
-        return (new ErrorSTO("UnaryOp.checkOperands()"));
+        return(new ErrorSTO("UnaryOp.checkOperands()"));
     }
 }

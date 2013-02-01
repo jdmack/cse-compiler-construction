@@ -22,18 +22,18 @@ class ConstSTO extends STO
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    ConstSTO (String strName)
+    ConstSTO(String strName)
     {
-        super (strName);
+        super(strName);
         m_value = null; // fix this
                 // You may want to change the isModifiable and isAddressable                      
                 // fields as necessary
     }
 
     public 
-    ConstSTO (String strName, Type typ)
+    ConstSTO(String strName, Type typ)
     {
-        super (strName, typ);
+        super(strName, typ);
         m_value = null; // fix this
                 // You may want to change the isModifiable and isAddressable                      
                 // fields as necessary
@@ -43,39 +43,39 @@ class ConstSTO extends STO
     //      Methods
     //---------------------------------------------------------------------
     public boolean
-    isConst () 
+    isConst() 
     {
         return true;
     }
 
     private void
-    setValue (double val) 
+    setValue(double val) 
     {
         m_value = new Double(val);
     }
 
     public Double
-    getValue () 
+    getValue() 
     {
         return m_value;
     }
 
     public int
-    getIntValue () 
+    getIntValue() 
     {
         return m_value.intValue();
     }
 
     public float
-    getFloatValue () 
+    getFloatValue() 
     {
         return m_value.floatValue();
     }
 
     public boolean
-    getBoolValue () 
+    getBoolValue() 
     {
-        return (m_value.intValue() != 0);
+        return(m_value.intValue() != 0);
     }
 
 }

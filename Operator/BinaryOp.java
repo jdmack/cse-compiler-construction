@@ -19,6 +19,6 @@ class BinaryOp extends Operator
     public STO
     checkOperands(STO operand1, STO operand2)
     {
-        return (new ErrorSTO("BinaryOp.checkOperands()"));
+        return(new ErrorSTO("BinaryOp.checkOperands()"));
     }
 }

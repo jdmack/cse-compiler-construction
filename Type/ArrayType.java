@@ -8,7 +8,7 @@ class ArrayType extends CompositeType
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    ArrayType (String strName, int size)
+    ArrayType(String strName, int size)
     {
         super(strName, size);
     }

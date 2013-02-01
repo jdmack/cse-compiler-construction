@@ -19,10 +19,10 @@ class SymbolTable
     //
     //----------------------------------------------------------------
     public 
-    SymbolTable ()
+    SymbolTable()
     {
         m_nLevel = 0;
-        m_stkScopes = new Stack<Scope> ();
+        m_stkScopes = new Stack<Scope>();
         m_scopeGlobal = null;
     }
 
@@ -31,11 +31,11 @@ class SymbolTable
     //
     //----------------------------------------------------------------
     public void
-    insert (STO sto)
+    insert(STO sto)
     {
-        Scope        scope = m_stkScopes.peek ();
+        Scope        scope = m_stkScopes.peek();
 
-        scope.InsertLocal (sto);
+        scope.InsertLocal(sto);
     }
 
 
@@ -43,9 +43,9 @@ class SymbolTable
     //
     //----------------------------------------------------------------
     public STO
-    accessGlobal (String strName)
+    accessGlobal(String strName)
     {
-        return (m_scopeGlobal.access (strName));
+        return(m_scopeGlobal.access(strName));
     }
 
 
@@ -53,11 +53,11 @@ class SymbolTable
     //
     //----------------------------------------------------------------
     public STO
-    accessLocal (String strName)
+    accessLocal(String strName)
     {
-        Scope        scope = m_stkScopes.peek ();
+        Scope        scope = m_stkScopes.peek();
 
-        return (scope.accessLocal (strName));
+        return(scope.accessLocal(strName));
     }
 
 
@@ -65,9 +65,9 @@ class SymbolTable
     //
     //----------------------------------------------------------------
     public STO
-    access (String strName)
+    access(String strName)
     {
-        Stack        stk = new Stack ();
+        Stack        stk = new Stack();
         Scope        scope;
         STO        stoReturn = null;    
 
@@ -75,14 +75,14 @@ class SymbolTable
         stk.addAll(m_stkScopes);
         Collections.reverse(stk);
 
-        for (Enumeration<Scope> e = stk.elements(); e.hasMoreElements(); )
+        for(Enumeration<Scope> e = stk.elements(); e.hasMoreElements(); )
         {
             scope = e.nextElement();
-            if ((stoReturn = scope.access (strName)) != null)
+            if((stoReturn = scope.access(strName)) != null)
                 return    stoReturn;
         }
 
-        return (null);
+        return(null);
     }
 
 
@@ -90,15 +90,15 @@ class SymbolTable
     //
     //----------------------------------------------------------------
     public void
-    openScope ()
+    openScope()
     {
         Scope        scope = new Scope();
 
         //    The first scope created will be the global scope.
-        if (m_scopeGlobal == null)
+        if(m_scopeGlobal == null)
             m_scopeGlobal = scope;
 
-        m_stkScopes.push (scope);
+        m_stkScopes.push(scope);
         m_nLevel++;
     }
 
@@ -107,9 +107,9 @@ class SymbolTable
     //
     //----------------------------------------------------------------
     public void
-    closeScope ()
+    closeScope()
     {
-        m_stkScopes.pop ();
+        m_stkScopes.pop();
         m_nLevel--;
     }
 
@@ -118,7 +118,7 @@ class SymbolTable
     //
     //----------------------------------------------------------------
     public int
-    getLevel ()
+    getLevel()
     {
         return m_nLevel;
     }
@@ -127,7 +127,7 @@ class SymbolTable
     //----------------------------------------------------------------
     //    This is the function currently being parsed.
     //----------------------------------------------------------------
-    public FuncSTO getFunc ()            { return m_func; }
-    public void    setFunc (FuncSTO sto) { m_func = sto; }
+    public FuncSTO getFunc()            { return m_func; }
+    public void    setFunc(FuncSTO sto) { m_func = sto; }
 
 }

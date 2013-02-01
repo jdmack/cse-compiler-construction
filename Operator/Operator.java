@@ -38,7 +38,7 @@ abstract class Operator
 /*  public STO 
     checkOperands(STO operand1, STO operand2)
     {
-        return (new ErrorSTO("Operator: abstract class")); 
+        return(new ErrorSTO("Operator: abstract class")); 
     }
 */
 }

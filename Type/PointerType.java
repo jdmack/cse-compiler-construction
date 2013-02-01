@@ -8,7 +8,7 @@ class PointerType extends PtrGrpType
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    PointerType (String strName, int size)
+    PointerType(String strName, int size)
     {
         super(strName, size);
     }

@@ -11,26 +11,26 @@ class LineNumberPushbackStream extends PushbackInputStream
     //
     //-----------------------------------------------------------------
     public 
-    LineNumberPushbackStream ()
+    LineNumberPushbackStream()
     {
-        this (System.in);
+        this(System.in);
         m_streamName = "(stdin)";
     }
 
     public 
-    LineNumberPushbackStream (String strFilename)
+    LineNumberPushbackStream(String strFilename)
     throws FileNotFoundException
     {
-        this (new FileInputStream (strFilename));
+        this(new FileInputStream(strFilename));
         m_streamName = strFilename;
     }
 
     public 
-    LineNumberPushbackStream (InputStream in)
+    LineNumberPushbackStream(InputStream in)
     {
         //    You should never push back more than 3 characters
-        //    (12e-X) but double up to be safe.
-        super (in, 6);
+        //  (12e-X) but double up to be safe.
+        super(in, 6);
 
         m_nLine = 1;
         m_streamName = "";
@@ -40,7 +40,7 @@ class LineNumberPushbackStream extends PushbackInputStream
     //
     //-----------------------------------------------------------------
     public String
-    getName ()
+    getName()
     {
         return    m_streamName;
     }
@@ -50,9 +50,9 @@ class LineNumberPushbackStream extends PushbackInputStream
     //
     //-----------------------------------------------------------------
     public int
-    getLineNumber ()
+    getLineNumber()
     {
-        return (m_nLine);
+        return(m_nLine);
     }
 
 
@@ -60,7 +60,7 @@ class LineNumberPushbackStream extends PushbackInputStream
     //
     //-----------------------------------------------------------------
     public void
-    incLineNumber ()
+    incLineNumber()
     {
         m_nLine++;
     }
@@ -70,7 +70,7 @@ class LineNumberPushbackStream extends PushbackInputStream
     //
     //-----------------------------------------------------------------
     public void
-    decLineNumber ()
+    decLineNumber()
     {
         m_nLine--;
     }
@@ -80,12 +80,12 @@ class LineNumberPushbackStream extends PushbackInputStream
     //
     //-----------------------------------------------------------------
     public int
-    read () 
+    read() 
     throws IOException
     {
         int    nextChar = super.read();
 
-        if (nextChar == '\n')
+        if(nextChar == '\n')
             incLineNumber();
 
         return    nextChar;
@@ -96,12 +96,12 @@ class LineNumberPushbackStream extends PushbackInputStream
     //
     //-----------------------------------------------------------------
     public void
-    unread (int b) 
+    unread(int b) 
     throws IOException
     {
-        super.unread (b);
+        super.unread(b);
 
-        if (b == '\n')
+        if(b == '\n')
             decLineNumber();
     }    
 

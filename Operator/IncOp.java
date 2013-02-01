@@ -22,15 +22,15 @@ class IncOp extends UnaryOp
         STO resultSTO;
 
         // Check #2 - increment, decrement - operand numeric
-        if((!operand.getType().isNumeric()) && (!operand.getType().isPointer()))
+        if((!operand.getType().isNumeric()) &&(!operand.getType().isPointer()))
         {
-            return (new ErrorSTO(Formatter.toString(ErrorMsg.error2_Type, operand.getType().getName(), this.getName())));
+            return(new ErrorSTO(Formatter.toString(ErrorMsg.error2_Type, operand.getType().getName(), this.getName())));
         }
 
         // Check #2 - increment,  decrement - operand not modifiable L-value
         if(!operand.isModLValue())
         {
-            return (new ErrorSTO(Formatter.toString(ErrorMsg.error2_Lval, this.getName())));
+            return(new ErrorSTO(Formatter.toString(ErrorMsg.error2_Lval, this.getName())));
         }
 
         // Passed checks, determine result type
@@ -44,7 +44,7 @@ class IncOp extends UnaryOp
         }
         else
         {
-            return (new ErrorSTO("This will never happen, making compiler happy"));
+            return(new ErrorSTO("This will never happen, making compiler happy"));
         }
 
         return resultSTO;

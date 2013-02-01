@@ -8,7 +8,7 @@ class StructType extends CompositeType
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    StructType (String strName, int size)
+    StructType(String strName, int size)
     {
         super(strName, size);
     }

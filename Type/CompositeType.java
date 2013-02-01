@@ -9,7 +9,7 @@ class CompositeType extends Type
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    CompositeType (String strName, int size)
+    CompositeType(String strName, int size)
     {
         super(strName, size);
     }

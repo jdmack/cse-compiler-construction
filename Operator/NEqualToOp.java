@@ -22,9 +22,9 @@ class NEqualToOp extends ComparisonOp
         STO resultSTO;
 
         // Check #1 - NotEqualTo - Both operands numeric
-        if((!(operand1.getType().isNumeric() && operand2.getType().isNumeric())) && (!(operand1.getType().isBool() && operand2.getType().isBool())))
+        if((!(operand1.getType().isNumeric() && operand2.getType().isNumeric())) &&(!(operand1.getType().isBool() && operand2.getType().isBool())))
         {
-            return (new ErrorSTO(Formatter.toString(ErrorMsg.error1b_Expr, operand1.getType().getName(), this.getName(), operand2.getType().getName())));
+            return(new ErrorSTO(Formatter.toString(ErrorMsg.error1b_Expr, operand1.getType().getName(), this.getName(), operand2.getType().getName())));
         }
 
         resultSTO = new ExprSTO("NEqualToOp.checkOperands() Result", new BoolType());

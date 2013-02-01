@@ -29,7 +29,7 @@ class MyParser extends parser
     MyParser(Lexer lexer, ErrorPrinter errors)
     {
         m_lexer = lexer;
-        m_symtab = new SymbolTable ();
+        m_symtab = new SymbolTable();
         m_errors = errors;
         m_nNumErrors = 0;
     }
@@ -41,7 +41,7 @@ class MyParser extends parser
     public boolean
     Ok()
     {
-        return (m_nNumErrors == 0);
+        return(m_nNumErrors == 0);
     }
 
 
@@ -51,14 +51,14 @@ class MyParser extends parser
     public Symbol
     scan()
     {
-        Token t = m_lexer.GetToken ();
+        Token t = m_lexer.GetToken();
 
         // We'll save the last token read for error messages.
         // Sometimes, the token is lost reading for the next
         // token which can be null.
-        m_strLastLexeme = t.GetLexeme ();
+        m_strLastLexeme = t.GetLexeme();
 
-        switch (t.GetCode ())
+        switch(t.GetCode())
         {
             case sym.T_ID:
             case sym.T_ID_U:
@@ -66,9 +66,9 @@ class MyParser extends parser
             case sym.T_FLOAT_LITERAL:
             case sym.T_INT_LITERAL:
             case sym.T_CHAR_LITERAL:
-                return (new Symbol (t.GetCode (), t.GetLexeme ()));
+                return(new Symbol(t.GetCode(), t.GetLexeme()));
             default:
-                return (new Symbol (t.GetCode ()));
+                return(new Symbol(t.GetCode()));
         }
     }
 
@@ -86,10 +86,10 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     public void
-    report_fatal_error (Symbol s)
+    report_fatal_error(Symbol s)
     {
         m_nNumErrors++;
-        if (m_bSyntaxError)
+        if(m_bSyntaxError)
         {
             m_nNumErrors++;
 
@@ -98,7 +98,7 @@ class MyParser extends parser
             //    be null.  Instead, we saved the last token
             //    read in to give a more meaningful error 
             //    message.
-            m_errors.print (Formatter.toString (ErrorMsg.syntax_error, m_strLastLexeme));
+            m_errors.print(Formatter.toString(ErrorMsg.syntax_error, m_strLastLexeme));
         }
     }
 
@@ -107,9 +107,9 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     public void
-    unrecovered_syntax_error (Symbol s)
+    unrecovered_syntax_error(Symbol s)
     {
-        report_fatal_error (s);
+        report_fatal_error(s);
     }
 
 
@@ -117,13 +117,13 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     public void
-    DisableSyntaxError ()
+    DisableSyntaxError()
     {
         m_bSyntaxError = false;
     }
 
     public void
-    EnableSyntaxError ()
+    EnableSyntaxError()
     {
         m_bSyntaxError = true;
     }
@@ -133,27 +133,27 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     public String 
-    GetFile ()
+    GetFile()
     {
-        return (m_lexer.getEPFilename ());
+        return(m_lexer.getEPFilename());
     }
 
     public int
-    GetLineNum ()
+    GetLineNum()
     {
-        return (m_lexer.getLineNumber ());
+        return(m_lexer.getLineNumber());
     }
 
     public void
-    SaveLineNum ()
+    SaveLineNum()
     {
-        m_nSavedLineNum = m_lexer.getLineNumber ();
+        m_nSavedLineNum = m_lexer.getLineNumber();
     }
 
     public int
-    GetSavedLineNum ()
+    GetSavedLineNum()
     {
-        return (m_nSavedLineNum);
+        return(m_nSavedLineNum);
     }
 
 
@@ -164,7 +164,7 @@ class MyParser extends parser
     DoProgramStart()
     {
         // Opens the global scope.
-        m_symtab.openScope ();
+        m_symtab.openScope();
     }
 
 
@@ -174,7 +174,7 @@ class MyParser extends parser
     void
     DoProgramEnd()
     {
-        m_symtab.closeScope ();
+        m_symtab.closeScope();
     }
 
 
@@ -182,16 +182,16 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoVarDecl (Type type, Vector<String> lstIDs)
+    DoVarDecl(Type type, Vector<String> lstIDs)
     {
-        for (int i = 0; i < lstIDs.size (); i++)
+        for(int i = 0; i < lstIDs.size(); i++)
         {
-            String id = lstIDs.elementAt (i);
+            String id = lstIDs.elementAt(i);
         
-            if (m_symtab.accessLocal (id) != null)
+            if(m_symtab.accessLocal(id) != null)
             {
                 m_nNumErrors++;
-                m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
+                m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
 
             VarSTO sto = new VarSTO(id, type);
@@ -204,20 +204,20 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoExternDecl (Vector<String> lstIDs)
+    DoExternDecl(Vector<String> lstIDs)
     {
-        for (int i = 0; i < lstIDs.size (); i++)
+        for(int i = 0; i < lstIDs.size(); i++)
         {
-            String id = lstIDs.elementAt (i);
+            String id = lstIDs.elementAt(i);
 
-            if (m_symtab.accessLocal (id) != null)
+            if(m_symtab.accessLocal(id) != null)
             {
                 m_nNumErrors++;
-                m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
+                m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
 
-            VarSTO sto = new VarSTO (id);
-            m_symtab.insert (sto);
+            VarSTO sto = new VarSTO(id);
+            m_symtab.insert(sto);
         }
     }
 
@@ -226,42 +226,20 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoConstDecl (Vector<String> lstIDs)
+    DoConstDecl(Vector<String> lstIDs)
     {
-        for (int i = 0; i < lstIDs.size (); i++)
+        for(int i = 0; i < lstIDs.size(); i++)
         {
-            String id = lstIDs.elementAt (i);
+            String id = lstIDs.elementAt(i);
 
-            if (m_symtab.accessLocal (id) != null)
+            if(m_symtab.accessLocal(id) != null)
             {
                 m_nNumErrors++;
-                m_errors.print (Formatter.toString (ErrorMsg.redeclared_id, id));
-            }
-        
-            ConstSTO sto = new ConstSTO (id);
-            m_symtab.insert (sto);
-        }
-    }
-
-
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
-    void
-    DoTypedefDecl (Vector<String> lstIDs)
-    {
-        for (int i = 0; i < lstIDs.size (); i++)
-        {
-            String id = lstIDs.elementAt (i);
-
-            if (m_symtab.accessLocal (id) != null)
-            {
-                m_nNumErrors++;
-                m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
+                m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
         
-            TypedefSTO sto = new TypedefSTO (id);
-            m_symtab.insert (sto);
+            ConstSTO sto = new ConstSTO(id);
+            m_symtab.insert(sto);
         }
     }
 
@@ -270,16 +248,38 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoStructdefDecl (String id)
+    DoTypedefDecl(Vector<String> lstIDs)
     {
-        if (m_symtab.accessLocal (id) != null)
+        for(int i = 0; i < lstIDs.size(); i++)
+        {
+            String id = lstIDs.elementAt(i);
+
+            if(m_symtab.accessLocal(id) != null)
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
+            }
+        
+            TypedefSTO sto = new TypedefSTO(id);
+            m_symtab.insert(sto);
+        }
+    }
+
+
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
+    void
+    DoStructdefDecl(String id)
+    {
+        if(m_symtab.accessLocal(id) != null)
         {
             m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
+            m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
         
-        TypedefSTO sto = new TypedefSTO (id);
-        m_symtab.insert (sto);
+        TypedefSTO sto = new TypedefSTO(id);
+        m_symtab.insert(sto);
     }
 
 
@@ -289,21 +289,21 @@ class MyParser extends parser
     void
     DoFuncDecl_1(Type returnType, String id)
     {
-        if (m_symtab.accessLocal (id) != null)
+        if(m_symtab.accessLocal(id) != null)
         {
             m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.redeclared_id, id));
+            m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
     
-        FuncSTO sto = new FuncSTO (id);
+        FuncSTO sto = new FuncSTO(id);
         
         // Set return type
         sto.setReturnType(returnType);
 
-        m_symtab.insert (sto);
+        m_symtab.insert(sto);
 
-        m_symtab.openScope ();
-        m_symtab.setFunc (sto);
+        m_symtab.openScope();
+        m_symtab.setFunc(sto);
     }
 
 
@@ -313,8 +313,8 @@ class MyParser extends parser
     void
     DoFuncDecl_2()
     {
-        m_symtab.closeScope ();
-        m_symtab.setFunc (null);
+        m_symtab.closeScope();
+        m_symtab.setFunc(null);
     }
 
 
@@ -329,7 +329,7 @@ class MyParser extends parser
         if((funcSTO = m_symtab.getFunc()) == null)
         {
             m_nNumErrors++;
-            m_errors.print ("internal: DoFormalParams says no proc!");
+            m_errors.print("internal: DoFormalParams says no proc!");
             return;
         }
 
@@ -345,7 +345,7 @@ class MyParser extends parser
     DoBlockOpen()
     {
         // Open a scope.
-        m_symtab.openScope ();
+        m_symtab.openScope();
     }
 
 
@@ -355,7 +355,7 @@ class MyParser extends parser
     void
     DoBlockClose()
     {
-        m_symtab.closeScope ();
+        m_symtab.closeScope();
     }
 
 
@@ -363,7 +363,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoAssignExpr (STO stoDes, STO stoValue)
+    DoAssignExpr(STO stoDes, STO stoValue)
     {
         // Check for previous errors in line and short circuit
         if(stoDes.isError())
@@ -376,18 +376,18 @@ class MyParser extends parser
         }
 
         // Check #3a - illegal assignment - not modifiable L-value
-        if (!stoDes.isModLValue())
+        if(!stoDes.isModLValue())
         {
             m_nNumErrors++;
             m_errors.print(ErrorMsg.error3a_Assign);
-            return (new ErrorSTO("DoAssignExpr Error - not mod-L-Value"));
+            return(new ErrorSTO("DoAssignExpr Error - not mod-L-Value"));
         }
 
         if(!stoValue.getType().isAssignable(stoDes.getType()))
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, stoValue.getType().getName(), stoDes.getType().getName()));
-            return (new ErrorSTO("DoAssignExpr Error - bad types"));
+            return(new ErrorSTO("DoAssignExpr Error - bad types"));
         }
         
         return stoDes;
@@ -400,15 +400,15 @@ class MyParser extends parser
     STO
     DoFuncCall(STO sto, Vector<ExprSTO> args)
     {
-        if (!sto.isFunc())
+        if(!sto.isFunc())
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.not_function, sto.getName()));
-            return (new ErrorSTO(sto.getName ()));
+            return(new ErrorSTO(sto.getName()));
         }
     
         // We know it's a function, do function call checks
-        FuncSTO funcSTO = (FuncSTO)sto;
+        FuncSTO funcSTO =(FuncSTO)sto;
 
         // Check #5
         // Check #5a - # args = # params
@@ -416,7 +416,7 @@ class MyParser extends parser
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error5n_Call, args.size(), funcSTO.getNumOfParams()));
-            return (new ErrorSTO("DoFuncCall - # args"));
+            return(new ErrorSTO("DoFuncCall - # args"));
         }
 
         // Now we check each arg individually, accepting one error per arg
@@ -466,11 +466,11 @@ class MyParser extends parser
         if(error_flag)
         {
             // Error occured in at least one arg, return error
-            return (new ErrorSTO("DoFuncCall - Check 5"));
+            return(new ErrorSTO("DoFuncCall - Check 5"));
         }
         else
             // Func call legal, return function return type
-            return (new ExprSTO(funcSTO.getName() + " return type", funcSTO.getReturnType()));
+            return(new ExprSTO(funcSTO.getName() + " return type", funcSTO.getReturnType()));
     }
 
 
@@ -478,7 +478,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoDesignator2_Dot (STO sto, String strID)
+    DoDesignator2_Dot(STO sto, String strID)
     {
         // Good place to do the struct checks
 
@@ -490,7 +490,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoDesignator2_Array (STO sto)
+    DoDesignator2_Array(STO sto)
     {
         // Good place to do the array checks
 
@@ -502,17 +502,17 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoDesignator3_GlobalID (String strID)
+    DoDesignator3_GlobalID(String strID)
     {
         STO sto;
 
-        if ((sto = m_symtab.accessGlobal (strID)) == null)
+        if((sto = m_symtab.accessGlobal(strID)) == null)
         {
             m_nNumErrors++;
-             m_errors.print (Formatter.toString(ErrorMsg.error0g_Scope, strID));    
-            sto = new ErrorSTO (strID);
+             m_errors.print(Formatter.toString(ErrorMsg.error0g_Scope, strID));    
+            sto = new ErrorSTO(strID);
         }
-        return (sto);
+        return(sto);
     }
 
 
@@ -520,17 +520,17 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoDesignator3_ID (String strID)
+    DoDesignator3_ID(String strID)
     {
         STO sto;
 
-        if ((sto = m_symtab.access (strID)) == null)
+        if((sto = m_symtab.access(strID)) == null)
         {
             m_nNumErrors++;
-             m_errors.print (Formatter.toString(ErrorMsg.undeclared_id, strID));    
-            sto = new ErrorSTO (strID);
+             m_errors.print(Formatter.toString(ErrorMsg.undeclared_id, strID));    
+            sto = new ErrorSTO(strID);
         }
-        return (sto);
+        return(sto);
     }
 
 
@@ -538,32 +538,32 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoQualIdent (String strID)
+    DoQualIdent(String strID)
     {
         STO sto;
 
-        if ((sto = m_symtab.access (strID)) == null)
+        if((sto = m_symtab.access(strID)) == null)
         {
             m_nNumErrors++;
-             m_errors.print (Formatter.toString(ErrorMsg.undeclared_id, strID));    
-            return (new ErrorSTO (strID));
+             m_errors.print(Formatter.toString(ErrorMsg.undeclared_id, strID));    
+            return(new ErrorSTO(strID));
         }
 
-        if (!sto.isTypedef())
+        if(!sto.isTypedef())
         {
             m_nNumErrors++;
-            m_errors.print (Formatter.toString(ErrorMsg.not_type, sto.getName ()));
-            return (new ErrorSTO (sto.getName ()));
+            m_errors.print(Formatter.toString(ErrorMsg.not_type, sto.getName()));
+            return(new ErrorSTO(sto.getName()));
         }
 
-        return (sto);
+        return(sto);
     }
 
     //----------------------------------------------------------------
     //      DoBinaryOp
     //----------------------------------------------------------------
     STO
-    DoBinaryOp (BinaryOp op, STO operand1, STO operand2)
+    DoBinaryOp(BinaryOp op, STO operand1, STO operand2)
     {
         // Check for previous errors in line and short circuit
         if(operand1.isError())
@@ -592,7 +592,7 @@ class MyParser extends parser
     //      DoUnaryOp
     //----------------------------------------------------------------
     STO
-    DoUnaryOp (UnaryOp op, STO operand)
+    DoUnaryOp(UnaryOp op, STO operand)
     {
         // Check for previous errors in line and short circuit
         if(operand.isError())
@@ -617,7 +617,7 @@ class MyParser extends parser
     //      DoWhileExpr
     //----------------------------------------------------------------
     STO
-    DoWhileExpr (STO stoExpr)
+    DoWhileExpr(STO stoExpr)
     {
         // Check for previous errors in line and short circuit
         if(stoExpr.isError())
@@ -626,11 +626,11 @@ class MyParser extends parser
         }
 
         // Check #4 - while expr - int or bool
-        if((!stoExpr.getType().isInt()) && (!stoExpr.getType().isBool()))
+        if((!stoExpr.getType().isInt()) &&(!stoExpr.getType().isBool()))
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
-            return (new ErrorSTO("DoWhile error"));
+            return(new ErrorSTO("DoWhile error"));
         }
 
         return stoExpr;
@@ -640,7 +640,7 @@ class MyParser extends parser
     //      DoIfExpr
     //----------------------------------------------------------------
     STO
-    DoIfExpr (STO stoExpr)
+    DoIfExpr(STO stoExpr)
     {
         // Check for previous errors in line and short circuit
         if(stoExpr.isError())
@@ -649,14 +649,27 @@ class MyParser extends parser
         }
 
         // Check #4 - if expr - int or bool
-        if((!stoExpr.getType().isInt()) && (!stoExpr.getType().isBool()))
+        if((!stoExpr.getType().isInt()) &&(!stoExpr.getType().isBool()))
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
-            return (new ErrorSTO("DoIf error"));
+            return(new ErrorSTO("DoIf error"));
         }
 
         return stoExpr;
     }
+
+    //----------------------------------------------------------------
+    //      DoReturnStmt
+    //----------------------------------------------------------------
+    /*
+    STO
+    DoReturnStmt(STO stoExpr)
+    {
+
+
+    }
+   */ 
+
 
 }

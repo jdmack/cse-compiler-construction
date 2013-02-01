@@ -21,10 +21,10 @@ private static int nextIndex(String template) {
     int    patPos = -1;
     int    patNum;
 
-    for (patNum = 0 ; patNum < patterns.length ; patNum++) {
+    for(patNum = 0 ; patNum < patterns.length ; patNum++) {
         int     pos = template.indexOf(patterns[patNum]);
         // least match so far
-        if (pos != -1 && (patPos == -1 || pos < patPos))  
+        if(pos != -1 &&(patPos == -1 || pos < patPos))  
                   patPos = pos;
         // System.out.println(template + " " + patNum + " " 
         //    + pos + " " + patPos);
@@ -39,7 +39,7 @@ private static int nextIndex(String template) {
 /////////////////////////////////////////////////////////////////
 public static String toString(String template, Iterator<String> strings) {
     // System.out.println(template + " " + strings);
-    if (!strings.hasNext()) return template;
+    if(!strings.hasNext()) return template;
 
     String    result;
     int        patPos = nextIndex(template);
@@ -134,7 +134,7 @@ public static String toString(String template, int s1, int s2, int s3) {
 }
 
 /////////////////////////////////////////////////////////////////
-//     Test driver: test all/most methods (number, type).
+//     Test driver: test all/most methods(number, type).
 /////////////////////////////////////////////////////////////////
 public static void main(String args[]) throws IOException {
     System.out.println(Formatter.toString("Hel %D lo", 100));

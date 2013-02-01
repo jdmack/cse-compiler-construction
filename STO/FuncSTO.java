@@ -23,7 +23,7 @@ class FuncSTO extends STO
         setNumOfParams(0);
         setParameters(new Vector());        
         setReturnByRef(false);
-        setReturnType (null);
+        setReturnType(null);
     }
 
     public 
@@ -33,7 +33,7 @@ class FuncSTO extends STO
         setNumOfParams(params.size());
         setParameters(params);        
         setReturnByRef(retByRef);
-        setReturnType (null);
+        setReturnType(null);
     }
 
     //---------------------------------------------------------------------
@@ -47,7 +47,7 @@ class FuncSTO extends STO
 
     //----------------------------------------------------------------
     // This is the return type of the function. This is different from 
-    // the function's type (for function pointers).
+    // the function's type(for function pointers).
     //----------------------------------------------------------------
     public void
     setReturnType(Type typ)

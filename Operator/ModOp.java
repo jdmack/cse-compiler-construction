@@ -25,12 +25,12 @@ class ModOp extends ArithmeticOp
         // Check left operand to be int
         if((!operand1.getType().isInt()))
         {
-            return (new ErrorSTO (Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), this.getName(), "int")));    
+            return(new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand1.getType().getName(), this.getName(), "int")));    
         }
         // Check right operand to be int
         else if((!operand2.getType().isInt()))
         {
-            return (new ErrorSTO (Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName(), "int")));    
+            return(new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName(), "int")));    
         }
 
         resultSTO = new ExprSTO("ModOp.checkOperands() Result", new IntType());

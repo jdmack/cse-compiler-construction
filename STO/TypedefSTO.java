@@ -9,22 +9,22 @@ class TypedefSTO extends STO
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    TypedefSTO (String strName)
+    TypedefSTO(String strName)
     {
-        super (strName);
+        super(strName);
     }
 
     public 
-    TypedefSTO (String strName, Type typ)
+    TypedefSTO(String strName, Type typ)
     {
-        super (strName, typ);
+        super(strName, typ);
     }
 
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
     public boolean
-    isTypedef ()
+    isTypedef()
     {
         return true;
     }

@@ -11,9 +11,9 @@ class Scope
     //
     //----------------------------------------------------------------
     public 
-    Scope ()
+    Scope()
     {
-        m_lstLocals = new Vector<STO> ();
+        m_lstLocals = new Vector<STO>();
     }
 
 
@@ -21,9 +21,9 @@ class Scope
     //
     //----------------------------------------------------------------
     public STO
-    access (String strName)
+    access(String strName)
     {
-        return    accessLocal (strName);
+        return    accessLocal(strName);
     }
 
 
@@ -31,19 +31,19 @@ class Scope
     //
     //----------------------------------------------------------------
     public STO
-    accessLocal (String strName)
+    accessLocal(String strName)
     {
         STO        sto = null;
 
-        for (int i = 0; i < m_lstLocals.size (); i++)
+        for(int i = 0; i < m_lstLocals.size(); i++)
         {
-            sto = m_lstLocals.elementAt (i);
+            sto = m_lstLocals.elementAt(i);
 
-            if (sto.getName ().equals (strName))
-                return (sto);
+            if(sto.getName().equals(strName))
+                return(sto);
         }
 
-        return (null);
+        return(null);
     }
 
 
@@ -51,9 +51,9 @@ class Scope
     //
     //----------------------------------------------------------------
     public void
-    InsertLocal (STO sto)
+    InsertLocal(STO sto)
     {
-        m_lstLocals.addElement (sto);
+        m_lstLocals.addElement(sto);
     }
 
 

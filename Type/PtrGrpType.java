@@ -9,7 +9,7 @@ class PtrGrpType extends CompositeType
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    PtrGrpType (String strName, int size)
+    PtrGrpType(String strName, int size)
     {
         super(strName, size);
     }

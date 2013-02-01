@@ -69,7 +69,7 @@ abstract class STO
     //----------------------------------------------------------------
     // Addressable refers to if the object has an address. Variables
     // and declared constants have an address, whereas results from 
-    // expression like (x + y) and literal constants like 77 do not 
+    // expression like(x + y) and literal constants like 77 do not 
     // have an address.
     //----------------------------------------------------------------
     public boolean
@@ -120,7 +120,7 @@ abstract class STO
     //----------------------------------------------------------------
     //    It will be helpful to ask a STO what specific STO it is.
     //    The Java operator instanceof will do this, but these methods 
-    //    will allow more flexibility (ErrorSTO is an example of the
+    //    will allow more flexibility(ErrorSTO is an example of the
     //    flexibility needed).
     //----------------------------------------------------------------
     public boolean isVar()     { return false; }

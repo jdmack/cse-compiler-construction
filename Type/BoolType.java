@@ -14,19 +14,19 @@ class BoolType extends BasicType
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    BoolType ()
+    BoolType()
     {
         this(BOOL_NAME, BOOL_SIZE);
     }
 
     public 
-    BoolType (String strName)
+    BoolType(String strName)
     {
         this(strName, BOOL_SIZE);
     }
 
     public 
-    BoolType (String strName, int size)
+    BoolType(String strName, int size)
     {
         super(strName, size);
     }
