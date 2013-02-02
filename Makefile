@@ -22,15 +22,11 @@ SOURCES = \
 
 new:
 	make clean
-	cp src/* ./
 	make rc
-	rm *.java rc.cup
 
 debug:
 	make clean
-	cp src/* ./
 	make rcdbg
-	rm *.java rc.cup
 
 rc: $(SOURCES) parser.java sym.java
 	javac RC.java
@@ -46,7 +42,7 @@ parser.java: rc.cup
 	javacup < rc.cup
 
 clean:
-	rm -f rc.cup *.java *.class RC parser.java sym.java a.out core rc.s
+	rm -f *.class RC parser.java sym.java a.out core rc.s
 
 tar:
 	tar cvf rc.tar $(SOURCES) Makefile RC.sh
