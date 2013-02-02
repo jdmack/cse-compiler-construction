@@ -188,6 +188,7 @@ class MyParser extends parser
         {
             String id = lstIDs.elementAt(i);
         
+            // Check for var already existing in localScope
             if(m_symtab.accessLocal(id) != null)
             {
                 m_nNumErrors++;
@@ -289,6 +290,7 @@ class MyParser extends parser
     void
     DoFuncDecl_1(Type returnType, String id)
     {
+        // Check for func already existing in localScope
         if(m_symtab.accessLocal(id) != null)
         {
             m_nNumErrors++;
@@ -358,6 +360,19 @@ class MyParser extends parser
 
         // Insert parameters
         stoFunc.setParameters(params);
+
+        // Add parameters to local scope
+        for(STO thisParam: params)
+        {
+            /* Not sure if want this check
+            if(m_symtab.accessLocal(id) != null)
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
+            }
+            */
+            m_symtab.insert(thisParam);
+        }
     }
 
 
