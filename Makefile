@@ -62,6 +62,11 @@ backup:
 	-@mkdir backups
 	tar cvf - $(SOURCES) Makefile RC.sh | compress > backups/`date +%m%d%R`.tar.Z
 
-compile:
-	javac -sourcepath .:./Type:./STO:./Operator -d bin RC.java
+turnin:
+	cp Operator/* .
+	cp STO/* .
+	cp Type/* .
+	mv Makefile Makefile.mine 
+	mv Makefile.orig Makefile
+	make turnin 
 
