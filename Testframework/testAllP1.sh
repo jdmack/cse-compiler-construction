@@ -1,61 +1,70 @@
 #!/bin/bash
 
+# usage:
+#   ./testAllP1.sh [phase] [check #]
+#
+
+
+# Define colors
 red="\033[1;31m"
 green="\033[1;32m"
 blue="\033[1;34m"
 clear="\033[0m"
 
+# Set state colors
 new="[ ${blue}NEW ${clear} ]"
 pass="[ ${green}PASS${clear} ]"
 fail="[ ${red}FAIL${clear} ]"
 
-rcdbg="RCdbg.sh"
+# Assign executable vars
 rc="RC.sh"
-program="./RCdbg.sh"
+program="../RC"
 d=`pwd`
 tname=$d/testAllP1.sh
 
-if [ -f $tname ]; then
-    echo "Replacing ${d}/${rcdbg}"
-    cp $rcdbg ../$rcdbg
-    cd ..
-    make debug
-    cd $d
-    cp ../bin/*.class .
-else 
-    echo "Cannot find ${tname}"
-    echo "Make sure you are inside the test framework directory."
-    echo "Tests did not run."
-    exit
-fi
+# Make the program
+cd ..
+make -s debug
+cd $d
+cp ../bin/*.class .
 
-
-if [[ -x /software/common/gnu/bin/gdiff ]]; then
-    differ=/software/common/gnu/bin/gdiff
+# Select the diff tool to use
+if [[ -x /usr/bin/colordiff ]]; then
+    differ=colordiff
 else
     differ=diff
 fi
 
+# Get lists of tests based on script args
 if [[ -n $1 ]]; then
     tests=$(find project1/$1 -name "*${2}*.rc")
 else
     tests=$(find project1/* -mindepth 1 -name "*${2}*.rc")
 fi
 
+pass_count=0
+total_count=0
+
+echo -e "\nBeginning tests...\n"
+
+
+# Run each test
 for f in $tests; do
+    let total_count=total_count+1
     my="`dirname $f`/`basename $f .rc`.my.out"
     ans="`dirname $f`/`basename $f .rc`.ans.out"
     err=$($program $f 3>&1 1>$my 2>&3)
     dos2unix $my &> /dev/null
     dos2unix $ans&> /dev/null
-    sed -e "/Error.* line /d" $my > `dirname $f`/mytemp
-    sed -e "/Error.* line /d" $ans > `dirname $f`/myans
+    sed -e "/Error,* line /d" $my > `dirname $f`/mytemp
+    sed -e "/Error,* line /d" $ans > `dirname $f`/myans
     mytemp="`dirname $f`/mytemp"
     myans="`dirname $f`/myans"
     if [[ -e $ans ]]; then
         diff=$($differ -u $myans $mytemp)
         if [[ -z $diff ]]; then
             msg=$pass
+            let pass_count=pass_count+1
 	      else
 	          msg=$fail
 	      fi
@@ -69,6 +78,8 @@ for f in $tests; do
     if [[ -n $err ]]; then echo "$err"; fi
     if [[ -n $diff ]]; then echo "$diff"; fi
 done
+echo -e "\nPass: $pass_count / $total_count\n"
+rm $my
 rm $mytemp
 rm $myans
 
