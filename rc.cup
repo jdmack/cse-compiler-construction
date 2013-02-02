@@ -320,7 +320,10 @@ FuncDecl ::=        T_EXTERN T_FUNCTION T_COLON ReturnType:_1 T_ID:_2
     ;
 
 
-Type ::=            SubType OptModifierList OptArrayDef
+Type ::=            SubType:_1 OptModifierList OptArrayDef
+                    {:
+                        RESULT = _1;
+                    :}
     |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
     ;
 
