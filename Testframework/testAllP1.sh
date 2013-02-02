@@ -79,6 +79,7 @@ for f in $tests; do
     if [[ -n $diff ]]; then echo "$diff"; fi
 done
 echo -e "\nPass: $pass_count / $total_count\n"
+rm $my
 rm $mytemp
 rm $myans
 
