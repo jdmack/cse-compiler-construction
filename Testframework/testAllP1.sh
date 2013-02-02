@@ -26,7 +26,6 @@ tname=$d/testAll.sh
 cd ..
 make -s debug
 cd $d
-cp ../bin/*.class .
 
 # Select the diff tool to use
 if [[ -x /usr/bin/colordiff ]]; then
@@ -82,5 +81,3 @@ echo -e "\nPass: $pass_count / $total_count\n"
 #rm $my
 rm $mytemp
 rm $myans
-
-rm *.class
