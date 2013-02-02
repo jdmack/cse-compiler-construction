@@ -44,7 +44,9 @@ fi
 pass_count=0
 total_count=0
 
-echo -e "\nBeginning tests...\n"
+echo -e "\nTests:\n$tests"
+
+echo -e "\n\nBeginning tests...\n"
 
 # Run each test
 for f in $tests; do
