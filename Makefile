@@ -6,19 +6,22 @@ SOURCES = \
 	Token.java \
 	LineNumberPushbackStream.java \
 	Lexer.java \
-	STO.java \
-	ExprSTO.java \
-	ConstSTO.java \
-	VarSTO.java \
-	FuncSTO.java \
-	TypedefSTO.java \
-	ErrorSTO.java \
-	Type.java \
+	STO/STO.java \
+	STO/ExprSTO.java \
+	STO/ConstSTO.java \
+	STO/VarSTO.java \
+	STO/FuncSTO.java \
+	STO/TypedefSTO.java \
+	STO/ErrorSTO.java \
+	STO/TypedefSTO.java \
+	Type/Type.java \
 	Scope.java \
 	SymbolTable.java \
 	MyParser.java \
 	RC.java \
 	RCdbg.java
+
+JAVACOPT=-sourcepath .:./Type:./STO:./Operator -classpath .
 
 new:
 	make clean
@@ -29,20 +32,26 @@ debug:
 	make rcdbg
 
 rc: $(SOURCES) parser.java sym.java
-	javac RC.java
+	javac $(JAVACOPT) -d bin RC.java
 	cp RC.sh RC
 	chmod 755 RC
 
 rcdbg: $(SOURCES) parser.java sym.java
-	javac RCdbg.java
+	javac $(JAVACOPT) -d bin RCdbg.java
 	cp RCdbg.sh RC
 	chmod 755 RC
 
+warnings: $(SOURCES) parser.java sym.java
+	make clean
+	make parser.java
+	javac -Xlint $(JAVACOPT) -d bin RC.java
+
+
 parser.java: rc.cup
-	javacup < rc.cup
+	./javacup < rc.cup
 
 clean:
-	rm -f *.class RC parser.java sym.java a.out core rc.s
+	 rm -f *.class bin/*.class RC parser.java sym.java a.out core rc.s
 
 tar:
 	tar cvf rc.tar $(SOURCES) Makefile RC.sh
