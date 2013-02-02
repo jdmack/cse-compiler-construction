@@ -61,3 +61,11 @@ function : int wrong(){
 }
 
 Should we print second error when first happened
+
+
+For Type ::=
+    this needs to return something that combines the other things
+
+Increment/Decrement issue, @183
+
+how to deal wtih +++ with no spaces
