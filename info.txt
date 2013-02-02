@@ -48,3 +48,16 @@ Need to pass argument to ConstSTO when creating it to set the value
 Possibly applies to Check #8, but make sure can handle hex and octal as well as decimal
     string.contains(0x)?, then stip 0x and convert to decimal
     string.startsWith(0) but isn't just 0, then stip 0 and convert to decimal
+
+
+For check #6, 
+Error, "../tests/phase1/p06c.rc", line 11:
+  Type of return expression (bool), not assignment compatible with function's return type (int).
+  Error, "", line 0:
+    Return required in function, none found.
+on
+function : int wrong(){
+    return false;
+}
+
+Should we print second error when first happened
