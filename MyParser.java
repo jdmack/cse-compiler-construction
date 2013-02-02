@@ -318,7 +318,6 @@ class MyParser extends parser
     void
     DoFuncDecl_2()
     {
-        // Check #6c - no return statement for non-void type function
         FuncSTO stoFunc;
 
         if((stoFunc = m_symtab.getFunc()) == null)
@@ -328,6 +327,7 @@ class MyParser extends parser
             return;
         }
 
+        // Check #6c - no return statement for non-void type function
         if(!stoFunc.getReturnType().isVoid())
         {
             if(!stoFunc.getHasReturnStatement())
@@ -722,8 +722,11 @@ class MyParser extends parser
             return (new ErrorSTO("DoReturnStmt_1 Error"));
         }
         
-        // valid return statement, set func.hasReturnStatement
-        stoFunc.setHasReturnStatement(true);
+        // valid return statement, set func.hasReturnStatement if at right level
+        if(stoFunc.getLevel() == m_symtab.getLevel())
+        {
+            stoFunc.setHasReturnStatement(true);
+        }
 
         return (new ExprSTO(stoFunc.getName() + " Return", new VoidType()));
 
@@ -779,8 +782,11 @@ class MyParser extends parser
             }
         }
 
-        // valid return statement, set func.hasReturnStatement
-        stoFunc.setHasReturnStatement(true);
+        // valid return statement, set func.hasReturnStatement if at right level
+        if(stoFunc.getLevel() == m_symtab.getLevel())
+        {
+            stoFunc.setHasReturnStatement(true);
+        }
 
         return stoExpr;
     }
