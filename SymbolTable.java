@@ -92,9 +92,9 @@ class SymbolTable
     public void
     openScope()
     {
-        Scope        scope = new Scope();
+        Scope scope = new Scope();
 
-        //    The first scope created will be the global scope.
+        // The first scope created will be the global scope.
         if(m_scopeGlobal == null)
             m_scopeGlobal = scope;
 
