@@ -1,0 +1,5 @@
+Error, "project1/phase1/p02b.rc", line 15: 
+  Incompatible type bool to operator --, equivalent to int, float, or pointer expected.
+Error, "project1/phase1/p02b.rc", line 17: 
+  Incompatible type bool to operator --, equivalent to int, float, or pointer expected.
+Compile: failure.

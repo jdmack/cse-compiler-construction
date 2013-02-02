@@ -1,0 +1,3 @@
+Error, "project1/phase1/p01k.rc", line 9: 
+  Incompatible type bool to binary operator %, equivalent to int expected.
+Compile: failure.
