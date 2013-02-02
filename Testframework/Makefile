@@ -6,14 +6,14 @@ SOURCES = \
 	Token.java \
 	LineNumberPushbackStream.java \
 	Lexer.java \
-	STO/STO.java \
-	STO/ExprSTO.java \
-	STO/ConstSTO.java \
-	STO/VarSTO.java \
-	STO/FuncSTO.java \
-	STO/TypedefSTO.java \
-	STO/ErrorSTO.java \
-	Type/Type.java \
+	STO.java \
+	ExprSTO.java \
+	ConstSTO.java \
+	VarSTO.java \
+	FuncSTO.java \
+	TypedefSTO.java \
+	ErrorSTO.java \
+	Type.java \
 	Scope.java \
 	SymbolTable.java \
 	MyParser.java \
@@ -22,36 +22,31 @@ SOURCES = \
 
 new:
 	make clean
+	cp src/* ./
 	make rc
+	rm *.java rc.cup
 
 debug:
 	make clean
+	cp src/* ./
 	make rcdbg
-
-JAVACOPT=-sourcepath .:./Type:./STO:./Operator -classpath .
+	rm *.java rc.cup
 
 rc: $(SOURCES) parser.java sym.java
-	javac $(JAVACOPT) -d bin RC.java
-	cp RC.sh RC
-	chmod 755 RC
-
-warnings: $(SOURCES) parser.java sym.java
-	make clean
-	make parser.java
-	javac -Xlint $(JAVACOPT) -d bin RC.java
+	javac RC.java
 	cp RC.sh RC
 	chmod 755 RC
 
 rcdbg: $(SOURCES) parser.java sym.java
-	javac $(JAVACOPT) -d bin RCdbg.java
+	javac RCdbg.java
 	cp RCdbg.sh RC
 	chmod 755 RC
 
 parser.java: rc.cup
-	./javacup < rc.cup
+	javacup < rc.cup
 
 clean:
-	rm -f *.class bin/*.class RC parser.java sym.java a.out core rc.s
+	rm -f rc.cup *.java *.class RC parser.java sym.java a.out core rc.s
 
 tar:
 	tar cvf rc.tar $(SOURCES) Makefile RC.sh
@@ -61,7 +56,20 @@ backup:
 	-@make clean
 	-@mkdir backups
 	tar cvf - $(SOURCES) Makefile RC.sh | compress > backups/`date +%m%d%R`.tar.Z
+<<<<<<< HEAD
 
-compile:
-	javac -sourcepath .:./Type:./STO:./Operator -d bin RC.java
+turnin:
+	mv Operator/* .
+	mv STO/* .
+	mv Type/* .
+	rmdir Operator 
+	rmdir STO 
+	rmdir Type 
+	mv .git ../ 
+	rm info.txt 
+	rm Makefile
+	mv Makefile.orig Makefile
+	make new 
 
+=======
+>>>>>>> added eclipse stuff to the ignorelist
