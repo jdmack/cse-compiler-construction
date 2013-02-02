@@ -447,7 +447,6 @@ ParamList ::=       ParamDecl:_1
     |               ParamList:_1 T_COMMA ParamDecl:_2
                     {:
                         RESULT = _1;
-                        //((Vector<ParamSTO>)RESULT).addElement(_2);   
                         RESULT.addElement(_2);   
                     :}
     ;

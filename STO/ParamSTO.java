@@ -16,7 +16,7 @@ class ParamSTO extends STO
     ParamSTO(String strName, Type type, boolean passByRef)
     {
         super(strName, type);
-
+        setPassByReference(passByRef);
     }
     
     public
