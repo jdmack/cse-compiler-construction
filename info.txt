@@ -42,3 +42,9 @@ Make sure action code is in the best place
 For Check #5, two more complicated ReturnType instances not handled
 
 I am returning STO's for stmt's that don't require it, but there isn't anything technically wrong with not using a return value, so doing it anyways to be consistent
+
+
+Need to pass argument to ConstSTO when creating it to set the value
+Possibly applies to Check #8, but make sure can handle hex and octal as well as decimal
+    string.contains(0x)?, then stip 0x and convert to decimal
+    string.startsWith(0) but isn't just 0, then stip 0 and convert to decimal

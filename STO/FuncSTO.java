@@ -27,7 +27,7 @@ class FuncSTO extends STO
     public 
     FuncSTO(String strName, Vector<ParamSTO> params, boolean retByRef)
     {
-        super(strName);
+        super(strName, new FuncPtrType());
         setNumOfParams(params.size());
         setParameters(params);        
         setReturnByRef(retByRef);

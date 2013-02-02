@@ -736,20 +736,20 @@ class MyParser extends parser
         // Check #6b - 1st bullet - rtn by val - rtn expr type not assignable to return
         if(!stoFunc.getReturnByRef())
         {
-            if(!stoExpr.getType().isAssignable(stoFunc.getType()))
+            if(!stoExpr.getType().isAssignable(stoFunc.getReturnType()))
             {
                 m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg. error6a_Return_type, stoExpr.getType().getName(), stoFunc.getType().getName()));
+                m_errors.print(Formatter.toString(ErrorMsg. error6a_Return_type, stoExpr.getType().getName(), stoFunc.getReturnType().getName()));
                 return (new ErrorSTO("DoReturnStmt_2 Error"));
             }
         }
         else
         {
             // Check #6b - 2nd bullet - rtn by ref - rtn expr type not equivalent to return type
-            if(!stoExpr.getType().isEquivalent(stoFunc.getType()))
+            if(!stoExpr.getType().isEquivalent(stoFunc.getReturnType()))
             {
                 m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg.error6b_Return_equiv, stoExpr.getType().getName(), stoFunc.getType().getName()));
+                m_errors.print(Formatter.toString(ErrorMsg.error6b_Return_equiv, stoExpr.getType().getName(), stoFunc.getReturnType().getName()));
                 return (new ErrorSTO("DoReturnStmt_2 Error"));
             }
 
