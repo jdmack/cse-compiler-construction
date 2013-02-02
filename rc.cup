@@ -291,6 +291,19 @@ FuncDef ::=         T_FUNCTION T_COLON ReturnType:_1 OptRef T_ID:_2             
                     :}
     ;
 
+/*
+FuncDef:
+            function: int foo(int i, int j) 
+            {
+                // ... statements
+            }
+
+FuncDecl:
+            function: int foo(int i, int j);
+
+
+*/
+
 
 FuncDecl ::=        T_EXTERN T_FUNCTION T_COLON ReturnType:_1 T_ID:_2
                     {:
