@@ -52,3 +52,8 @@ backup:
 	-@make clean
 	-@mkdir backups
 	tar cvf - $(SOURCES) Makefile RC.sh | compress > backups/`date +%m%d%R`.tar.Z
+
+restore:
+	rm *
+	mv ../.git .
+	git reset --hard
