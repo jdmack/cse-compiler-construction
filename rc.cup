@@ -250,15 +250,15 @@ OptStatic ::=       T_STATIC
     ;
 
 
-TypedefDecl ::=     T_TYPEDEF Type IdListUpper:_2 T_SEMI
+TypedefDecl ::=     T_TYPEDEF Type IdListUpper:_2 T_SEMI                // typedef [type] IDENTIFIER;
                     {:
                         ((MyParser) parser).DoTypedefDecl (_2);
                     :}
-    |               T_STRUCTDEF T_ID_U:_1 T_LBRACE
+    |               T_STRUCTDEF T_ID_U:_1 T_LBRACE                      // structdef IDENTIFIER { [fields] };
                     {:
                         ((MyParser) parser).DoBlockOpen();
                     :}
-                    FieldsList T_RBRACE T_SEMI
+                    FieldsList T_RBRACE T_SEMI   // ReturnStatement: No
                     {:
                          ((MyParser) parser).DoBlockClose();
                          ((MyParser) parser).DoStructdefDecl (_1);
@@ -276,7 +276,7 @@ FieldList ::=       Type IdList T_SEMI
     ;
 
 
-FuncDef ::=         T_FUNCTION T_COLON ReturnType:_1 OptRef T_ID:_2
+FuncDef ::=         T_FUNCTION T_COLON ReturnType:_1 OptRef T_ID:_2                 // function: [type] & identifier ( param1, param2) { statments } 
                     {:
                         ((MyParser) parser).SaveLineNum ();
                         ((MyParser) parser).DoFuncDecl_1(_1, _2);
@@ -285,7 +285,7 @@ FuncDef ::=         T_FUNCTION T_COLON ReturnType:_1 OptRef T_ID:_2
                     {:
                         ((MyParser) parser).DoFormalParams(_3);
                     :}
-                    T_LBRACE OptStmtList T_RBRACE
+                    T_LBRACE OptStmtList T_RBRACE  // ReturnStatement: Yes
                     {:
                         ((MyParser) parser).DoFuncDecl_2();
                     :}
@@ -374,15 +374,15 @@ ReturnType ::=      SubType:_1 OptModifierList
     ;
 
 
-CodeBlock ::=       T_LBRACE
-                    {: 
-                        ((MyParser) parser).DoBlockOpen(); 
-                    :}
-                    OptStmtList
+CodeBlock ::=       T_LBRACE                                                    // CodeBlock is for: 
+                    {:                                                          //                  - random { } blocks
+                        ((MyParser) parser).DoBlockOpen();                      //                  - if statements 
+                    :}                                                          //                  - else statements
+                    OptStmtList                                                 //                  - loop statements
 		            {:
                         ((MyParser) parser).DoBlockClose(); 
                     :}
-                    T_RBRACE
+                    T_RBRACE    // ReturnStatement: No
     ;
 
 
@@ -511,7 +511,7 @@ IdListWInit ::=     OptModifierList OptArrayDef T_ID:_1 T_ASSIGN ConstExpr
 
 
 OptInit ::=         T_ASSIGN Expr
-    |               T_ASSIGN T_LBRACE ArrElemsList T_RBRACE
+    |               T_ASSIGN T_LBRACE ArrElemsList T_RBRACE  // ReturnStatement: No             = {ele1, ele2, ..., ele3}
     |               /* empty */
     ;
 
@@ -549,15 +549,21 @@ ContinueStmt ::=    T_CONTINUE T_SEMI
     ;
 
 
-ExitStmt ::=        T_EXIT T_LPAREN Expr T_RPAREN T_SEMI
+ExitStmt ::=        T_EXIT T_LPAREN Expr:_1 T_RPAREN T_SEMI
+                    {:
+                        RESULT = ((MyParser)parser).DoExitStmt(_1);
+                    :}
     ;
 
 
 ReturnStmt ::=      T_RETURN T_SEMI
                     {:
-
+                        RESULT = ((MyParser)parser).DoReturnStmt_1();
                     :}
-    |               T_RETURN Expr T_SEMI
+    |               T_RETURN Expr:_1 T_SEMI
+                    {:
+                        RESULT = ((MyParser)parser).DoReturnStmt_2(_1);
+                    :}
     ;
 
 

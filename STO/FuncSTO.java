@@ -12,6 +12,8 @@ class FuncSTO extends STO
     private int m_numOfParams;
     private Vector<ParamSTO> m_parameters;
     private boolean m_returnByReference;
+    private boolean m_hasReturnStatement;
+    private int m_level;
 
     //---------------------------------------------------------------------
     //      Constructors
@@ -19,11 +21,7 @@ class FuncSTO extends STO
     public 
     FuncSTO(String strName)
     {
-        super(strName);
-        setNumOfParams(0);
-        setParameters(new Vector());        
-        setReturnByRef(false);
-        setReturnType(null);
+        this(strName, new Vector(), false);
     }
 
     public 
@@ -34,6 +32,7 @@ class FuncSTO extends STO
         setParameters(params);        
         setReturnByRef(retByRef);
         setReturnType(null);
+        setHasReturnStatement(false);
     }
 
     //---------------------------------------------------------------------
@@ -49,6 +48,10 @@ class FuncSTO extends STO
     // This is the return type of the function. This is different from 
     // the function's type(for function pointers).
     //----------------------------------------------------------------
+
+    //////////////////////////////
+    //      m_returnType        //
+    //////////////////////////////
     public void
     setReturnType(Type typ)
     {
@@ -61,6 +64,9 @@ class FuncSTO extends STO
         return m_returnType;
     }
 
+    //////////////////////////////
+    //      m_numOfParams       //
+    //////////////////////////////
     private void
     setNumOfParams(int numParams)
     {
@@ -73,6 +79,9 @@ class FuncSTO extends STO
         return m_numOfParams;
     }
 
+    //////////////////////////////
+    //      m_parameters        //
+    //////////////////////////////
     public Vector<ParamSTO>
     getParameters()
     {
@@ -85,6 +94,9 @@ class FuncSTO extends STO
         m_parameters = params;
     }
 
+    //////////////////////////////
+    //      m_returnByReference //
+    //////////////////////////////
     private void
     setReturnByRef(boolean retByRef)
     {
@@ -95,5 +107,36 @@ class FuncSTO extends STO
     getReturnByRef()
     {
         return m_returnByReference;
+    }
+
+    //////////////////////////////
+    //     m_hasReturnStatement //
+    //////////////////////////////
+    // m
+    public void
+    setHasReturnStatement(boolean hasRtnStmt)
+    {
+        m_hasReturnStatement = hasRtnStmt;
+    }
+
+    public boolean
+    getHasReturnStatement()
+    {
+        return m_hasReturnStatement;
+    }
+
+    //////////////////////////////
+    //      m_level             //
+    //////////////////////////////
+    public void
+    setLevel(int level)
+    {
+        m_level = level;
+    }
+
+    public int
+    getLevel()
+    {
+        return m_level;
     }
 }

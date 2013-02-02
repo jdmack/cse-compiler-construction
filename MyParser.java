@@ -41,7 +41,7 @@ class MyParser extends parser
     public boolean
     Ok()
     {
-        return(m_nNumErrors == 0);
+        return (m_nNumErrors == 0);
     }
 
 
@@ -66,9 +66,9 @@ class MyParser extends parser
             case sym.T_FLOAT_LITERAL:
             case sym.T_INT_LITERAL:
             case sym.T_CHAR_LITERAL:
-                return(new Symbol(t.GetCode(), t.GetLexeme()));
+                return (new Symbol(t.GetCode(), t.GetLexeme()));
             default:
-                return(new Symbol(t.GetCode()));
+                return (new Symbol(t.GetCode()));
         }
     }
 
@@ -135,13 +135,13 @@ class MyParser extends parser
     public String 
     GetFile()
     {
-        return(m_lexer.getEPFilename());
+        return (m_lexer.getEPFilename());
     }
 
     public int
     GetLineNum()
     {
-        return(m_lexer.getLineNumber());
+        return (m_lexer.getLineNumber());
     }
 
     public void
@@ -153,7 +153,7 @@ class MyParser extends parser
     public int
     GetSavedLineNum()
     {
-        return(m_nSavedLineNum);
+        return (m_nSavedLineNum);
     }
 
 
@@ -304,6 +304,9 @@ class MyParser extends parser
 
         m_symtab.openScope();
         m_symtab.setFunc(sto);
+
+        // Set the function's level
+        sto.setLevel(m_symtab.getLevel());
     }
 
 
@@ -313,6 +316,26 @@ class MyParser extends parser
     void
     DoFuncDecl_2()
     {
+        // Check #6c - no return statement for non-void type function
+        FuncSTO stoFunc;
+
+        if((stoFunc = m_symtab.getFunc()) == null)
+        {
+            m_nNumErrors++;
+            m_errors.print("internal: DoFuncDecl_2 says no proc!");
+            return;
+        }
+
+        if(!stoFunc.getReturnType().isVoid())
+        {
+            if(!stoFunc.getHasReturnStatement())
+            {
+                m_nNumErrors++;
+                m_errors.print(ErrorMsg.error6c_Return_missing);
+            }
+
+        }
+
         m_symtab.closeScope();
         m_symtab.setFunc(null);
     }
@@ -324,9 +347,9 @@ class MyParser extends parser
     void
     DoFormalParams(Vector<ParamSTO> params)
     {
-        FuncSTO funcSTO;
+        FuncSTO stoFunc;
 
-        if((funcSTO = m_symtab.getFunc()) == null)
+        if((stoFunc = m_symtab.getFunc()) == null)
         {
             m_nNumErrors++;
             m_errors.print("internal: DoFormalParams says no proc!");
@@ -334,7 +357,7 @@ class MyParser extends parser
         }
 
         // Insert parameters
-        funcSTO.setParameters(params);
+        stoFunc.setParameters(params);
     }
 
 
@@ -380,14 +403,14 @@ class MyParser extends parser
         {
             m_nNumErrors++;
             m_errors.print(ErrorMsg.error3a_Assign);
-            return(new ErrorSTO("DoAssignExpr Error - not mod-L-Value"));
+            return (new ErrorSTO("DoAssignExpr Error - not mod-L-Value"));
         }
 
         if(!stoValue.getType().isAssignable(stoDes.getType()))
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, stoValue.getType().getName(), stoDes.getType().getName()));
-            return(new ErrorSTO("DoAssignExpr Error - bad types"));
+            return (new ErrorSTO("DoAssignExpr Error - bad types"));
         }
         
         return stoDes;
@@ -404,19 +427,19 @@ class MyParser extends parser
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.not_function, sto.getName()));
-            return(new ErrorSTO(sto.getName()));
+            return (new ErrorSTO(sto.getName()));
         }
     
         // We know it's a function, do function call checks
-        FuncSTO funcSTO =(FuncSTO)sto;
+        FuncSTO stoFunc =(FuncSTO)sto;
 
         // Check #5
         // Check #5a - # args = # params
-        if(!(funcSTO.getNumOfParams() != args.size()))
+        if(!(stoFunc.getNumOfParams() != args.size()))
         {
             m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error5n_Call, args.size(), funcSTO.getNumOfParams()));
-            return(new ErrorSTO("DoFuncCall - # args"));
+            m_errors.print(Formatter.toString(ErrorMsg.error5n_Call, args.size(), stoFunc.getNumOfParams()));
+            return (new ErrorSTO("DoFuncCall - # args"));
         }
 
         // Now we check each arg individually, accepting one error per arg
@@ -426,7 +449,7 @@ class MyParser extends parser
         for(int i = 0; i < args.size(); i++)
         {
             // For readability and shorter lines
-            ParamSTO thisParam = funcSTO.getParameters().elementAt(i);
+            ParamSTO thisParam = stoFunc.getParameters().elementAt(i);
             ExprSTO thisArg = args.elementAt(i);
 
             // Check #5b - non-assignable arg for pass-by-value param
@@ -466,11 +489,11 @@ class MyParser extends parser
         if(error_flag)
         {
             // Error occured in at least one arg, return error
-            return(new ErrorSTO("DoFuncCall - Check 5"));
+            return (new ErrorSTO("DoFuncCall - Check 5"));
         }
         else
             // Func call legal, return function return type
-            return(new ExprSTO(funcSTO.getName() + " return type", funcSTO.getReturnType()));
+            return (new ExprSTO(stoFunc.getName() + " return type", stoFunc.getReturnType()));
     }
 
 
@@ -512,7 +535,7 @@ class MyParser extends parser
              m_errors.print(Formatter.toString(ErrorMsg.error0g_Scope, strID));    
             sto = new ErrorSTO(strID);
         }
-        return(sto);
+        return (sto);
     }
 
 
@@ -530,7 +553,7 @@ class MyParser extends parser
              m_errors.print(Formatter.toString(ErrorMsg.undeclared_id, strID));    
             sto = new ErrorSTO(strID);
         }
-        return(sto);
+        return (sto);
     }
 
 
@@ -546,17 +569,17 @@ class MyParser extends parser
         {
             m_nNumErrors++;
              m_errors.print(Formatter.toString(ErrorMsg.undeclared_id, strID));    
-            return(new ErrorSTO(strID));
+            return (new ErrorSTO(strID));
         }
 
         if(!sto.isTypedef())
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.not_type, sto.getName()));
-            return(new ErrorSTO(sto.getName()));
+            return (new ErrorSTO(sto.getName()));
         }
 
-        return(sto);
+        return (sto);
     }
 
     //----------------------------------------------------------------
@@ -630,7 +653,7 @@ class MyParser extends parser
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
-            return(new ErrorSTO("DoWhile error"));
+            return (new ErrorSTO("DoWhile error"));
         }
 
         return stoExpr;
@@ -653,23 +676,119 @@ class MyParser extends parser
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
-            return(new ErrorSTO("DoIf error"));
+            return (new ErrorSTO("DoIf error"));
         }
 
         return stoExpr;
     }
 
     //----------------------------------------------------------------
-    //      DoReturnStmt
+    //      DoReturnStmt_1
     //----------------------------------------------------------------
-    /*
     STO
-    DoReturnStmt(STO stoExpr)
+    DoReturnStmt_1()
     {
+        FuncSTO stoFunc;
 
+        if((stoFunc = m_symtab.getFunc()) == null)
+        {
+            m_nNumErrors++;
+            m_errors.print("internal: DoReturnStmt_1 says no proc!");
+            return (new ErrorSTO("DoReturnStmt_1 Error"));
+        }
+    
+        // Check #6a - no expr on non-void rtn
+        if(!stoFunc.getReturnType().isVoid())
+        {
+            m_nNumErrors++;
+            m_errors.print(ErrorMsg.error6a_Return_expr);
+            return (new ErrorSTO("DoReturnStmt_1 Error"));
+        }
+        
+        // valid return statement, set func.hasReturnStatement
+        stoFunc.setHasReturnStatement(true);
+
+        return (new ExprSTO(stoFunc.getName() + " Return", new VoidType()));
 
     }
-   */ 
 
+    //----------------------------------------------------------------
+    //      DoReturnStmt_2
+    //----------------------------------------------------------------
+    STO
+    DoReturnStmt_2(STO stoExpr)
+    {
+        FuncSTO stoFunc;
+
+        // Check for previous errors in line and short circuit
+        if(stoExpr.isError())
+        {
+            return stoExpr;
+        }
+
+        if((stoFunc = m_symtab.getFunc()) == null)
+        {
+            m_nNumErrors++;
+            m_errors.print("internal: DoReturnStmt_2 says no proc!");
+            return (new ErrorSTO("DoReturnStmt_2 Error"));
+        }
+         
+        // Check #6b - 1st bullet - rtn by val - rtn expr type not assignable to return
+        if(!stoFunc.getReturnByRef())
+        {
+            if(!stoExpr.getType().isAssignable(stoFunc.getType()))
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg. error6a_Return_type, stoExpr.getType().getName(), stoFunc.getType().getName()));
+                return (new ErrorSTO("DoReturnStmt_2 Error"));
+            }
+        }
+        else
+        {
+            // Check #6b - 2nd bullet - rtn by ref - rtn expr type not equivalent to return type
+            if(!stoExpr.getType().isEquivalent(stoFunc.getType()))
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error6b_Return_equiv, stoExpr.getType().getName(), stoFunc.getType().getName()));
+                return (new ErrorSTO("DoReturnStmt_2 Error"));
+            }
+
+            // Check #6b - 3rd bullet - rtn by ref - rtn expr not modLValue
+            if(!stoExpr.isModLValue())
+            {
+                m_nNumErrors++;
+                m_errors.print(ErrorMsg.error6b_Return_modlval);
+                return (new ErrorSTO("DoReturnStmt_2 Error"));
+            }
+        }
+
+        // valid return statement, set func.hasReturnStatement
+        stoFunc.setHasReturnStatement(true);
+
+        return stoExpr;
+    }
+
+    //----------------------------------------------------------------
+    //      DoExitStmt
+    //----------------------------------------------------------------
+    STO
+    DoExitStmt(STO stoExpr)
+    {
+        // Check for previous errors in line and short circuit
+        if(stoExpr.isError())
+        {
+            return stoExpr;
+        }
+
+        // Check #7 - exit value assignable to int
+        if(!stoExpr.getType().isAssignable(new IntType()))
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error7_Exit, stoExpr.getType().getName()));
+        }
+        
+        return stoExpr;
+    }
+    
 
 }
