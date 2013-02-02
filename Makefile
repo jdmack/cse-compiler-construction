@@ -63,10 +63,15 @@ backup:
 	tar cvf - $(SOURCES) Makefile RC.sh | compress > backups/`date +%m%d%R`.tar.Z
 
 turnin:
-	cp Operator/* .
-	cp STO/* .
-	cp Type/* .
-	mv Makefile Makefile.mine 
+	mv Operator/* .
+	mv STO/* .
+	mv Type/* .
+	rmdir Operator 
+	rmdir STO 
+	rmdir Type 
+	mv .git ../ 
+	rm info.txt 
+	rm Makefile
 	mv Makefile.orig Makefile
-	make turnin 
+	make new 
 
