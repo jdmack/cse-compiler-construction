@@ -867,8 +867,7 @@ Designator2 ::=     Designator2:_1 T_DOT T_ID:_3
                     :}
     |               Designator2:_1 T_LPAREN OptExprList:_2 T_RPAREN
                     {:
-                        ((MyParser) parser).DoFuncCall (_1, (Vector<ExprSTO>)_2);
-                        RESULT = _1;
+                        RESULT = ((MyParser) parser).DoFuncCall (_1, (Vector<ExprSTO>)_2);
                     :}
     |               Designator3:_1
                     {:

@@ -492,8 +492,10 @@ class MyParser extends parser
             return (new ErrorSTO("DoFuncCall - Check 5"));
         }
         else
+        {
             // Func call legal, return function return type
             return (new ExprSTO(stoFunc.getName() + " return type", stoFunc.getReturnType()));
+        }
     }
 
 
