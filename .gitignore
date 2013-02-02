@@ -8,3 +8,13 @@ parser.java
 sym.java
 java-cup-v11a.jar
 javacup
+
+#eclipse stuff
+.classpath
+.externalToolBuilders/
+.parserDone
+.project
+build.xml
+javacupv11a.jar
+MakefileBackup
+bin/

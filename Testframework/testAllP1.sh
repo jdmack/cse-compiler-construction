@@ -13,7 +13,7 @@ rcdbg="RCdbg.sh"
 rc="RC.sh"
 program="./RCdbg.sh"
 d=`pwd`
-tname=$d/testAll.sh
+tname=$d/testAllP1.sh
 
 if [ -f $tname ]; then
     echo "Replacing ${d}/${rcdbg}"
