@@ -435,7 +435,7 @@ class MyParser extends parser
 
         // Check #5
         // Check #5a - # args = # params
-        if(!(stoFunc.getNumOfParams() != args.size()))
+        if((stoFunc.getNumOfParams() != args.size()))
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error5n_Call, args.size(), stoFunc.getNumOfParams()));
