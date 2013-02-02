@@ -1,0 +1,5 @@
+Error, "../tests/phase1/p06a.rc", line 3:
+  Return in function requires a result expression, none found.
+Error, "../tests/phase1/p06a.rc", line 5:
+  Return required in function, none found.
+Compile: failure.

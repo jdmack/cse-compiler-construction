@@ -46,7 +46,6 @@ total_count=0
 
 echo -e "\nBeginning tests...\n"
 
-
 # Run each test
 for f in $tests; do
     let total_count=total_count+1
@@ -64,13 +63,13 @@ for f in $tests; do
         if [[ -z $diff ]]; then
             msg=$pass
             let pass_count=pass_count+1
-	      else
-	          msg=$fail
-	      fi
+          else
+              msg=$fail
+          fi
     else
-	      mv $my $ans
-	      diff=$(<$ans)
-	      msg=$new
+          mv $my $ans
+          diff=$(<$ans)
+          msg=$new
     fi
     echo -en $msg
     echo " $f"
