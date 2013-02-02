@@ -26,7 +26,6 @@ tname=$d/testAll.sh
 cd ..
 make -s debug
 cd $d
-cp ../bin/*.class .
 
 # Select the diff tool to use
 if [[ -x /usr/bin/colordiff ]]; then
@@ -61,7 +60,7 @@ for f in $tests; do
     mytemp="`dirname $f`/mytemp"
     myans="`dirname $f`/myans"
     if [[ -e $ans ]]; then
-        diff=$($differ -u $myans $mytemp)
+        diff=$($differ -uw $myans $mytemp)
         if [[ -z $diff ]]; then
             msg=$pass
             let pass_count=pass_count+1
@@ -82,5 +81,3 @@ echo -e "\nPass: $pass_count / $total_count\n"
 rm $my
 rm $mytemp
 rm $myans
-
-rm *.class
