@@ -92,6 +92,7 @@ class FuncSTO extends STO
     setParameters(Vector<ParamSTO> params)
     {
         m_parameters = params;
+        setNumOfParams(params.size());
     }
 
     //////////////////////////////
