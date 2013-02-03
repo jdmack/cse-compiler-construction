@@ -297,7 +297,7 @@ class MyParser extends parser
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
-        
+            type.setName(id);
             TypedefSTO sto = new TypedefSTO(id, type);
             m_symtab.insert(sto);
         }
@@ -612,21 +612,22 @@ class MyParser extends parser
     DoQualIdent(String strID)
     {
         STO sto;
-
+        System.out.println("Running DoQualIdent");
         if((sto = m_symtab.access(strID)) == null)
         {
             m_nNumErrors++;
-             m_errors.print(Formatter.toString(ErrorMsg.undeclared_id, strID));    
+            m_errors.print(Formatter.toString(ErrorMsg.undeclared_id, strID));    
             return (new ErrorSTO(strID));
         }
-
+        System.out.println(sto.getName());
+        System.out.println(sto.getType());
         if(!sto.isTypedef())
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.not_type, sto.getName()));
             return (new ErrorSTO(sto.getName()));
         }
-
+        
         return (sto);
     }
 

@@ -31,7 +31,7 @@ abstract class Type
         return m_typeName;
     }
 
-    private void
+    public void
     setName(String str)
     {
         m_typeName = str;

@@ -1,0 +1,7 @@
+typedef int INT;
+INT a;
+
+function : int main() {
+    a = a + a;
+    return 0;
+}

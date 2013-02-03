@@ -343,7 +343,10 @@ UndecoratedType ::= SubType:_1
     |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
     ;
 
-SubType ::=         QualIdent
+SubType ::=         QualIdent:_2
+                    {:
+                        RESULT = (_2).getType();
+                    :}
     |               BasicType:_1
                     {:
                         RESULT = _1;
