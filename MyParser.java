@@ -256,6 +256,7 @@ class MyParser extends parser
             {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
+                return;
             }
         
             // Check #8a - init value not known at compiler time
@@ -263,6 +264,7 @@ class MyParser extends parser
             {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error8_CompileTime, id));
+                return;
             }
 
             // Check #8b
@@ -270,6 +272,7 @@ class MyParser extends parser
             {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error8_Assign, value.getType().getName(), type.getName()));
+                return;
             }
             
             STO sto = new ConstSTO(id, type, ((ConstSTO)value).getValue());

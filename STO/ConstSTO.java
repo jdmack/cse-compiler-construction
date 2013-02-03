@@ -63,6 +63,7 @@ class ConstSTO extends STO
         {
             setValue((double) 0);
         }
+
         else
         {
             int base;
@@ -91,7 +92,7 @@ class ConstSTO extends STO
                 //System.out.println("\tIt's decimal");
             }
             
-            Double value;
+            Double value = 0.0;
 
             if(typ.isInt())
             {
@@ -100,13 +101,41 @@ class ConstSTO extends STO
                 Integer i = Integer.parseInt(str, base);
                 value = new Double(i);
             }
-            else
+            else if(typ.isFloat())
             {
                 //System.out.println("\tIt's float");
                 Float f = Float.parseFloat(str);
                 value = f.doubleValue();
             }
+            else if(typ.isBool())
+            {
+                if(val.contains("."))
+                {
+                    Float f = Float.parseFloat(str);
+                    if(f == 0.0)
+                    {
+                        value = 0.0;
+                    }
+                    else
+                    {
+                        value = 1.0;
+                    }
+                }
+                else
+                {
+                    Integer i = Integer.parseInt(str, base);
 
+                    if(i == 0)
+                    {
+                        value = 0.0;
+                    }
+                    else
+                    {
+                        value = 1.0;
+                    }
+
+                }
+            }
             setValue(value);
 
             //System.out.println("\t\t\tFinal Value: " + value);
