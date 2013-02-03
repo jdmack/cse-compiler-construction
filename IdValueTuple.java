@@ -5,9 +5,9 @@ public class IdValueTuple
     //---------------------------------------------------------------------
     //      Instance Variables
     //---------------------------------------------------------------------
-	String m_ID;
-	STO m_value;
-    STO m_arrayIndex;
+	private String m_ID;
+	private STO m_value;
+	private STO m_arrayIndex;
 	
     //---------------------------------------------------------------------
     //      Constructors
@@ -32,7 +32,7 @@ public class IdValueTuple
 	public String 
     getId() 
     {
-		return m_iD;
+		return m_ID;
 	}
 	
 	public STO 
@@ -44,6 +44,6 @@ public class IdValueTuple
 	public STO 
     getArrayIndex() 
     {
-		return m_arrayIndex;;
+		return m_arrayIndex;
 	}
 }
