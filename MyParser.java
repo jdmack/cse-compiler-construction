@@ -199,20 +199,39 @@ class MyParser extends parser
             // Do Array checks if type = ArrayType
             if(lstIDs.elementAt(i).getArrayIndex() != null && type != null) 
             {
-            	ArrayType arrType = new ArrayType(type, lstIDs.elementAt(i).getArrayIndex());               
-            	STO stoResult = arrType.checkArray();
+            	if(!lstIDs.elementAt(i).getArrayIndex().getType().isEquivalent(new IntType()))
+            	{
+                    m_nNumErrors++;
+                    m_errors.print(Formatter.toString(ErrorMsg.error10i_Array, lstIDs.elementAt(i).getArrayIndex().getType().getName()));
+                    break;
+            	}
+            	if(!lstIDs.elementAt(i).getArrayIndex().isConst())
+            	{
+                    m_nNumErrors++;
+                    m_errors.print(ErrorMsg.error10c_Array);
+                    break;
+            	} 
+            	else if(((ConstSTO)lstIDs.elementAt(i).getArrayIndex()).getIntValue() <= 0)
+            	{
+                    m_nNumErrors++;
+                    m_errors.print(Formatter.toString(ErrorMsg.error10z_Array,((ConstSTO)lstIDs.elementAt(i).getArrayIndex()).getIntValue()));
+                    break;
+            	}
+            	ArrayType arrType = new ArrayType(type, lstIDs.elementAt(i).getArrayIndex());     
+            	
+            	/*STO stoResult = arrType.checkArray();
                 if(stoResult.isError())
                 {
                     m_nNumErrors++;
                     m_errors.print(stoResult.getName());
-                }
+                }*/
             	stoVar = new VarSTO(id, arrType);
-                m_symtab.insert(stoVar);
+                m_symtab.insert(stoVar); // May be redundant but didn't want a possibility of inserting null.
             }
             else 
             {
             	stoVar = new VarSTO(id, type);
-                m_symtab.insert(stoVar);
+                m_symtab.insert(stoVar); // May be redundant but didn't want a possibility of inserting null.
 
             }
                         

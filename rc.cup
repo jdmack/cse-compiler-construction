@@ -531,12 +531,12 @@ IdListWOptInit ::=  OptModifierList OptArrayDef:_3 T_ID:_1 OptInit:_2
                         // _3 is ConstExpr in [ConstExpr]
 
                         RESULT = new Vector<IdValueTuple> ();
-                        RESULT.addElement (new IdValueTuple(_1, (STO)_2, (ConstSTO)_3));
+                        RESULT.addElement (new IdValueTuple(_1, (STO)_2, (STO)_3));
                     :}
     |               IdListWOptInit:_1 T_COMMA OptModifierList:_2 OptArrayDef:_5 T_ID:_3 OptInit:_4
                     {:
                         RESULT = _1;
-                        RESULT.addElement (new IdValueTuple(_3, (STO)_4, (ConstSTO)_5));
+                        RESULT.addElement (new IdValueTuple(_3, (STO)_4, (STO)_5));
                     :}
     ;
                     // This OptArrayDef not needed because constant arrays WNBT

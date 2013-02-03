@@ -1,0 +1,3 @@
+Error, "", line 0: 
+  Index expression value (0) in array declaration must be > 0.
+Compile: failure.
