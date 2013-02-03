@@ -1,0 +1,3 @@
+Error, "project1/phase2/p09c.rc", line 17: 
+  Value of type BBB not assignable to variable of type NOT.
+Compile: failure.

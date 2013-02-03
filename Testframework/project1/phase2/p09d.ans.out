@@ -1,0 +1,7 @@
+Error, "project1/phase2/p09d.rc", line 11: 
+  Value of type int not assignable to variable of type FLOAT.
+Error, "project1/phase2/p09d.rc", line 14: 
+  Type of return expression (FLOAT), not assignment compatible with function's return type (INTEGER).
+Error, "project1/phase2/p09d.rc", line 16: 
+  Return required in function, none found.
+Compile: failure.
