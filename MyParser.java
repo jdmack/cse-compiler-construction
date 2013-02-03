@@ -195,7 +195,7 @@ class MyParser extends parser
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
-
+            
             VarSTO stoVar = new VarSTO(id, type);
             m_symtab.insert(stoVar);
             
@@ -204,10 +204,25 @@ class MyParser extends parser
                 DoAssignExpr(stoVar, value);
             }
 
+            // Check #10
+            if(!value.getType().isEquivalent(new IntType()))
+            {
+            	m_nNumErrors++;
+            	m_errors.print(Formatter.toString(ErrorMsg.error10i_Array, id));    
+            }
+            if(!value.isConst())
+            {
+            	m_nNumErrors++;
+            	m_errors.print(ErrorMsg.error10c_Array);    
+            }
+            if(((ConstSTO)value).getIntValue() <= 0)
+            {
+            	m_nNumErrors++;
+            	m_errors.print(Formatter.toString(ErrorMsg.error10z_Array,((ConstSTO)value).getIntValue()));
+            }
         }
     }
-
-
+    
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -360,9 +375,8 @@ class MyParser extends parser
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
-    
-        FuncSTO sto = new FuncSTO(id, retByRef);
         
+        FuncSTO sto = new FuncSTO(id, retByRef);
         // Set return type
         sto.setReturnType(returnType);
 
