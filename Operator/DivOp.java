@@ -20,6 +20,11 @@ class DivOp extends ArithmeticOp
     public STO
     doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
     {
+        System.out.println("DivOp.doOperation()");
+        System.out.println("resultType: " + resultType.getName());
+        System.out.println("operand1: " + operand1.getType().getName() + "\t" + operand1.getIntValue());
+        System.out.println("operand2: " + operand2.getType().getName() + "\t" + operand2.getIntValue());
+        System.out.println("");
         Double value = 0.0;
 
         {

@@ -115,6 +115,8 @@ class ConstSTO extends STO
     public int
     getIntValue() 
     {
+        //if(m_value == null) System.out.printf("m_value: null");
+        //System.out.println("m_value:" + m_value.toString());
         return m_value.intValue();
     }
 
@@ -153,8 +155,16 @@ class ConstSTO extends STO
 
     private Double stringToDouble(String str, int base)
     {
-        Long i = Long.parseLong(str, base);
-        Float f = Float.intBitsToFloat(i.intValue());
+        Float f;
+        if(str.contains("."))
+        {
+            f = Float.parseFloat(str);
+        }
+        else
+        {
+            Long i = Long.parseLong(str, base);
+            f = Float.intBitsToFloat(i.intValue());
+        }
         Double d = f.doubleValue();
         return d; 
     }
