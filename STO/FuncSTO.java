@@ -25,6 +25,12 @@ class FuncSTO extends STO
     }
 
     public 
+    FuncSTO(String strName, Boolean retByRef)
+    {
+        this(strName, new Vector(), retByRef);
+    }
+
+    public 
     FuncSTO(String strName, Vector<ParamSTO> params, boolean retByRef)
     {
         super(strName, new FuncPtrType());

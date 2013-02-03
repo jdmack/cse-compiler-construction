@@ -288,7 +288,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoFuncDecl_1(Type returnType, String id)
+    DoFuncDecl_1(Type returnType, String id, Boolean retByRef)
     {
         // Check for func already existing in localScope
         if(m_symtab.accessLocal(id) != null)
