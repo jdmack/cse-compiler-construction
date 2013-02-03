@@ -465,7 +465,7 @@ class MyParser extends parser
         {
             // For readability and shorter lines
             ParamSTO thisParam = stoFunc.getParameters().elementAt(i);
-            ExprSTO thisArg = args.elementAt(i);
+            STO thisArg = args.elementAt(i);
 
             // Check #5b - non-assignable arg for pass-by-value param
             if(!thisParam.isPassByReference())
