@@ -74,3 +74,7 @@ turnin:
 	rm Makefile
 	mv Makefile.orig Makefile
 	make new 
+
+test:
+	cd Testframework; ./testAllP1.sh
+
