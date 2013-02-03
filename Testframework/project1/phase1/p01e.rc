@@ -1,0 +1,11 @@
+/* Check 1 (p01e.rc) */
+// Expected: Compile: failure.
+// Incompatible type bool to binary operator *, numeric expected.
+
+float r;
+bool b;
+
+function : int main() {
+    r = r * b;
+    return 0;
+}

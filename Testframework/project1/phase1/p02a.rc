@@ -1,0 +1,17 @@
+/* Check 2 (p02a.rc) */
+/*
+Error, "p02a.rc", line 9: 
+  Value of type float not assignable to variable of type int.
+Compile: failure.
+*/
+int x;
+float y, w;
+
+function : int main() {
+    x++;
+    w = x++ + --y;
+    x = x + ++w + y+++x;
+    w = y-y-- - --x;
+
+    return 0;
+}

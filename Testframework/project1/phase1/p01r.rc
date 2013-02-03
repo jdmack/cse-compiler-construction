@@ -1,0 +1,12 @@
+/* Check 1 (p01r.rc) */
+// Expected: Compile: failure.
+// Incompatible types to operator: bool != int;
+// both must be numeric, or both equivalent to bool.
+
+
+bool b;
+
+function : int main() {
+    b = true != 31;
+    return 0;
+} 

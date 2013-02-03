@@ -1,0 +1,12 @@
+/* Check 1 (p01o.rc) */
+// Expected: Compile: failure.
+// Incompatible type bool to binary operator >, numeric expected.
+
+float r;
+int i;
+bool b;
+
+function : int main() {
+    r = i > b;
+    return 0;
+ }

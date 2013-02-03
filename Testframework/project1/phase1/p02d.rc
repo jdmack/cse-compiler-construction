@@ -1,0 +1,14 @@
+/* Check 2 (p02a.rc) */
+// Compile: success.
+
+int x;
+float y, w;
+
+function : int main() {
+    x++;
+    w = x++ + --y;
+    x = x++ + ++x + x+++x++;
+    w = --y-y-- - --x;
+
+    return 0;
+}

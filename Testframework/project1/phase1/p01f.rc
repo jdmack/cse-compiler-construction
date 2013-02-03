@@ -1,0 +1,10 @@
+/* Check 1 (p01f.rc) */
+// Exptected: Compile: success.
+
+float r;
+int i;
+
+function : int main() {
+    r = i * r;
+    return 0;
+}

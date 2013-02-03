@@ -1,0 +1,9 @@
+/* Check 1 (p01h.rc) */
+// Expected: Compile: failure.
+// Value of type float not assignable to variable of type int.
+int i;
+
+function : int main() {
+    i = 2 * 3.14;
+    return 0;
+}
