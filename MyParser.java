@@ -237,7 +237,7 @@ class MyParser extends parser
         // Check for previous errors
         for(int i = 0; i < lstIDs.size(); i++)
         {
-            if(lstIDs.elementAt(i).value.isError())
+            if(lstIDs.elementAt(i).getValue().isError())
                 return;
                 //return lstIDs.elementAt(i).value;
 
