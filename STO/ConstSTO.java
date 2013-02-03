@@ -39,6 +39,38 @@ class ConstSTO extends STO
                 // fields as necessary
     }
 
+    public
+    ConstSTO(String strName, Type typ, String val)
+    {
+        super(strName, typ);
+
+        int base;
+        String str;
+
+        // Check for hex
+        if(val.toLowerCase().startsWith("0x"))
+        {
+            str = val.replace("0x", "");
+            base = 16;
+        }
+        // Check for octal
+        else if(val.startsWith("0") && val.length() > 1) 
+        {
+            str = val.substring(1);
+            base = 8;
+        }
+
+        // It's decimal
+        else
+        {
+            str = val;
+            base = 10;
+        }
+
+        setValue(stringToDouble(str, base));
+
+    }
+
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
@@ -49,7 +81,7 @@ class ConstSTO extends STO
     }
 
     private void
-    setValue(double val) 
+    setValue(Double val) 
     {
         m_value = new Double(val);
     }
@@ -76,6 +108,14 @@ class ConstSTO extends STO
     getBoolValue() 
     {
         return(m_value.intValue() != 0);
+    }
+
+    private Double stringToDouble(String str, int base)
+    {
+        Long i = Long.parseLong(str, base);
+        Float f = Float.intBitsToFloat(i.intValue());
+        Double d = f.doubleValue();
+        return d; 
     }
 
 }
