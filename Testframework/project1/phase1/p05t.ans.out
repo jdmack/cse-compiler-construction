@@ -1,0 +1,3 @@
+Error, "project1/phase1/p05t.rc", line 5: 
+  Value of type void not assignable to variable of type int.
+Compile: failure.

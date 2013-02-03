@@ -1,4 +1,6 @@
-function : float & f() {
+
+
+function : float f() {
     float a;
     return a;
 }

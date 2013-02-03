@@ -130,6 +130,6 @@ abstract class STO
     public boolean isTypedef() { return false; }
     public boolean isError()   { return false; }
     public boolean isParam()   { return false; }
-
+    public boolean isNull()    { return false; }
 
 }
