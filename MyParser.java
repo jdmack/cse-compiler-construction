@@ -297,7 +297,7 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
     
-        FuncSTO sto = new FuncSTO(id);
+        FuncSTO sto = new FuncSTO(id, retByRef);
         
         // Set return type
         sto.setReturnType(returnType);
