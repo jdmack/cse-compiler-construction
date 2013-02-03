@@ -233,7 +233,7 @@ ExternDecl ::=      T_EXTERN Type IdList:_3 T_SEMI
 VarDecl ::=         OptStatic UndecoratedType:_2 IdListWOptInit:_3 T_SEMI
                     {:
                         ((MyParser) parser).DoVarDecl (_2, _3);
-                        // _2: Type
+                        // _2: UType
                         // _3: Vector<IdValueTuple>
                     :}
     |               OptStatic T_AUTO T_ID:_1 T_ASSIGN Expr:_2 T_SEMI
@@ -329,9 +329,14 @@ FuncDecl ::=        T_EXTERN T_FUNCTION T_COLON ReturnType:_1 T_ID:_2
     ;
 
 
-Type ::=            SubType:_1 OptModifierList OptArrayDef
+Type ::=            SubType:_1 OptModifierList OptArrayDef:_3
                     {:
-                        RESULT = _1;
+                        if(_3 != null) {
+                            RESULT = new ArrayType(_1, _3);      
+                        }
+                        else {
+                            RESULT = _1;
+                        }
                     :}
     |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
     ;
@@ -384,7 +389,10 @@ Modifier ::=        T_STAR
     ;
 
 
-OptArrayDef ::=     T_LBRACKET ConstExpr T_RBRACKET
+OptArrayDef ::=     T_LBRACKET ConstExpr:_1 T_RBRACKET
+                    {:
+                        RESULT = _1;
+                    :}
     |               /* empty */
     ;
 
@@ -513,12 +521,14 @@ IdListUpper ::=     T_ID_U:_1
 
                     // int x = expr2, y = expr
 
-IdListWOptInit ::=  OptModifierList OptArrayDef T_ID:_1 OptInit:_2
+IdListWOptInit ::=  OptModifierList OptArrayDef:_3 T_ID:_1 OptInit:_2
                     {:
                         // _1 is String strID
-                        // _2 is ExprSTO from DoFuncCall
+                        // _2 is STO from DoFuncCall
+                        // _3 is ConstExpr in [ConstExpr]
+
                         RESULT = new Vector<IdValueTuple> ();
-                        RESULT.addElement (new IdValueTuple(_1, (STO)_2));
+                        RESULT.addElement (new IdValueTuple(_1, (STO)_2, _3));
                     :}
     |               IdListWOptInit:_1 T_COMMA OptModifierList:_2 OptArrayDef T_ID:_3 OptInit:_4
                     {:
