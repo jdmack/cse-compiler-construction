@@ -5,15 +5,18 @@
 class ArrayType extends CompositeType
 {
 	Type elementType;
-	int dimensionSize;
+	STO dimensionSize;
 	
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
     public 
-    ArrayType(String strName, int size)
+    ArrayType(Type elementType, STO dimenionSize)
     {
-        super(strName, size);
+        super(elementType.getName()+"["+((ConstSTO) dimenionSize).getIntValue()+"]", ((ConstSTO) dimenionSize).getIntValue());
+        setElementType(elementType);
+        setDimensionSize(dimenionSize);
+
     }
     
     //---------------------------------------------------------------------
@@ -29,11 +32,29 @@ class ArrayType extends CompositeType
     	elementType = type;
     }
     
-    public int getDimensionSize() {
+    public STO getDimensionSize() {
     	return dimensionSize;
     }
     
-    public void setDimensionSize(int size) {
+    public void setDimensionSize(STO size) {
     	dimensionSize = size;
+    }
+
+    public STO checkArray() {
+    	STO result = null;
+        // Check #10
+        if(!elementType.isEquivalent(new IntType()))
+        {
+        	result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10i_Array, dimensionSize.getName())));    
+        } 
+        else if(!dimensionSize.isConst())
+        {
+        	result = (new ErrorSTO(ErrorMsg.error10c_Array));    
+        }
+        else if(((ConstSTO) dimensionSize).getIntValue() <= 0)
+        {
+        	result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10z_Array,((ConstSTO)dimensionSize).getIntValue())));
+        }
+        return result;
     }
 }

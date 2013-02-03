@@ -203,23 +203,6 @@ class MyParser extends parser
             {
                 DoAssignExpr(stoVar, value);
             }
-
-            // Check #10
-            if(!value.getType().isEquivalent(new IntType()))
-            {
-            	m_nNumErrors++;
-            	m_errors.print(Formatter.toString(ErrorMsg.error10i_Array, id));    
-            }
-            if(!value.isConst())
-            {
-            	m_nNumErrors++;
-            	m_errors.print(ErrorMsg.error10c_Array);    
-            }
-            if(((ConstSTO)value).getIntValue() <= 0)
-            {
-            	m_nNumErrors++;
-            	m_errors.print(Formatter.toString(ErrorMsg.error10z_Array,((ConstSTO)value).getIntValue()));
-            }
         }
     }
     
