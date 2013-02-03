@@ -50,8 +50,8 @@ class ConstSTO extends STO
     ConstSTO(String strName, Type typ, String val)
     {
         super(strName, typ);
-        System.out.println("String: " + val);
-        System.out.println("Type: " + typ.getName());
+        //System.out.println("String: " + val);
+        //System.out.println("Type: " + typ.getName());
 
         if(val.equals("true"))
         {
@@ -72,12 +72,14 @@ class ConstSTO extends STO
             {
                 str = val.replace("0x", "");
                 base = 16;
+                //System.out.println("\tIt's hex");
             }
             // Check for octal
             else if(val.startsWith("0") && val.length() > 1) 
             {
                 str = val.substring(1);
                 base = 8;
+                //System.out.println("\tIt's octal");
             }
 
             // It's decimal
@@ -85,26 +87,28 @@ class ConstSTO extends STO
             {
                 str = val;
                 base = 10;
+                //System.out.println("\tIt's decimal");
             }
             
             Double value;
 
             if(typ.isInt())
             {
+                //System.out.println("\tIt's int");
+
                 Integer i = Integer.parseInt(str, base);
                 value = new Double(i);
-                System.out.println("\tConverting literal to int then Double");
-                System.out.println("\t\tInteger: " + i);
-                System.out.println("\t\tDouble: " + value);
             }
             else
             {
-                Long i = Long.parseLong(str, base);
-                Float f = Float.intBitsToFloat(i.intValue());
+                //System.out.println("\tIt's float");
+                Float f = Float.parseFloat(str);
                 value = f.doubleValue();
             }
 
-            setValue(stringToDouble(str, base));
+            setValue(value);
+
+            //System.out.println("\t\t\tFinal Value: " + value);
         }
 
     }
@@ -133,8 +137,8 @@ class ConstSTO extends STO
     public int
     getIntValue() 
     {
-        if(m_value == null) System.out.printf("m_value: null");
-        System.out.println("m_value:" + m_value.toString());
+        //if(m_value == null) //System.out.printf("m_value: null");
+        //System.out.println("m_value:" + m_value.toString());
         return m_value.intValue();
     }
 
@@ -169,23 +173,6 @@ class ConstSTO extends STO
             m_value = new Double(1);
         else
             m_value = new Double(0);
-    }
-
-    private Double stringToDouble(String str, int base)
-    {
-
-        Float f;
-        if(str.contains("."))
-        {
-            f = Float.parseFloat(str);
-        }
-        else
-        {
-            Long i = Long.parseLong(str, base);
-            f = Float.intBitsToFloat(i.intValue());
-        }
-        Double d = f.doubleValue();
-        return d; 
     }
 
 }
