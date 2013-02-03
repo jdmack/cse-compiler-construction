@@ -35,15 +35,45 @@ class ArithmeticOp extends BinaryOp
         
         // Check successful, determine result type
         // Plus, Minus, Star, Slash - Int if both int, Float otherwise
+        Type resultType;
+
         if(operand1.getType().isInt() && operand2.getType().isInt())
         {
-            resultSTO = new ExprSTO("ArithmeticOp.checkOperands() Result", new IntType());
+            resultType = new IntType();
         }
         else
         {
-            resultSTO = new ExprSTO("ArithmeticOp.checkOperands() Result", new FloatType());
+            resultType = new FloatType();
+        }
+
+        if(operand1.isConst() && operand2.isConst())
+        {
+            resultSTO = new ConstSTO("ArithmeticOp.checkOperands() Result", resultType);
+        }
+        else
+        {
+            resultSTO = new ExprSTO("ArithmeticOp.checkOperands() Result", resultType);
         }
 
         return resultSTO;
     }
+
+    public STO
+    doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
+    {
+        Double value = 0.0;
+
+        if(resultType.isInt())
+        {
+            value = new Double(operand1.getIntValue() + operand2.getIntValue());
+        }
+        else if(resultType.isFloat())
+        {
+            value = new Double(operand1.getFloatValue() + operand2.getFloatValue());
+        }
+
+        return new ConstSTO("AddOp.doOperation Result", resultType, value);
+        return(new ErrorSTO("ArithmeticOp.doOperation()"));
+    }
+
 }

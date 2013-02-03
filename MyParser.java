@@ -248,10 +248,24 @@ class MyParser extends parser
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
         
-            ConstSTO sto = new ConstSTO(id, type);
+            // Check #8a - init value not known at compiler time
+            if(!value.isConst())
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error8_CompileTime, id));
+            }
+
+            // Check #8b
+            if(!value.getType().isAssignable(type))
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error8_Assign, value.getType().getName(), type.getName()));
+            }
+            
+            STO sto = new ConstSTO(id, type, ((ConstSTO)value).getValue());
             m_symtab.insert(sto);
 
-            //if(!value.
+             
         }
     }
     /*
@@ -646,6 +660,11 @@ class MyParser extends parser
 
         // Use BinaryOp.checkOperands() to perform error checks
         STO resultSTO = op.checkOperands(operand1, operand2);
+
+        if(resultSTO.isConst())
+        {
+            resultSTO =  op.doOperation((ConstSTO)operand1, (ConstSTO)operand2, resultSTO.getType());
+        }
 
         // Process/Print errors
         if(resultSTO.isError())

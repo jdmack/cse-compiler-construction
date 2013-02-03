@@ -40,34 +40,54 @@ class ConstSTO extends STO
     }
 
     public
+    ConstSTO(String strName, Type typ, Double val)
+    {
+        super(strName, typ);
+        setValue(val);
+    }
+
+    public
     ConstSTO(String strName, Type typ, String val)
     {
         super(strName, typ);
 
-        int base;
-        String str;
 
-        // Check for hex
-        if(val.toLowerCase().startsWith("0x"))
+        if(val.equals("true"))
         {
-            str = val.replace("0x", "");
-            base = 16;
-        }
-        // Check for octal
-        else if(val.startsWith("0") && val.length() > 1) 
-        {
-            str = val.substring(1);
-            base = 8;
+            setValue((double) 1);
         }
 
-        // It's decimal
+        else if(val.equals("false"))
+        {
+            setValue((double) 0);
+        }
         else
         {
-            str = val;
-            base = 10;
-        }
+            int base;
+            String str;
 
-        setValue(stringToDouble(str, base));
+            // Check for hex
+            if(val.toLowerCase().startsWith("0x"))
+            {
+                str = val.replace("0x", "");
+                base = 16;
+            }
+            // Check for octal
+            else if(val.startsWith("0") && val.length() > 1) 
+            {
+                str = val.substring(1);
+                base = 8;
+            }
+
+            // It's decimal
+            else
+            {
+                str = val;
+                base = 10;
+            }
+
+            setValue(stringToDouble(str, base));
+        }
 
     }
 
@@ -80,7 +100,7 @@ class ConstSTO extends STO
         return true;
     }
 
-    private void
+    public void
     setValue(Double val) 
     {
         m_value = new Double(val);
@@ -108,6 +128,27 @@ class ConstSTO extends STO
     getBoolValue() 
     {
         return(m_value.intValue() != 0);
+    }
+
+    public void
+    setIntValue(int value)
+    {
+        m_value = new Double(value);
+    }
+
+    public void
+    setFloatValue(float value)
+    {
+        m_value = new Double(value);
+    }
+
+    public void
+    setBoolValue(boolean value)
+    {
+        if(value)
+            m_value = new Double(1);
+        else
+            m_value = new Double(0);
     }
 
     private Double stringToDouble(String str, int base)
