@@ -52,12 +52,7 @@ abstract class Type
     public boolean
     isEquivalent(Type type)
     {
-        if(this.getName().equals(type.getName()))
-        {
-            return true;
-        }
-
-        return false;
+        return (this.getClass() == type.getClass())
     }
 
     // meaning: param = this
