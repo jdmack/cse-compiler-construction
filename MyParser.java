@@ -625,6 +625,10 @@ class MyParser extends parser
     STO
     DoDesignator2_Array(STO desSTO, STO indexSTO)
     {
+        // desSTO: the identifier
+        // indexSTO: the expression inside the []
+
+
         // Check #11a
         // bullet 1 - desSTO is not array or pointer type
         if((!desSTO.getType().isArray()) && (!desSTO.getType().isPointer()))
@@ -653,6 +657,12 @@ class MyParser extends parser
                 return new ErrorSTO("Desig2_Array() - index is constant, out of bounds");
             }
         }
+
+        // Checks are complete, now we need to return an ExprSTO with the type of the array elements
+        if(
+        
+
+
 
         return desSTO;
     }

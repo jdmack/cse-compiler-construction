@@ -906,6 +906,7 @@ Designator2 ::=     Designator2:_1 T_DOT T_ID:_3
                     {:
                         RESULT = ((MyParser) parser).DoDesignator2_Dot (_1, _3);
                     :}
+                    // Array
     |               Designator2:_1 T_LBRACKET Expr:_2 T_RBRACKET
                     {:
                         // T_ID [x]...[y]
