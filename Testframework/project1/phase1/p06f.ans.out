@@ -1,5 +1,5 @@
-Error, "../tests/phase1/p06f.rc", line 7:
+Error, "project1/phase1/p06f.rc", line 7:
   Type of return expression (float), not assignment compatible with function's return type (int).
-Error, "../tests/phase1/p06f.rc", line 9:
+Error, "project1/phase1/p06f.rc", line 9:
   Return required in function, none found.
 Compile: failure.

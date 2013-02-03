@@ -1,1 +1,5 @@
-Compile: success.
+Error, "project1/phase1/p06h.rc", line 3:
+  Return expression is not a modifiable L-value for function that returns by reference.
+Error, "", line 0:
+  Return required in function, none found.
+Compile: failure.

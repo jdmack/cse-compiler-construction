@@ -1,4 +1,4 @@
-Error, "../tests/phase1/p06k.rc", line 4:
+Error, "project1/phase1/p06k.rc", line 4:
   Type of return expression (int) is not equivalent to the function's return type (float).
 Error, "", line 0:
   Return required in function, none found.

@@ -1,6 +1,6 @@
-Error, "../tests/phase1/p06c.rc", line 4:
+Error, "project1/phase1/p06c.rc", line 4:
   Type of return expression (float), not assignment compatible with function's return type (int).
-Error, "../tests/phase1/p06c.rc", line 11:
+Error, "project1/phase1/p06c.rc", line 11:
   Type of return expression (bool), not assignment compatible with function's return type (int).
 Error, "", line 0:
   Return required in function, none found.

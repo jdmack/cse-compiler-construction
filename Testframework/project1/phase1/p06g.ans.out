@@ -1,12 +1,12 @@
-Error, "../tests/phase1/p06g.rc", line 7:
+Error, "project1/phase1/p06g.rc", line 7:
   Return required in function, none found.
-Error, "../tests/phase1/p06g.rc", line 15:
+Error, "project1/phase1/p06g.rc", line 15:
   Return in function requires a result expression, none found.
-Error, "../tests/phase1/p06g.rc", line 23:
+Error, "project1/phase1/p06g.rc", line 23:
   Return required in function, none found.
-Error, "../tests/phase1/p06g.rc", line 37:
+Error, "project1/phase1/p06g.rc", line 37:
   Return required in function, none found.
-Error, "../tests/phase1/p06g.rc", line 55:
+Error, "project1/phase1/p06g.rc", line 55:
   Return required in function, none found.
 Error, "", line 0:
   Return required in function, none found.
