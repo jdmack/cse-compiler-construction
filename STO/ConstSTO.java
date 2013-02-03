@@ -50,7 +50,7 @@ class ConstSTO extends STO
     ConstSTO(String strName, Type typ, String val)
     {
         super(strName, typ);
-
+        System.out.println("String: " + val);
 
         if(val.equals("true"))
         {
@@ -85,6 +85,23 @@ class ConstSTO extends STO
                 str = val;
                 base = 10;
             }
+            
+            Double value;
+
+            if(typ.isInt())
+            {
+                Integer i = Integer.parseInt(str, base);
+                value = new Double(i);
+                System.out.println("\tConverting literal to int then Double");
+                System.out.println("\t\tInteger: " + i);
+                System.out.println("\t\tDouble: " + value);
+            }
+            else
+            {
+                Long i = Long.parseLong(str, base);
+                Float f = Float.intBitsToFloat(i.intValue());
+                value = f.doubleValue();
+            }
 
             setValue(stringToDouble(str, base));
         }
@@ -115,8 +132,8 @@ class ConstSTO extends STO
     public int
     getIntValue() 
     {
-        //if(m_value == null) System.out.printf("m_value: null");
-        //System.out.println("m_value:" + m_value.toString());
+        if(m_value == null) System.out.printf("m_value: null");
+        System.out.println("m_value:" + m_value.toString());
         return m_value.intValue();
     }
 
@@ -155,6 +172,7 @@ class ConstSTO extends STO
 
     private Double stringToDouble(String str, int base)
     {
+
         Float f;
         if(str.contains("."))
         {
