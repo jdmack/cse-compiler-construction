@@ -477,25 +477,20 @@ class MyParser extends parser
                     error_flag = true;
                 }
             }
-
-            // Check #5c - arg type not equivalent to pass-by-ref param type
-            else if(thisParam.isPassByReference())
+            else
             {
+            // Check #5c - arg type not equivalent to pass-by-ref param type
                 if(!thisArg.getType().isEquivalent(thisParam.getType()))
                 {
                     m_nNumErrors++;
                     m_errors.print(Formatter.toString(ErrorMsg.error5r_Call, thisArg.getType().getName(), thisParam.getName(), thisParam.getType().getName()));
                     error_flag = true;
                 }
-            }
 
             // Check #5d - arg not modifiable l-value for pass by ref param
-            else if(thisParam.isPassByReference())
-            {
-                if(!thisArg.isModLValue())
                 {
                     m_nNumErrors++;
-                    m_errors.print(Formatter.toString(ErrorMsg.error5c_Call, thisArg.getName(), thisArg.getType().getName()));
+                    m_errors.print(Formatter.toString(ErrorMsg.error5c_Call, thisParam.getName(), thisArg.getType().getName()));
                     error_flag = true;
                 }
             }
