@@ -1,0 +1,3 @@
+Error, "project1/phase1/p01u.rc", line 12: 
+  Incompatible type int to unary operator !, equivalent to bool expected.
+Compile: failure.

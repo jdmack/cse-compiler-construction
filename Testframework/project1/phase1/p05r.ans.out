@@ -1,0 +1,7 @@
+Error, "project1/phase1/p05r.rc", line 12: 
+  Left-hand operand is not assignable (not a modifiable L-value).
+Error, "project1/phase1/p05r.rc", line 13: 
+  Left-hand operand is not assignable (not a modifiable L-value).
+Error, "project1/phase1/p05r.rc", line 16: 
+  Value of type float not assignable to variable of type int.
+Compile: failure.
