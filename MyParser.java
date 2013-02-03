@@ -338,7 +338,7 @@ class MyParser extends parser
             if(type.isArray()) 
             {
                 STO stoResult = ((ArrayType)type).checkArray();
-
+                
                 if(stoResult.isError())
                 {
                     m_nNumErrors++;

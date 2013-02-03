@@ -41,11 +41,11 @@ class ArrayType extends CompositeType
     }
 
     public STO checkArray() {
-    	STO result = null;
+    	STO result = dimensionSize;
         // Check #10
-        if(!elementType.isEquivalent(new IntType()))
+        if(!dimensionSize.getType().isEquivalent(new IntType()))
         {
-        	result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10i_Array, dimensionSize.getName())));    
+        	result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10i_Array, dimensionSize.getType().getName())));    
         } 
         else if(!dimensionSize.isConst())
         {
