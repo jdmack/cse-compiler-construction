@@ -1,18 +1,49 @@
 
-public class IdValueTuple {
-	String id;
-	STO value;
+public class IdValueTuple 
+{
+
+    //---------------------------------------------------------------------
+    //      Instance Variables
+    //---------------------------------------------------------------------
+	String m_ID;
+	STO m_value;
+    ConstSTO m_arrayIndex;
 	
-	public IdValueTuple(String id, STO value) {
-		this.id = id;
-		this.value = value;
+    //---------------------------------------------------------------------
+    //      Constructors
+    //---------------------------------------------------------------------
+	public 
+    IdValueTuple(String ID, STO value) 
+    {
+        this(ID, value, null);
+	}
+
+	public 
+    IdValueTuple(String ID, STO value, ConstSTO arrayIndex) 
+    {
+		m_ID = ID;
+		m_value = value;
+        m_arrayIndex = arrayIndex;
 	}
 	
-	public String getId() {
-		return id;
+    //---------------------------------------------------------------------
+    //      Methods
+    //---------------------------------------------------------------------
+	public String 
+    getId() 
+    {
+		return m_iD;
 	}
 	
-	public STO getValue() {
-		return value;
+	public STO 
+    getValue() 
+    {
+		return m_value;
+	}
+
+	public STO 
+    getArrayIndex() 
+    {
+		return m_arrayIndex;;
 	}
 }
