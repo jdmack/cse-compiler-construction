@@ -1,0 +1,5 @@
+Error, "project1/phase2/p08i.rc", line 2: 
+  Arithmetic exception occurred during constant folding.
+Error, "", line 0: 
+  Return required in function, none found.
+Compile: failure.
