@@ -486,8 +486,18 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoFuncCall(STO sto, Vector<ExprSTO> args)
+    DoFuncCall(STO sto, Vector<STO> args)
     {
+        // Check for previous errors
+        if(sto.isError())
+            return sto;
+
+        for(int i = 0; i < args.size(); i++)
+        {
+            if(args.elementAt(i).isError())
+                return args.elementAt(i);
+        }
+
         if(!sto.isFunc())
         {
             m_nNumErrors++;
@@ -525,6 +535,7 @@ class MyParser extends parser
                     m_nNumErrors++;
                     m_errors.print(Formatter.toString(ErrorMsg.error5a_Call, thisArg.getType().getName(), thisParam.getName(), thisParam.getType().getName()));
                     error_flag = true;
+                    continue;
                 }
             }
             else
@@ -535,13 +546,16 @@ class MyParser extends parser
                     m_nNumErrors++;
                     m_errors.print(Formatter.toString(ErrorMsg.error5r_Call, thisArg.getType().getName(), thisParam.getName(), thisParam.getType().getName()));
                     error_flag = true;
+                    continue;
                 }
 
             // Check #5d - arg not modifiable l-value for pass by ref param
+                if(!thisArg.isModLValue())
                 {
                     m_nNumErrors++;
                     m_errors.print(Formatter.toString(ErrorMsg.error5c_Call, thisParam.getName(), thisArg.getType().getName()));
                     error_flag = true;
+                    continue;
                 }
             }
         }
