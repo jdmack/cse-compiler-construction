@@ -259,9 +259,9 @@ OptStatic ::=       T_STATIC
     ;
 
 
-TypedefDecl ::=     T_TYPEDEF Type IdListUpper:_2 T_SEMI                // typedef [type] IDENTIFIER;
+TypedefDecl ::=     T_TYPEDEF Type:_1 IdListUpper:_2 T_SEMI                // typedef [type] IDENTIFIER;
                     {:
-                        ((MyParser) parser).DoTypedefDecl (_2);
+                        ((MyParser) parser).DoTypedefDecl (_1, _2);
                     :}
     |               T_STRUCTDEF T_ID_U:_1 T_LBRACE                      // structdef IDENTIFIER { [fields] };
                     {:
