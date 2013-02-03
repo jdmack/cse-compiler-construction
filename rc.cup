@@ -243,11 +243,14 @@ VarDecl ::=         OptStatic UndecoratedType:_2 IdListWOptInit:_3 T_SEMI
 
     ;
 
-ConstDecl ::=       OptStatic T_CONST UndecoratedType IdListWInit:_3 T_SEMI
+ConstDecl ::=       OptStatic T_CONST UndecoratedType:_2 IdListWInit:_3 T_SEMI
                     {:
-                        ((MyParser) parser).DoConstDecl (_3);
+                        ((MyParser) parser).DoConstDecl (_2, _3);
                     :}
     |               OptStatic T_CONST T_AUTO T_ID T_ASSIGN Expr T_SEMI
+                    {:
+                        
+                    :}
     ;
 
 
@@ -512,25 +515,24 @@ IdListWOptInit ::=  OptModifierList OptArrayDef T_ID:_1 OptInit:_2
                         // _1 is String strID
                         // _2 is ExprSTO from DoFuncCall
                         RESULT = new Vector<IdValueTuple> ();
-                        RESULT.addElement (new IdValueTuple(_1, _2));
+                        RESULT.addElement (new IdValueTuple(_1, (STO)_2));
                     :}
     |               IdListWOptInit:_1 T_COMMA OptModifierList:_2 OptArrayDef T_ID:_3 OptInit:_4
                     {:
                         RESULT = _1;
-                        RESULT.addElement (new IdValueTupel(_3, _4);
+                        RESULT.addElement (new IdValueTuple(_3, (STO)_4));
                     :}
     ;
 
-IdListWInit ::=     OptModifierList OptArrayDef T_ID:_1 T_ASSIGN ConstExpr
+IdListWInit ::=     OptModifierList OptArrayDef T_ID:_1 T_ASSIGN ConstExpr:_2
                     {:
-			            RESULT = new Vector ();
-			            RESULT.addElement (_1);
+			            RESULT = new Vector<IdValueTuple>();
+			            RESULT.addElement (new IdValueTuple(_1, (STO)_2));
                     :}
-  //|       Do not need an extra rule since we are not doing constant arrays
-    |               IdListWInit:_1 T_COMMA OptModifierList OptArrayDef T_ID:_3 T_ASSIGN ConstExpr
+    |               IdListWInit:_1 T_COMMA OptModifierList OptArrayDef T_ID:_3 T_ASSIGN ConstExpr:_4
                     {:
 			            RESULT = _1;
-			            RESULT.addElement (_3);
+			            RESULT.addElement (new IdValueTuple(_3, (STO)_4));
 		            :}
     ;
 

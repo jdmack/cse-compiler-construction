@@ -187,7 +187,7 @@ class MyParser extends parser
         for(int i = 0; i < lstIDs.size(); i++)
         {
             String id = lstIDs.elementAt(i).getId();
-            STO value = 1stIDs.elementAt(i).getValue();
+            STO value = lstIDs.elementAt(i).getValue();
         
             // Check for var already existing in localScope
             if(m_symtab.accessLocal(id) != null)
@@ -234,22 +234,52 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoConstDecl(Vector<String> lstIDs)
+    DoConstDecl(Type type, Vector<IdValueTuple> lstIDs)
     {
         for(int i = 0; i < lstIDs.size(); i++)
         {
-            String id = lstIDs.elementAt(i);
+            String id = lstIDs.elementAt(i).getId();
+            STO value = lstIDs.elementAt(i).getValue(); 
 
+            // Check for constant already existing in localScope
             if(m_symtab.accessLocal(id) != null)
             {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
         
-            ConstSTO sto = new ConstSTO(id);
+            ConstSTO sto = new ConstSTO(id, type);
             m_symtab.insert(sto);
+
+            //if(!value.
         }
     }
+    /*
+    DoVarDecl(Type type, Vector<IdValueTuple> lstIDs)
+    {
+        for(int i = 0; i < lstIDs.size(); i++)
+        {
+            String id = lstIDs.elementAt(i).getId();
+            STO value = lstIDs.elementAt(i).getValue();
+        
+            // Check for var already existing in localScope
+            if(m_symtab.accessLocal(id) != null)
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
+            }
+
+            VarSTO stoVar = new VarSTO(id, type);
+            m_symtab.insert(stoVar);
+            
+            if(!value.isNull())
+            {
+                DoAssignExpr(stoVar, value);
+            }
+
+        }
+    }
+    */
 
 
     //----------------------------------------------------------------
