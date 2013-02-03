@@ -1,5 +1,0 @@
-/* Check 10 (p10b.rc) */
-
-typedef int INDEX;
-const INDEX i1 = 2;
-bool[i1] a;

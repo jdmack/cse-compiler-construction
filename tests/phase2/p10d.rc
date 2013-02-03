@@ -1,5 +1,0 @@
-/* Check 10 (p10d.rc) */
-
-typedef int INDEX;
-INDEX i1 = 2;
-bool[i1] a;
