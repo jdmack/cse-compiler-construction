@@ -626,6 +626,9 @@ WritePair ::=       Expr
 
 
 ConstExpr ::=       Expr
+                    {:
+
+                    :}
     ;
 
 
