@@ -1,18 +1,18 @@
 
 public class IdValueTuple {
 	String id;
-	STO sto;
+	STO value;
 	
-	public IdValueTuple(String id, STO sto) {
+	public IdValueTuple(String id, STO value) {
 		this.id = id;
-		this.sto = sto;
+		this.value = value;
 	}
 	
 	public String getId() {
 		return id;
 	}
 	
-	public STO getSTO() {
-		return sto;
+	public STO getValue() {
+		return value;
 	}
 }
