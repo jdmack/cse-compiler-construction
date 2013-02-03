@@ -92,7 +92,7 @@ terminal String
     T_ID_U,
     T_ID
     ;
-
+    
 
 //--------------------------------------------------------------------
 //
@@ -499,8 +499,9 @@ IdListUpper ::=     T_ID_U:_1
     ;
 
 
-IdListWOptInit ::=  OptModifierList OptArrayDef T_ID:_1 OptInit
+IdListWOptInit ::=  OptModifierList OptArrayDef T_ID:_1 OptInit:_2
                     {:
+                        ((MyParser) parser).DoAssignExpr (_1, _2);
                         RESULT = new Vector ();
                         RESULT.addElement (_1);
                     :}
@@ -525,7 +526,10 @@ IdListWInit ::=     OptModifierList OptArrayDef T_ID:_1 T_ASSIGN ConstExpr
     ;
 
 
-OptInit ::=         T_ASSIGN Expr
+OptInit ::=         T_ASSIGN Expr:_1
+                    {:
+                        RESULT = _1;
+                    :}
     |               T_ASSIGN T_LBRACE ArrElemsList T_RBRACE  // ReturnStatement: No             = {ele1, ele2, ..., ele3}
     |               /* empty */
     ;
