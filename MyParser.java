@@ -657,7 +657,7 @@ class MyParser extends parser
 
         // Check #11a
         // bullet 1 - desSTO is not array or pointer type
-        if((!desSTO.getType().isArray()) && (!desSTO.getType().isPointer()))
+        if((!desSTO.getType().isArray()) || (!desSTO.getType().isPointer()))
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error11t_ArrExp, desSTO.getType().getName()));
@@ -676,20 +676,17 @@ class MyParser extends parser
         //              except when desSTO is pointer type
         if(indexSTO.isConst())
         {
-            if(((ConstSTO)indexSTO).getIntValue() >= desSTO.getType().getDimensionSize().getIntValue())
+            if(((ConstSTO)indexSTO).getIntValue() >= ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue())
             {
                 m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstST)indexSTO).getIntValue(), desSTO.getDimensionSize().getIntValue()));
+                m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstSTO)indexSTO).getIntValue(), ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue()));
                 return new ErrorSTO("Desig2_Array() - index is constant, out of bounds");
             }
         }
 
         // Checks are complete, now we need to return an ExprSTO with the type of the array elements
-        if(
         
-
-
-
+        
         return desSTO;
     }
 
