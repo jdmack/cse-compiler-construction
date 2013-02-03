@@ -527,7 +527,7 @@ IdListUpper ::=     T_ID_U:_1
 IdListWOptInit ::=  OptModifierList OptArrayDef:_3 T_ID:_1 OptInit:_2
                     {:
                         // _1 is String strID
-                        // _2 is STO from DoFuncCall
+                        // _2 is STO from DoFuncCall or NullSTO if no Init
                         // _3 is ConstExpr in [ConstExpr]
 
                         RESULT = new Vector<IdValueTuple> ();
