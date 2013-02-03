@@ -675,6 +675,7 @@ class MyParser extends parser
         // Use BinaryOp.checkOperands() to perform error checks
         STO resultSTO = op.checkOperands(operand1, operand2);
 
+        // If operands are constants, do the op
         if((!resultSTO.isError()) && (resultSTO.isConst()))
         {
             resultSTO =  op.doOperation((ConstSTO)operand1, (ConstSTO)operand2, resultSTO.getType());
@@ -704,6 +705,12 @@ class MyParser extends parser
 
         // Use UnaryOp.checkOperand() to perform error checks
         STO resultSTO = op.checkOperand(operand);
+
+        // If operand is a constant, do the op
+        if((!resultSTO.isError()) && (resultSTO.isConst()))
+        {
+            resultSTO =  op.doOperation((ConstSTO)operand, resultSTO.getType());
+        }
 
         // Process/Print errors
         if(resultSTO.isError())

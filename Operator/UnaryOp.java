@@ -23,7 +23,7 @@ class UnaryOp extends Operator
     }
 
     public STO
-    doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
+    doOperation(ConstSTO operand1, Type resultType)
     {
         return new ErrorSTO("UnaryOp.doOperation Error");
     }
