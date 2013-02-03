@@ -1,0 +1,8 @@
+/* Chekc 3 (p03h.rc) */
+
+int i;
+
+function : int main() {
+    i  = i = 4 = 2;
+    return 0;
+}
