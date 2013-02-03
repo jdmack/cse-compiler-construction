@@ -623,11 +623,12 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoDesignator2_Array(STO sto)
+    DoDesignator2_Array(STO desSTO, STO indexSTO)
     {
-        // Good place to do the array checks
+        // Check #11a
 
-        return sto;
+
+        return desSTO;
     }
 
 
