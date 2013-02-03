@@ -1,0 +1,11 @@
+typedef int FOO;
+typedef FOO BAR;
+typedef BAR BAZ;
+int x;
+BAZ y;
+
+function : int main() {
+    x = 5; // OK
+    x = y; // OK by name equivalence
+    return 0;
+}
