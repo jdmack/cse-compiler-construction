@@ -22,7 +22,7 @@ class DivOp extends ArithmeticOp
     {
         Double value = 0.0;
 
-        if((operand2.getIntValue == 0) || (operand2.getFloatValue == 0.0))
+        if((operand2.getIntValue() == 0) || (operand2.getFloatValue() == 0.0))
         {
             return new ErrorSTO(ErrorMsg.error8_Arithmetic);
         }

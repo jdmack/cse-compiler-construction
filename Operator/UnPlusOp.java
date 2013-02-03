@@ -28,15 +28,14 @@ class UnPlusOp extends UnaryOp
 
         if(resultType.isInt())
         {
-            value = new Double(operand1.getIntValue() + operand2.getIntValue());
+            value = new Double(+operand.getIntValue());
         }
         else if(resultType.isFloat())
         {
-            value = new Double(operand1.getFloatValue() + operand2.getFloatValue());
+            value = new Double(+operand.getFloatValue());
         }
 
-        return new ConstSTO("AddOp.doOperation Result", resultType, value);
-        return(new ErrorSTO("UnPlusOp.doOperation()"));
+        return new ConstSTO("UnPlusOp.doOperation Result", resultType, value);
     }
 
 }

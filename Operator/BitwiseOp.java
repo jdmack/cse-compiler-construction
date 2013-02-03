@@ -33,27 +33,16 @@ class BitwiseOp extends BinaryOp
             return(new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName(), "int")));
         }
 
-        resultSTO = new ExprSTO("BitwiseOp.checkOperands() Result", new IntType());
+        if(operand1.isConst() && operand2.isConst())
+        {
+            resultSTO = new ConstSTO("BitwiseOp.checkOperands() Result", new IntType());
+        }
+        else
+        {
+            resultSTO = new ExprSTO("BitwiseOp.checkOperands() Result", new IntType());
+        }
+
 
         return resultSTO;
     }
-
-    public STO
-    doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
-    {
-        Double value = 0.0;
-
-        if(resultType.isInt())
-        {
-            value = new Double(operand1.getIntValue() + operand2.getIntValue());
-        }
-        else if(resultType.isFloat())
-        {
-            value = new Double(operand1.getFloatValue() + operand2.getFloatValue());
-        }
-
-        return new ConstSTO("AddOp.doOperation Result", resultType, value);
-        return(new ErrorSTO("BitwiseOp.doOperation()"));
-    }
-
 }

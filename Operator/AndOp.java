@@ -21,15 +21,14 @@ class AndOp extends BooleanOp
     doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
     {
         Double value = 0.0;
+        boolean b_value = true;
 
-        if(resultType.isInt())
-        {
-            value = new Double(operand1.getIntValue() && operand2.getIntValue());
-        }
-        else if(resultType.isFloat())
-        {
-            value = new Double(operand1.getFloatValue() && operand2.getFloatValue());
-        }
+        b_value = operand1.getBoolValue() && operand2.getBoolValue();
+
+        if(b_value)
+            value = new Double(1);
+        else
+            value = new Double(0);
 
         return new ConstSTO("AndOp.doOperation Result", resultType, value);
     }

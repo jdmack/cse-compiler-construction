@@ -33,7 +33,14 @@ class ModOp extends ArithmeticOp
             return(new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand2.getType().getName(), this.getName(), "int")));    
         }
 
-        resultSTO = new ExprSTO("ModOp.checkOperands() Result", new IntType());
+        if(operand1.isConst() && operand2.isConst())
+        {
+            resultSTO = new ConstSTO("ModOp.checkOperands() Result", new IntType());
+        }
+        else
+        {
+            resultSTO = new ExprSTO("ModOp.checkOperands() Result", new IntType());
+        }
 
         return resultSTO;
     }
@@ -42,17 +49,9 @@ class ModOp extends ArithmeticOp
     {
         Double value = 0.0;
 
-        if(resultType.isInt())
-        {
-            value = new Double(operand1.getIntValue() + operand2.getIntValue());
-        }
-        else if(resultType.isFloat())
-        {
-            value = new Double(operand1.getFloatValue() + operand2.getFloatValue());
-        }
+            value = new Double(operand1.getIntValue() % operand2.getIntValue());
 
-        return new ConstSTO("AddOp.doOperation Result", resultType, value);
-        return(new ErrorSTO("ModOp.doOperation()"));
+        return new ConstSTO("ModOp.doOperation Result", resultType, value);
     }
 
 }

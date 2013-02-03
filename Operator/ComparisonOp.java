@@ -34,28 +34,16 @@ class ComparisonOp extends BinaryOp
         }
 
         // Check successful, determine result type
-        resultSTO = new ExprSTO("ComparisonOp.checkOperands() Result", new BoolType());
+        if(operand1.isConst() && operand2.isConst())
+        {
+            resultSTO = new ConstSTO("ComparisonOp.checkOperands() Result", new BoolType());
+        }
+        else
+        {
+            resultSTO = new ExprSTO("ComparisonOp.checkOperands() Result", new BoolType());
+        }
 
         return resultSTO;
 
     }
-
-    public STO
-    doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
-    {
-        Double value = 0.0;
-
-        if(resultType.isInt())
-        {
-            value = new Double(operand1.getIntValue() + operand2.getIntValue());
-        }
-        else if(resultType.isFloat())
-        {
-            value = new Double(operand1.getFloatValue() + operand2.getFloatValue());
-        }
-
-        return new ConstSTO("AddOp.doOperation Result", resultType, value);
-        return(new ErrorSTO("ComparisonOp.doOperation()"));
-    }
-
 }
