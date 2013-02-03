@@ -332,7 +332,7 @@ FuncDecl ::=        T_EXTERN T_FUNCTION T_COLON ReturnType:_1 T_ID:_2
 Type ::=            SubType:_1 OptModifierList OptArrayDef:_3
                     {:
                         if(_3 != null) {
-                            RESULT = new ArrayType(_1, _3);      
+                            RESULT = new ArrayType(_1, (ConstSTO)_3);      
                         }
                         else {
                             RESULT = _1;
