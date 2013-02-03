@@ -7,7 +7,7 @@ public class IdValueTuple
     //---------------------------------------------------------------------
 	String m_ID;
 	STO m_value;
-    ConstSTO m_arrayIndex;
+    STO m_arrayIndex;
 	
     //---------------------------------------------------------------------
     //      Constructors
@@ -19,7 +19,7 @@ public class IdValueTuple
 	}
 
 	public 
-    IdValueTuple(String ID, STO value, ConstSTO arrayIndex) 
+    IdValueTuple(String ID, STO value, STO arrayIndex) 
     {
 		m_ID = ID;
 		m_value = value;
