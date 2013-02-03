@@ -1,0 +1,6 @@
+function : bool foo() { return false; }
+
+function : void main() {
+    int x;
+    x = foo();
+}
