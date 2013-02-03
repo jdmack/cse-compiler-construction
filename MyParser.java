@@ -195,7 +195,9 @@ class MyParser extends parser
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
+            
             VarSTO stoVar;
+
             // Do Array checks if type = ArrayType
             if(lstIDs.elementAt(i).getArrayIndex() != null && type != null) 
             {
@@ -649,7 +651,43 @@ class MyParser extends parser
     STO
     DoDesignator2_Array(STO desSTO, STO indexSTO)
     {
+        // desSTO: the identifier
+        // indexSTO: the expression inside the []
+
+
         // Check #11a
+        // bullet 1 - desSTO is not array or pointer type
+        if((!desSTO.getType().isArray()) && (!desSTO.getType().isPointer()))
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error11t_ArrExp, desSTO.getType().getName()));
+            return new ErrorSTO("Desig2_Array() - Not array or ptr");
+        }
+
+        // bullet 2 - index expression type is not equiv to int
+        if(!indexSTO.getType().isEquivalent(new IntType()))
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error11i_ArrExp, indexSTO.getType().getName()));
+            return new ErrorSTO("Desig2_Array() - index not equiv to int");
+        }
+
+        // bullet 3 - index expr is constant, error if indexExpr outside bounds of array dimension
+        //              except when desSTO is pointer type
+        if(indexSTO.isConst())
+        {
+            if(((ConstSTO)indexSTO).getIntValue() >= desSTO.getType().getDimensionSize().getIntValue())
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstST)indexSTO).getIntValue(), desSTO.getDimensionSize().getIntValue()));
+                return new ErrorSTO("Desig2_Array() - index is constant, out of bounds");
+            }
+        }
+
+        // Checks are complete, now we need to return an ExprSTO with the type of the array elements
+        if(
+        
+
 
 
         return desSTO;
@@ -667,7 +705,7 @@ class MyParser extends parser
         if((sto = m_symtab.accessGlobal(strID)) == null)
         {
             m_nNumErrors++;
-             m_errors.print(Formatter.toString(ErrorMsg.error0g_Scope, strID));    
+            m_errors.print(Formatter.toString(ErrorMsg.error0g_Scope, strID));    
             sto = new ErrorSTO(strID);
         }
         return (sto);
