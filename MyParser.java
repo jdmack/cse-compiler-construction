@@ -195,22 +195,27 @@ class MyParser extends parser
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
-
+            VarSTO stoVar;
             // Do Array checks if type = ArrayType
-            if(type.isArray()) 
+            if(lstIDs.elementAt(i).getArrayIndex() != null && type != null) 
             {
-                STO stoResult = ((ArrayType)type).checkArray();
-
+            	ArrayType arrType = new ArrayType(type, lstIDs.elementAt(i).getArrayIndex());               
+            	STO stoResult = arrType.checkArray();
                 if(stoResult.isError())
                 {
                     m_nNumErrors++;
                     m_errors.print(stoResult.getName());
                 }
+            	stoVar = new VarSTO(id, arrType);
+                m_symtab.insert(stoVar);
             }
-            
-            VarSTO stoVar = new VarSTO(id, type);
-            m_symtab.insert(stoVar);
-            
+            else 
+            {
+            	stoVar = new VarSTO(id, type);
+                m_symtab.insert(stoVar);
+
+            }
+                        
             if(!value.isNull())
             {
                 DoAssignExpr(stoVar, value);
