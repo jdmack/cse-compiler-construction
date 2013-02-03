@@ -50,7 +50,8 @@ class ConstSTO extends STO
     ConstSTO(String strName, Type typ, String val)
     {
         super(strName, typ);
-        //System.out.println("String: " + val);
+        //System.out.println("strName: " + strName);
+        //System.out.println("val: " + val);
         //System.out.println("Type: " + typ.getName());
 
         if(val.equals("true"))

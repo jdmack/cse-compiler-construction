@@ -236,8 +236,18 @@ class MyParser extends parser
     void
     DoConstDecl(Type type, Vector<IdValueTuple> lstIDs)
     {
+        // Check for previous errors
         for(int i = 0; i < lstIDs.size(); i++)
         {
+            if(lstIDs.elementAt(i).value.isError())
+                return;
+                //return lstIDs.elementAt(i).value;
+
+        }
+
+        for(int i = 0; i < lstIDs.size(); i++)
+        {
+
             String id = lstIDs.elementAt(i).getId();
             STO value = lstIDs.elementAt(i).getValue(); 
 
