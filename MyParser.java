@@ -182,11 +182,12 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoVarDecl(Type type, Vector<String> lstIDs)
+    DoVarDecl(Type type, Vector<IdValueTuple> lstIDs)
     {
         for(int i = 0; i < lstIDs.size(); i++)
         {
-            String id = lstIDs.elementAt(i);
+            String id = lstIDs.elementAt(i).getId();
+            STO value = 1stIDs.elementAt(i).getValue();
         
             // Check for var already existing in localScope
             if(m_symtab.accessLocal(id) != null)
@@ -195,8 +196,14 @@ class MyParser extends parser
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
 
-            VarSTO sto = new VarSTO(id, type);
-            m_symtab.insert(sto);
+            VarSTO stoVar = new VarSTO(id, type);
+            m_symtab.insert(stoVar);
+            
+            if(!value.isNull())
+            {
+                DoAssignExpr(stoVar, value);
+            }
+
         }
     }
 
@@ -401,7 +408,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     STO
-    DoAssignExpr_1(STO stoDes, STO stoValue)
+    DoAssignExpr(STO stoDes, STO stoValue)
     {
         // Check for previous errors in line and short circuit
         if(stoDes.isError())
@@ -430,46 +437,6 @@ class MyParser extends parser
         
         return stoDes;
     }
-
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
-    STO
-    DoAssignExpr_2(String strID, STO stoValue)
-    {
-        // Check for previous errors in line and short circuit
-        if(stoValue.isError())
-        {
-            return stoValue;
-        }
-
-        STO stoDes; 
-        
-        if((stoDes = m_symtab.access(strID)) == null)
-        {
-            m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.undeclared_id, strID));    
-            stoDes = new ErrorSTO(strID);
-        }
-
-        // Check #3a - illegal assignment - not modifiable L-value
-        if(!stoDes.isModLValue())
-        {
-            m_nNumErrors++;
-            m_errors.print(ErrorMsg.error3a_Assign);
-            return (new ErrorSTO("DoAssignExpr Error - not mod-L-Value"));
-        }
-
-        if(!stoValue.getType().isAssignable(stoDes.getType()))
-        {
-            m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, stoValue.getType().getName(), stoDes.getType().getName()));
-            return (new ErrorSTO("DoAssignExpr Error - bad types"));
-        }
-        
-        return stoDes;
-    }
-
 
     //----------------------------------------------------------------
     //
