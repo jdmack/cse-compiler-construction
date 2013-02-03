@@ -195,6 +195,18 @@ class MyParser extends parser
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
+
+            // Do Array checks if type = ArrayType
+            if(type.isArray()) 
+            {
+                STO stoResult = ((ArrayType)type).checkArray();
+
+                if(stoResult.isError())
+                {
+                    m_nNumErrors++;
+                    m_errors.print(stoResult.getName());
+                }
+            }
             
             VarSTO stoVar = new VarSTO(id, type);
             m_symtab.insert(stoVar);
