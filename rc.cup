@@ -530,10 +530,10 @@ IdListWOptInit ::=  OptModifierList OptArrayDef:_3 T_ID:_1 OptInit:_2
                         RESULT = new Vector<IdValueTuple> ();
                         RESULT.addElement (new IdValueTuple(_1, (STO)_2, _3));
                     :}
-    |               IdListWOptInit:_1 T_COMMA OptModifierList:_2 OptArrayDef T_ID:_3 OptInit:_4
+    |               IdListWOptInit:_1 T_COMMA OptModifierList:_2 OptArrayDef:_5 T_ID:_3 OptInit:_4
                     {:
                         RESULT = _1;
-                        RESULT.addElement (new IdValueTuple(_3, (STO)_4));
+                        RESULT.addElement (new IdValueTuple(_3, (STO)_4), _5);
                     :}
     ;
 
