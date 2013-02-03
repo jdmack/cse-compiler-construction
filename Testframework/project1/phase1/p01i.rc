@@ -1,0 +1,9 @@
+/* Check 1 (p01i.rc) */
+// Expected: Compile: success.
+
+int i;
+
+function : int main() {
+    i = i / i;
+    return 0;
+}

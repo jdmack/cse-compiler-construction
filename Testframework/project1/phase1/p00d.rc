@@ -1,0 +1,7 @@
+// Expected: Compile: failure. 
+// Identifier x is undeclared in the global scope.
+
+int myX;
+function : void foo(){
+    int i = 5 + ::x;
+}

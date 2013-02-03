@@ -1,0 +1,27 @@
+/* Check 2 (p02c.rc) */
+/*
+Error, "p02c.rc", line 7: 
+  Value of type int not assignable to variable of type bool.
+Error, "p02c.rc", line 8: 
+  Operand to ++ is not a modifiable L-value.
+Error, "p02c.rc", line 9: 
+  Left-hand operand is not assignable (not a modifiable L-value).
+Error, "p02c.rc", line 10: 
+  Operand to ++ is not a modifiable L-value.
+Error, "p02c.rc", line 11: 
+  Operand to ++ is not a modifiable L-value.
+Compile: failure.
+*/
+
+int x;
+bool y, w;
+
+function : int main() {
+    y = x++;
+    x = (x+99)++;
+    ++x = 1337;
+    x = (x++)++;
+    x = 131++ + 131;
+
+    return 0;
+}
