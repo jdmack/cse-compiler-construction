@@ -286,7 +286,7 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoTypedefDecl(Vector<String> lstIDs)
+    DoTypedefDecl(Type type, Vector<String> lstIDs)
     {
         for(int i = 0; i < lstIDs.size(); i++)
         {
@@ -298,7 +298,7 @@ class MyParser extends parser
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
         
-            TypedefSTO sto = new TypedefSTO(id);
+            TypedefSTO sto = new TypedefSTO(id, type);
             m_symtab.insert(sto);
         }
     }
