@@ -598,6 +598,9 @@ WhileStmt ::=       T_WHILE Expr:_1
                         RESULT = ((MyParser) parser).DoWhileExpr(_1);
                     :}
                     CodeBlock
+                    {:
+
+                    :}
     ;
 
 ForStmt ::=         T_FOR T_LPAREN OptExpr T_SEMI OptExpr T_SEMI OptExpr T_RPAREN CodeBlock
@@ -877,15 +880,17 @@ IncDecOp ::=        T_PLUSPLUS
 
 Designator ::=      T_STAR Designator:_1
                     {:
-			            RESULT = _1;
+                        RESULT = _1;
+			            //RESULT = ((MyParser) parser).DoUnaryOp(new NotOp("!"), _1);
                     :}
     |               T_AMPERSAND Designator:_1
                     {:
-			            RESULT = _1;
+			            //RESULT = ((MyParser) parser).DoUnaryOp(new NotOp("&"), _1);
+                        RESULT = _1;
                     :}
-    |               UnarySign Designator:_1
+    |               UnarySign:_2 Designator:_1
                     {:
-			            RESULT = _1;
+			            RESULT = ((MyParser) parser).DoUnaryOp(_2, _1);
                     :}
     |               T_NOT Designator:_1
                     {:
