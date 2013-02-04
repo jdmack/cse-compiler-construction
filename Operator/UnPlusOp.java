@@ -19,8 +19,27 @@ class UnPlusOp extends UnaryOp
     public STO
     checkOperand(STO operand)
     {
-        return(new ErrorSTO("UnPlusOp.checkOperands()"));
-    }
+        STO resultSTO;
+
+        // Check #1 - UnPlus - operand numeric
+        // Check operand
+        if(!operand.getType().isNumeric())
+        {
+            return(new ErrorSTO(Formatter.toString("Incompatible type %T to unary operator %O, numeric expected.", operand.getType().getName(), this.getName())));
+        }
+
+        if(operand.isConst())
+        {
+            resultSTO = new ConstSTO("UnMinus.checkOperand() Result", new FloatType());
+        }
+        else
+        {
+            resultSTO = new ExprSTO("UnMinus.checkOperand() Result", new FloatType());
+        }
+
+        return resultSTO;
+}
+
     public STO
     doOperation(ConstSTO operand, Type resultType)
     {
