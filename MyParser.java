@@ -22,6 +22,8 @@ class MyParser extends parser
     private int          m_nSavedLineNum;
     private SymbolTable  m_symtab;
 
+    private int          m_whileLevels;
+
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -873,6 +875,8 @@ class MyParser extends parser
             return (new ErrorSTO("DoWhile error"));
         }
 
+        m_symtab.m_whileLevels++;
+
         return stoExpr;
     }
 
@@ -895,6 +899,8 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
             return (new ErrorSTO("DoIf error"));
         }
+
+        m_symtab.m_ifLevels++;
 
         return stoExpr;
     }

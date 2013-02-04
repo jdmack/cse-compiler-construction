@@ -15,9 +15,6 @@ class SymbolTable
     private Scope        m_scopeGlobal;
     private FuncSTO      m_func = null;
 
-    public int           m_whileLevel;
-    public int           m_ifLevel;
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
