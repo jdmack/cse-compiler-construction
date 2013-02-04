@@ -30,11 +30,11 @@ class UnPlusOp extends UnaryOp
 
         if(operand.isConst())
         {
-            resultSTO = new ConstSTO("UnMinus.checkOperand() Result", new FloatType());
+            resultSTO = new ConstSTO("UnMinus.checkOperand() Result", new IntType());
         }
         else
         {
-            resultSTO = new ExprSTO("UnMinus.checkOperand() Result", new FloatType());
+            resultSTO = new ExprSTO("UnMinus.checkOperand() Result", new IntType());
         }
 
         return resultSTO;
