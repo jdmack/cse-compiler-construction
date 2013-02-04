@@ -133,7 +133,6 @@ non terminal
     WritePair,
     ConstExpr,
     OptInit,
-    ArrElemsList,
     OptModifierList,
     ModifierList,
     Modifier,
@@ -190,7 +189,8 @@ non terminal Vector
     OptParamList,
     ParamList,
     OptExprList,
-    ExprList
+    ExprList,
+    ArrElemsList
     ;
 
 //--------------------------------------------------------------------
