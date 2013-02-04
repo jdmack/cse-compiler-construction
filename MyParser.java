@@ -716,7 +716,7 @@ class MyParser extends parser
         //              except when desSTO is pointer type
         if(indexSTO.isConst())
         {
-            if(((ConstSTO)indexSTO).getIntValue() >= ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue())
+            if(((ConstSTO)indexSTO).getIntValue() >= ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue() || ((ConstSTO)indexSTO).getIntValue() < 0)
             {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstSTO)indexSTO).getIntValue(), ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue()));
