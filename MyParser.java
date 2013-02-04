@@ -431,14 +431,25 @@ class MyParser extends parser
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
+          
+        //DoBlockOpen();
+
         boolean error_flag = false;
         // Check for duplicate names
         for(STO thisSTO: fieldList)
         {
+            // Check 13a
             if(m_symtab.accessLocal(thisSTO.getName()) != null)
             {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, thisSTO.getName()));
+                error_flag = true;
+            }
+            // Check 13b
+            else if(thisSTO.getName().equals(id))
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, thisSTO.getName()));
                 error_flag = true;
             }
             else 
