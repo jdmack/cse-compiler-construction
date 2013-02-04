@@ -447,6 +447,8 @@ class MyParser extends parser
             }
         }
 
+        DoBlockClose();
+
         if(!error_flag) 
         {
             TypedefSTO sto = new TypedefSTO(id, fieldList);

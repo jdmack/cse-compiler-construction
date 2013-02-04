@@ -270,7 +270,7 @@ TypedefDecl ::=     T_TYPEDEF Type:_1 IdListUpper:_2 T_SEMI                // ty
                     FieldsList:_2 T_RBRACE T_SEMI                          // ReturnStatement: No
                     {:
                          ((MyParser) parser).DoStructdefDecl (_1, _2);
-                         ((MyParser) parser).DoBlockClose();
+                         //((MyParser) parser).DoBlockClose();
                     :}
     ;
 
