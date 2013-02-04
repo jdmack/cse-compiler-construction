@@ -2,9 +2,12 @@
 // For typedefs like: typedef int myInteger1, myInteger2;
 // Also can hold the structdefs
 //---------------------------------------------------------------------
+import java.util.Vector;
 
 class TypedefSTO extends STO
 {
+    private Vector<STO> m_fieldList;
+
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
@@ -20,6 +23,13 @@ class TypedefSTO extends STO
         super(strName, typ);
     }
 
+    public 
+    TypedefSTO(String strName, Vector<STO> fields) 
+    {
+        super(strName, new VoidType());
+        setFields(fields);
+    }
+
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
@@ -27,5 +37,17 @@ class TypedefSTO extends STO
     isTypedef()
     {
         return true;
+    }
+
+    Vector<STO>
+    getFields()
+    {
+        return m_fieldList;
+    }
+
+    void
+    setFields(Vector<STO> fields)
+    {
+        m_fieldList = fields;
     }
 }

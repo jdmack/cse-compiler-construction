@@ -111,8 +111,6 @@ non terminal
     OptStatic,
     TypedefDecl,
     OptRef,
-    FieldsList,
-    FieldList,
     OptStmtList,
     StmtList,
     Stmt,
@@ -190,7 +188,9 @@ non terminal Vector
     ParamList,
     OptExprList,
     ExprList,
-    ArrElemsList
+    ArrElemsList,
+    FieldsList,
+    FieldList
     ;
 
 //--------------------------------------------------------------------
@@ -267,10 +267,10 @@ TypedefDecl ::=     T_TYPEDEF Type:_1 IdListUpper:_2 T_SEMI                // ty
                     {:
                         ((MyParser) parser).DoBlockOpen();
                     :}
-                    FieldsList T_RBRACE T_SEMI                          // ReturnStatement: No
+                    FieldsList:_2 T_RBRACE T_SEMI                          // ReturnStatement: No
                     {:
                          ((MyParser) parser).DoBlockClose();
-                         ((MyParser) parser).DoStructdefDecl (_1);
+                         ((MyParser) parser).DoStructdefDecl (_1, _2);
                     :}
     ;
 
@@ -291,8 +291,8 @@ FieldsList ::=      FieldList:_1
 FieldList ::=       Type:_1 IdList:_2 T_SEMI
                     {:
                         RESULT = new Vector<STO>();
-                        for(String id: _2) {
-                            RESULT.addElement(new VarSTO(id, _1);
+                        for(String id: (Vector<String>)_2) {
+                            RESULT.addElement(new VarSTO(id, _1));
                         }
                     :}
     |               FuncDef:_1

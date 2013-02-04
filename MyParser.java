@@ -423,27 +423,42 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoStructdefDecl(String id)
+    DoStructdefDecl(String id, Vector<STO> fieldList)
     {
+        // check for struct in scope
         if(m_symtab.accessLocal(id) != null)
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
+        boolean error_flag = false;
+        // Check for duplicate names
+        for(STO thisSTO: fieldList)
+        {
+            if(m_symtab.accessLocal(thisSTO.getName()) != null)
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, thisSTO.getName()));
+                error_flag = true;
+            }
+            else 
+            {
+                m_symtab.insert(thisSTO);
+            }
+        }
 
-
-
-
-        
-        TypedefSTO sto = new TypedefSTO(id);
-        m_symtab.insert(sto);
+        if(!error_flag) 
+        {
+            TypedefSTO sto = new TypedefSTO(id, fieldList);
+            m_symtab.insert(sto);
+        }
     }
 
 
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
-    void
+    STO
     DoFuncDecl_1(Type returnType, String id, Boolean retByRef)
     {
         // Check for func already existing in localScope
@@ -464,6 +479,8 @@ class MyParser extends parser
 
         // Set the function's level
         sto.setLevel(m_symtab.getLevel());
+
+        return sto;
     }
 
 
