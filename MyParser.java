@@ -446,11 +446,15 @@ class MyParser extends parser
                 error_flag = true;
             }
             // Check 13b
-            else if(thisSTO.getName().equals(id))
+
+            else if(thisSTO.getType() != null)
             {
-                m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, thisSTO.getName()));
-                error_flag = true;
+                if(thisSTO.getType().getName().equals(id))
+                {
+                    m_nNumErrors++;
+                    m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, thisSTO.getName()));
+                    error_flag = true;
+                }
             }
             else 
             {
