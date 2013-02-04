@@ -718,6 +718,44 @@ class MyParser extends parser
     DoDesignator2_Dot(STO sto, String strID)
     {
         // Good place to do the struct checks
+        if(sto.isError())
+        {
+            return sto;
+        }
+
+        // Check #14a
+        // type of struct is not a struct type
+        if(!sto.getType().isStruct())
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error14t_StructExp, sto.getType().getName()));
+            return new ErrorSTO("not a struct");
+        }
+
+        // type of struct does not contain the field or function
+        boolean found_flag = false;
+        Vector<STO> fieldList = ((TypedefSTO)sto).getFields();
+
+        for(STO thisSTO: fieldList)
+        {
+            if(thisSTO.getName().equals(strID))
+            {
+                found_flag = true;
+            }
+        }
+
+        if(!found_flag)
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error14f_StructExp, strID, sto.getType().getName()));
+            return new ErrorSTO("not valid field in struct");
+        }
+
+
+
+
+
+
 
         return sto;
     }
