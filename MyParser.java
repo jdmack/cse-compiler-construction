@@ -220,24 +220,43 @@ class MyParser extends parser
                     m_errors.print(Formatter.toString(ErrorMsg.error10z_Array,((ConstSTO)lstIDs.elementAt(i).getArrayIndex()).getIntValue()));
                     break;
             	}
-
+            	ArrayType arrType;
                 // Check 11b
                 if(lstIDs.elementAt(i).getValue().isArrEle())
                 {
                     ArrEleSTO elements = (ArrEleSTO) lstIDs.elementAt(i).getValue();
-
+                    Vector<STO> stos = elements.getArrayElements();
                     // # elements not exceed array size
-                    if(elements.getArrayElements().size() >= ((ConstSTO) lstIDs.elementAt(i).getArrayIndex()).getIntValue())
+                    if(stos.size() >= ((ConstSTO) lstIDs.elementAt(i).getArrayIndex()).getIntValue())
                     {
                         m_nNumErrors++;
-                        m_errors.print(Formatter.toString(ErrorMsg.error11_TooManyInitExpr));
+                        m_errors.print(ErrorMsg.error11_TooManyInitExpr);
                         break;
                     }
-
+                    
+                    for(STO sto : stos) 
+                    {
+                    	if (!sto.isConst())
+                    	{
+                            m_nNumErrors++;
+                            m_errors.print(ErrorMsg.error11_NonConstInitExpr);
+                            break;
+                    	}
+                    	
+                    	if (!sto.getType().isAssignable(type))
+                    	{
+                            m_nNumErrors++;
+                            m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, sto.getType().getName(), type.getName()));
+                            break;
+                    	}
+                    }
+                    arrType = new ArrayType(type, lstIDs.elementAt(i).getArrayIndex(), elements);
+                } else {
+                	
+                	arrType = new ArrayType(type, lstIDs.elementAt(i).getArrayIndex());     
                 }
 
 
-            	ArrayType arrType = new ArrayType(type, lstIDs.elementAt(i).getArrayIndex(), elelemtnts);     
             	
             	/*STO stoResult = arrType.checkArray();
                 if(stoResult.isError())
@@ -245,7 +264,7 @@ class MyParser extends parser
                     m_nNumErrors++;
                     m_errors.print(stoResult.getName());
                 }*/
-            	stoVar = new VarSTO(id, arrType, jfjfj);
+            	stoVar = new VarSTO(id, arrType);
                 m_symtab.insert(stoVar); // May be redundant but didn't want a possibility of inserting null.
             }
             else 
@@ -993,18 +1012,4 @@ class MyParser extends parser
         
         return stoExpr;
     }
-
-    //----------------------------------------------------------------
-    //      ArrInit
-    //----------------------------------------------------------------
-    STO
-    ArrInit(STO stoExpr)
-    {
-
-    
-
-
-
-    } 
-
 }

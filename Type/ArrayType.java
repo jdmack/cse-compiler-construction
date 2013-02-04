@@ -21,7 +21,7 @@ class ArrayType extends CompositeType
     }
 
     public 
-    ArrayType(Type elementType, STO dimenionSize, STO eleList)
+    ArrayType(Type elementType, STO dimenionSize, ArrEleSTO eleList)
     {
         super(elementType.getName()+"["+((ConstSTO) dimenionSize).getIntValue()+"]", ((ConstSTO) dimenionSize).getIntValue());
         setElementType(elementType);
