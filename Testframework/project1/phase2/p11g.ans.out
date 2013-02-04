@@ -1,0 +1,3 @@
+Error, "project1/phase2/p11g.rc", line 5: 
+  Index value of -5 is outside legal range [0,10).
+Compile: failure.

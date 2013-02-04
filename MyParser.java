@@ -720,7 +720,7 @@ class MyParser extends parser
         //              except when desSTO is pointer type
         if(indexSTO.isConst())
         {
-            if(((ConstSTO)indexSTO).getIntValue() >= ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue())
+            if(((ConstSTO)indexSTO).getIntValue() >= ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue() || ((ConstSTO)indexSTO).getIntValue() < 0)
             {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstSTO)indexSTO).getIntValue(), ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue()));
@@ -729,7 +729,7 @@ class MyParser extends parser
         }
 
         // Checks are complete, now we need to return an ExprSTO with the type of the array elements
-        desSTO = new ExprSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
+        desSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
         //TODO: Double check what the name of exprSTO should be.
         return desSTO;
     }
