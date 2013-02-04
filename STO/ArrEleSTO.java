@@ -1,18 +1,23 @@
 import java.util.Vector;
 
 
-public class ArrEleSTO extends STO{
-
+public class ArrEleSTO extends STO
+{
 	private Vector<STO> exprs;
 	
-	public ArrEleSTO(Vector<STO> exprs) 
+	public 
+    ArrEleSTO(Vector<STO> exprs) 
 	{
 		super("ArrEleSTO", new VoidType(), false);
 		this.exprs = exprs;
 	}
 	
-	public Vector<STO> getArrayElements()
+	public Vector<STO> 
+    getArrayElements()
 	{
 		return exprs;
 	}
+
+
+
 }

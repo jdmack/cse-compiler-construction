@@ -571,13 +571,13 @@ OptInit ::=         T_ASSIGN Expr:_1
 ArrElemsList ::=    Expr:_1
                     {:
                         RESULT = new Vector<STO>();
-                        RESULT.addElement(_1);
+                        RESULT.addElement((STO)_1);
                     :}
 
     |               ArrElemsList:_1 T_COMMA Expr:_2
                     {:
                         RESULT = _1;
-                        RESULT.addElement(_2);
+                        RESULT.addElement((STO)_2);
                     :}
     ;
 

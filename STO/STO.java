@@ -130,5 +130,5 @@ abstract class STO
     public boolean isError()   { return false; }
     public boolean isParam()   { return false; }
     public boolean isNull()    { return false; }
-    public boolean isArrEleSTO() { return false; }
+    public boolean isArrEle()  { return false; }
 }
