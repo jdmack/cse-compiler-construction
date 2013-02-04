@@ -22,7 +22,7 @@ class MyParser extends parser
     private int          m_nSavedLineNum;
     private SymbolTable  m_symtab;
 
-    private int          m_whileLevels;
+    private int          m_whileLevel;
 
     //----------------------------------------------------------------
     //
@@ -34,6 +34,7 @@ class MyParser extends parser
         m_symtab = new SymbolTable();
         m_errors = errors;
         m_nNumErrors = 0;
+        m_whileLevel = 0;
     }
 
 
@@ -875,6 +876,8 @@ class MyParser extends parser
             return (new ErrorSTO("DoWhile error"));
         }
 
+        whileLevelUp();
+
         return stoExpr;
     }
 
@@ -1013,5 +1016,45 @@ class MyParser extends parser
         }
         
         return stoExpr;
+    }
+    
+    //----------------------------------------------------------------
+    //      DoBreakStmt
+    //----------------------------------------------------------------
+    void
+    DoBreakStmt()
+    {
+        // Check #12 - break statement in while loop
+        if(m_whileLevel <= 0)
+        {
+            m_nNumErrors++;
+            m_errors.print(ErrorMsg.error12_Break);
+        }
+    }
+
+    //----------------------------------------------------------------
+    //      DoBreakStmt
+    //----------------------------------------------------------------
+    void
+    DoContinueStmt()
+    {
+        // Check #12 - continue statement in while loop
+        if(m_whileLevel <= 0)
+        {
+            m_nNumErrors++;
+            m_errors.print(ErrorMsg.error12_Continue);
+        }
+    }
+
+    void
+    whileLevelUp()
+    {
+        m_whileLevel++;
+    }
+
+    void
+    whileLevelDown()
+    {
+        m_whileLevel--;
     }
 }

@@ -599,7 +599,7 @@ WhileStmt ::=       T_WHILE Expr:_1
                     :}
                     CodeBlock
                     {:
-
+                        ((MyParser) parser).whileLevelDown();
                     :}
     ;
 
@@ -607,10 +607,15 @@ ForStmt ::=         T_FOR T_LPAREN OptExpr T_SEMI OptExpr T_SEMI OptExpr T_RPARE
     ;
 
 BreakStmt ::=       T_BREAK T_SEMI
+                    {:
+                        ((MyParser) parser).DoBreakStmt();
+                    :}
     ;
 
-
 ContinueStmt ::=    T_CONTINUE T_SEMI
+                    {:
+                        ((MyParser) parser).DoContinueStmt();
+                    :}
     ;
 
 
