@@ -555,12 +555,12 @@ IdListWInit ::=     OptModifierList OptArrayDef T_ID:_1 T_ASSIGN ConstExpr:_2
 
 OptInit ::=         T_ASSIGN Expr:_1
                     {:
-                        // _1: ExprSTO from DoFUncCall
+                        // _1: STO from DoFUncCall
                         RESULT = _1;
                     :}
     |               T_ASSIGN T_LBRACE ArrElemsList:_2 T_RBRACE  // ReturnStatement: No             = {ele1, ele2, ..., ele3}
                     {:
-                        RESULT = _2;
+                        RESULT = new ArrEleSTO (_2);
                     :}
     |               /* empty */
                     {:
@@ -568,8 +568,17 @@ OptInit ::=         T_ASSIGN Expr:_1
                     :}
     ;
 
-ArrElemsList ::=    Expr
-    |               ArrElemsList T_COMMA Expr
+ArrElemsList ::=    Expr:_1
+                    {:
+                        RESULT = new Vector<STO>();
+                        RESULT.addElement(_1);
+                    :}
+
+    |               ArrElemsList:_1 T_COMMA Expr:_2
+                    {:
+                        RESULT = _1;
+                        RESULT.addElement(_2);
+                    :}
     ;
 
 IfStmt ::=          T_IF Expr:_1 
