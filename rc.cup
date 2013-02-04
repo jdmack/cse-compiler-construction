@@ -993,19 +993,19 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
                     :}
     |               T_TRUE
                     {:
-                        RESULT = new ConstSTO ("true", new BoolType(), "true");
+                        RESULT = new ConstSTO("true", new BoolType(), "true");
                     :}
     |               T_FALSE
                     {:
-                        RESULT = new ConstSTO ("false", new BoolType(), "false");
+                        RESULT = new ConstSTO("false", new BoolType(), "false");
                     :}
     |               T_NULLPTR
                     {:
-                        RESULT = new ConstSTO ("nullptr", new NullPtrType());
+                        RESULT = new ConstSTO("nullptr", new NullPtrType());
                     :}
     |               T_THIS
                     {:
-                        RESULT = new ConstSTO ("this");
+                        RESULT = new ConstSTO("this");
                     :}
     |               T_COLONCOLON T_ID:_1
                     {:
