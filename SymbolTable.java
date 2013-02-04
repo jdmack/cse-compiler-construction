@@ -14,6 +14,7 @@ class SymbolTable
     private int          m_nLevel;
     private Scope        m_scopeGlobal;
     private FuncSTO      m_func = null;
+
     public int           m_whileLevel;
     public int           m_ifLevel;
 
@@ -134,5 +135,9 @@ class SymbolTable
     //----------------------------------------------------------------
     public FuncSTO getFunc()            { return m_func; }
     public void    setFunc(FuncSTO sto) { m_func = sto; }
-
+    //public boolean isInWhileLoop()      { returwhile loopn isInWhileLoop; }
+    //public void    setIsINWhileLoop(boolean isInWhile) { isInWhileLoop = isInWhile; }
+    public int getWhileLoopCount() { return whileLoopCount; }
+    public void incrementLoopCount() { whileLoopCount++; }
+    public void decrementLoopCount() { whileLoopCount--; }
 }

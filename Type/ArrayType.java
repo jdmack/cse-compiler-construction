@@ -6,7 +6,7 @@ class ArrayType extends CompositeType
 {
 	Type elementType;
 	STO dimensionSize;
-    STO elementList;
+	ArrEleSTO elementList;
 	
     //---------------------------------------------------------------------
     //      Constructors
@@ -21,7 +21,7 @@ class ArrayType extends CompositeType
     }
 
     public 
-    ArrayType(Type elementType, STO dimenionSize, STO eleList)
+    ArrayType(Type elementType, STO dimenionSize, ArrEleSTO eleList)
     {
         super(elementType.getName()+"["+((ConstSTO) dimenionSize).getIntValue()+"]", ((ConstSTO) dimenionSize).getIntValue());
         setElementType(elementType);
@@ -51,11 +51,11 @@ class ArrayType extends CompositeType
     	dimensionSize = size;
     }
 
-    public STO getElementList() {
+    public ArrEleSTO getElementList() {
     	return elementList;
     }
     
-    public void setElementList(STO eleList) {
+    public void setElementList(ArrEleSTO eleList) {
     	elementList = eleList;
     }
 
