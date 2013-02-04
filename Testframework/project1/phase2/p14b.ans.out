@@ -1,0 +1,3 @@
+Error, "project1/phase2/p14b.rc", line 7: 
+  Type of expression referenced by "." (float[10]) is not a struct.
+Compile: failure.

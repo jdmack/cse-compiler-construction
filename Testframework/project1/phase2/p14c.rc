@@ -1,0 +1,9 @@
+/* Check 14 (p14c.rc) */
+
+function : int main() {
+    float r;
+    float[10] ar;
+
+    r = ar[0].r;
+    return 0;
+}
