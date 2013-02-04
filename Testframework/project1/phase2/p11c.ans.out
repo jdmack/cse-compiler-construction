@@ -1,7 +1,5 @@
 Error, "project1/phase2/p11c.rc", line 5: 
   Index value of 42 is outside legal range [0,10).
 Error, "project1/phase2/p11c.rc", line 6: 
-  Index value of 42 is outside legal range [0,10).
-Error, "project1/phase2/p11c.rc", line 7: 
-  Index value of 92 is outside legal range [0,10).
+  Index value of -42 is outside legal range [0,10).
 Compile: failure.
