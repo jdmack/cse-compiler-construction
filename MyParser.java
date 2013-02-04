@@ -751,12 +751,6 @@ class MyParser extends parser
             return new ErrorSTO("not valid field in struct");
         }
 
-
-
-
-
-
-
         return sto;
     }
 
