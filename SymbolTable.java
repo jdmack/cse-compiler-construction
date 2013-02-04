@@ -14,6 +14,8 @@ class SymbolTable
     private int          m_nLevel;
     private Scope        m_scopeGlobal;
     private FuncSTO      m_func = null;
+    public int           m_whileLevel;
+    public int           m_ifLevel;
 
     //----------------------------------------------------------------
     //
@@ -24,6 +26,9 @@ class SymbolTable
         m_nLevel = 0;
         m_stkScopes = new Stack<Scope>();
         m_scopeGlobal = null;
+
+        m_whileLevel = 0;
+        m_ifLevel    = 0;
     }
 
 
