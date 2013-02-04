@@ -277,22 +277,28 @@ TypedefDecl ::=     T_TYPEDEF Type:_1 IdListUpper:_2 T_SEMI                // ty
 
 FieldsList ::=      FieldList:_1
                     {:
-                        
+                        RESULT = new Vector<STO>(); 
+                        RESULT.addAll(_1);
                     :}
     |               FieldsList:_1 FieldList:_2
                     {:
-                        
+                        RESULT = _1;
+                        RESULT.addAll(_2);
                     :}
     ;
                     // IdList: Vector<String> of Ids
 
 FieldList ::=       Type:_1 IdList:_2 T_SEMI
                     {:
-                        
+                        RESULT = new Vector<STO>();
+                        for(String id: _2) {
+                            RESULT.addElement(new VarSTO(id, _1);
+                        }
                     :}
     |               FuncDef:_1
                     {:
-                        
+                        RESULT = new Vector<STO>();
+                        RESULT.addElement(_1);
                     :}
     ;
 
@@ -300,7 +306,7 @@ FieldList ::=       Type:_1 IdList:_2 T_SEMI
 FuncDef ::=         T_FUNCTION T_COLON ReturnType:_1 OptRef:_4 T_ID:_2                 // function: [type] & identifier ( param1, param2) { statments } 
                     {:
                         ((MyParser) parser).SaveLineNum ();
-                        ((MyParser) parser).DoFuncDecl_1(_1, _2, (Boolean)_4);
+                        RESULT = ((MyParser) parser).DoFuncDecl_1(_1, _2, (Boolean)_4);
                     :}
                     T_LPAREN OptParamList:_3 T_RPAREN
                     {:
