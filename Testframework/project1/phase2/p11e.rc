@@ -1,0 +1,9 @@
+typedef float[10] ARR;
+
+function : void main() {
+
+    ARR[2] c;
+    float a;
+    a = c[1][2];
+
+}

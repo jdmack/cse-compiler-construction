@@ -9,6 +9,6 @@ function : void main () {
     const int i = 9;
     int j = 10;
 
-    nodeptr[100000] = myMap[i][i];
+    nodeptr[100000] = myMap[i][i]; // should work but not yet.
     myMap[j][i] = myMap[i][j];
 }

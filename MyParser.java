@@ -657,7 +657,7 @@ class MyParser extends parser
 
         // Check #11a
         // bullet 1 - desSTO is not array or pointer type
-        if((!desSTO.getType().isArray()) || (!desSTO.getType().isPointer()))
+        if((!desSTO.getType().isArray()) && (!desSTO.getType().isPointer()))
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error11t_ArrExp, desSTO.getType().getName()));
@@ -685,8 +685,8 @@ class MyParser extends parser
         }
 
         // Checks are complete, now we need to return an ExprSTO with the type of the array elements
-        
-        
+        desSTO = new ExprSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
+        //TODO: Double check what the name of exprSTO should be.
         return desSTO;
     }
 

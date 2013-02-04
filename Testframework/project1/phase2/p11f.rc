@@ -1,0 +1,6 @@
+typedef int NODE;
+
+function : void main() {
+    NODE * nodeptr;
+    nodeptr[1000];
+}

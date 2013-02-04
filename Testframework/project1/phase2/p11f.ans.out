@@ -1,0 +1,3 @@
+Error, "project1/phase2/p11f.rc", line 5: 
+  Type of expression referenced by array subscript (NODE) is not of array or pointer type.
+Compile: failure.
