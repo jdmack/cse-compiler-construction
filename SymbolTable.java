@@ -24,9 +24,6 @@ class SymbolTable
         m_nLevel = 0;
         m_stkScopes = new Stack<Scope>();
         m_scopeGlobal = null;
-
-        m_whileLevel = 0;
-        m_ifLevel    = 0;
     }
 
 
@@ -132,3 +129,4 @@ class SymbolTable
     //----------------------------------------------------------------
     public FuncSTO getFunc()            { return m_func; }
     public void    setFunc(FuncSTO sto) { m_func = sto; }
+}
