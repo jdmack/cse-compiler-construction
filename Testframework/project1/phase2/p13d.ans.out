@@ -1,0 +1,5 @@
+Error, "project1/phase2/p13d.rc", line 4: 
+  undeclared identifier 'MYSTRUCT'.
+Error, "project1/phase2/p13d.rc", line 8: 
+  undeclared identifier 'MYSTRUCT2'.
+Compile: failure.

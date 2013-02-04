@@ -1,0 +1,15 @@
+Error, "project1/phase2/p13b.rc", line 18: 
+  Field a declared second time in struct.
+Error, "project1/phase2/p13b.rc", line 18: 
+  Field b declared second time in struct.
+Error, "project1/phase2/p13b.rc", line 18: 
+  Field c declared second time in struct.
+Error, "project1/phase2/p13b.rc", line 18: 
+  Field d declared second time in struct.
+Error, "project1/phase2/p13b.rc", line 18: 
+  Field e declared second time in struct.
+Error, "project1/phase2/p13b.rc", line 18: 
+  Field f declared second time in struct.
+Error, "project1/phase2/p13b.rc", line 18: 
+  Field g declared second time in struct.
+Compile: failure.
