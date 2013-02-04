@@ -725,7 +725,7 @@ class MyParser extends parser
         }
 
         // Checks are complete, now we need to return an ExprSTO with the type of the array elements
-        desSTO = new ExprSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
+        desSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
         //TODO: Double check what the name of exprSTO should be.
         return desSTO;
     }
