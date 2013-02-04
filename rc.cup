@@ -267,7 +267,7 @@ TypedefDecl ::=     T_TYPEDEF Type:_1 IdListUpper:_2 T_SEMI                // ty
                     {:
                         ((MyParser) parser).DoBlockOpen();
                     :}
-                    FieldsList T_RBRACE T_SEMI   // ReturnStatement: No
+                    FieldsList T_RBRACE T_SEMI                          // ReturnStatement: No
                     {:
                          ((MyParser) parser).DoBlockClose();
                          ((MyParser) parser).DoStructdefDecl (_1);
@@ -275,13 +275,25 @@ TypedefDecl ::=     T_TYPEDEF Type:_1 IdListUpper:_2 T_SEMI                // ty
     ;
 
 
-FieldsList ::=      FieldList
-    |               FieldsList FieldList
+FieldsList ::=      FieldList:_1
+                    {:
+                        
+                    :}
+    |               FieldsList:_1 FieldList:_2
+                    {:
+                        
+                    :}
     ;
+                    // IdList: Vector<String> of Ids
 
-
-FieldList ::=       Type IdList T_SEMI
-    |               FuncDef
+FieldList ::=       Type:_1 IdList:_2 T_SEMI
+                    {:
+                        
+                    :}
+    |               FuncDef:_1
+                    {:
+                        
+                    :}
     ;
 
 
@@ -498,7 +510,7 @@ OptRef ::=          T_AMPERSAND
 
 IdList ::=          T_ID:_1
                     {:
-                        RESULT = new Vector ();
+                        RESULT = new Vector<String> ();
                         RESULT.addElement (_1);
                     :}
     |               IdList:_1 T_COMMA T_ID:_3
