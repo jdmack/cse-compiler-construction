@@ -443,11 +443,12 @@ class MyParser extends parser
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, thisSTO.getName()));
         }
-        // Check 13b
 
+        // Check 13b
         else if(thisSTO.getType() != null)
         {
-            if(thisSTO.getType().getName().equals(id))
+            // Check that the type is not this same type of struct and that it's not a pointer in that case
+            if((thisSTO.getType().getName().equals(id)) && (!thisSTO.getType().isPointer()))
             {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, thisSTO.getName()));
@@ -455,7 +456,6 @@ class MyParser extends parser
         }
         else 
         {
-            //m_symtab.insert(thisSTO);
         	m_currentStructdef.InsertLocal(thisSTO);
         }
     }
