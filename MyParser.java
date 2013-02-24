@@ -22,6 +22,9 @@ class MyParser extends parser
     private int          m_nSavedLineNum;
     private SymbolTable  m_symtab;
 
+    private boolean      m_inStructdef = false;
+    private Scope        m_currentStructdef;
+
     private int          m_whileLevel;
 
     //----------------------------------------------------------------
@@ -423,7 +426,43 @@ class MyParser extends parser
     //
     //----------------------------------------------------------------
     void
-    DoStructdefDecl(String id, Vector<STO> fieldList)
+    DoStructdefDeclStart()
+    {
+        m_inStructdef = true;
+        m_currentStructdef = new Scope();
+        // TODO: Need to add the name of the struct type to scope so we can look for the type for function pointers done inside struct
+    }
+
+    void
+    DoStructdefField(String id, STO thisSTO)
+    {
+        // Check for duplicate names
+        // Check 13a
+        if(m_symtab.accessLocal(thisSTO.getName()) != null)
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, thisSTO.getName()));
+        }
+        // Check 13b
+
+        else if(thisSTO.getType() != null)
+        {
+            if(thisSTO.getType().getName().equals(id))
+            {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, thisSTO.getName()));
+            }
+        }
+        else 
+        {
+            // change this to m_currentStructdef
+            m_symtab.insert(thisSTO);
+        }
+    }
+
+
+    void
+    DoStructdefDeclFinish(String id, Vector<STO> fieldList)
     {
         // check for struct in scope
         if(m_symtab.accessLocal(id) != null)
@@ -432,37 +471,6 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
           
-        //DoBlockOpen();
-
-        boolean error_flag = false;
-        // Check for duplicate names
-        for(STO thisSTO: fieldList)
-        {
-            // Check 13a
-            if(m_symtab.accessLocal(thisSTO.getName()) != null)
-            {
-                m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, thisSTO.getName()));
-                error_flag = true;
-            }
-            // Check 13b
-
-            else if(thisSTO.getType() != null)
-            {
-                if(thisSTO.getType().getName().equals(id))
-                {
-                    m_nNumErrors++;
-                    m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, thisSTO.getName()));
-                    error_flag = true;
-                }
-            }
-            else 
-            {
-                m_symtab.insert(thisSTO);
-            }
-        }
-
-        DoBlockClose();
 
         if(!error_flag) 
         {
