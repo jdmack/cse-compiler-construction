@@ -1,18 +1,17 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 class ArrayType extends CompositeType
 {
-	Type elementType;
-	STO dimensionSize;
-	ArrEleSTO elementList;
-	
+    Type elementType;
+    STO dimensionSize;
+    ArrEleSTO elementList;
+
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    ArrayType(Type elementType, STO dimenionSize)
+    public ArrayType(Type elementType, STO dimenionSize)
     {
         super(elementType.getName()+"["+((ConstSTO) dimenionSize).getIntValue()+"]", ((ConstSTO) dimenionSize).getIntValue());
         setElementType(elementType);
@@ -20,8 +19,7 @@ class ArrayType extends CompositeType
 
     }
 
-    public 
-    ArrayType(Type elementType, STO dimenionSize, ArrEleSTO eleList)
+    public ArrayType(Type elementType, STO dimenionSize, ArrEleSTO eleList)
     {
         super(elementType.getName()+"["+((ConstSTO) dimenionSize).getIntValue()+"]", ((ConstSTO) dimenionSize).getIntValue());
         setElementType(elementType);
@@ -29,50 +27,57 @@ class ArrayType extends CompositeType
         setElementList(eleList);
 
     }
-    
+
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isArray() { return true; }
-    
-    public Type getElementType() {
-    	return elementType;
-    }
-    
-    public void setElementType(Type type) {
-    	elementType = type;
-    }
-    
-    public STO getDimensionSize() {
-    	return dimensionSize;
-    }
-    
-    public void setDimensionSize(STO size) {
-    	dimensionSize = size;
+    public boolean isArray()
+    {
+        return true;
     }
 
-    public ArrEleSTO getElementList() {
-    	return elementList;
-    }
-    
-    public void setElementList(ArrEleSTO eleList) {
-    	elementList = eleList;
+    public Type getElementType()
+    {
+        return elementType;
     }
 
-    public STO checkArray() {
-    	STO result = dimensionSize;
+    public void setElementType(Type type)
+    {
+        elementType = type;
+    }
+
+    public STO getDimensionSize()
+    {
+        return dimensionSize;
+    }
+
+    public void setDimensionSize(STO size)
+    {
+        dimensionSize = size;
+    }
+
+    public ArrEleSTO getElementList()
+    {
+        return elementList;
+    }
+
+    public void setElementList(ArrEleSTO eleList)
+    {
+        elementList = eleList;
+    }
+
+    public STO checkArray()
+    {
+        STO result = dimensionSize;
         // Check #10
-        if(!dimensionSize.getType().isEquivalent(new IntType()))
-        {
-        	result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10i_Array, dimensionSize.getType().getName())));    
-        } 
-        else if(!dimensionSize.isConst())
-        {
-        	result = (new ErrorSTO(ErrorMsg.error10c_Array));    
+        if(!dimensionSize.getType().isEquivalent(new IntType())) {
+            result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10i_Array, dimensionSize.getType().getName())));
         }
-        else if(((ConstSTO) dimensionSize).getIntValue() <= 0)
-        {
-        	result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10z_Array,((ConstSTO)dimensionSize).getIntValue())));
+        else if(!dimensionSize.isConst()) {
+            result = (new ErrorSTO(ErrorMsg.error10c_Array));
+        }
+        else if(((ConstSTO) dimensionSize).getIntValue() <= 0) {
+            result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10z_Array,((ConstSTO)dimensionSize).getIntValue())));
         }
         return result;
     }

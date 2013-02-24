@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 class PointerType extends PtrGrpType
@@ -7,8 +7,7 @@ class PointerType extends PtrGrpType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    PointerType(String strName, int size)
+    public PointerType(String strName, int size)
     {
         super(strName, size);
     }
@@ -16,6 +15,9 @@ class PointerType extends PtrGrpType
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isPointer() { return true; }
+    public boolean isPointer()
+    {
+        return true;
+    }
 
 }

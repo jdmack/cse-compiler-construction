@@ -18,24 +18,21 @@ class FuncSTO extends STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    FuncSTO(String strName)
+    public FuncSTO(String strName)
     {
         this(strName, new Vector(), false);
     }
 
-    public 
-    FuncSTO(String strName, Boolean retByRef)
+    public FuncSTO(String strName, Boolean retByRef)
     {
         this(strName, new Vector(), retByRef);
     }
 
-    public 
-    FuncSTO(String strName, Vector<ParamSTO> params, boolean retByRef)
+    public FuncSTO(String strName, Vector<ParamSTO> params, boolean retByRef)
     {
         super(strName, new FuncPtrType());
         setNumOfParams(params.size());
-        setParameters(params);        
+        setParameters(params);
         setReturnByRef(retByRef);
         setReturnType(null);
         setHasReturnStatement(false);
@@ -44,28 +41,25 @@ class FuncSTO extends STO
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean
-    isFunc() 
-    { 
+    public boolean isFunc()
+    {
         return true;
     }
 
     //----------------------------------------------------------------
-    // This is the return type of the function. This is different from 
+    // This is the return type of the function. This is different from
     // the function's type(for function pointers).
     //----------------------------------------------------------------
 
     //////////////////////////////
     //      m_returnType        //
     //////////////////////////////
-    public void
-    setReturnType(Type typ)
+    public void setReturnType(Type typ)
     {
         m_returnType = typ;
     }
 
-    public Type
-    getReturnType()
+    public Type getReturnType()
     {
         return m_returnType;
     }
@@ -73,8 +67,7 @@ class FuncSTO extends STO
     //////////////////////////////
     //      m_numOfParams       //
     //////////////////////////////
-    private void
-    setNumOfParams(int numParams)
+    private void setNumOfParams(int numParams)
     {
         m_numOfParams = numParams;
     }
@@ -104,14 +97,12 @@ class FuncSTO extends STO
     //////////////////////////////
     //      m_returnByReference //
     //////////////////////////////
-    private void
-    setReturnByRef(boolean retByRef)
+    private void setReturnByRef(boolean retByRef)
     {
         m_returnByReference = retByRef;
     }
 
-    public boolean
-    getReturnByRef()
+    public boolean getReturnByRef()
     {
         return m_returnByReference;
     }
@@ -119,15 +110,12 @@ class FuncSTO extends STO
     //////////////////////////////
     //     m_hasReturnStatement //
     //////////////////////////////
-    // m
-    public void
-    setHasReturnStatement(boolean hasRtnStmt)
+    public void setHasReturnStatement(boolean hasRtnStmt)
     {
         m_hasReturnStatement = hasRtnStmt;
     }
 
-    public boolean
-    getHasReturnStatement()
+    public boolean getHasReturnStatement()
     {
         return m_hasReturnStatement;
     }
@@ -135,14 +123,12 @@ class FuncSTO extends STO
     //////////////////////////////
     //      m_level             //
     //////////////////////////////
-    public void
-    setLevel(int level)
+    public void setLevel(int level)
     {
         m_level = level;
     }
 
-    public int
-    getLevel()
+    public int getLevel()
     {
         return m_level;
     }

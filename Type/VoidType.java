@@ -12,24 +12,24 @@ class VoidType extends Type
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public
-    VoidType()
+    public VoidType()
     {
         this(VOID_NAME, VOID_SIZE);
     }
 
-    public
-    VoidType(String strName)
+    public VoidType(String strName)
     {
         this(strName, VOID_SIZE);
     }
 
-    public 
-    VoidType(String strName, int size)
+    public VoidType(String strName, int size)
     {
-        super(strName, size);     
+        super(strName, size);
     }
 
     //methods
-    public boolean isVoid() { return true; }
+    public boolean isVoid()
+    {
+        return true;
+    }
 }

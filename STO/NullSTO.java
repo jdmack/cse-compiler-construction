@@ -1,9 +1,14 @@
 
-public class NullSTO extends STO {
+public class NullSTO extends STO
+{
 
-	public NullSTO() {
-		super("Null", null, false);
-	}
-	
-    public boolean isNull()    { return true; }
+    public NullSTO()
+    {
+        super("Null", null, false);
+    }
+
+    public boolean isNull()
+    {
+        return true;
+    }
 }

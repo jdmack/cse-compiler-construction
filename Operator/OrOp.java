@@ -7,8 +7,7 @@ class OrOp extends BooleanOp
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    OrOp(String strName)
+    public OrOp(String strName)
     {
         super(strName);
     }
@@ -16,8 +15,7 @@ class OrOp extends BooleanOp
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
+    public STO doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
     {
         Double value = 0.0;
         boolean b_value = true;

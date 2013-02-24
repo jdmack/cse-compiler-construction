@@ -13,8 +13,7 @@ abstract class Operator
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    Operator(String strName)
+    public Operator(String strName)
     {
         setName(strName);
     }
@@ -22,23 +21,20 @@ abstract class Operator
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public String
-    getName()
+    public String getName()
     {
         return m_opName;
     }
 
-    public void
-    setName(String str)
+    public void setName(String str)
     {
         m_opName = str;
     }
 
 // Decided this should go in BinaryOp then Unary Op gets checkOperand
-/*  public STO 
-    checkOperands(STO operand1, STO operand2)
-    {
-        return(new ErrorSTO("Operator: abstract class")); 
-    }
-*/
+    /*  public STO checkOperands(STO operand1, STO operand2)
+        {
+            return(new ErrorSTO("Operator: abstract class"));
+        }
+    */
 }

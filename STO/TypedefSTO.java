@@ -11,20 +11,17 @@ class TypedefSTO extends STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    TypedefSTO(String strName)
+    public TypedefSTO(String strName)
     {
         super(strName);
     }
 
-    public 
-    TypedefSTO(String strName, Type typ)
+    public TypedefSTO(String strName, Type typ)
     {
         super(strName, typ);
     }
 
-    public 
-    TypedefSTO(String strName, Vector<STO> fields) 
+    public TypedefSTO(String strName, Vector<STO> fields)
     {
         super(strName, new VoidType());
         setFields(fields);
@@ -33,20 +30,17 @@ class TypedefSTO extends STO
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean
-    isTypedef()
+    public boolean isTypedef()
     {
         return true;
     }
 
-    Vector<STO>
-    getFields()
+    Vector<STO> getFields()
     {
         return m_fieldList;
     }
 
-    void
-    setFields(Vector<STO> fields)
+    void setFields(Vector<STO> fields)
     {
         m_fieldList = fields;
     }

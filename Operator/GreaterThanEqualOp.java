@@ -7,8 +7,7 @@ class GreaterThanEqualOp extends ComparisonOp
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    GreaterThanEqualOp(String strName)
+    public GreaterThanEqualOp(String strName)
     {
         super(strName);
     }
@@ -17,8 +16,7 @@ class GreaterThanEqualOp extends ComparisonOp
     //      Methods
     //---------------------------------------------------------------------
 
-    public STO
-    doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
+    public STO doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
     {
         Double value = 0.0;
         boolean b_value = true;

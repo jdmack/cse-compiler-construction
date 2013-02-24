@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 class BasicType extends Type
@@ -7,8 +7,7 @@ class BasicType extends Type
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    BasicType(String strName, int size)
+    public BasicType(String strName, int size)
     {
         super(strName, size);
     }
@@ -16,6 +15,9 @@ class BasicType extends Type
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isBasic() { return true; }
+    public boolean isBasic()
+    {
+        return true;
+    }
 
 }

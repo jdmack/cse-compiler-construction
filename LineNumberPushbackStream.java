@@ -10,25 +10,21 @@ class LineNumberPushbackStream extends PushbackInputStream
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public 
-    LineNumberPushbackStream()
+    public LineNumberPushbackStream()
     {
         this(System.in);
         m_streamName = "(stdin)";
     }
 
-    public 
-    LineNumberPushbackStream(String strFilename)
-    throws FileNotFoundException
+    public LineNumberPushbackStream(String strFilename) throws FileNotFoundException
     {
         this(new FileInputStream(strFilename));
         m_streamName = strFilename;
     }
 
-    public 
-    LineNumberPushbackStream(InputStream in)
+    public LineNumberPushbackStream(InputStream in)
     {
-        //    You should never push back more than 3 characters
+        // You should never push back more than 3 characters
         //  (12e-X) but double up to be safe.
         super(in, 6);
 
@@ -39,8 +35,7 @@ class LineNumberPushbackStream extends PushbackInputStream
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public String
-    getName()
+    public String getName()
     {
         return    m_streamName;
     }
@@ -49,8 +44,7 @@ class LineNumberPushbackStream extends PushbackInputStream
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public int
-    getLineNumber()
+    public int getLineNumber()
     {
         return(m_nLine);
     }
@@ -59,8 +53,7 @@ class LineNumberPushbackStream extends PushbackInputStream
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public void
-    incLineNumber()
+    public void incLineNumber()
     {
         m_nLine++;
     }
@@ -69,8 +62,7 @@ class LineNumberPushbackStream extends PushbackInputStream
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public void
-    decLineNumber()
+    public void decLineNumber()
     {
         m_nLine--;
     }
@@ -79,9 +71,7 @@ class LineNumberPushbackStream extends PushbackInputStream
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public int
-    read() 
-    throws IOException
+    public int read() throws IOException
     {
         int    nextChar = super.read();
 
@@ -95,24 +85,22 @@ class LineNumberPushbackStream extends PushbackInputStream
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public void
-    unread(int b) 
-    throws IOException
+    public void unread(int b) throws IOException
     {
         super.unread(b);
 
         if(b == '\n')
             decLineNumber();
-    }    
+    }
 
 
 //-----------------------------------------------------------------
-//    Instance variables.
+// Instance variables.
 //-----------------------------------------------------------------
-    private int    m_nLine;
+    private int m_nLine;
 
-    //    I'm saving the name directly because I cannot see
-    //    how to get the filename out of a created FileInputStream.
-    //    Either I'm stupid or I'm totally missing something.
-    private String    m_streamName;
+    // I'm saving the name directly because I cannot see
+    // how to get the filename out of a created FileInputStream.
+    // Either I'm stupid or I'm totally missing something.
+    private String m_streamName;
 }

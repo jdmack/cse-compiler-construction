@@ -7,8 +7,7 @@ class UnaryOp extends Operator
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    UnaryOp(String strName)
+    public UnaryOp(String strName)
     {
         super(strName);
     }
@@ -16,14 +15,12 @@ class UnaryOp extends Operator
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    checkOperand(STO operand)
+    public STO checkOperand(STO operand)
     {
         return(new ErrorSTO("UnaryOp.checkOperands()"));
     }
 
-    public STO
-    doOperation(ConstSTO operand1, Type resultType)
+    public STO doOperation(ConstSTO operand1, Type resultType)
     {
         return new ErrorSTO("UnaryOp.doOperation Error");
     }

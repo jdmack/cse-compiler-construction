@@ -14,14 +14,12 @@ abstract class STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    STO(String strName)
+    public STO(String strName)
     {
         this(strName, null);
     }
 
-    public 
-    STO(String strName, Type typ)
+    public STO(String strName, Type typ)
     {
         setName(strName);
         setType(typ);
@@ -29,8 +27,7 @@ abstract class STO
         setIsModifiable(false);
     }
 
-    public 
-    STO(String strName, Type typ, boolean isModLvalue)
+    public STO(String strName, Type typ, boolean isModLvalue)
     {
         setName(strName);
         setType(typ);
@@ -40,26 +37,22 @@ abstract class STO
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public String
-    getName()
+    public String getName()
     {
         return m_strName;
     }
 
-    private void
-    setName(String str)
+    private void setName(String str)
     {
         m_strName = str;
     }
 
-    public Type
-    getType()
+    public Type getType()
     {
         return m_type;
     }
 
-    private void
-    setType(Type type)
+    private void setType(Type type)
     {
         m_type = type;
     }
@@ -67,12 +60,11 @@ abstract class STO
 
     //----------------------------------------------------------------
     // Addressable refers to if the object has an address. Variables
-    // and declared constants have an address, whereas results from 
-    // expression like(x + y) and literal constants like 77 do not 
+    // and declared constants have an address, whereas results from
+    // expression like(x + y) and literal constants like 77 do not
     // have an address.
     //----------------------------------------------------------------
-    public boolean
-    getIsAddressable()
+    public boolean getIsAddressable()
     {
         return m_isAddressable;
     }
@@ -86,8 +78,7 @@ abstract class STO
     //----------------------------------------------------------------
     // You shouldn't need to use these two routines directly
     //----------------------------------------------------------------
-    private boolean
-    getIsModifiable()
+    private boolean getIsModifiable()
     {
         return m_isModifiable;
     }
@@ -100,11 +91,10 @@ abstract class STO
 
     //----------------------------------------------------------------
     // A modifiable L-value is an object that is both addressable and
-    // modifiable. Objects like constants are not modifiable, so they 
+    // modifiable. Objects like constants are not modifiable, so they
     // are not modifiable L-values.
     //----------------------------------------------------------------
-    public boolean
-    isModLValue()
+    public boolean isModLValue()
     {
         return getIsModifiable() && getIsAddressable();
     }
@@ -118,18 +108,48 @@ abstract class STO
 
     //----------------------------------------------------------------
     //    It will be helpful to ask a STO what specific STO it is.
-    //    The Java operator instanceof will do this, but these methods 
+    //    The Java operator instanceof will do this, but these methods
     //    will allow more flexibility(ErrorSTO is an example of the
     //    flexibility needed).
     //----------------------------------------------------------------
-    public boolean isVar()     { return false; }
-    public boolean isConst()   { return false; }
-    public boolean isExpr()    { return false; }
-    public boolean isFunc()    { return false; }
-    public boolean isTypedef() { return false; }
-    public boolean isError()   { return false; }
-    public boolean isParam()   { return false; }
-    public boolean isNull()    { return false; }
-    public boolean isArrEle()  { return false; }
-    public boolean isStructdef() { return false; }
+    public boolean isVar()
+    {
+        return false;
+    }
+    public boolean isConst()
+    {
+        return false;
+    }
+    public boolean isExpr()
+    {
+        return false;
+    }
+    public boolean isFunc()
+    {
+        return false;
+    }
+    public boolean isTypedef()
+    {
+        return false;
+    }
+    public boolean isError()
+    {
+        return false;
+    }
+    public boolean isParam()
+    {
+        return false;
+    }
+    public boolean isNull()
+    {
+        return false;
+    }
+    public boolean isArrEle()
+    {
+        return false;
+    }
+    public boolean isStructdef()
+    {
+        return false;
+    }
 }

@@ -7,14 +7,13 @@ class ErrorSTO extends STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    ErrorSTO(String strName)
+    public ErrorSTO(String strName)
     {
         super(strName);
     }
 
     //----------------------------------------------------------------
-    //    There are times where it is an error if the STO is not a 
+    //    There are times where it is an error if the STO is not a
     //    constant or adddressable or something else. However, if
     //    the STO is already an error, nothing should be said. To
     //    supress that error, we would have to check if the STO is
@@ -27,13 +26,37 @@ class ErrorSTO extends STO
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean  isVar()              { return true; }
-    public boolean  isConst()            { return true; }
-    public boolean  isExpr()             { return true; }
-    public boolean  isFunc()             { return true; }
-    public boolean  isTypedef()          { return true; }
-    public boolean  isError()            { return true; }
+    public boolean  isVar()
+    {
+        return true;
+    }
+    public boolean  isConst()
+    {
+        return true;
+    }
+    public boolean  isExpr()
+    {
+        return true;
+    }
+    public boolean  isFunc()
+    {
+        return true;
+    }
+    public boolean  isTypedef()
+    {
+        return true;
+    }
+    public boolean  isError()
+    {
+        return true;
+    }
 
-    public boolean  getIsAddressable()   { return true; }
-    public boolean  getIsModLValue()     { return true; }
+    public boolean  getIsAddressable()
+    {
+        return true;
+    }
+    public boolean  getIsModLValue()
+    {
+        return true;
+    }
 }

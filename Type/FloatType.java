@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 class FloatType extends NumericType
@@ -13,20 +13,17 @@ class FloatType extends NumericType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    FloatType()
+    public FloatType()
     {
         this(FLOAT_NAME, FLOAT_SIZE);
     }
 
-    public 
-    FloatType(String strName)
+    public FloatType(String strName)
     {
         this(strName, FLOAT_SIZE);
     }
 
-    public 
-    FloatType(String strName, int size)
+    public FloatType(String strName, int size)
     {
         super(strName, size);
     }
@@ -34,6 +31,9 @@ class FloatType extends NumericType
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isFloat() { return true; }
+    public boolean isFloat()
+    {
+        return true;
+    }
 
 }

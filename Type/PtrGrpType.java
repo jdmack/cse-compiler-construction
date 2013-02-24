@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 
@@ -8,8 +8,7 @@ class PtrGrpType extends CompositeType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    PtrGrpType(String strName, int size)
+    public PtrGrpType(String strName, int size)
     {
         super(strName, size);
     }
@@ -17,6 +16,9 @@ class PtrGrpType extends CompositeType
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isPtrGrp() { return true; }
+    public boolean isPtrGrp()
+    {
+        return true;
+    }
 
 }

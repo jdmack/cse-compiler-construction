@@ -20,8 +20,7 @@ public class Token
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public String
-    GetLexeme()
+    public String GetLexeme()
     {
         return(m_strLexeme);
     }
@@ -30,8 +29,7 @@ public class Token
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public int
-    GetCode()
+    public int GetCode()
     {
         return(m_nCode);
     }
@@ -40,10 +38,9 @@ public class Token
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    public String
-    toString()
+    public String toString()
     {
-       return  "Code: " + m_nCode + ", Lexeme: " + m_strLexeme;
+        return  "Code: " + m_nCode + ", Lexeme: " + m_strLexeme;
     }
 
 

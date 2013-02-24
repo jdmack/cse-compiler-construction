@@ -7,8 +7,7 @@ class LessThanEqualOp extends ComparisonOp
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    LessThanEqualOp(String strName)
+    public LessThanEqualOp(String strName)
     {
         super(strName);
     }
@@ -16,8 +15,7 @@ class LessThanEqualOp extends ComparisonOp
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public STO
-    doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
+    public STO doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
     {
         Double value = 0.0;
         boolean b_value = true;

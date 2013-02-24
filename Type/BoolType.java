@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 class BoolType extends BasicType
@@ -13,20 +13,17 @@ class BoolType extends BasicType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    BoolType()
+    public BoolType()
     {
         this(BOOL_NAME, BOOL_SIZE);
     }
 
-    public 
-    BoolType(String strName)
+    public BoolType(String strName)
     {
         this(strName, BOOL_SIZE);
     }
 
-    public 
-    BoolType(String strName, int size)
+    public BoolType(String strName, int size)
     {
         super(strName, size);
     }
@@ -34,6 +31,9 @@ class BoolType extends BasicType
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isBool() { return true; }
+    public boolean isBool()
+    {
+        return true;
+    }
 
 }

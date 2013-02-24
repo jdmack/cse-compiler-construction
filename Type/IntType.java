@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 class IntType extends NumericType
@@ -13,20 +13,17 @@ class IntType extends NumericType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    IntType()
+    public IntType()
     {
         this(INT_NAME, INT_SIZE);
     }
 
-    public 
-    IntType(String strName)
+    public IntType(String strName)
     {
         this(strName, INT_SIZE);
     }
 
-    public
-    IntType(String strName, int size)
+    public IntType(String strName, int size)
     {
         super(strName, size);
     }
@@ -34,18 +31,18 @@ class IntType extends NumericType
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isInt()     { return true; }
-
-    public boolean 
-    isAssignable(Type type)
+    public boolean isInt()
     {
-        if(isEquivalent(type)) 
-        {
+        return true;
+    }
+
+    public boolean isAssignable(Type type)
+    {
+        if(isEquivalent(type)) {
             return true;
         }
 
-        if(type.getName().equals("float"))
-        {
+        if(type.getName().equals("float")) {
             return true;
         }
 

@@ -7,8 +7,7 @@ class AndBwOp extends BitwiseOp
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    AndBwOp(String strName)
+    public AndBwOp(String strName)
     {
         super(strName);
     }
@@ -17,8 +16,7 @@ class AndBwOp extends BitwiseOp
     //      Methods
     //---------------------------------------------------------------------
 
-    public STO
-    doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
+    public STO doOperation(ConstSTO operand1, ConstSTO operand2, Type resultType)
     {
         Double value = new Double(operand1.getIntValue() & operand2.getIntValue());
 

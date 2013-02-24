@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 
@@ -14,20 +14,17 @@ class NullPtrType extends PointerType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    NullPtrType()
+    public NullPtrType()
     {
         super(NULLPTR_NAME, NULLPTR_SIZE);
     }
 
-    public 
-    NullPtrType(String strName)
+    public NullPtrType(String strName)
     {
         super(strName, NULLPTR_SIZE);
     }
 
-    public 
-    NullPtrType(String strName, int size)
+    public NullPtrType(String strName, int size)
     {
         super(strName, size);
     }
@@ -35,6 +32,9 @@ class NullPtrType extends PointerType
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isNullPtr() { return true; }
+    public boolean isNullPtr()
+    {
+        return true;
+    }
 
 }

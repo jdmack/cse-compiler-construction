@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 class StructType extends CompositeType
@@ -7,19 +7,22 @@ class StructType extends CompositeType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    StructType(String strName, int size)
+    public StructType(String strName, int size)
     {
         super(strName, size);
     }
-    
-    public StructType(String strName) {
-    	super(strName, 4);
+
+    public StructType(String strName)
+    {
+        super(strName, 4);
     }
 
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isStruct() { return true; }
+    public boolean isStruct()
+    {
+        return true;
+    }
 
 }

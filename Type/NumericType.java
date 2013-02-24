@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// 
+//
 //---------------------------------------------------------------------
 
 class NumericType extends BasicType
@@ -7,8 +7,7 @@ class NumericType extends BasicType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public 
-    NumericType(String strName, int size)
+    public NumericType(String strName, int size)
     {
         super(strName, size);
     }
@@ -16,6 +15,9 @@ class NumericType extends BasicType
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean isNumeric() { return true; }
+    public boolean isNumeric()
+    {
+        return true;
+    }
 
 }
