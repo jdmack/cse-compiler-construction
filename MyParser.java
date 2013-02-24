@@ -469,14 +469,13 @@ class MyParser extends parser
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
-        }
-          
-
-        if(!error_flag) 
+        } 
+        else 
         {
-            TypedefSTO sto = new TypedefSTO(id, fieldList);
-            m_symtab.insert(sto);
+        	StructdefSTO sto = new StructdefSTO(id, fieldList);
+        	m_symtab.insert(sto);
         }
+        m_inStructdef = false;
     }
 
 
