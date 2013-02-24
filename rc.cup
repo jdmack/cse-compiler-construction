@@ -1005,7 +1005,7 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
                     :}
     |               T_THIS
                     {:
-                        RESULT = new ConstSTO("this");
+                        RESULT = new ConstSTO("this", new StructType("thisStructType",4));
                     :}
     |               T_COLONCOLON T_ID:_1
                     {:
