@@ -737,27 +737,41 @@ class MyParser extends parser
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error14t_StructExp, sto.getType().getName()));
-            return new ErrorSTO("not a struct");
+            return new ErrorSTO("Struct Error - not a struct");
         }
-
-        // type of struct does not contain the field or function
-        boolean found_flag = false;
-        Vector<STO> fieldList = ((TypedefSTO)sto).getFields();
-
-        for(STO thisSTO: fieldList)
+        
+        // Check #14b
+        if (m_inStructdef) 
         {
-            if(thisSTO.getName().equals(strID))
-            {
-                found_flag = true;
-            }
+        	if(m_currentStructdef.accessLocal(strID) == null)
+        	{
+        		m_nNumErrors++;
+        		m_errors.print(Formatter.toString(ErrorMsg.error14b_StructExpThis, strID));
+        		return new ErrorSTO("Struct Error - field not in Struct");
+        	}
+        } 
+        else 
+        {
+        	// Check #14a
+        	boolean found_flag = false;        // type of struct does not contain the field or function
+        	Vector<STO> fieldList = ((StructdefSTO)sto).getFields();
+        	
+        	for(STO thisSTO: fieldList)
+        	{
+        		if(thisSTO.getName().equals(strID))
+        		{
+        			found_flag = true;
+        		}
+        	}
+        	
+        	if(!found_flag)
+        	{
+        		m_nNumErrors++;
+        		m_errors.print(Formatter.toString(ErrorMsg.error14f_StructExp, strID, sto.getType().getName()));
+        		return new ErrorSTO("Struct Error - field not found in type");
+        	}
         }
 
-        if(!found_flag)
-        {
-            m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error14f_StructExp, strID, sto.getType().getName()));
-            return new ErrorSTO("not valid field in struct");
-        }
 
         return sto;
     }
