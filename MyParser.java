@@ -438,7 +438,7 @@ class MyParser extends parser
     {
         // Check for duplicate names
         // Check 13a
-        if(m_symtab.accessLocal(thisSTO.getName()) != null)
+        if(m_currentStructdef.accessLocal(thisSTO.getName()) != null)
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, thisSTO.getName()));
@@ -455,8 +455,8 @@ class MyParser extends parser
         }
         else 
         {
-            // change this to m_currentStructdef
-            m_symtab.insert(thisSTO);
+            //m_symtab.insert(thisSTO);
+        	m_currentStructdef.InsertLocal(thisSTO);
         }
     }
 
@@ -465,7 +465,7 @@ class MyParser extends parser
     DoStructdefDeclFinish(String id, Vector<STO> fieldList)
     {
         // check for struct in scope
-        if(m_symtab.accessLocal(id) != null)
+        if(m_currentStructdef.accessLocal(id) != null)
         {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
