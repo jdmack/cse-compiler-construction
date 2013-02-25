@@ -410,7 +410,8 @@ class MyParser extends parser
     void DoStructdefDeclFinish(String id, Vector<STO> fieldList)
     {
         // check for struct in scope
-        if(m_currentStructdef.accessLocal(id) != null) {
+        // old line if(m_currentStructdef.accessLocal(id) != null) {
+        if(m_symtab.accessLocal(id) != null) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
