@@ -638,6 +638,8 @@ class MyParser extends parser
     //----------------------------------------------------------------
     STO DoDesignator2_Dot(STO sto, String strID)
     {
+    	STO returnSTO = null;
+    	
         // Good place to do the struct checks
         if(sto.isError()) {
             return sto;
@@ -657,6 +659,8 @@ class MyParser extends parser
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error14b_StructExpThis, strID));
                 return new ErrorSTO("Struct Error - field not in Struct");
+            } else {
+            	returnSTO = m_currentStructdef.accessLocal(strID);
             }
         }
         else {
@@ -667,6 +671,7 @@ class MyParser extends parser
             for(STO thisSTO: fieldList) {
                 if(thisSTO.getName().equals(strID)) {
                     found_flag = true;
+                    returnSTO = thisSTO;
                 }
             }
 
@@ -678,7 +683,7 @@ class MyParser extends parser
         }
 
 
-        return sto;
+        return returnSTO;
     }
 
 
