@@ -659,7 +659,8 @@ class MyParser extends parser
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error14b_StructExpThis, strID));
                 return new ErrorSTO("Struct Error - field not in Struct");
-            } else {
+            } 
+            else {
             	returnSTO = m_currentStructdef.accessLocal(strID);
             }
         }
