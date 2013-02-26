@@ -921,11 +921,11 @@ Designator ::=      T_STAR Designator:_1
                     :}
     |               T_SIZEOF T_LPAREN Designator:_2 T_RPAREN
                     {:
-			            RESULT = new ConstSTO("sizeof variable - fix me");
+			            RESULT = ((MyParser) parser).DoSizeOf(_2, null);
                     :}
     |               T_SIZEOF T_LPAREN Type:_2 T_RPAREN
                     {:
-			            RESULT = new ConstSTO("sizeof type - fix me");
+			            RESULT = ((MyParser) parser).DoSizeOf(null, _2);
                     :}
     |               T_LPAREN Type T_RPAREN Designator:_2
                     {:

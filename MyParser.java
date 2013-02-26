@@ -1012,4 +1012,31 @@ class MyParser extends parser
     {
         m_whileLevel--;
     }
+    
+    STO DoSizeOf(STO sto, Type type)
+    {
+    	int size = 0;
+    	
+    	//Either type or type is null
+    	if (sto == null) {
+    		if (sto.getIsAddressable()) {
+    			size = type.getSize();
+    		} else {
+    			m_nNumErrors++;
+     			m_errors.print(ErrorMsg.error19_Sizeof);
+    		}
+    	} else if (type == null){
+    		if (sto.getType() != null) {
+    			size = sto.getType().getSize();
+    		} else {
+                m_nNumErrors++;
+    			m_errors.print(ErrorMsg.error19_Sizeof);
+    		}
+    	} else {
+    		m_nNumErrors++;
+			m_errors.print(ErrorMsg.error19_Sizeof);
+    	}
+    	
+    	return new ConstSTO("ConstInt", new IntType("int",4), (double)size);
+    }
 }
