@@ -9,7 +9,7 @@ class ExprSTO extends STO
     //---------------------------------------------------------------------
     public ExprSTO(String strName)
     {
-        super(strName);
+        super(strName, null, false);
         // You may want to change the isModifiable and isAddressable
         // fields as necessary
 
@@ -19,7 +19,7 @@ class ExprSTO extends STO
 
     public ExprSTO(String strName, Type typ)
     {
-        super(strName, typ);
+        super(strName, typ, false);
         // You may want to change the isModifiable and isAddressable
         // fields as necessary
 

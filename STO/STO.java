@@ -26,6 +26,14 @@ abstract class STO
         setIsAddressable(false);
         setIsModifiable(false);
     }
+    
+    public STO(String strName, Type typ, boolean addressable, boolean modifiable)
+    {
+        setName(strName);
+        setType(typ);
+        setIsAddressable(addressable);
+        setIsModifiable(modifiable);
+    }
 
     public STO(String strName, Type typ, boolean isModLvalue)
     {
@@ -69,7 +77,7 @@ abstract class STO
         return m_isAddressable;
     }
 
-    protected void
+    private void
     setIsAddressable(boolean addressable)
     {
         m_isAddressable = addressable;
@@ -83,7 +91,7 @@ abstract class STO
         return m_isModifiable;
     }
 
-    protected void
+    private void
     setIsModifiable(boolean modifiable)
     {
         m_isModifiable = modifiable;

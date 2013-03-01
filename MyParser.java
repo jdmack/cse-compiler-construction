@@ -1019,14 +1019,9 @@ class MyParser extends parser
     	
     	//Either type or type is null
     	if (sto == null) {
-    		if (sto.getIsAddressable()) {
-    			size = type.getSize();
-    		} else {
-    			m_nNumErrors++;
-     			m_errors.print(ErrorMsg.error19_Sizeof);
-    		}
+    		size = type.getSize();
     	} else if (type == null){
-    		if (sto.getType() != null) {
+    		if (sto.getIsAddressable() && sto.getType() != null) {
     			size = sto.getType().getSize();
     		} else {
                 m_nNumErrors++;

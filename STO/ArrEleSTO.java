@@ -15,6 +15,8 @@ public class ArrEleSTO extends STO
         return exprs;
     }
 
-
-
+    public boolean isArrEle()
+    {
+        return true;
+    }
 }

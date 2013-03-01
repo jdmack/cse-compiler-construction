@@ -23,7 +23,7 @@ class ConstSTO extends STO
     //---------------------------------------------------------------------
     public ConstSTO(String strName)
     {
-        super(strName);
+        super(strName, null, true, false);
         m_value = null; // fix this
         // You may want to change the isModifiable and isAddressable
         // fields as necessary
@@ -31,21 +31,19 @@ class ConstSTO extends STO
 
     public ConstSTO(String strName, Type typ)
     {
-        super(strName, typ);
+        super(strName, typ, true, false);
         m_value = null; // fix this
-        // You may want to change the isModifiable and isAddressable
-        // fields as necessary
     }
 
     public ConstSTO(String strName, Type typ, Double val)
     {
-        super(strName, typ);
+        super(strName, typ, true, false);
         setValue(val);
     }
 
     public ConstSTO(String strName, Type typ, String val)
     {
-        super(strName, typ);
+        super(strName, typ, true, false);
         //System.out.println("strName: " + strName);
         //System.out.println("val: " + val);
         //System.out.println("Type: " + typ.getName());

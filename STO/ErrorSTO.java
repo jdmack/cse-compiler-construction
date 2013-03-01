@@ -9,7 +9,7 @@ class ErrorSTO extends STO
     //---------------------------------------------------------------------
     public ErrorSTO(String strName)
     {
-        super(strName);
+        super(strName, null, true);
     }
 
     //----------------------------------------------------------------
@@ -47,15 +47,6 @@ class ErrorSTO extends STO
         return true;
     }
     public boolean  isError()
-    {
-        return true;
-    }
-
-    public boolean  getIsAddressable()
-    {
-        return true;
-    }
-    public boolean  getIsModLValue()
     {
         return true;
     }
