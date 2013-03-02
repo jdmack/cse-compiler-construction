@@ -6,7 +6,6 @@ import java.util.Vector;
 
 class TypedefSTO extends STO
 {
-    private Vector<STO> m_fieldList;
 
     //---------------------------------------------------------------------
     //      Constructors
@@ -20,13 +19,6 @@ class TypedefSTO extends STO
     {
         super(strName, typ, addressable, modifiable);
     }
-
-    public TypedefSTO(String strName, Vector<STO> fields)
-    {
-        super(strName, new VoidType());
-        setFields(fields);
-    }
-
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
@@ -35,13 +27,4 @@ class TypedefSTO extends STO
         return true;
     }
 
-    Vector<STO> getFields()
-    {
-        return m_fieldList;
-    }
-
-    void setFields(Vector<STO> fields)
-    {
-        m_fieldList = fields;
-    }
 }
