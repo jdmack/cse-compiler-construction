@@ -26,27 +26,27 @@ class ErrorSTO extends STO
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
-    public boolean  isVar()
+    public boolean isVar()
     {
         return true;
     }
-    public boolean  isConst()
+    public boolean isConst()
     {
         return true;
     }
-    public boolean  isExpr()
+    public boolean isExpr()
     {
         return true;
     }
-    public boolean  isFunc()
+    public boolean isFunc()
     {
         return true;
     }
-    public boolean  isTypedef()
+    public boolean isTypedef()
     {
         return true;
     }
-    public boolean  isError()
+    public boolean isError()
     {
         return true;
     }
