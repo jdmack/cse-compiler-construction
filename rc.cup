@@ -426,6 +426,7 @@ ModifierList ::=    Modifier:_1
                         ((PtrGrpType)_2).setPointsToType((Type) _1);
                         RESULT = _2;
                     :}
+    ;
 
 
 Modifier ::=        T_STAR
