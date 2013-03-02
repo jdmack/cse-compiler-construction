@@ -5,23 +5,23 @@
 class ArrayType extends CompositeType
 {
     Type elementType;
-    STO dimensionSize;
+    Integer dimensionSize;
     ArrEleSTO elementList;
 
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public ArrayType(Type elementType, STO dimenionSize)
+    public ArrayType(Type elementType, Integer dimenionSize)
     {
-        super(elementType.getName()+"["+((ConstSTO) dimenionSize).getIntValue()+"]", ((ConstSTO) dimenionSize).getIntValue());
+        super(elementType.getName()+"["+dimenionSize+"]", dimenionSize);
         setElementType(elementType);
         setDimensionSize(dimenionSize);
 
     }
 
-    public ArrayType(Type elementType, STO dimenionSize, ArrEleSTO eleList)
+    public ArrayType(Type elementType, Integer dimenionSize, ArrEleSTO eleList)
     {
-        super(elementType.getName()+"["+((ConstSTO) dimenionSize).getIntValue()+"]", ((ConstSTO) dimenionSize).getIntValue());
+        super(elementType.getName()+"["+dimenionSize+"]", dimenionSize);
         setElementType(elementType);
         setDimensionSize(dimenionSize);
         setElementList(eleList);
@@ -46,14 +46,14 @@ class ArrayType extends CompositeType
         elementType = type;
     }
 
-    public STO getDimensionSize()
+    public Integer getDimensionSize()
     {
         return dimensionSize;
     }
 
-    public void setDimensionSize(STO size)
+    public void setDimensionSize(Integer dimenionSize)
     {
-        dimensionSize = size;
+        dimensionSize = dimenionSize;
     }
 
     public ArrEleSTO getElementList()
@@ -64,21 +64,5 @@ class ArrayType extends CompositeType
     public void setElementList(ArrEleSTO eleList)
     {
         elementList = eleList;
-    }
-
-    public STO checkArray()
-    {
-        STO result = dimensionSize;
-        // Check #10
-        if(!dimensionSize.getType().isEquivalent(new IntType())) {
-            result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10i_Array, dimensionSize.getType().getName())));
-        }
-        else if(!dimensionSize.isConst()) {
-            result = (new ErrorSTO(ErrorMsg.error10c_Array));
-        }
-        else if(((ConstSTO) dimensionSize).getIntValue() <= 0) {
-            result = (new ErrorSTO(Formatter.toString(ErrorMsg.error10z_Array,((ConstSTO)dimensionSize).getIntValue())));
-        }
-        return result;
     }
 }

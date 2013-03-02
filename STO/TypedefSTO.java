@@ -11,14 +11,14 @@ class TypedefSTO extends STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public TypedefSTO(String strName)
+/*    public TypedefSTO(String strName)
     {
         super(strName);
-    }
+    }*/
 
-    public TypedefSTO(String strName, Type typ)
+    public TypedefSTO(String strName, Type typ, boolean addressable, boolean modifiable)
     {
-        super(strName, typ);
+        super(strName, typ, addressable, modifiable);
     }
 
     public TypedefSTO(String strName, Vector<STO> fields)
