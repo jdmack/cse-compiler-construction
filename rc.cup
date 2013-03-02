@@ -361,12 +361,7 @@ FuncDecl ::=        T_EXTERN T_FUNCTION T_COLON ReturnType:_1 T_ID:_2
 // Return: Type - could be null
 Type ::=            SubType:_1 OptModifierList:_2 OptArrayDef:_3
                     {:
-                        if(_3 != null) {
-                            RESULT = new ArrayType(_1, (ConstSTO)_3);      
-                        }
-                        else {
-                            RESULT = _1;
-                        }
+                        RESULT = ((MyParser) parser).DoBuildType(_1, (Type) _2, (STO) _3);
                     :}
     |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
     ;
