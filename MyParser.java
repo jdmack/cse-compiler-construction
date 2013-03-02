@@ -387,6 +387,7 @@ class MyParser extends parser
         // TODO: Need to add the name of the struct type to scope so we can look for the type for function pointers done inside struct
     }
 
+    //STO DoStructdefField(String id, Type type)
     void DoStructdefField(String id, STO thisSTO)
     {
         // Check for duplicate names
@@ -394,16 +395,21 @@ class MyParser extends parser
         if(m_currentStructdef.accessLocal(thisSTO.getName()) != null) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, thisSTO.getName()));
+            //return new ErrorSTO();
         }
         // Check 13b
             // Check that the type is not this same type of struct and that it's not a pointer in that case
         else if((thisSTO.getType().getName().equals(id)) && (!thisSTO.getType().isPointer())) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, thisSTO.getName()));
+            //return new ErrorSTO();
         }
         else {
             m_currentStructdef.InsertLocal(thisSTO);
         }
+        // create the STO
+        //m_currentStructdef.InsertLocal(thisSTO);
+        //return STO;
     }
 
 
@@ -1054,11 +1060,11 @@ class MyParser extends parser
         }
 
         if(ptrType != null) {
-            PtrGrpType thisPtr = ptrType;
+            PtrGrpType thisPtr = (PtrGrpType) ptrType;
 
             // Walk down the pointer until we find the last one
             while(thisPtr.getPointsToType() != null) {
-                thisPtr = thisPtr.getPointsToType();
+                thisPtr = (PtrGrpType) thisPtr.getPointsToType();
             }
             
             thisPtr.setPointsToType(returnType);
@@ -1067,4 +1073,5 @@ class MyParser extends parser
         }
        
         return returnType;
+    }
 }
