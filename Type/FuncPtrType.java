@@ -14,12 +14,12 @@ class FuncPtrType extends PtrGrpType
     //---------------------------------------------------------------------
     public FuncPtrType()
     {
-        super(FUNCPTR_NAME, FUNCPTR_SIZE);
+        super(FUNCPTR_NAME, FUNCPTR_SIZE, null);
     }
 
     public FuncPtrType(String strName, int size)
     {
-        super(strName, size);
+        super(strName, size, null);
     }
 
     //---------------------------------------------------------------------

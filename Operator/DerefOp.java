@@ -34,7 +34,7 @@ class DerefOp extends UnaryOp
         }
         */
 
-        resultSTO = new VarSTO("DerefOp.checkOperands() Result", operand.getType().getPointsToType());
+        resultSTO = new VarSTO("DerefOp.checkOperands() Result", ((PtrGrpType)operand.getType()).getPointsToType());
 
         return resultSTO;
     }

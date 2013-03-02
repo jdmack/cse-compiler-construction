@@ -16,17 +16,17 @@ class NullPtrType extends PointerType
     //---------------------------------------------------------------------
     public NullPtrType()
     {
-        super(NULLPTR_NAME, NULLPTR_SIZE);
+        super(NULLPTR_NAME, NULLPTR_SIZE, null);
     }
 
     public NullPtrType(String strName)
     {
-        super(strName, NULLPTR_SIZE);
+        super(strName, NULLPTR_SIZE, null);
     }
 
     public NullPtrType(String strName, int size)
     {
-        super(strName, size);
+        super(strName, size, null);
     }
 
     //---------------------------------------------------------------------

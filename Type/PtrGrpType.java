@@ -25,7 +25,7 @@ class PtrGrpType extends CompositeType
     public Type getPointsToType()
     {
         return m_pointsToType;
-
+    }
     public void setPointsToType(Type pointsTo)
     {
         m_pointsToType = pointsTo;
