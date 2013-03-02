@@ -23,6 +23,11 @@ class PointerType extends PtrGrpType
         super(POINTER_NAME, POINTER_SIZE, pointsTo);
     }
 
+    public PointerType(String name, int size, Type pointsTo)
+    {
+        super(POINTER_NAME, POINTER_SIZE, pointsTo);
+    }
+
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
