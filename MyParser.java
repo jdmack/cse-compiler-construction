@@ -364,7 +364,7 @@ class MyParser extends parser
             }*/
 
             type.setName(id);
-            TypedefSTO sto = new TypedefSTO(id, type);
+            TypedefSTO sto = new TypedefSTO(id, type, false, false);
             m_symtab.insert(sto);
         }
     }
@@ -380,7 +380,6 @@ class MyParser extends parser
         // TODO: Need to add the name of the struct type to scope so we can look for the type for function pointers done inside struct
     }
 
-    //STO DoStructdefField(String id, Type type)
     void DoStructdefField(String id, STO thisSTO)
     {
         // Check for duplicate names
@@ -388,21 +387,16 @@ class MyParser extends parser
         if(m_currentStructdef.accessLocal(thisSTO.getName()) != null) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, thisSTO.getName()));
-            //return new ErrorSTO();
         }
         // Check 13b
             // Check that the type is not this same type of struct and that it's not a pointer in that case
         else if((thisSTO.getType().getName().equals(id)) && (!thisSTO.getType().isPointer())) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, thisSTO.getName()));
-            //return new ErrorSTO();
         }
         else {
             m_currentStructdef.InsertLocal(thisSTO);
         }
-        // create the STO
-        //m_currentStructdef.InsertLocal(thisSTO);
-        //return STO;
     }
 
 
@@ -415,8 +409,9 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
         else {
-            StructdefSTO sto = new StructdefSTO(id, fieldList);
-            m_symtab.insert(sto);
+        	//TODO
+            //TypedefSTO sto = new TypedefSTO(id, fieldList);
+            //m_symtab.insert(sto);
         }
         m_inStructdef = false;
     }
@@ -667,7 +662,7 @@ class MyParser extends parser
         else {
             // Check #14a
             boolean found_flag = false;        // type of struct does not contain the field or function
-            Vector<STO> fieldList = ((StructdefSTO)sto).getFields();
+            Vector<STO> fieldList = ((StructType)((TypedefSTO)sto).getType()).getFields();
 
             for(STO thisSTO: fieldList) {
                 if(thisSTO.getName().equals(strID)) {
@@ -1032,39 +1027,5 @@ class MyParser extends parser
     	}
     	
     	return new ConstSTO("ConstInt", new IntType("int",4), (double)size);
-    }
-
-    //----------------------------------------------------------------
-    //      DoBuildType
-    //----------------------------------------------------------------
-    Type DoBuildType(Type subType, Type ptrType, STO arrayIndex)
-    {
-        Type returnType = subType;
-
-        // TODO: Possibly check arrayIndex for errorSTO
-
-        // TODO: Do type null check here if decided needed
-
-        // Check if arrayIndex is null - this means it is not an array
-        if(arrayIndex != null) {
-            returnType = DoArrayDecl(subType, arrayIndex); 
-
-            // TODO: Might need to do something else here if arrayType isn't valid
-        }
-
-        if(ptrType != null) {
-            PtrGrpType thisPtr = (PtrGrpType) ptrType;
-
-            // Walk down the pointer until we find the last one
-            while(thisPtr.getPointsToType() != null) {
-                thisPtr = (PtrGrpType) thisPtr.getPointsToType();
-            }
-            
-            thisPtr.setPointsToType(returnType);
-
-            returnType = ptrType;
-        }
-       
-        return returnType;
     }
 }
