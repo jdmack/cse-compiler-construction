@@ -223,6 +223,7 @@ GlobalDecl ::=      ExternDecl
     |               FuncDef
     ;
 
+                    // TODO: Possibly check Type as null for error
 ExternDecl ::=      T_EXTERN Type:_2 IdList:_3 T_SEMI
                     {:
                          ((MyParser) parser).DoExternDecl (_2, _3);
@@ -230,6 +231,7 @@ ExternDecl ::=      T_EXTERN Type:_2 IdList:_3 T_SEMI
     ;
     
                                 // static int (z = )
+                                // _2: Type - could be null
 VarDecl ::=         OptStatic UndecoratedType:_2 IdListWOptInit:_3 T_SEMI
                     {:
                         ((MyParser) parser).DoVarDecl (_2, _3);
@@ -243,6 +245,7 @@ VarDecl ::=         OptStatic UndecoratedType:_2 IdListWOptInit:_3 T_SEMI
 
     ;
 
+                                        // _2: Type - could be null
 ConstDecl ::=       OptStatic T_CONST UndecoratedType:_2 IdListWInit:_3 T_SEMI
                     {:
                         ((MyParser) parser).DoConstDecl (_2, _3);
@@ -259,6 +262,7 @@ OptStatic ::=       T_STATIC
     ;
 
 
+                            // _1: Type - could be null
 TypedefDecl ::=     T_TYPEDEF Type:_1 IdListUpper:_2 T_SEMI                // typedef [type] IDENTIFIER;
                     {:
                         ((MyParser) parser).DoTypedefDecl (_1, _2);
@@ -287,12 +291,14 @@ FieldsList ::=      FieldList:_1
     ;
                     // IdList: Vector<String> of Ids
 
+                    // _1: Type - could be null
 FieldList ::=       Type:_1 IdList:_2 T_SEMI
                     {:
                         RESULT = new Vector<STO>();
                         for(String id: (Vector<String>)_2) {
                             ((MyParser) parser).DoStructdefField(id, new VarSTO(id, _1));
                             RESULT.addElement(new VarSTO(id, _1));
+                            // RESULT.addElement(((MyParser) parser).DoStructdefField(id, _1);
                         }
                     :}
     |               FuncDef:_1
@@ -303,6 +309,7 @@ FieldList ::=       Type:_1 IdList:_2 T_SEMI
     ;
 
 
+                        // _1: Type - could be null
 FuncDef ::=         T_FUNCTION T_COLON ReturnType:_1 OptRef:_4 T_ID:_2                 // function: [type] & identifier ( param1, param2) { statments } 
                     {:
                         ((MyParser) parser).SaveLineNum ();
@@ -347,7 +354,12 @@ FuncDecl ::=        T_EXTERN T_FUNCTION T_COLON ReturnType:_1 T_ID:_2
     ;
 
 
-Type ::=            SubType:_1 OptModifierList OptArrayDef:_3
+                    /* _1 - Type - Could be null
+                       _2 - PointerType
+                       _3 - STO
+                    */
+// Return: Type - could be null
+Type ::=            SubType:_1 OptModifierList:_2 OptArrayDef:_3
                     {:
                         if(_3 != null) {
                             RESULT = new ArrayType(_1, (ConstSTO)_3);      
@@ -359,6 +371,8 @@ Type ::=            SubType:_1 OptModifierList OptArrayDef:_3
     |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
     ;
 
+                    // _1: Type - Could be null
+// Return: Type
 UndecoratedType ::= SubType:_1
                     {:
                         RESULT = _1;
@@ -366,6 +380,8 @@ UndecoratedType ::= SubType:_1
     |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
     ;
 
+// Return: Type
+                    // _2: Type - Could be null
 SubType ::=         QualIdent:_2
                     {:
                         RESULT = (_2).getType();
@@ -393,17 +409,30 @@ BasicType ::=       T_INT
     ;
 
 
-OptModifierList ::= ModifierList
+OptModifierList ::= ModifierList:_1
+                    {:
+                        RESULT = _1;
+                    :}
     |               /* empty */
     ;
 
 
-ModifierList ::=    Modifier
-    |               ModifierList Modifier
-    ;
+ModifierList ::=    Modifier:_1
+                    {:
+                        RESULT = _1;
+                    :}
+    |               ModifierList:_1 Modifier:_2
+                    {:
+                        ((PtrGrpType)_2).setPointsToType((Type) _1);
+                        RESULT = _2;
+                    :}
 
 
 Modifier ::=        T_STAR
+                    {:
+                        RESULT = new PointerType();
+                    :}
+
     ;
 
 
@@ -418,6 +447,7 @@ OptArrayDef ::=     T_LBRACKET ConstExpr:_1 T_RBRACKET
     ;
 
 
+                    // _1: Type - could be null
 ReturnType ::=      SubType:_1 OptModifierList
                     {:
                         // You should determine the type and return it here
@@ -904,7 +934,7 @@ IncDecOp ::=        T_PLUSPLUS
 Designator ::=      T_STAR Designator:_1
                     {:
                         RESULT = _1;
-//			            RESULT = ((MyParser) parser).DoUnaryOp(new ("*"), _1);
+                        // RESULT = ((MyParser) parser).DoUnaryOp(new ("*"), _1);
                     :}
     |               T_AMPERSAND Designator:_1
                     {:
@@ -1018,6 +1048,7 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
     ;
 
 
+// Return: STO
 QualIdent ::=       T_ID_U:_1
                     {:
                        RESULT = ((MyParser) parser).DoQualIdent (_1);
