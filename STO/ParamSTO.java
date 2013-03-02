@@ -18,10 +18,10 @@ class ParamSTO extends STO
         setPassByReference(passByRef);
     }
 
-    public ParamSTO(String strName)
+/*    public ParamSTO(String strName)
     {
         super(strName);
-    }
+    }*/
 
     //---------------------------------------------------------------------
     //      Methods

@@ -185,23 +185,8 @@ class MyParser extends parser
 
             // Do Array checks if type = ArrayType
             if(lstIDs.elementAt(i).getArrayIndex() != null && type != null) {
-                // Check 11
-                if(!lstIDs.elementAt(i).getArrayIndex().getType().isEquivalent(new IntType())) {
-                    m_nNumErrors++;
-                    m_errors.print(Formatter.toString(ErrorMsg.error10i_Array, lstIDs.elementAt(i).getArrayIndex().getType().getName()));
-                    break;
-                }
-                if(!lstIDs.elementAt(i).getArrayIndex().isConst()) {
-                    m_nNumErrors++;
-                    m_errors.print(ErrorMsg.error10c_Array);
-                    break;
-                }
-                else if(((ConstSTO)lstIDs.elementAt(i).getArrayIndex()).getIntValue() <= 0) {
-                    m_nNumErrors++;
-                    m_errors.print(Formatter.toString(ErrorMsg.error10z_Array,((ConstSTO)lstIDs.elementAt(i).getArrayIndex()).getIntValue()));
-                    break;
-                }
-                ArrayType arrType;
+                // Check 10
+                ArrayType arrType = (ArrayType) DoArrayDecl(type, lstIDs.elementAt(i).getArrayIndex());
                 // Check 11b
                 if(lstIDs.elementAt(i).getValue().isArrEle()) {
                     ArrEleSTO elements = (ArrEleSTO) lstIDs.elementAt(i).getValue();
@@ -226,21 +211,9 @@ class MyParser extends parser
                             break;
                         }
                     }
-                    arrType = new ArrayType(type, lstIDs.elementAt(i).getArrayIndex(), elements);
+                    // Add it array
+                    arrType.setElementList(elements);
                 }
-                else {
-
-                    arrType = new ArrayType(type, lstIDs.elementAt(i).getArrayIndex());
-                }
-
-
-
-                /*STO stoResult = arrType.checkArray();
-                if(stoResult.isError())
-                {
-                    m_nNumErrors++;
-                    m_errors.print(stoResult.getName());
-                }*/
                 stoVar = new VarSTO(id, arrType);
                 m_symtab.insert(stoVar); // May be redundant but didn't want a possibility of inserting null.
             }
@@ -255,11 +228,35 @@ class MyParser extends parser
             }
         }
     }
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
-    void DoExternDecl(Vector<String> lstIDs)
+    Type DoArrayDecl(Type type, STO indexSTO) {
+    	
+    	if(indexSTO.isError()) return type;
+    	
+        // Do Array checks if type = ArrayType
+    	if(!indexSTO.getType().isEquivalent(new IntType())) {
+    		m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error10i_Array, indexSTO.getType().getName()));
+    	}
+    	
+    	if(!indexSTO.isConst()) {
+    		m_nNumErrors++;
+    		m_errors.print(ErrorMsg.error10c_Array);    		
+    	}
+
+    	if (((ConstSTO)indexSTO).getIntValue() <= 0) {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error10z_Array, ((ConstSTO)indexSTO).getIntValue()));
+    	}
+    	
+    	return new ArrayType(type, type.getSize() * ((ConstSTO)indexSTO).getIntValue());
+    }
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
+    void DoExternDecl(Type type, Vector<String> lstIDs)
     {
         for(int i = 0; i < lstIDs.size(); i++) {
             String id = lstIDs.elementAt(i);
@@ -269,7 +266,7 @@ class MyParser extends parser
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
 
-            VarSTO sto = new VarSTO(id);
+            VarSTO sto = new VarSTO(id, type);
             m_symtab.insert(sto);
         }
     }
@@ -361,14 +358,10 @@ class MyParser extends parser
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
             // Do Array checks if type = ArrayType
-            if(type.isArray()) {
-                STO stoResult = ((ArrayType)type).checkArray();
+/*            if(type.isArray()) {
+                STO stoResult = ((ArrayType)type);
 
-                if(stoResult.isError()) {
-                    m_nNumErrors++;
-                    m_errors.print(stoResult.getName());
-                }
-            }
+            }*/
 
             type.setName(id);
             TypedefSTO sto = new TypedefSTO(id, type);
@@ -722,13 +715,13 @@ class MyParser extends parser
         // bullet 3 - index expr is constant, error if indexExpr outside bounds of array dimension
         //              except when desSTO is pointer type
         if(indexSTO.isConst()) {
-            if(((ConstSTO)indexSTO).getIntValue() >= ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue() || ((ConstSTO)indexSTO).getIntValue() < 0) {
+            if(((ConstSTO)indexSTO).getIntValue() >= (((ArrayType)desSTO.getType()).getDimensionSize()) || ((ConstSTO)indexSTO).getIntValue() < 0) {
                 m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstSTO)indexSTO).getIntValue(), ((ConstSTO)((ArrayType)desSTO.getType()).getDimensionSize()).getIntValue()));
+                m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstSTO)indexSTO).getIntValue(), ((ArrayType)desSTO.getType()).getDimensionSize()));
                 return new ErrorSTO("Desig2_Array() - index is constant, out of bounds");
             }
         }
-
+        
         // Checks are complete, now we need to return an ExprSTO with the type of the array elements
         desSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
         //TODO: Double check what the name of exprSTO should be.

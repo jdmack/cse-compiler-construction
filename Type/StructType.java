@@ -1,9 +1,13 @@
+import java.util.Vector;
+
 //---------------------------------------------------------------------
 //
 //---------------------------------------------------------------------
 
 class StructType extends CompositeType
 {
+    private Vector<STO> m_fieldList;
+
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
@@ -25,4 +29,13 @@ class StructType extends CompositeType
         return true;
     }
 
+    Vector<STO> getFields()
+    {
+        return m_fieldList;
+    }
+
+    void setFields(Vector<STO> fields)
+    {
+        m_fieldList = fields;
+    }
 }
