@@ -1034,4 +1034,37 @@ class MyParser extends parser
     	
     	return new ConstSTO("ConstInt", new IntType("int",4), (double)size);
     }
+
+    //----------------------------------------------------------------
+    //      DoBuildType
+    //----------------------------------------------------------------
+    Type DoBuildType(Type subType, Type ptrType, STO arrayIndex)
+    {
+        Type returnType = subType;
+
+        // TODO: Possibly check arrayIndex for errorSTO
+
+        // TODO: Do type null check here if decided needed
+
+        // Check if arrayIndex is null - this means it is not an array
+        if(arrayIndex != null) {
+            returnType = DoArrayDecl(subType, arrayIndex); 
+
+            // TODO: Might need to do something else here if arrayType isn't valid
+        }
+
+        if(ptrType != null) {
+            PtrGrpType thisPtr = ptrType;
+
+            // Walk down the pointer until we find the last one
+            while(thisPtr.getPointsToType() != null) {
+                thisPtr = thisPtr.getPointsToType();
+            }
+            
+            thisPtr.setPointsToType(returnType);
+
+            returnType = ptrType;
+        }
+       
+        return returnType;
 }
