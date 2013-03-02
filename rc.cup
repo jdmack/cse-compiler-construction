@@ -444,11 +444,9 @@ OptArrayDef ::=     T_LBRACKET ConstExpr:_1 T_RBRACKET
 
 
                     // _1: Type - could be null
-ReturnType ::=      SubType:_1 OptModifierList
+ReturnType ::=      SubType:_1 OptModifierList: _2
                     {:
-                        // You should determine the type and return it here
-                        // Basic types right now, returned from SubType
-                        RESULT = _1;
+                        RESULT = ((MyParser) parser).DoBuildType(_1, (Type) _2, null);
                     :}
     |               T_VOID
                     {:
