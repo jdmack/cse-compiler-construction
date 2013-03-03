@@ -256,7 +256,7 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.error10z_Array, ((ConstSTO)indexSTO).getIntValue()));
     	}
     	
-    	return new ArrayType(type, type.getSize() * ((ConstSTO)indexSTO).getIntValue());
+    	return new ArrayType(type, ((ConstSTO)indexSTO).getIntValue());
     }
     //----------------------------------------------------------------
     //
@@ -385,26 +385,26 @@ class MyParser extends parser
         // TODO: Need to add the name of the struct type to scope so we can look for the type for function pointers done inside struct
     }
 
-    // STO DoStructdefField(String id, Type type)
-    void DoStructdefField(String id, STO thisSTO)
+    STO DoStructdefField(String id, Type type)
+    //void DoStructdefField(String id, STO thisSTO)
     {
         // Check for duplicate names
         // Check 13a
-        if(m_currentStructdef.accessLocal(thisSTO.getName()) != null) {
+        if(m_currentStructdef.accessLocal(id) != null) {
             m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, thisSTO.getName()));
-            //return new ErrorSTO();
+            m_errors.print(Formatter.toString(ErrorMsg.error13a_Struct, id));
+            //return new ErrorSTO("Error- Field declared second time in struct");
         }
         // Check 13b
             // Check that the type is not this same type of struct and that it's not a pointer in that case
-        else if((thisSTO.getType().getName().equals(id)) && (!thisSTO.getType().isPointer())) {
+        else if((type.getName().equals(id)) && (!type.isPointer())) {
             m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, thisSTO.getName()));
-            //return new ErrorSTO();
+            m_errors.print(Formatter.toString(ErrorMsg.error13b_Struct, id));
+           // return new ErrorSTO("Error- Size of field cannot be determined at compile time.");
         }
-        else {
-            m_currentStructdef.InsertLocal(thisSTO);
-        }
+        VarSTO var = new VarSTO(id, type);
+        m_currentStructdef.InsertLocal(var);
+        return var;
         // create the STO
         // m_currentStructdef.InsertLocal(thisSTO);
         // return thisSTO;
@@ -421,9 +421,15 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
         else {
-        	//TODO
-            //TypedefSTO sto = new TypedefSTO(id, fieldList);
-            //m_symtab.insert(sto);
+        	// get size of struct
+        	int size = 0;
+        	for(STO sto : fieldList) {
+        		if(sto.isFunc()) continue;
+        		
+        		size += sto.getType().getSize();
+        	}
+            TypedefSTO sto = new TypedefSTO(id, new StructType("StructType", size), false, false);
+            m_symtab.insert(sto);
         }
         m_inStructdef = false;
     }
