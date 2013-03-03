@@ -442,19 +442,13 @@ class MyParser extends parser
         	int size = 0;
         	for(STO sto : fieldList) {
         		if(sto.isFunc()) continue;
-        		System.out.println(sto.getType().getName() +" "+sto.getName() +" "+sto.getType().getSize());
         		size += sto.getType().getSize();
         	}
         	
         	// get TypedefSTO of StructType 
         	TypedefSTO sto = (TypedefSTO) m_symtab.accessLocal(id);
-        	System.out.println(sto.getName());
         	sto.getType().setSize(size);
         	((StructType) sto.getType()).setFields(fieldList);
-        	System.out.println("Size:"+m_symtab.access(id).getType().getSize());
-            //TypedefSTO sto = new TypedefSTO(id, new StructType("StructType", size, fieldList), false, false);
-            
-            //m_symtab.insert(sto);
         }
         m_inStructdef = false;
     }
