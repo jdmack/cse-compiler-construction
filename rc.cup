@@ -934,8 +934,8 @@ IncDecOp ::=        T_PLUSPLUS
 
 Designator ::=      T_STAR Designator:_1
                     {:
-                        RESULT = _1;
-                        // RESULT = ((MyParser) parser).DoUnaryOp(new ("*"), _1);
+                        RESULT = ((MyParser) parser).DoUnaryOp(new DerefOp("*"), _1);
+                        //RESULT = _1;
                     :}
     |               T_AMPERSAND Designator:_1
                     {:
