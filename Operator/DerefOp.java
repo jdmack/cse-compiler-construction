@@ -27,7 +27,8 @@ class DerefOp extends UnaryOp
 
         /* Don't need to worry about constant folding because constant pointers WNBT */
 
-        resultSTO = operand;
+        resultSTO = new VarSTO("*" + operand.getName(), ((PtrGrpType)operand.getType()).getPointsToType());
+
 
         return resultSTO;
     }
