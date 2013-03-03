@@ -690,7 +690,7 @@ class MyParser extends parser
         }
 
         // Check #14b
-        if (m_inStructdef) {
+        if((m_inStructdef) && (m_structId == sto.getType().getName())) {
             if(m_currentStructdef.accessLocal(strID) == null) {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error14b_StructExpThis, strID));
@@ -735,12 +735,6 @@ class MyParser extends parser
             return sto;
         }
 
-
-        /*
-                sto is a VarSTO with type Pointer
-        */
-
-        
         // Check 15b
         // if it's a pointer but not a struct pointer
         if(sto.getType().isPtrGrp()) {
