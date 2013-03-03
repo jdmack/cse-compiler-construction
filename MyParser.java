@@ -228,7 +228,7 @@ class MyParser extends parser
 
             if(ptrType != null) {
                 ((PtrGrpType) ptrType).setBottomPtrType(type);
-                finalType = ((PtrGrpType) ptrType).getBottomPtrType();
+                finalType = ptrType;
             }
 
             stoVar = new VarSTO(id, finalType);
