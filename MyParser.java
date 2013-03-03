@@ -21,6 +21,7 @@ class MyParser extends parser
     private SymbolTable  m_symtab;
 
     private boolean      m_inStructdef = false;
+    private String		 m_structId;
     private Scope        m_currentStructdef;
 
     private int          m_whileLevel;
@@ -244,16 +245,19 @@ class MyParser extends parser
     	if(!indexSTO.getType().isEquivalent(new IntType())) {
     		m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error10i_Array, indexSTO.getType().getName()));
+            return type;
     	}
     	
     	if(!indexSTO.isConst()) {
     		m_nNumErrors++;
-    		m_errors.print(ErrorMsg.error10c_Array);    		
+    		m_errors.print(ErrorMsg.error10c_Array); 
+    		return type;
     	}
 
     	if (((ConstSTO)indexSTO).getIntValue() <= 0) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error10z_Array, ((ConstSTO)indexSTO).getIntValue()));
+            return type;
     	}
     	
     	return new ArrayType(type, ((ConstSTO)indexSTO).getIntValue());
@@ -378,9 +382,10 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
-    void DoStructdefDeclStart()
+    void DoStructdefDeclStart(String id)
     {
         m_inStructdef = true;
+        m_structId = id;
         m_currentStructdef = new Scope();
         // TODO: Need to add the name of the struct type to scope so we can look for the type for function pointers done inside struct
     }

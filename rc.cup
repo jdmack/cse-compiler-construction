@@ -270,7 +270,7 @@ TypedefDecl ::=     T_TYPEDEF Type:_1 IdListUpper:_2 T_SEMI                // ty
                     :}
     |               T_STRUCTDEF T_ID_U:_1 T_LBRACE                      // structdef IDENTIFIER { [fields] };
                     {:
-                        ((MyParser) parser).DoStructdefDeclStart();
+                        ((MyParser) parser).DoStructdefDeclStart(_1);
                     :}
                     FieldsList:_2 T_RBRACE T_SEMI                          // ReturnStatement: No
                     {:
