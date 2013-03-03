@@ -19,7 +19,7 @@ class ArrowOp extends UnaryOp
     {
         STO resultSTO;
 
-        // Check #15a - operand is pointer type
+        // Check #15b - operand is pointer type
         // Check operand
         if(operand.getType().isPtrGrp()) {
             if(!((PtrGrpType) (operand.getType())).getBottomPtrType().isStruct())
