@@ -381,7 +381,7 @@ class MyParser extends parser
 
             }*/
 
-            type.setName(id);
+            // type.setName(id);
             TypedefSTO sto = new TypedefSTO(id, type, false, false);
             m_symtab.insert(sto);
         }
@@ -588,10 +588,21 @@ class MyParser extends parser
             return (new ErrorSTO("DoAssignExpr Error - not mod-L-Value"));
         }
 
+        Type desType, valueType;
+        if(stoDes.getType().isPtrGrp())
+            desType = ((PtrGrpType) stoDes.getType()).getPointsToType();
+        else
+            desType = stoDes.getType();
+
+        if(stoValue.getType().isPtrGrp())
+            valueType = ((PtrGrpType) stoValue.getType()).getPointsToType();
+        else
+            valueType = stoValue.getType();
+
         // Check #3b - illegal assignment - bad types
-        if(!stoValue.getType().isAssignable(stoDes.getType())) {
+        if(!valueType.isAssignable(desType)) {
             m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, stoValue.getType().getName(), stoDes.getType().getName()));
+            m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, valueType.getName(), desType.getName()));
             return (new ErrorSTO("DoAssignExpr Error - bad types"));
         }
 

@@ -20,19 +20,19 @@ YOURSTRUCT* y;
 
 function : int main() {
     x->a = i;
-    x->c = i;
+    x->c = i;               // Error - assigning int to bool
 
     (*x).b = i;
-    (*x).c = i;
+    (*x).c = i;             // Error - assigning int to bool
 
-    *x = s;
-    x->d[5] = s.c;
+    *x = s;                 // Assigning s (MYSTRUCT) to *x (PS which is MYSTRUCT *) - Strict name equivalence
+    x->d[5] = s.c;          // Error - assigning bool to int
     x->d[5] = s2.b;
 
-    *x = s3;
-    x->d[5] = s3.b;
-    x = y;
-    x->d[7] = y->d[2];
+    *x = s3;                // Error - s3 (YOURSTRUCT) assign to *x (MYSTRUCT) - Strict name equivalence
+    x->d[5] = s3.b;         // Int to int
+    x = y;                  // Error - Assign y (YOURSTRUCT *) to x (PS which is MYSTRUCT *) 
+    x->d[7] = y->d[2];      // Int to int
     
     return 0;
 }

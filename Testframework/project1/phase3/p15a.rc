@@ -10,13 +10,13 @@ MYSTRUCT s;
 
 function : int main() {
     i = x->a;
-    i = x->c;
+    i = x->c;               // Error - assign bool to int
 
     i = (*x).b;
-    i = (*x).c;
+    i = (*x).c;             // Error - assign bool to int
 
-    s = *x;
-    i = x->d[5];
+    s = *x;                 // Okay - assign *x (PS which is MYSTRUCT *) to s (MYSTRUCT)
+    i = x->d[5];            // Okay - assign int to int
     
     return 0;
 }
