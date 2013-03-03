@@ -191,33 +191,36 @@ class MyParser extends parser
             // Do Array checks if type = ArrayType
             if(arrayIndex != null && type != null) {
                 // Check 10
-                ArrayType arrType = (ArrayType) DoArrayDecl(type, arrayIndex);
-                // Check 11b
-                if(value.isArrEle()) {
-                    ArrEleSTO elements = (ArrEleSTO) value;
-                    Vector<STO> stos = elements.getArrayElements();
-                    // # elements not exceed array size
-                    if(stos.size() >= ((ConstSTO) arrayIndex).getIntValue()) {
-                        m_nNumErrors++;
-                        m_errors.print(ErrorMsg.error11_TooManyInitExpr);
-                        break;
-                    }
-
-                    for(STO sto : stos) {
-                        if (!sto.isConst()) {
-                            m_nNumErrors++;
-                            m_errors.print(ErrorMsg.error11_NonConstInitExpr);
-                            break;
-                        }
-
-                        if (!sto.getType().isAssignable(type)) {
-                            m_nNumErrors++;
-                            m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, sto.getType().getName(), type.getName()));
-                            break;
-                        }
-                    }
-                    // Add it array
-                    arrType.setElementList(elements);
+                ArrayType arrType = DoArrayDecl(type, arrayIndex);
+                if (arrType != null) {
+                	// Check 11b
+                	if(value.isArrEle()) {
+                		ArrEleSTO elements = (ArrEleSTO) value;
+                		Vector<STO> stos = elements.getArrayElements();
+                		// # elements not exceed array size
+                		if(stos.size() >= ((ConstSTO) arrayIndex).getIntValue()) {
+                			m_nNumErrors++;
+                			m_errors.print(ErrorMsg.error11_TooManyInitExpr);
+                			break;
+                		}
+                		
+                		for(STO sto : stos) {
+                			if (!sto.isConst()) {
+                				m_nNumErrors++;
+                				m_errors.print(ErrorMsg.error11_NonConstInitExpr);
+                				break;
+                			}
+                			
+                			if (!sto.getType().isAssignable(type)) {
+                				m_nNumErrors++;
+                				m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, sto.getType().getName(), type.getName()));
+                				break;
+                			}
+                		}
+                		// Add it array
+                		arrType.setElementList(elements);
+                	
+                	}
                 }
                 // Override type with new arrayType that encompasses the value stored in finalType
                 finalType = arrType;
@@ -237,30 +240,34 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
-    Type DoArrayDecl(Type type, STO indexSTO) {
+    ArrayType DoArrayDecl(Type type, STO indexSTO) {
+    	boolean errorFlag = false;
+    	int size = 0;
     	
-    	if(indexSTO.isError()) return type;
-    	
-        // Do Array checks if type = ArrayType
-    	if(!indexSTO.getType().isEquivalent(new IntType())) {
-    		m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error10i_Array, indexSTO.getType().getName()));
-            return type;
+    	if(!indexSTO.isError()) {
+	        // Do Array checks if type = ArrayType
+	    	if(!indexSTO.getType().isEquivalent(new IntType())) {
+	    		m_nNumErrors++;
+	            m_errors.print(Formatter.toString(ErrorMsg.error10i_Array, indexSTO.getType().getName()));
+	            errorFlag = true;
+	    	}
+	    	
+	    	if(!indexSTO.isConst()) {
+	    		m_nNumErrors++;
+	    		m_errors.print(ErrorMsg.error10c_Array); 
+	    		errorFlag = true;
+	    	} 
+	    	else if (((ConstSTO)indexSTO).getIntValue() <= 0) {
+	            m_nNumErrors++;
+	            m_errors.print(Formatter.toString(ErrorMsg.error10z_Array, ((ConstSTO)indexSTO).getIntValue()));
+	            errorFlag = true;
+	    	}
+	    	
+	    	if (errorFlag == false) {
+	    		size = ((ConstSTO)indexSTO).getIntValue();
+	    	}
     	}
-    	
-    	if(!indexSTO.isConst()) {
-    		m_nNumErrors++;
-    		m_errors.print(ErrorMsg.error10c_Array); 
-    		return type;
-    	}
-
-    	if (((ConstSTO)indexSTO).getIntValue() <= 0) {
-            m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error10z_Array, ((ConstSTO)indexSTO).getIntValue()));
-            return type;
-    	}
-    	
-    	return new ArrayType(type, ((ConstSTO)indexSTO).getIntValue());
+    	return new ArrayType(type, size);
     }
     //----------------------------------------------------------------
     //
@@ -1152,7 +1159,7 @@ class MyParser extends parser
         // Check if arrayIndex is null - this means it is not an array
         if(arrayIndex != null) {
             returnType = DoArrayDecl(subType, arrayIndex);
-    
+            
             // TODO: Might need to do something else here if arrayType isn't valid
         }
     
