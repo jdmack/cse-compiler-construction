@@ -1165,7 +1165,7 @@ class MyParser extends parser
     
         if(ptrType != null) {
             ((PtrGrpType) ptrType).setBottomPtrType(returnType);
-            returnType = ((PtrGrpType) ptrType).getBottomPtrType();
+            returnType = ptrType;
         }
             
         return returnType;
