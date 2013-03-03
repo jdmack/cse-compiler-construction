@@ -802,7 +802,9 @@ class MyParser extends parser
     {
         // desSTO: the identifier
         // indexSTO: the expression inside the []
-
+        if(desSTO.isError()) {
+            return desSTO;
+        }
 
         // Check #11a
         // bullet 1 - desSTO is not array or pointer type
