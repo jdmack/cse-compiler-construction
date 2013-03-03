@@ -397,6 +397,13 @@ class MyParser extends parser
         m_structId = id;
         m_currentStructdef = new Scope();
         // TODO: Need to add the name of the struct type to scope so we can look for the type for function pointers done inside struct
+        if(m_symtab.accessLocal(id) != null) {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
+        } else {
+	        TypedefSTO sto = new TypedefSTO(m_structId, new StructType(m_structId), false, false);
+	        m_symtab.insert(sto);
+        }
     }
 
     STO DoStructdefField(String id, Type type)
@@ -431,20 +438,23 @@ class MyParser extends parser
         // check for struct in scope
         // old line if(m_currentStructdef.accessLocal(id) != null) {
         if(m_symtab.accessLocal(id) != null) {
-            m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
-        }
-        else {
         	// get size of struct
         	int size = 0;
         	for(STO sto : fieldList) {
         		if(sto.isFunc()) continue;
-        		
+        		System.out.println(sto.getType().getName() +" "+sto.getName() +" "+sto.getType().getSize());
         		size += sto.getType().getSize();
         	}
-            TypedefSTO sto = new TypedefSTO(id, new StructType("StructType", size, fieldList), false, false);
+        	
+        	// get TypedefSTO of StructType 
+        	TypedefSTO sto = (TypedefSTO) m_symtab.accessLocal(id);
+        	System.out.println(sto.getName());
+        	sto.getType().setSize(size);
+        	((StructType) sto.getType()).setFields(fieldList);
+        	System.out.println("Size:"+m_symtab.access(id).getType().getSize());
+            //TypedefSTO sto = new TypedefSTO(id, new StructType("StructType", size, fieldList), false, false);
             
-            m_symtab.insert(sto);
+            //m_symtab.insert(sto);
         }
         m_inStructdef = false;
     }
@@ -875,9 +885,13 @@ class MyParser extends parser
     {
         STO sto;
         if((sto = m_symtab.access(strID)) == null) {
-            m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.undeclared_id, strID));
-            return (new ErrorSTO(strID));
+        	if(m_inStructdef) {
+        		if(!m_structId.equals(strID)) {
+        			m_nNumErrors++;
+        			m_errors.print(Formatter.toString(ErrorMsg.undeclared_id, strID));
+        			return (new ErrorSTO(strID));
+        		}
+        	}
         }
         if(!sto.isTypedef()) {
             m_nNumErrors++;

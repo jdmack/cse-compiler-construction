@@ -39,7 +39,7 @@ abstract class Type
         return m_size;
     }
 
-    private void setSize(int size)
+    protected void setSize(int size)
     {
         m_size = size;
     }

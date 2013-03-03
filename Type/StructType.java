@@ -35,8 +35,9 @@ class StructType extends CompositeType
         return m_fieldList;
     }
 
-    void setFields(Vector<STO> fields)
+    public void setFields(Vector<STO> fields)
     {
         m_fieldList = fields;
     }
+    
 }

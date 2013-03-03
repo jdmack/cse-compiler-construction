@@ -26,5 +26,4 @@ class TypedefSTO extends STO
     {
         return true;
     }
-
 }
