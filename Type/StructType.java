@@ -40,4 +40,8 @@ class StructType extends CompositeType
         m_fieldList = fields;
     }
     
+    public boolean isEquivalent(Type type)
+    {
+        return (this.getName() == type.getName());
+    }
 }
