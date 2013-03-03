@@ -37,7 +37,9 @@ class PtrGrpType extends CompositeType
     }
 
     public Type getBottomPtrType()
-    {
+    { 
+    	if(m_pointsToType == null) return null;
+    	
         if(m_pointsToType.isPtrGrp())
             return ((PtrGrpType) m_pointsToType).getBottomPtrType();
         else
