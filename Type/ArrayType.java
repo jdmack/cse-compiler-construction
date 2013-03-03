@@ -65,4 +65,23 @@ class ArrayType extends CompositeType
     {
         elementList = eleList;
     }
+
+    // meaning: param = this
+    public boolean isAssignable(Type type)
+    {
+        // If trying to assign to pointer, check if pointer type is this array's element type
+        if(type.isPtrGrp()) {
+            if(elementType.isAssignable(((PtrGrpType) type).getPointsToType()))
+                return true;
+            else
+                return false;
+        }
+
+        if(isEquivalent(type)) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
