@@ -256,7 +256,7 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.error10z_Array, ((ConstSTO)indexSTO).getIntValue()));
     	}
     	
-    	return new ArrayType(type, type.getSize() * ((ConstSTO)indexSTO).getIntValue());
+    	return new ArrayType(type, ((ConstSTO)indexSTO).getIntValue());
     }
     //----------------------------------------------------------------
     //
