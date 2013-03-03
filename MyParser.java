@@ -784,7 +784,7 @@ class MyParser extends parser
 
             if(!found_flag) {
                 m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg.error14f_StructExp, strID, sto.getType().getName()));
+                m_errors.print(Formatter.toString(ErrorMsg.error14f_StructExp, strID, structType.getName()));
                 return new ErrorSTO("Struct Error - field not found in type");
             }
         }
