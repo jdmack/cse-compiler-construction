@@ -442,7 +442,8 @@ class MyParser extends parser
         		
         		size += sto.getType().getSize();
         	}
-            TypedefSTO sto = new TypedefSTO(id, new StructType("StructType", size), false, false);
+            TypedefSTO sto = new TypedefSTO(id, new StructType("StructType", size, fieldList), false, false);
+            
             m_symtab.insert(sto);
         }
         m_inStructdef = false;
@@ -692,7 +693,7 @@ class MyParser extends parser
         }
 
         // Check #14b
-        if((m_inStructdef) && (m_structId == sto.getType().getName())) {
+        if((m_inStructdef) && ((m_structId == sto.getType().getName()) || sto.getName().equals("this"))) {
             if(m_currentStructdef.accessLocal(strID) == null) {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error14b_StructExpThis, strID));
@@ -705,7 +706,7 @@ class MyParser extends parser
         else {
             // Check #14a
             boolean found_flag = false;        // type of struct does not contain the field or function
-            Vector<STO> fieldList = ((StructType)((TypedefSTO)sto).getType()).getFields();
+            Vector<STO> fieldList = ((StructType)sto.getType()).getFields();
 
             for(STO thisSTO: fieldList) {
                 if(thisSTO.getName().equals(strID)) {

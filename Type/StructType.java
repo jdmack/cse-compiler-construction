@@ -11,9 +11,10 @@ class StructType extends CompositeType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public StructType(String strName, int size)
+    public StructType(String strName, int size, Vector<STO> fieldList)
     {
         super(strName, size);
+        setFields(fieldList);
     }
 
     public StructType(String strName)
