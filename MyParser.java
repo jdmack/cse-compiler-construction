@@ -181,6 +181,8 @@ class MyParser extends parser
                 m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
             }
 
+            Type finalType = type;
+
             VarSTO stoVar;
 
             // Do Array checks if type = ArrayType
@@ -188,8 +190,8 @@ class MyParser extends parser
                 // Check 10
                 ArrayType arrType = (ArrayType) DoArrayDecl(type, lstIDs.elementAt(i).getArrayIndex());
                 // Check 11b
-                if(lstIDs.elementAt(i).getValue().isArrEle()) {
-                    ArrEleSTO elements = (ArrEleSTO) lstIDs.elementAt(i).getValue();
+                if(value.isArrEle()) {
+                    ArrEleSTO elements = (ArrEleSTO) value;
                     Vector<STO> stos = elements.getArrayElements();
                     // # elements not exceed array size
                     if(stos.size() >= ((ConstSTO) lstIDs.elementAt(i).getArrayIndex()).getIntValue()) {
@@ -214,14 +216,11 @@ class MyParser extends parser
                     // Add it array
                     arrType.setElementList(elements);
                 }
-                stoVar = new VarSTO(id, arrType);
-                m_symtab.insert(stoVar); // May be redundant but didn't want a possibility of inserting null.
+                // Override type with new arrayType that encompasses the value stored in finalType
+                finalType = arrType;
             }
-            else {
-                stoVar = new VarSTO(id, type);
-                m_symtab.insert(stoVar); // May be redundant but didn't want a possibility of inserting null.
-
-            }
+            
+            stoVar = new VarSTO(id, finalType);
 
             if(!value.isNull()) {
                 DoAssignExpr(stoVar, value);
@@ -429,8 +428,16 @@ class MyParser extends parser
     //----------------------------------------------------------------
     STO DoFuncDecl_1(Type returnType, String id, Boolean retByRef)
     {
+        STO accessedSTO;
+
+        if(m_inStructdef) 
+            accessedSTO = m_currentStructdef.access(id);
+        else
+            accessedSTO = m_symtab.accessLocal(id);
+
+
         // Check for func already existing in localScope
-        if(m_symtab.accessLocal(id) != null) {
+        if(accessedSTO != null) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
@@ -439,7 +446,10 @@ class MyParser extends parser
         // Set return type
         sto.setReturnType(returnType);
 
-        m_symtab.insert(sto);
+        if(m_inStructdef) 
+            m_currentStructdef.InsertLocal(sto);
+        else
+            m_symtab.insert(sto);
 
         m_symtab.openScope();
         m_symtab.setFunc(sto);

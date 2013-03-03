@@ -232,6 +232,7 @@ ExternDecl ::=      T_EXTERN Type:_2 IdList:_3 T_SEMI
     
                                 // static int (z = )
                                 // _2: Type - could be null
+                                // _3: Vector<IdValueTuple>
 VarDecl ::=         OptStatic UndecoratedType:_2 IdListWOptInit:_3 T_SEMI
                     {:
                         ((MyParser) parser).DoVarDecl (_2, _3);
@@ -566,23 +567,29 @@ IdListUpper ::=     T_ID_U:_1
 
                     // int x = expr2, y = expr
 
-IdListWOptInit ::=  OptModifierList OptArrayDef:_3 T_ID:_1 OptInit:_2
+                                    // _1: String
+                                    // _2: STO
+                                    // _3: STO (arrayIndex)
+                                    // _4: Type (PointerType)
+// Return: Vector<IdValueTuple>
+IdListWOptInit ::=  OptModifierList:_4 OptArrayDef:_3 T_ID:_1 OptInit:_2
                     {:
                         // _1 is String strID
                         // _2 is STO from DoFuncCall or NullSTO if no Init or ArrayElements
                         // _3 is ConstExpr in [ConstExpr]
 
                         RESULT = new Vector<IdValueTuple> ();
-                        RESULT.addElement (new IdValueTuple(_1, (STO)_2, (STO)_3));
+                        RESULT.addElement (new IdValueTuple(_1, (STO)_2, (STO)_3, (Type) _4));
                     :}
     |               IdListWOptInit:_1 T_COMMA OptModifierList:_2 OptArrayDef:_5 T_ID:_3 OptInit:_4
                     {:
                         RESULT = _1;
-                        RESULT.addElement (new IdValueTuple(_3, (STO)_4, (STO)_5));
+                        RESULT.addElement (new IdValueTuple(_3, (STO)_4, (STO)_5, (Type) _2));
                     :}
     ;
                     // This OptArrayDef not needed because constant arrays WNBT
-IdListWInit ::=     OptModifierList OptArrayDef T_ID:_1 T_ASSIGN ConstExpr:_2
+                    // This OptModiferList not needed because constant pointers WNBT
+IdListWInit ::=     OptModifierList: OptArrayDef T_ID:_1 T_ASSIGN ConstExpr:_2
                     {:
 			            RESULT = new Vector<IdValueTuple>();
 			            RESULT.addElement (new IdValueTuple(_1, (STO)_2));

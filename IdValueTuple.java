@@ -8,6 +8,7 @@ public class IdValueTuple
     private String m_ID;
     private STO m_value;
     private STO m_arrayIndex;
+    private Type m_pointer;
 
     //---------------------------------------------------------------------
     //      Constructors
@@ -19,9 +20,15 @@ public class IdValueTuple
 
     public IdValueTuple(String ID, STO value, STO arrayIndex)
     {
+        this(ID, value, null, null);
+    }
+
+    public IdValueTuple(String ID, STO value, STO arrayIndex, Type pointer)
+    {
         m_ID = ID;
         m_value = value;
         m_arrayIndex = arrayIndex;
+        m_pointer = pointer;
     }
 
     //---------------------------------------------------------------------
