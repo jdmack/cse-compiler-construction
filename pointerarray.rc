@@ -1,0 +1,6 @@
+function : int main() {
+    int [4] a;
+    int * s = a;
+
+    return 2;
+}
