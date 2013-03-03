@@ -830,15 +830,21 @@ class MyParser extends parser
         // bullet 3 - index expr is constant, error if indexExpr outside bounds of array dimension
         //              except when desSTO is pointer type
         if(indexSTO.isConst()) {
-            if(((ConstSTO)indexSTO).getIntValue() >= (((ArrayType)desSTO.getType()).getDimensionSize()) || ((ConstSTO)indexSTO).getIntValue() < 0) {
-                m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstSTO)indexSTO).getIntValue(), ((ArrayType)desSTO.getType()).getDimensionSize()));
-                return new ErrorSTO("Desig2_Array() - index is constant, out of bounds");
-            }
+        	if(desSTO.getType().isArray()) {
+        		if(((ConstSTO)indexSTO).getIntValue() >= (((ArrayType)desSTO.getType()).getDimensionSize()) || ((ConstSTO)indexSTO).getIntValue() < 0) {
+        			m_nNumErrors++;
+        			m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstSTO)indexSTO).getIntValue(), ((ArrayType)desSTO.getType()).getDimensionSize()));
+        			return new ErrorSTO("Desig2_Array() - index is constant, out of bounds");
+        		}
+        	}
         }
         
         // Checks are complete, now we need to return an ExprSTO with the type of the array elements
-        desSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
+        if(desSTO.getType().isArray()) {
+        	desSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
+        } else if (desSTO.getType().isPointer()){
+        	desSTO = new VarSTO(((PointerType)desSTO.getType()).getPointsToType().getName(),((PointerType)desSTO.getType()).getPointsToType());
+        }
         //TODO: Double check what the name of exprSTO should be.
         return desSTO;
     }
