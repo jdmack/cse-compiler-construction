@@ -711,6 +711,80 @@ class MyParser extends parser
         return returnSTO;
     }
 
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
+    STO DoDesignator2_Arrow(STO sto, String strID)
+    {
+    	STO returnSTO = null;
+    	
+        // Good place to do the struct checks
+        if(sto.isError()) {
+            return sto;
+        }
+
+
+        /*
+                sto is a VarSTO with type Pointer
+        */
+
+        
+        // Check 15b
+        // if it's a pointer but not a struct pointer
+        if(sto.getType().isPtrGrp()) {
+            if(!((PtrGrpType) sto.getType()).getPointsToType().isStruct()) {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error15_ReceiverArrow, sto.getType().getName()));
+                return new ErrorSTO("Pointer Error - Doesn't point to struct pointer");
+            }
+        }
+        // If it's not a pointer
+        else {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.error15_ReceiverArrow, sto.getType().getName()));
+            return new ErrorSTO("Pointer Error - Doesn't point to struct pointer");
+        }
+
+        // It's a pointer, check if the field is valid
+        // Check 14a
+
+        StructType structType = (StructType) ((PtrGrpType) sto.getType()).getPointsToType();
+
+        // if the struct we're accessing is the struct being defined
+        if((m_inStructdef) && (m_structId == structType.getName())) {
+            if(m_currentStructdef.accessLocal(strID) == null) {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error14b_StructExpThis, strID));
+                return new ErrorSTO("Struct Error - field not in Struct");
+            } 
+            else {
+                returnSTO = m_currentStructdef.accessLocal(strID);
+            }
+        }
+        // The struct we're accessing isn't the current struct
+        else {
+            boolean found_flag = false;        // type of struct does not contain the field or function
+
+            Vector<STO> fieldList = structType.getFields(); 
+
+            for(STO thisSTO: fieldList) {
+                if(thisSTO.getName().equals(strID)) {
+                    found_flag = true;
+                    returnSTO = thisSTO;
+                }
+            }
+
+            if(!found_flag) {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error14f_StructExp, strID, sto.getType().getName()));
+                return new ErrorSTO("Struct Error - field not found in type");
+            }
+        }
+
+
+        return returnSTO;
+    }
+
 
     //----------------------------------------------------------------
     //
