@@ -38,11 +38,23 @@ class PtrGrpType extends CompositeType
 
     public Type getBottomPtrType()
     { 
-    	if(m_pointsToType == null) return null;
+    	if(m_pointsToType == null) 
+            return null;
     	
         if(m_pointsToType.isPtrGrp())
             return ((PtrGrpType) m_pointsToType).getBottomPtrType();
         else
             return m_pointsToType;
+    }
+
+    public void setBottomPtrType(Type newType)
+    { 
+    	if(m_pointsToType == null)
+            setPointsToType(newType);
+    	
+        if(m_pointsToType.isPtrGrp())
+            ((PtrGrpType) m_pointsToType).setBottomPtrType(newType);
+        else
+            setPointsToType(newType);
     }
 }

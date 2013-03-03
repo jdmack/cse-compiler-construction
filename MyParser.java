@@ -226,8 +226,10 @@ class MyParser extends parser
                 finalType = arrType;
             }
 
-            if(ptrType != null)
+            if(ptrType != null) {
+                ((PtrGrpType) ptrType).setBottomPtrType(type);
                 finalType = ((PtrGrpType) ptrType).getBottomPtrType();
+            }
 
             stoVar = new VarSTO(id, finalType);
             m_symtab.insert(stoVar);
