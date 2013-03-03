@@ -174,6 +174,8 @@ class MyParser extends parser
         for(int i = 0; i < lstIDs.size(); i++) {
             String id = lstIDs.elementAt(i).getId();
             STO value = lstIDs.elementAt(i).getValue();
+            STO arrayIndex = lstIDs.elementAt(i).getArrayIndex(); 
+            Type ptrType = lstIDs.elementAt(i).getPointerType();  
 
             // Check for var already existing in localScope
             if(m_symtab.accessLocal(id) != null) {
@@ -186,15 +188,15 @@ class MyParser extends parser
             VarSTO stoVar;
 
             // Do Array checks if type = ArrayType
-            if(lstIDs.elementAt(i).getArrayIndex() != null && type != null) {
+            if(arrayIndex != null && type != null) {
                 // Check 10
-                ArrayType arrType = (ArrayType) DoArrayDecl(type, lstIDs.elementAt(i).getArrayIndex());
+                ArrayType arrType = (ArrayType) DoArrayDecl(type, arrayIndex);
                 // Check 11b
                 if(value.isArrEle()) {
                     ArrEleSTO elements = (ArrEleSTO) value;
                     Vector<STO> stos = elements.getArrayElements();
                     // # elements not exceed array size
-                    if(stos.size() >= ((ConstSTO) lstIDs.elementAt(i).getArrayIndex()).getIntValue()) {
+                    if(stos.size() >= ((ConstSTO) arrayIndex).getIntValue()) {
                         m_nNumErrors++;
                         m_errors.print(ErrorMsg.error11_TooManyInitExpr);
                         break;
@@ -219,8 +221,12 @@ class MyParser extends parser
                 // Override type with new arrayType that encompasses the value stored in finalType
                 finalType = arrType;
             }
-            
+
+            if(ptrType != null)
+                finalType = ((PtrGrpType) ptrType).getBottomPtrType();
+
             stoVar = new VarSTO(id, finalType);
+            m_symtab.insert(stoVar);
 
             if(!value.isNull()) {
                 DoAssignExpr(stoVar, value);
@@ -1065,18 +1071,8 @@ class MyParser extends parser
             // TODO: Might need to do something else here if arrayType isn't valid
         }
     
-        if(ptrType != null) {
-            PtrGrpType thisPtr = (PtrGrpType) ptrType;
-        
-            // Walk down the pointer until we find the last one
-            while(thisPtr.getPointsToType() != null) {
-                thisPtr = (PtrGrpType) thisPtr.getPointsToType();
-            }
-            
-            thisPtr.setPointsToType(returnType);
-            
-            returnType = ptrType;
-        }
+        if(ptrType != null)
+            returnType = ((PtrGrpType) ptrType).getBottomPtrType();
             
         return returnType;
     }

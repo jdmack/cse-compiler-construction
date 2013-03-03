@@ -8,7 +8,7 @@ public class IdValueTuple
     private String m_ID;
     private STO m_value;
     private STO m_arrayIndex;
-    private Type m_pointer;
+    private Type m_pointerType;
 
     //---------------------------------------------------------------------
     //      Constructors
@@ -28,7 +28,7 @@ public class IdValueTuple
         m_ID = ID;
         m_value = value;
         m_arrayIndex = arrayIndex;
-        m_pointer = pointer;
+        m_pointerType = pointer;
     }
 
     //---------------------------------------------------------------------
@@ -47,5 +47,10 @@ public class IdValueTuple
     public STO getArrayIndex()
     {
         return m_arrayIndex;
+    }
+
+    public Type getPointerType()
+    {
+        return m_pointerType;
     }
 }
