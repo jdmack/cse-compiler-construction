@@ -1,7 +1,7 @@
 function : int* fip(float a) { int* x;  return x; }
 float r;
 int i;
-int* t = NULL;
+int* t = nullptr;
 float* f = &r;
 
 function : int main() {
