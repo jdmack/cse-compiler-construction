@@ -421,9 +421,15 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
         else {
-        	//TODO
-            //TypedefSTO sto = new TypedefSTO(id, fieldList);
-            //m_symtab.insert(sto);
+        	// get size of struct
+        	int size = 0;
+        	for(STO sto : fieldList) {
+        		if(sto.isFunc()) continue;
+        		
+        		size += sto.getType().getSize();
+        	}
+            TypedefSTO sto = new TypedefSTO(id, new StructType("StructType", size), false, false);
+            m_symtab.insert(sto);
         }
         m_inStructdef = false;
     }
