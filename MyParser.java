@@ -1160,10 +1160,11 @@ class MyParser extends parser
             // TODO: Might need to do something else here if arrayType isn't valid
         }
     
-        if(ptrType != null)
+        if(ptrType != null) {
+            ((PtrGrpType) ptrType).setBottomPtrType(returnType);
             returnType = ((PtrGrpType) ptrType).getBottomPtrType();
+        }
             
         return returnType;
     }
-
 }
