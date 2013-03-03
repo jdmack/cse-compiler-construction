@@ -297,9 +297,9 @@ FieldList ::=       Type:_1 IdList:_2 T_SEMI
                     {:
                         RESULT = new Vector<STO>();
                         for(String id: (Vector<String>)_2) {
-                            ((MyParser) parser).DoStructdefField(id, new VarSTO(id, _1));
-                            RESULT.addElement(new VarSTO(id, _1));
-                            // RESULT.addElement(((MyParser) parser).DoStructdefField(id, _1);
+                            //((MyParser) parser).DoStructdefField(id, new VarSTO(id, _1));
+                            //RESULT.addElement(new VarSTO(id, _1));
+                            RESULT.addElement(((MyParser) parser).DoStructdefField(id, _1));
                         }
                     :}
     |               FuncDef:_1
