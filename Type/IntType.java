@@ -41,11 +41,15 @@ class IntType extends NumericType
         if(isEquivalent(type)) {
             return true;
         }
-
+/*
         if(type.getName().equals("float")) {
             return true;
         }
-
+*/
+        if(type.getClass() == FloatType.class) {
+        	return true;
+        }
+        
         return false;
     }
 }
