@@ -575,7 +575,7 @@ IdListUpper ::=     T_ID_U:_1
 IdListWOptInit ::=  OptModifierList:_4 OptArrayDef:_3 T_ID:_1 OptInit:_2
                     {:
                         // _1 is String strID
-                        // _2 is STO from DoFuncCall or NullSTO if no Init or ArrayElements
+                        // _2 is STO from Expr or NullSTO if no Init or ArrayElements
                         // _3 is ConstExpr in [ConstExpr]
 
                         RESULT = new Vector<IdValueTuple> ();
@@ -604,7 +604,7 @@ IdListWInit ::=     OptModifierList: OptArrayDef T_ID:_1 T_ASSIGN ConstExpr:_2
 
 OptInit ::=         T_ASSIGN Expr:_1
                     {:
-                        // _1: STO from DoFUncCall
+                        // _1: STO from Expr
                         RESULT = _1;
                     :}
     |               T_ASSIGN T_LBRACE ArrElemsList:_2 T_RBRACE  // ReturnStatement: No             = {ele1, ele2, ..., ele3}
