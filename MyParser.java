@@ -588,6 +588,7 @@ class MyParser extends parser
             return (new ErrorSTO("DoAssignExpr Error - not mod-L-Value"));
         }
 
+        // Check #3b - illegal assignment - bad types
         if(!stoValue.getType().isAssignable(stoDes.getType())) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, stoValue.getType().getName(), stoDes.getType().getName()));
