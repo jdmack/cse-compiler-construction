@@ -7,7 +7,8 @@ import java.util.Vector;
 class StructType extends CompositeType
 {
     private Vector<STO> m_fieldList;
-
+    private String baseName; // For strict name equivalence
+    
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
@@ -15,11 +16,13 @@ class StructType extends CompositeType
     {
         super(strName, size);
         setFields(fieldList);
+        setBaseName(strName);
     }
 
     public StructType(String strName)
     {
         super(strName, 4);
+        setBaseName(strName);
     }
 
     //---------------------------------------------------------------------
@@ -40,8 +43,25 @@ class StructType extends CompositeType
         m_fieldList = fields;
     }
     
+    private void setBaseName(String name)
+    {
+    	baseName = name;
+    }
+    
+    private String getBaseName()
+    {
+    	return baseName;
+    }
+    
     public boolean isEquivalent(Type type)
     {
-        return (this.getName() == type.getName());
+    	boolean eq = false;
+    	if(type.isStruct()) {
+    		eq = (this.getBaseName() == ((StructType)type).getBaseName());
+    	}
+    	else {
+    		eq = (this.getName() == type.getName());
+    	}
+        return eq;
     }
 }
