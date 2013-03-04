@@ -55,13 +55,11 @@ class StructType extends CompositeType
     
     public boolean isEquivalent(Type type)
     {
-    	boolean eq = false;
     	if(type.isStruct()) {
-    		eq = (this.getBaseName() == ((StructType)type).getBaseName());
+    		return (this.getBaseName() == ((StructType)type).getBaseName());
     	}
     	else {
-    		eq = (this.getName() == type.getName());
+    		return false;
     	}
-        return eq;
     }
 }
