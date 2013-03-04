@@ -1,0 +1,16 @@
+const int i1 = 0;
+const int i2 = 123;
+const float f1 = 0.0;
+const float f2 = 12.3;
+const int* ip1 = 0;
+const int* ip2 = 123;
+const float* fp1 = 0.0;
+const float* fp2 = 12.3;
+
+int[1] iArr;
+
+function : int main() {
+    iArr[(int)((bool) i1 && (bool) f1 && (bool) ip1 && (bool) fp1)];
+    iArr[(int)((bool) i2 && (bool) f2 && (bool) ip2 && (bool) fp2)];
+    return 0;
+}
