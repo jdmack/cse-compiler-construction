@@ -1275,7 +1275,7 @@ class MyParser extends parser
     	}
     	if(!sto.getType().isPointer()) {
     		m_nNumErrors++;
-    		m_errors.print(String.format(ErrorMsg.error16_New, sto.getType().getName()));
+    		m_errors.print(Formatter.toString(ErrorMsg.error16_New, sto.getType().getName()));
     	}
     }
     //----------------------------------------------------------------
@@ -1289,7 +1289,7 @@ class MyParser extends parser
     	}
     	if(!sto.getType().isPointer()) {
     		m_nNumErrors++;
-    		m_errors.print(String.format(ErrorMsg.error16_Delete, sto.getType().getName()));
+    		m_errors.print(Formatter.toString(ErrorMsg.error16_Delete, sto.getType().getName()));
     	}
     }
 }
