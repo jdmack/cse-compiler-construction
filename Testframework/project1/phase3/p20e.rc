@@ -1,0 +1,8 @@
+const bool x = true;
+int[1] y;
+int z;
+
+function : int main() {
+    z = y[(int) x]; // the index into the array will be 1
+    return 0;
+}
