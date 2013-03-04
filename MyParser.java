@@ -227,8 +227,8 @@ class MyParser extends parser
             }
 
             if(ptrType != null) {
-                ((PtrGrpType) ptrType).setBottomPtrType(type);
-                ((PtrGrpType) ptrType).setInitialName();
+                ((PointerType) ptrType).setBottomPtrType(type);
+                ((PointerType) ptrType).setInitialName();
                 finalType = ptrType;
             }
 
@@ -555,6 +555,13 @@ class MyParser extends parser
         }
     }
 
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
+    Type DoFuncPtrDef(Type returnType, boolean returnByRef, Vector<ParamSTO> paramList)
+    {
+        return new FuncPtrType(returnType, returnByRef, paramList);
+    }
 
     //----------------------------------------------------------------
     //
@@ -752,8 +759,8 @@ class MyParser extends parser
 
         // Check 15b
         // if it's a pointer but not a struct pointer
-        if(sto.getType().isPtrGrp()) {
-            if(!((PtrGrpType) sto.getType()).getPointsToType().isStruct()) {
+        if(sto.getType().isPointer()) {
+            if(!((PointerType) sto.getType()).getPointsToType().isStruct()) {
                 m_nNumErrors++;
                 m_errors.print(Formatter.toString(ErrorMsg.error15_ReceiverArrow, sto.getType().getName()));
                 return new ErrorSTO("Pointer Error - Doesn't point to struct pointer");
@@ -769,7 +776,7 @@ class MyParser extends parser
         // It's a pointer, check if the field is valid
         // Check 14a
 
-        StructType structType = (StructType) ((PtrGrpType) sto.getType()).getPointsToType();
+        StructType structType = (StructType) ((PointerType) sto.getType()).getPointsToType();
 
         // if the struct we're accessing is the struct being defined
         if((m_inStructdef) && (m_structId == structType.getName())) {
@@ -1186,7 +1193,7 @@ class MyParser extends parser
         }
     
         if(ptrType != null) {
-            ((PtrGrpType) ptrType).setBottomPtrType(returnType);
+            ((PointerType) ptrType).setBottomPtrType(returnType);
             returnType = ptrType;
         }
             
