@@ -380,9 +380,15 @@ class MyParser extends parser
                 STO stoResult = ((ArrayType)type);
 
             }*/
-
-            type.setName(id);
-            TypedefSTO sto = new TypedefSTO(id, type, false, false);
+            TypedefSTO sto;
+            if(type.isStruct()) {
+            	sto = new TypedefSTO(id, new StructType(id), false, false);
+            }
+            else {
+            	type.setName(id);
+            	sto = new TypedefSTO(id, type, false, false);
+            }
+            
             m_symtab.insert(sto);
         }
     }
