@@ -72,8 +72,7 @@ class FuncSTO extends STO
         m_numOfParams = numParams;
     }
 
-    public int
-    getNumOfParams()
+    public int getNumOfParams()
     {
         return m_numOfParams;
     }
@@ -81,14 +80,12 @@ class FuncSTO extends STO
     //////////////////////////////
     //      m_parameters        //
     //////////////////////////////
-    public Vector<ParamSTO>
-    getParameters()
+    public Vector<ParamSTO> getParameters()
     {
         return m_parameters;
     }
 
-    public void
-    setParameters(Vector<ParamSTO> params)
+    public void setParameters(Vector<ParamSTO> params)
     {
         m_parameters = params;
         setNumOfParams(params.size());
