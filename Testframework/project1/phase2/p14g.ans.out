@@ -1,5 +1,3 @@
-Error, "project1/phase2/p14g.rc", line 9: 
-  Field failClass declared second time in struct.
-Error, "project1/phase2/p14g.rc", line 10: 
-  undeclared identifier 'COMPILERSCLASS'.
+Error, "project1/phase2/p14g.rc", line 12: 
+  Referenced field passClass not found in type COMPILERSCLASS.
 Compile: failure.
