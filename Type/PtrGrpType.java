@@ -66,8 +66,10 @@ class PtrGrpType extends CompositeType
             setName("nullptr");
         else if(m_pointsToType.isArray())
             setName(m_pointsToType.getName()); // TODO: TEMPORARY TO MAKE COMPILER
-        else
+        else if(m_pointsToType.isPtrGrp())
             setName(((PtrGrpType) m_pointsToType).setInitialName() + "*"); 
+        else
+            setName(m_pointsToType.getName()); 
 
         return getName();
 
