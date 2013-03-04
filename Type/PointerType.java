@@ -33,7 +33,7 @@ class PointerType extends PtrGrpType
 
     public PointerType(String name, int size, Type pointsTo)
     {
-        super(pointsTo.getName() + "*", POINTER_SIZE, pointsTo);
+        super(POINTER_NAME, POINTER_SIZE, pointsTo);
 
         String pointerName;
 

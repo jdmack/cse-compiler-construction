@@ -31,6 +31,8 @@ class PtrGrpType extends CompositeType
     public void setPointsToType(Type pointsTo)
     {
         m_pointsToType = pointsTo;
+        if(pointsTo != null)
+            setName(pointsTo.getName() + "*");
     }
 
     public boolean isPtrGrp()
