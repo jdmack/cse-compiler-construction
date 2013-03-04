@@ -69,9 +69,20 @@ class PtrGrpType extends CompositeType
         else if(m_pointsToType.isPtrGrp())
             setName(((PtrGrpType) m_pointsToType).setInitialName() + "*"); 
         else
-            setName(m_pointsToType.getName()); 
+            setName(m_pointsToType.getName() + "*"); 
 
         return getName();
 
+    }
+
+    // meaning: param = this
+    public boolean isAssignable(Type type)
+    {
+        if(type == null)
+            return false;
+        else if(type.isPtrGrp()) 
+            return m_pointsToType.isAssignable(((PtrGrpType) type).getPointsToType());
+        else 
+            return isEquivalent(type);
     }
 }

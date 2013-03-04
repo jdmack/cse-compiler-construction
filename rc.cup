@@ -938,8 +938,7 @@ Designator ::=      T_STAR Designator:_1
                     :}
     |               T_AMPERSAND Designator:_1
                     {:
-			            //RESULT = ((MyParser) parser).DoUnaryOp(new NotOp("&"), _1);
-                        RESULT = _1;
+			            RESULT = ((MyParser) parser).DoUnaryOp(new AddressOfOp("&"), _1);
                     :}
     |               UnarySign:_2 Designator:_1
                     {:
