@@ -22,6 +22,7 @@ class PtrGrpType extends CompositeType
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
+    /*
     public String getName()
     {
         if(m_pointsToType == null) {
@@ -36,6 +37,7 @@ class PtrGrpType extends CompositeType
         }
 
     }
+    */
 
     public Type getPointsToType()
     {
