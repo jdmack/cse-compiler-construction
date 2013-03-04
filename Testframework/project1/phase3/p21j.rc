@@ -1,10 +1,10 @@
 function : int main() {
-    bool at = true;
+    bool at = true;         
     bool af = false;
     bool * ap;
     float a = 1.0;
-    ap = &at;
+    ap = &at;               
     ap = &af;
-    ap = &a;
+    ap = &a;                // Error - can't assign (float *) to (bool *)
     return 0;
 }

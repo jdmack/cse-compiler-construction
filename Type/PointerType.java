@@ -15,17 +15,17 @@ class PointerType extends PtrGrpType
     //---------------------------------------------------------------------
     public PointerType()
     {
-        super(POINTER_NAME, POINTER_SIZE, null);
+        super("null*", POINTER_SIZE, null);
     }
 
     public PointerType(Type pointsTo)
     {
-        super(POINTER_NAME, POINTER_SIZE, pointsTo);
+        super(pointsTo.getName() + "*", POINTER_SIZE, pointsTo);
     }
 
     public PointerType(String name, int size, Type pointsTo)
     {
-        super(POINTER_NAME, POINTER_SIZE, pointsTo);
+        super(pointsTo.getName() + "*", POINTER_SIZE, pointsTo);
     }
 
     //---------------------------------------------------------------------

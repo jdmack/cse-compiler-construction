@@ -1,0 +1,5 @@
+Error, "project1/phase3/p21a.rc", line 6: 
+  Left-hand operand is not assignable (not a modifiable L-value).
+Error, "project1/phase3/p21a.rc", line 9: 
+  Left-hand operand is not assignable (not a modifiable L-value).
+Compile: failure.

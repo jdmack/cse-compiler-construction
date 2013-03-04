@@ -1,6 +1,6 @@
 function : int main() {
     int *x;
     int y;
-    *&y = *x; /* ok */
+    *&y = *x;           // Okay - dereferencing the result of & op yields a modifiable L-val, ends up being int and *x is int
     return y;
 }

@@ -1,6 +1,6 @@
 function : int main() {
     float *x;
     int y;
-    x = &y;
+    x = &y;             // Okay - &y becomes pointer to int which is assignment to pointer of float
     return y;
 }

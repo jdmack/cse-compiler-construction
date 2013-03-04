@@ -1,6 +1,6 @@
 function : int main() {
-    int *x;
+    int *x;         
     int y;
-    x = &y;
+    x = &y;     
     return y;
 }

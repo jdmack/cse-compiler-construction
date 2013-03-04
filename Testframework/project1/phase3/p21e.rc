@@ -1,6 +1,6 @@
 function : int main() {
     int *x;
     int y;
-    &x = &y; /* error */
+    &x = &y;        // results of &x is an r-val, r-val can't be on the left side of =
     return y;
 }
