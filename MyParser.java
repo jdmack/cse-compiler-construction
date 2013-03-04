@@ -381,7 +381,7 @@ class MyParser extends parser
 
             }*/
 
-            // type.setName(id);
+            type.setName(id);
             TypedefSTO sto = new TypedefSTO(id, type, false, false);
             m_symtab.insert(sto);
         }
