@@ -701,10 +701,16 @@ ReadStmt ::=        T_CIN T_ISTREAM Designator T_SEMI
 WriteStmt ::=       T_COUT T_OSTREAM WritePairList T_SEMI
     ;
 
-NewStmt ::=         T_NEW Designator T_SEMI
+NewStmt ::=         T_NEW Designator:_1 T_SEMI
+                    {:
+                        ((MyParser) parser).DoNew(_1);
+                    :}
     ;
 
-DeleteStmt ::=      T_DELETE Designator T_SEMI
+DeleteStmt ::=      T_DELETE Designator:_1 T_SEMI
+                    {:
+                        ((MyParser) parser).DoDelete(_1);
+                    :}
     ;
 
 

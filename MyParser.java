@@ -1271,4 +1271,32 @@ class MyParser extends parser
     	resultSTO.setIsModLValue(false);
     	return resultSTO;
     }
+    //----------------------------------------------------------------
+    //      DoNew
+    //----------------------------------------------------------------
+    void DoNew(STO sto)
+    {
+    	if(!sto.isModLValue()){
+    		m_nNumErrors++;
+			m_errors.print(ErrorMsg.error16_New_var);
+    	}
+    	if(!sto.getType().isPointer()) {
+    		m_nNumErrors++;
+    		m_errors.print(Formatter.toString(ErrorMsg.error16_New, sto.getType().getName()));
+    	}
+    }
+    //----------------------------------------------------------------
+    //      DoDelete
+    //----------------------------------------------------------------
+    void DoDelete(STO sto)
+    {
+    	if(!sto.isModLValue()){
+    		m_nNumErrors++;
+			m_errors.print(ErrorMsg.error16_Delete_var);
+    	}
+    	if(!sto.getType().isPointer()) {
+    		m_nNumErrors++;
+    		m_errors.print(Formatter.toString(ErrorMsg.error16_Delete, sto.getType().getName()));
+    	}
+    }
 }
