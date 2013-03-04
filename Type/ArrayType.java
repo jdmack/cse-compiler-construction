@@ -13,7 +13,7 @@ class ArrayType extends CompositeType
     //---------------------------------------------------------------------
     public ArrayType(Type elementType, Integer dimenionSize)
     {
-        super(elementType.getName()+"["+dimenionSize+"]", dimenionSize);
+        super(elementType.getName()+"["+dimenionSize+"]", elementType.getSize() * dimenionSize);
         setElementType(elementType);
         setDimensionSize(dimenionSize);
 
@@ -21,7 +21,7 @@ class ArrayType extends CompositeType
 
     public ArrayType(Type elementType, Integer dimenionSize, ArrEleSTO eleList)
     {
-        super(elementType.getName()+"["+dimenionSize+"]", dimenionSize);
+        super(elementType.getName()+"["+dimenionSize+"]", elementType.getSize() * dimenionSize);
         setElementType(elementType);
         setDimensionSize(dimenionSize);
         setElementList(eleList);
