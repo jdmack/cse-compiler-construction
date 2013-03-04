@@ -1,6 +1,6 @@
 function : int main() {
     int *x;
     const int y = 6;
-    x = &y;
+    x = &y;             // Valid because constants are non-modifiable L-Vals (i.e. Addressable)
     return y;
 }
