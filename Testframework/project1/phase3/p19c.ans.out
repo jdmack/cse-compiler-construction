@@ -1,0 +1,5 @@
+Error, "project1/phase3/p19c.rc", line 12: 
+  Index value of 4 is outside legal range [0,4).
+Error, "project1/phase3/p19c.rc", line 15: 
+  Index value of 4 is outside legal range [0,4).
+Compile: failure.
