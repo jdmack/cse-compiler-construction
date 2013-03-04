@@ -1,0 +1,5 @@
+Error, "project1/phase3/p15a.rc", line 13: 
+  Value of type bool not assignable to variable of type int.
+Error, "project1/phase3/p15a.rc", line 16: 
+  Value of type bool not assignable to variable of type int.
+Compile: failure.

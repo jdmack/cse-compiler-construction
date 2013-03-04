@@ -383,7 +383,7 @@ class MyParser extends parser
             }*/
             TypedefSTO sto;
             if(type.isStruct()) {
-            	sto = new TypedefSTO(id, new StructType(id), false, false);
+            	sto = new TypedefSTO(id, new StructType(type.getName(), type.getSize(), ((StructType) type).getFields()), false, false);
             }
             else {
             	type.setName(id);
