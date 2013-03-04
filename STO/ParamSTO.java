@@ -16,6 +16,7 @@ class ParamSTO extends STO
     {
         super(strName, type);
         setPassByReference(passByRef);
+        setIsModLValue(true);
     }
 
 /*    public ParamSTO(String strName)
