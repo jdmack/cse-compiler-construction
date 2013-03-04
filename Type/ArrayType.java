@@ -70,8 +70,8 @@ class ArrayType extends CompositeType
     public boolean isAssignable(Type type)
     {
         // If trying to assign to pointer, check if pointer type is this array's element type
-        if(type.isPtrGrp()) {
-            if(elementType.isAssignable(((PtrGrpType) type).getPointsToType()))
+        if(type.isPointer()) {
+            if(elementType.isAssignable(((PointerType) type).getPointsToType()))
                 return true;
             else
                 return false;

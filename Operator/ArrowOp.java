@@ -21,8 +21,8 @@ class ArrowOp extends UnaryOp
 
         // Check #15b - operand is pointer type pointing to struct
         // Check operand
-        if(operand.getType().isPtrGrp()) {
-            if(!((PtrGrpType) (operand.getType())).getBottomPtrType().isStruct())
+        if(operand.getType().isPointer()) {
+            if(!((PointerType) (operand.getType())).getBottomPtrType().isStruct())
                 return(new ErrorSTO(Formatter.toString(ErrorMsg.error15_ReceiverArrow, operand.getType().getName())));
         }
         else {
@@ -31,7 +31,7 @@ class ArrowOp extends UnaryOp
 
         /* Don't need to worry about constant folding because constant pointers WNBT */
 
-        resultSTO = new VarSTO("ArrowOp.checkOperands() Result", ((PtrGrpType)operand.getType()).getPointsToType());
+        resultSTO = new VarSTO("ArrowOp.checkOperands() Result", ((PointerType)operand.getType()).getPointsToType());
 
         return resultSTO;
     }

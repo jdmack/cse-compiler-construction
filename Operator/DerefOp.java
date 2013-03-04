@@ -21,13 +21,13 @@ class DerefOp extends UnaryOp
 
         // Check #15a - operand is pointer type
         // Check operand
-        if(!operand.getType().isPtrGrp()) {
+        if(!operand.getType().isPointer()) {
             return(new ErrorSTO(Formatter.toString(ErrorMsg.error15_Receiver, operand.getType().getName())));
         }
 
         /* Don't need to worry about constant folding because constant pointers WNBT */
 
-        resultSTO = new VarSTO("*" + operand.getName(), ((PtrGrpType)operand.getType()).getPointsToType());
+        resultSTO = new VarSTO("*" + operand.getName(), ((PointerType)operand.getType()).getPointsToType());
 
 
         return resultSTO;

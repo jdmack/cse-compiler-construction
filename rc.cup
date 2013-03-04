@@ -364,7 +364,15 @@ Type ::=            SubType:_1 OptModifierList:_2 OptArrayDef:_3
                     {:
                         RESULT = ((MyParser) parser).DoBuildType(_1, (Type) _2, (STO) _3);
                     :}
-    |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
+
+                    /*  _1: Type    - Return type of function
+                        _2: boolean - whether return type is by reference or not
+                        _3: Vector<ParamSTO> - list of parameters
+                    */
+    |               T_FUNCPTR T_COLON ReturnType:_1 OptRef:_2 T_LPAREN OptParamList:_3 T_RPAREN
+                    {:
+                        RESULT = ((MyParser) parser).DoFuncPtrDef((Type) _1, (boolean) _2, (Vector<ParamSTO>) _3);
+                    :}
     ;
 
                     // _1: Type - Could be null
@@ -419,7 +427,7 @@ ModifierList ::=    Modifier:_1
                     :}
     |               ModifierList:_1 Modifier:_2
                     {:
-                        ((PtrGrpType)_2).setPointsToType((Type) _1);
+                        ((PointerType)_2).setPointsToType((Type) _1);
                         RESULT = _2;
                     :}
     ;
