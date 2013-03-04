@@ -957,9 +957,9 @@ Designator ::=      T_STAR Designator:_1
                     {:
 			            RESULT = ((MyParser) parser).DoSizeOf(null, _2);
                     :}
-    |               T_LPAREN Type T_RPAREN Designator:_2
+    |               T_LPAREN Type:_1 T_RPAREN Designator:_2
                     {:
-			            RESULT = _2;
+			            RESULT = ((MyParser) parser).DoTypeCast(_1, _2);
                     :}
     |               IncDecOp:_1 Designator:_2
                     {:

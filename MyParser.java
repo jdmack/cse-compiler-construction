@@ -1203,4 +1203,71 @@ class MyParser extends parser
             
         return returnType;
     }
+    
+    //----------------------------------------------------------------
+    //      DoTypeCast Check #20
+    //----------------------------------------------------------------
+    STO DoTypeCast(Type castingType, STO castedSTO)
+    {
+    	if(castedSTO.isError()) return castedSTO;
+    	
+    	STO resultSTO = castedSTO;
+    	Type castedType = castedSTO.getType();
+    	
+    	if(castedSTO.isConst()) {
+    		// If it's const conversion, it follows a special casting rule
+    		ConstSTO constSTO = (ConstSTO) castedSTO;
+    		String newConstName = "casted_" + constSTO.getName() +"_from_"+castedType.getName();
+    		
+    		// bool --> int, float, pointer
+    		if(castedType.isBool() && (castingType.isInt() || castingType.isFloat() || castingType.isPointer())) {
+    			if(constSTO.getBoolValue()) {
+    				resultSTO = new ConstSTO(newConstName, castingType, "1");
+    			} 
+    			else {
+    				resultSTO = new ConstSTO(newConstName, castingType, "0");
+    			}
+    		}
+    		// int, float, pointer --> bool
+    		else if((castedType.isInt() || castedType.isFloat() || castedType.isPointer()) && castingType.isBool()) {
+    			if(constSTO.getValue() == 0) {
+    				resultSTO = new ConstSTO(newConstName, castingType, "false");
+    			}
+    			else if(constSTO.getValue() != 0) {
+    				resultSTO = new ConstSTO(newConstName, castingType, "true");
+    			}
+    		}
+    		// float --> int, pointer
+    		else if(castedType.isFloat() && (castingType.isInt() || castingType.isPointer())) {
+    			resultSTO = new ConstSTO(newConstName, castingType, Integer.toString((constSTO.getValue().intValue())));
+    		}
+    		// int, float --> float
+    		else if((castedType.isInt() || castedType.isPointer()) && castingType.isFloat()) {
+    			resultSTO = new ConstSTO(newConstName, castingType, constSTO.getValue());
+    		}
+    		// int <--> pointer
+    		else if((castedType.isInt() && castingType.isPointer()) || (castedType.isPointer() && castingType.isInt())) {
+    			resultSTO = new ConstSTO(newConstName, castingType, constSTO.getValue());
+    		} 
+    		else {
+        		m_nNumErrors++;
+    			m_errors.print(String.format(ErrorMsg.error20_Cast, castedType, castingType));
+    			resultSTO = new ErrorSTO("Casting Error");
+    		}
+    	}
+    	else {
+    		if(castedType.isBasic() || castedType.isStruct() || castedSTO.isTypedef() || castedType.isPointer()) {
+    			resultSTO = new VarSTO("casted_" + castedSTO.getName() +"_from_"+castedType.getName(),castingType);
+    		}
+    		else {
+        		m_nNumErrors++;
+    			m_errors.print(String.format(ErrorMsg.error20_Cast, castedType, castingType));
+    			resultSTO = new ErrorSTO("Casting Error");
+    		}
+    	}
+    	
+    	// Makes sure the result is R-Val
+    	resultSTO.setIsModLValue(false);
+    	return resultSTO;
+    }
 }
