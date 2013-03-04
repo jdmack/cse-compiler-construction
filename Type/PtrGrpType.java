@@ -22,6 +22,21 @@ class PtrGrpType extends CompositeType
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
+    public String getName()
+    {
+        if(m_pointsToType == null) {
+            return "nullptr";
+        }
+        else if(m_pointsToType.isArray()) {
+            // TODO:
+            return m_pointsToType.getName(); // TEMPORARY TO MAKE COMPILER
+        }
+        else {
+            return (m_pointsToType.getName() + "*"); 
+        }
+
+    }
+
     public Type getPointsToType()
     {
         return m_pointsToType;

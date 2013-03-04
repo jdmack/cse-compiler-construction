@@ -602,7 +602,7 @@ class MyParser extends parser
         // Check #3b - illegal assignment - bad types
         if(!valueType.isAssignable(desType)) {
             m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, valueType.getName(), desType.getName()));
+            m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, stoValue.getType().getName(), stoDes.getType().getName()));
             return (new ErrorSTO("DoAssignExpr Error - bad types"));
         }
 
