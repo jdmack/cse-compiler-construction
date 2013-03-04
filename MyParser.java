@@ -595,29 +595,7 @@ class MyParser extends parser
             return (new ErrorSTO("DoAssignExpr Error - not mod-L-Value"));
         }
 
-        /*
-        Type desType, valueType;
-        if(stoDes.getType().isPtrGrp()) {
-            if(stoDes.getType().isNullPtr())
-                desType = stoDes.getType();
-            else
-                desType = ((PtrGrpType) stoDes.getType()).getPointsToType();
-        }
-        else
-            desType = stoDes.getType();
-
-        if(stoValue.getType().isPtrGrp()) {
-            if(stoValue.getType().isNullPtr())
-                valueType = stoValue.getType();
-            else
-                valueType = ((PtrGrpType) stoValue.getType()).getPointsToType();
-        }
-        else
-            valueType = stoValue.getType();
-        */
-
         // Check #3b - illegal assignment - bad types
-        //if(!valueType.isAssignable(desType)) {
         if(!stoValue.getType().isAssignable(stoDes.getType())) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, stoValue.getType().getName(), stoDes.getType().getName()));
