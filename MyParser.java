@@ -1245,7 +1245,12 @@ class MyParser extends parser
     		}
     	}
     	else {
-    		if(castedType.isBasic() || castedType.isStruct() || castedSTO.isTypedef() || castedType.isPointer()) {
+    		// alias who's type is basic
+    		if(castedSTO.isTypedef() && castedType.isBasic()) {
+				resultSTO = new VarSTO("casted_" + castedSTO.getName() +"_from_"+castedType.getName(),castingType);
+    		}
+    		// basic type or pointer
+    		else if(!castedSTO.isTypedef() && (castedType.isBasic() || castedType.isPointer())) {
     			resultSTO = new VarSTO("casted_" + castedSTO.getName() +"_from_"+castedType.getName(),castingType);
     		}
     		else {
