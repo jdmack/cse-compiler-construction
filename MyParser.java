@@ -228,6 +228,7 @@ class MyParser extends parser
 
             if(ptrType != null) {
                 ((PtrGrpType) ptrType).setBottomPtrType(type);
+                ((PtrGrpType) ptrType).setInitialName();
                 finalType = ptrType;
             }
 
