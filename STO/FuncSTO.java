@@ -8,34 +8,24 @@ class FuncSTO extends STO
     //----------------------------------------------------------------
     //    Instance variables.
     //----------------------------------------------------------------
-    private Type m_returnType;
-    private int m_numOfParams;
-    private Vector<ParamSTO> m_parameters;
-    private boolean m_returnByReference;
+
     private boolean m_hasReturnStatement;
-    private int m_level;
+    private int     m_level;
 
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
     public FuncSTO(String strName)
     {
-        this(strName, new Vector(), false);
+        this(strName, new FuncPtrType());
     }
 
-    public FuncSTO(String strName, Boolean retByRef)
+    public FuncSTO(String strName, FuncPtrType funcPtr)
     {
-        this(strName, new Vector(), retByRef);
-    }
+        super(strName, funcPtr);
 
-    public FuncSTO(String strName, Vector<ParamSTO> params, boolean retByRef)
-    {
-        super(strName, new FuncPtrType());
-        setNumOfParams(params.size());
-        setParameters(params);
-        setReturnByRef(retByRef);
-        setReturnType(null);
         setHasReturnStatement(false);
+        setLevel(0);
     }
 
     //---------------------------------------------------------------------
@@ -56,12 +46,12 @@ class FuncSTO extends STO
     //////////////////////////////
     public void setReturnType(Type typ)
     {
-        m_returnType = typ;
+        ((FuncPtrType) getType()).setReturnType(typ);
     }
 
     public Type getReturnType()
     {
-        return m_returnType;
+        return ((FuncPtrType) getType()).getReturnType();
     }
 
     //////////////////////////////
@@ -69,12 +59,12 @@ class FuncSTO extends STO
     //////////////////////////////
     private void setNumOfParams(int numParams)
     {
-        m_numOfParams = numParams;
+        ((FuncPtrType) getType()).setNumOfParams(numParams);
     }
 
     public int getNumOfParams()
     {
-        return m_numOfParams;
+        return ((FuncPtrType) getType()).getNumOfParams();
     }
 
     //////////////////////////////
@@ -82,12 +72,12 @@ class FuncSTO extends STO
     //////////////////////////////
     public Vector<ParamSTO> getParameters()
     {
-        return m_parameters;
+        return ((FuncPtrType) getType()).getParameters();
     }
 
     public void setParameters(Vector<ParamSTO> params)
     {
-        m_parameters = params;
+        ((FuncPtrType) getType()).setParameters(params);
         setNumOfParams(params.size());
     }
 
@@ -96,12 +86,12 @@ class FuncSTO extends STO
     //////////////////////////////
     private void setReturnByRef(boolean retByRef)
     {
-        m_returnByReference = retByRef;
+        ((FuncPtrType) getType()).setReturnByRef(retByRef);
     }
 
     public boolean getReturnByRef()
     {
-        return m_returnByReference;
+        return ((FuncPtrType) getType()).getReturnByRef();
     }
 
     //////////////////////////////

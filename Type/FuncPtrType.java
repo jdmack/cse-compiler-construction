@@ -9,10 +9,10 @@ class FuncPtrType extends PtrGrpType
     //----------------------------------------------------------------
     //    Instance variables.
     //----------------------------------------------------------------
-    private Type m_returnType;
-    private int m_numOfParams;
+    private Type             m_returnType;
+    private int              m_numOfParams;
     private Vector<ParamSTO> m_parameters;
-    private boolean m_returnByReference;
+    private boolean          m_returnByReference;
 
     //---------------------------------------------------------------------
     //      Constants
@@ -33,9 +33,29 @@ class FuncPtrType extends PtrGrpType
         super(strName, size);
     }
 
+    public FuncPtrType(Type returnType, boolean returnByRef)
+    {
+        this(returnType, returnByRef, new Vector<ParamSTO> ()); 
+    }
+
+    public FuncPtrType(String id, Type returnType, boolean returnByRef)
+    {
+        this(id, returnType, returnByRef, new Vector<ParamSTO> ()); 
+    }
+
     public FuncPtrType(Type returnType, boolean returnByRef, Vector<ParamSTO> paramList)
     {
+        this(FUNCPTR_NAME, returnType, returnByRef, paramList);
+    }
+
+    public FuncPtrType(String id, Type returnType, boolean returnByRef, Vector<ParamSTO> paramList)
+    {
         super(FUNCPTR_NAME, FUNCPTR_SIZE);
+        setNumOfParams(paramList.size());
+        setParameters(paramList);
+        setReturnByRef(returnByRef);
+        setReturnType(returnType);
+
     }
 
     //---------------------------------------------------------------------
@@ -62,7 +82,7 @@ class FuncPtrType extends PtrGrpType
     //////////////////////////////
     //      m_numOfParams       //
     //////////////////////////////
-    private void setNumOfParams(int numParams)
+    public void setNumOfParams(int numParams)
     {
         m_numOfParams = numParams;
     }
@@ -90,7 +110,7 @@ class FuncPtrType extends PtrGrpType
     //////////////////////////////
     //      m_returnByReference //
     //////////////////////////////
-    private void setReturnByRef(boolean retByRef)
+    public void setReturnByRef(boolean retByRef)
     {
         m_returnByReference = retByRef;
     }
@@ -100,7 +120,36 @@ class FuncPtrType extends PtrGrpType
         return m_returnByReference;
     }
 
+    public boolean isEquivalent(Type type)
+    {
 
+        // Is type a function pointer
+        if(!type.isFuncPtr())
+            return false;
 
+        // is return type same
+        if(!getReturnType().isEquivalent(((FuncPtrType) type).getReturnType()))
+            return false;
 
+        // returnByReference the same
+        if(getReturnByRef() != ((FuncPtrType) type).getReturnByRef())
+            return false;
+
+        // Parameter List - types only, not id names
+        if(getNumOfParams() != ((FuncPtrType) type).getNumOfParams())
+            return false;
+
+        for(int i = 0; i < getNumOfParams(); i++) {
+            ParamSTO thisParam1 = getParameters().elementAt(i);
+            ParamSTO thisParam2 = ((FuncPtrType) type).getParameters().elementAt(i);
+
+            if(!thisParam1.getType().isEquivalent(thisParam2.getType()))
+                return false;
+
+            if(!thisParam1.isPassByReference() != thisParam2.isPassByReference())
+                return false;
+        }
+        
+        return true;
+    }
 }

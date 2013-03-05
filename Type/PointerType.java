@@ -100,7 +100,8 @@ class PointerType extends PtrGrpType
         if(m_pointsToType == null)
             setName("nullptr");
         else if(m_pointsToType.isArray())
-            setName(m_pointsToType.getName()); // TODO: TEMPORARY TO MAKE COMPILER
+            setName(m_pointsToType.getName());  // TODO: TEMPORARY TO MAKE COMPILER
+                                                    // Need to fix so it names in format "int*[4]" 
         else if(m_pointsToType.isPointer())
             setName(((PointerType) m_pointsToType).setInitialName() + "*");
         else
