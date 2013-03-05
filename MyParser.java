@@ -654,7 +654,10 @@ class MyParser extends parser
         }
         else {
             // Func call legal, return function return type
-            return (new ExprSTO(sto.getName() + " return type", funcType.getReturnType()));
+            if(funcType.getReturnByRef())
+                return (new VarSTO(sto.getName() + " return type", funcType.getReturnType()));
+            else
+                return (new ExprSTO(sto.getName() + " return type", funcType.getReturnType()));
         }
     }
 
