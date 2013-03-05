@@ -121,7 +121,6 @@ class PointerType extends PtrGrpType
                 setName(temp);
             }
         }
-                                                    // Need to fix so it names in format "int*[4]" 
 
         else if(m_pointsToType.isPointer())
             setName(((PointerType) m_pointsToType).setInitialName() + "*");

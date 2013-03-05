@@ -376,11 +376,12 @@ class MyParser extends parser
         m_inStructdef = true;
         m_structId = id;
         m_currentStructdef = new Scope();
-        // TODO: Need to add the name of the struct type to scope so we can look for the type for function pointers done inside struct
+
         if(m_symtab.accessLocal(id) != null) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
-        } else {
+        } 
+        else {
 	        TypedefSTO sto = new TypedefSTO(m_structId, new StructType(m_structId), false, false);
 	        m_symtab.insert(sto);
         }
@@ -824,15 +825,15 @@ class MyParser extends parser
         	}
         }
         
-        // Checks are complete, now we need to return an ExprSTO with the type of the array elements
+        // Checks are complete, now we need to return a VarSTO with the type of the array elements - VarSTO because result of [] operation is a modLVal
         if(desSTO.getType().isArray()) {
         	desSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
         } 
-        // TODO: Will there be arrays of function pointers?
+
         else if (desSTO.getType().isPointer()){
         	desSTO = new VarSTO(((PointerType)desSTO.getType()).getPointsToType().getName(),((PointerType)desSTO.getType()).getPointsToType());
         }
-        //TODO: Double check what the name of exprSTO should be.
+
         return desSTO;
     }
 
@@ -1131,14 +1132,17 @@ class MyParser extends parser
     	//Either type or type is null
     	if (sto == null) {
     		size = type.getSize();
-    	} else if (type == null){
+    	} 
+        else if (type == null){
     		if (sto.getIsAddressable() && sto.getType() != null) {
     			size = sto.getType().getSize();
-    		} else {
+    		} 
+            else {
                 m_nNumErrors++;
     			m_errors.print(ErrorMsg.error19_Sizeof);
     		}
-    	} else {
+    	} 
+        else {
     		m_nNumErrors++;
 			m_errors.print(ErrorMsg.error19_Sizeof);
     	}
@@ -1154,15 +1158,9 @@ class MyParser extends parser
     {
         Type returnType = subType;
 
-        // TODO: Possibly check arrayIndex for errorSTO
-
-        // TODO: Do type null check here if decided needed
-
         // Check if arrayIndex is null - this means it is not an array
         if(arrayIndex != null) {
             returnType = DoArrayDecl(subType, arrayIndex);
-             
-            // TODO: Might need to do something else here if arrayType isn't valid
         }
     
         if(ptrType != null) {
@@ -1273,7 +1271,7 @@ class MyParser extends parser
 			m_errors.print(ErrorMsg.error16_Delete_var);
     	}
         
-        // Can't call "delete" on nullptr or function pointer - see @115
+        // Can't call "delete" on nullptr or function pointer
     	if(!sto.getType().isPointer() || sto.getType().isNullPtr()) {
     		m_nNumErrors++;
     		m_errors.print(Formatter.toString(ErrorMsg.error16_Delete, sto.getType().getName()));
