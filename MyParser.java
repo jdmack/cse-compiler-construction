@@ -336,33 +336,6 @@ class MyParser extends parser
 
         }
     }
-    /*
-    DoVarDecl(Type type, Vector<IdValueTuple> lstIDs)
-    {
-        for(int i = 0; i < lstIDs.size(); i++)
-        {
-            String id = lstIDs.elementAt(i).getId();
-            STO value = lstIDs.elementAt(i).getValue();
-
-            // Check for var already existing in localScope
-            if(m_symtab.accessLocal(id) != null)
-            {
-                m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
-            }
-
-            VarSTO stoVar = new VarSTO(id, type);
-            m_symtab.insert(stoVar);
-
-            if(!value.isNull())
-            {
-                DoAssignExpr(stoVar, value);
-            }
-
-        }
-    }
-    */
-
 
     //----------------------------------------------------------------
     //
@@ -480,7 +453,7 @@ class MyParser extends parser
         }
 
         // Create function pointer that contains function information to use for new FuncSTO
-        FuncPtrType funcPtr = new FuncPtrType(id, returnType, retByRef);
+        FuncPtrType funcPtr = new FuncPtrType(returnType, retByRef);
 
         // Create new FuncSTO with function pointer holding it's info
         FuncSTO sto = new FuncSTO(id, funcPtr);
@@ -620,7 +593,7 @@ class MyParser extends parser
                 return args.elementAt(i);
         }
 
-        if(!sto.isFunc()) {
+        if((!sto.isFunc()) && (!sto.getType().isFuncPtr())) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.not_function, sto.getName()));
             return (new ErrorSTO(sto.getName()));
@@ -850,7 +823,9 @@ class MyParser extends parser
         // Checks are complete, now we need to return an ExprSTO with the type of the array elements
         if(desSTO.getType().isArray()) {
         	desSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
-        } else if (desSTO.getType().isPointer()){
+        } 
+        // TODO: Will there be arrays of function pointers?
+        else if (desSTO.getType().isPointer()){
         	desSTO = new VarSTO(((PointerType)desSTO.getType()).getPointsToType().getName(),((PointerType)desSTO.getType()).getPointsToType());
         }
         //TODO: Double check what the name of exprSTO should be.
@@ -1204,6 +1179,8 @@ class MyParser extends parser
     	STO resultSTO = castedSTO;
     	Type castedType = castedSTO.getType();
     	
+        // No casting of function pointers, so isPointer() is good
+
     	if(castedSTO.isConst()) {
     		// If it's const conversion, it follows a special casting rule
     		ConstSTO constSTO = (ConstSTO) castedSTO;
@@ -1274,6 +1251,7 @@ class MyParser extends parser
     		m_nNumErrors++;
 			m_errors.print(ErrorMsg.error16_New_var);
     	}
+        // TODO: Can you do "new" on a function pointer?
     	if(!sto.getType().isPointer()) {
     		m_nNumErrors++;
     		m_errors.print(Formatter.toString(ErrorMsg.error16_New, sto.getType().getName()));
@@ -1288,6 +1266,7 @@ class MyParser extends parser
     		m_nNumErrors++;
 			m_errors.print(ErrorMsg.error16_Delete_var);
     	}
+        // TODO: Can you do "delete" on a function pointer?
     	if(!sto.getType().isPointer()) {
     		m_nNumErrors++;
     		m_errors.print(Formatter.toString(ErrorMsg.error16_Delete, sto.getType().getName()));
