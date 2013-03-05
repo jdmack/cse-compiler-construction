@@ -1,7 +1,7 @@
 /* Check 18 (x18a.rc) */
 
 typedef funcptr : int (int a, int& b) MYPTRALIAS;
-MYPTRALIAS myPtr1 = NULL;
+MYPTRALIAS myPtr1 = nullptr;
 
 function : int addition(int x, int y) {
     return x + y;
