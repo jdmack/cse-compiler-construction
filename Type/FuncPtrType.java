@@ -141,7 +141,7 @@ class FuncPtrType extends PtrGrpType
 
     public void setFuncPtrName()
     {
-        String name = "funcptr : " + getReturnType();
+        String name = "funcptr : " + getReturnType().getName();
 
         if(getReturnByRef())
             name += " & (";
