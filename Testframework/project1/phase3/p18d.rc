@@ -1,0 +1,13 @@
+/* Check 18 (x18a.rc) */
+
+typedef funcptr : int (int a, int& b) MYPTRALIAS;
+MYPTRALIAS myPtr1 = NULL;
+
+function : int addition(int x, int y) {
+    return x + y;
+}
+
+function : int main() {
+    myPtr1 = addition;
+    return 0;
+}
