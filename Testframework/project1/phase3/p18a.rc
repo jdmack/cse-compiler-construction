@@ -13,13 +13,13 @@ function : int subtraction(int x, int y) {
 
 function : int main() {
     if (myPtr1 == nullptr) {
-        myPtr1 = addition;                  // 
+        myPtr1 = addition;                  // Okay - types match
     }
     cout << myPtr1(4, 6) << endl;
-    myPtr2 = subtraction;
+    myPtr2 = subtraction;                   // Okay - types match
     cout << myPtr2(5, 2) << endl;
-    myPtr2 = myPtr1;
-    cout << myPtr2(5, 2) << endl;
-    myPtr2 = nullptr;
+    myPtr2 = myPtr1;                        // Okay - types match
+    cout << myPtr2(5, 2) << endl;           
+    myPtr2 = nullptr;                       // Okay - assigning pointer to nullptr
     return 0;
 }
