@@ -3,9 +3,9 @@ typedef funcptr : int() MYFP;
 MYFP MyFuncPtr;
 
 function : void main() {
-    MyFuncPtr = foo;
-    MyFuncPtr();            // this will be a function call to foo!
-    MYFP * MyFuncPtrPtr;
-    MyFuncPtrPtr = &MyFuncPtr;
-    (*MyFuncPtrPtr)();      // this will be a function call to foo!
+    MyFuncPtr = foo;            // Okay - assign function with type (funcptr : int () ) to a funcptr with type ( funcptr : int () )
+    MyFuncPtr();                // Okay - this will be a function call to foo - parameters match
+    MYFP * MyFuncPtrPtr;        // create a pointer to a funcptr of type ( funcptr : int () )
+    MyFuncPtrPtr = &MyFuncPtr;  // Okay - assigning pointer to function pointer to a function pointer
+    (*MyFuncPtrPtr)();          // Okay - this will be a function call to foo, dereference to get a function pointer, then do a call
 }
