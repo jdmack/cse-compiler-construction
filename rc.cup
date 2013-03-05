@@ -381,7 +381,10 @@ UndecoratedType ::= SubType:_1
                     {:
                         RESULT = _1;
                     :}
-    |               T_FUNCPTR T_COLON ReturnType OptRef T_LPAREN OptParamList:_3 T_RPAREN
+    |               T_FUNCPTR T_COLON ReturnType:_1 OptRef:_2 T_LPAREN OptParamList:_3 T_RPAREN
+                    {:
+                        RESULT = new FuncPtrType((Type) _1, (boolean) _2, (Vector<ParamSTO>) _3);
+                    :}
     ;
 
 // Return: Type
