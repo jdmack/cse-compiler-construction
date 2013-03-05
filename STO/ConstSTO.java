@@ -25,8 +25,6 @@ class ConstSTO extends STO
     {
         super(strName, null, true, false);
         m_value = null; // fix this
-        // You may want to change the isModifiable and isAddressable
-        // fields as necessary
     }
 
     public ConstSTO(String strName, Type typ)
@@ -44,9 +42,6 @@ class ConstSTO extends STO
     public ConstSTO(String strName, Type typ, String val)
     {
         super(strName, typ, true, false);
-        //System.out.println("strName: " + strName);
-        //System.out.println("val: " + val);
-        //System.out.println("Type: " + typ.getName());
 
         if(val.equals("true")) {
             setValue((double) 1);
