@@ -453,6 +453,7 @@ class MyParser extends parser
         }
 
         // Create function pointer that contains function information to use for new FuncSTO
+        if(returnType == null) System.out.println("null returnType in MyParser.java");
         FuncPtrType funcPtr = new FuncPtrType(returnType, retByRef);
 
         // Create new FuncSTO with function pointer holding it's info

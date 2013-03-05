@@ -23,11 +23,6 @@ class FuncPtrType extends PtrGrpType
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public FuncPtrType()
-    {
-        this(null, false, new Vector<ParamSTO>());
-    }
-
     public FuncPtrType(Type returnType, boolean returnByRef)
     {
         this(returnType, returnByRef, new Vector<ParamSTO>()); 
@@ -39,6 +34,7 @@ class FuncPtrType extends PtrGrpType
         setNumOfParams(paramList.size());
         setParameters(paramList);
         setReturnByRef(returnByRef);
+        if(returnType == null) System.out.println("null returnType in FuncPtrType constructor");
         setReturnType(returnType);
         
         setFuncPtrName();
@@ -57,6 +53,7 @@ class FuncPtrType extends PtrGrpType
     //////////////////////////////
     public void setReturnType(Type typ)
     {
+        if(typ == null) System.out.println("null returnType in setReturnTYpe");
         m_returnType = typ;
     }
 
@@ -142,7 +139,11 @@ class FuncPtrType extends PtrGrpType
 
     public void setFuncPtrName()
     {
-        String name = "funcptr : " + getReturnType().getName();
+        String name = "funcptr : ";
+        if(getReturnType() == null)
+            name += "null";
+        else
+            name += getReturnType().getName();
 
         if(getReturnByRef())
             name += " & (";

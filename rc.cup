@@ -371,6 +371,7 @@ Type ::=            SubType:_1 OptModifierList:_2 OptArrayDef:_3
                     */
     |               T_FUNCPTR T_COLON ReturnType:_1 OptRef:_2 T_LPAREN OptParamList:_3 T_RPAREN
                     {:
+                        if(_1 == null) System.out.println("null returnType in rc.cup");
                         RESULT = new FuncPtrType((Type) _1, (boolean) _2, (Vector<ParamSTO>) _3);
                     :}
     ;

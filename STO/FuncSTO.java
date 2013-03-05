@@ -15,10 +15,6 @@ class FuncSTO extends STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public FuncSTO(String strName)
-    {
-        this(strName, new FuncPtrType());
-    }
 
     public FuncSTO(String strName, FuncPtrType funcPtr)
     {
