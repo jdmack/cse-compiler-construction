@@ -61,7 +61,10 @@ class EqualToOp extends ComparisonOp
             b_value = operand1.getFloatValue() == operand2.getFloatValue();
         }
         else if(resultType.isBool()) {
-            b_value = operand1.getBoolValue() == operand2.getBoolValue();
+        	if(operand1.getType().isNullPtr() && operand2.getType().isNullPtr())
+        		b_value = true;
+        	else
+        		b_value = operand1.getBoolValue() == operand2.getBoolValue();
         }
 
         if(b_value)
