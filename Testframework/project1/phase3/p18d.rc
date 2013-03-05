@@ -1,13 +1,13 @@
 /* Check 18 (x18a.rc) */
 
-typedef funcptr : int (int a, int& b) MYPTRALIAS;
-MYPTRALIAS myPtr1 = nullptr;
+typedef funcptr : int (int a, int& b) MYPTRALIAS;           // MYPTRALIAS set to type - funcptr : int (int a, int & b)
+MYPTRALIAS myPtr1 = nullptr;                                // Okay - declare and intiialize funcptr to nullptr
 
-function : int addition(int x, int y) {
+function : int addition(int x, int y) {                     // Does not match MYPTRALIAS - one parameter isn't passByReference as it is in type
     return x + y;
 }
 
 function : int main() {
-    myPtr1 = addition;
+    myPtr1 = addition;                                      // Error - not assignable because types don't match
     return 0;
 }
