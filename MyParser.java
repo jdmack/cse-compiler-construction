@@ -593,20 +593,21 @@ class MyParser extends parser
                 return args.elementAt(i);
         }
 
-        if((!sto.isFunc()) && (!sto.getType().isFuncPtr())) {
+        if(!sto.getType().isFuncPtr()) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.not_function, sto.getName()));
             return (new ErrorSTO(sto.getName()));
         }
 
+
         // We know it's a function, do function call checks
-        FuncSTO stoFunc =(FuncSTO)sto;
+        FuncPtrType funcType = (FuncPtrType) sto.getType();
 
         // Check #5
         // Check #5a - # args = # params
-        if((stoFunc.getNumOfParams() != args.size())) {
+        if((funcType.getNumOfParams() != args.size())) {
             m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error5n_Call, args.size(), stoFunc.getNumOfParams()));
+            m_errors.print(Formatter.toString(ErrorMsg.error5n_Call, args.size(), funcType.getNumOfParams()));
             return (new ErrorSTO("DoFuncCall - # args"));
         }
 
@@ -616,7 +617,7 @@ class MyParser extends parser
 
         for(int i = 0; i < args.size(); i++) {
             // For readability and shorter lines
-            ParamSTO thisParam = stoFunc.getParameters().elementAt(i);
+            ParamSTO thisParam = funcType.getParameters().elementAt(i);
             STO thisArg = args.elementAt(i);
 
             // Check #5b - non-assignable arg for pass-by-value param
@@ -653,7 +654,7 @@ class MyParser extends parser
         }
         else {
             // Func call legal, return function return type
-            return (new ExprSTO(stoFunc.getName() + " return type", stoFunc.getReturnType()));
+            return (new ExprSTO(sto.getName() + " return type", funcType.getReturnType()));
         }
     }
 
