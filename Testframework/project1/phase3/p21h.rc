@@ -6,5 +6,5 @@ function : void main() {
     MyFuncPtr = foo;
     MyFuncPtr();            // this will be a function call to foo!
     MYFP * MyFuncPtrPtr;
-    MyFuncPtrPtr = &foo;    // NOT ALLOWED - error!
+    MyFuncPtrPtr = &foo;    // Error - function names are R-vals
 }
