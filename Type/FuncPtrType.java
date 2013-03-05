@@ -128,7 +128,7 @@ class FuncPtrType extends PtrGrpType
             if(!thisParam1.getType().isEquivalent(thisParam2.getType()))
                 return false;
 
-            if(!thisParam1.isPassByReference() != thisParam2.isPassByReference())
+            if(thisParam1.isPassByReference() != thisParam2.isPassByReference())
                 return false;
         }
         
