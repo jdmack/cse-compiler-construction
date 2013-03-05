@@ -1,10 +1,10 @@
-const bool cb = NULL != NULL;
+const bool cb = nullptr != nullptr;
 int a;
 int * b = &a;
 int* c = &a;
 float x;
 float* y = &x;
-int * p = NULL;
+int * p = nullptr;
 bool r;
 
 function : int main() {
