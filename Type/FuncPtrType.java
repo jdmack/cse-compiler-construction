@@ -31,11 +31,10 @@ class FuncPtrType extends PtrGrpType
     public FuncPtrType(Type returnType, boolean returnByRef, Vector<ParamSTO> paramList)
     {
         super(FUNCPTR_NAME, FUNCPTR_SIZE);
+        setReturnType(returnType);
+        setReturnByRef(returnByRef);
         setNumOfParams(paramList.size());
         setParameters(paramList);
-        setReturnByRef(returnByRef);
-        if(returnType == null) System.out.println("null returnType in FuncPtrType constructor");
-        setReturnType(returnType);
         
         setFuncPtrName();
     }
@@ -53,7 +52,6 @@ class FuncPtrType extends PtrGrpType
     //////////////////////////////
     public void setReturnType(Type typ)
     {
-        if(typ == null) System.out.println("null returnType in setReturnTYpe");
         m_returnType = typ;
     }
 
@@ -177,7 +175,6 @@ class FuncPtrType extends PtrGrpType
                 name += ")";
             }
         }
-        System.out.println("Setting name to: " + name);        
         setName(name);
     }
 }
