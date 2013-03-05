@@ -1252,8 +1252,8 @@ class MyParser extends parser
     		m_nNumErrors++;
 			m_errors.print(ErrorMsg.error16_New_var);
     	}
-        // TODO: Can you do "new" on a function pointer?
-    	if(!sto.getType().isPointer()) {
+        // TODO: Can you do "new" on a function pointer? - I think the answer is yes
+    	if(!sto.getType().isPtrGrp()) {
     		m_nNumErrors++;
     		m_errors.print(Formatter.toString(ErrorMsg.error16_New, sto.getType().getName()));
     	}
