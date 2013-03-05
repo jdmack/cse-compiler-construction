@@ -97,16 +97,45 @@ class PointerType extends PtrGrpType
 
     public String setInitialName()
     {
+        // Name null pointers
         if(m_pointsToType == null)
             setName("nullptr");
-        else if(m_pointsToType.isArray())
-            setName(m_pointsToType.getName());  // TODO: TEMPORARY TO MAKE COMPILER
+
+        // Name array
+            /*
+            if(m_pointsToType.isArray())
+                setName(m_pointsToType.getName());  // TODO: TEMPORARY TO MAKE COMPILER
+                */
+        else if(getBottomPtrType() != null) {
+            if(getBottomPtrType().isArray()) {
+
+                String temp;
+
+                if(m_pointsToType.isArray())
+                    temp = m_pointsToType.getName();
+                else 
+                    temp = ((PointerType) m_pointsToType).setInitialName();
+
+                if(temp.contains("*")) {
+                    temp = temp.substring(0, temp.lastIndexOf("*")) + "*" + temp.substring(temp.lastIndexOf("*"));
+
+                }
+                else {
+                    temp = temp.substring(0, temp.lastIndexOf("[")) + "*" + temp.substring(temp.lastIndexOf("["));
+
+                }
+
+                setName(temp);
+            }
+        }
                                                     // Need to fix so it names in format "int*[4]" 
+
         else if(m_pointsToType.isPointer())
             setName(((PointerType) m_pointsToType).setInitialName() + "*");
         else
             setName(m_pointsToType.getName() + "*");
 
+        System.out.println(getName());
         return getName();
 
     }
