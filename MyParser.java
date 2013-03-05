@@ -227,7 +227,7 @@ class MyParser extends parser
             }
 
             if(ptrType != null) {
-                ((PointerType) ptrType).setBottomPtrType(type);
+                ((PointerType) ptrType).setBottomPtrType(finalType);
                 ((PointerType) ptrType).setInitialName();
                 finalType = ptrType;
             }
@@ -1161,12 +1161,13 @@ class MyParser extends parser
         // Check if arrayIndex is null - this means it is not an array
         if(arrayIndex != null) {
             returnType = DoArrayDecl(subType, arrayIndex);
-            
+             
             // TODO: Might need to do something else here if arrayType isn't valid
         }
     
         if(ptrType != null) {
             ((PointerType) ptrType).setBottomPtrType(returnType);
+            ((PointerType) ptrType).setInitialName();
             returnType = ptrType;
         }
             
