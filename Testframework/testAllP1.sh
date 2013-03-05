@@ -36,9 +36,9 @@ fi
 
 # Get lists of tests based on script args
 if [[ -n $1 ]]; then
-    tests=$(find project1/$1 -name "*${2}*.rc")
+    tests=$(find project1/$1 -name "*${2}*.rc" | sort -n)
 else
-    tests=$(find project1/* -mindepth 1 -name "*${2}*.rc")
+    tests=$(find project1/* -mindepth 1 -name "*${2}*.rc" | sort -n)
 fi
 
 pass_count=0

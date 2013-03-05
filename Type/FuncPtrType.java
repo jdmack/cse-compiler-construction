@@ -25,37 +25,23 @@ class FuncPtrType extends PtrGrpType
     //---------------------------------------------------------------------
     public FuncPtrType()
     {
-        super(FUNCPTR_NAME, FUNCPTR_SIZE);
-    }
-
-    public FuncPtrType(String strName, int size)
-    {
-        super(strName, size);
+        this(null, false, new Vector<ParamSTO>());
     }
 
     public FuncPtrType(Type returnType, boolean returnByRef)
     {
-        this(returnType, returnByRef, new Vector<ParamSTO> ()); 
-    }
-
-    public FuncPtrType(String id, Type returnType, boolean returnByRef)
-    {
-        this(id, returnType, returnByRef, new Vector<ParamSTO> ()); 
+        this(returnType, returnByRef, new Vector<ParamSTO>()); 
     }
 
     public FuncPtrType(Type returnType, boolean returnByRef, Vector<ParamSTO> paramList)
-    {
-        this(FUNCPTR_NAME, returnType, returnByRef, paramList);
-    }
-
-    public FuncPtrType(String id, Type returnType, boolean returnByRef, Vector<ParamSTO> paramList)
     {
         super(FUNCPTR_NAME, FUNCPTR_SIZE);
         setNumOfParams(paramList.size());
         setParameters(paramList);
         setReturnByRef(returnByRef);
         setReturnType(returnType);
-
+        
+        setFuncPtrName();
     }
 
     //---------------------------------------------------------------------
@@ -151,5 +137,45 @@ class FuncPtrType extends PtrGrpType
         }
         
         return true;
+    }
+
+    public void setFuncPtrName()
+    {
+        String name = "funcptr : " + getReturnType().getName();
+
+        if(getReturnByRef())
+            name += " & (";
+        else
+            name += " (";
+        
+        if(getNumOfParams() == 0)
+            name += ")";
+        else {
+            Vector<String> paramNames = new Vector<String>();
+
+            for(ParamSTO thisParam: getParameters()) {
+                String thisParamName = thisParam.getType().getName();
+
+                if(thisParam.isPassByReference())
+                    thisParamName += " & " + thisParam.getName();
+                else
+                    thisParamName += " " + thisParam.getName();
+
+                paramNames.addElement(thisParamName);
+            }
+        
+            name += paramNames.elementAt(0);
+
+            if(paramNames.size() == 1)
+                name += ")";
+            else {
+                for(int i = 1; i < paramNames.size(); i++)
+                    name += ", " + paramNames.elementAt(i);
+
+                name += ")";
+            }
+        }
+        
+        setName(name);
     }
 }

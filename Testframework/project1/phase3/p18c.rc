@@ -1,7 +1,7 @@
 /* Check 18 (x18a.rc) */
 
-typedef funcptr : int (int x, int y) MYPTRALIAS;
-MYPTRALIAS myPtr1, myPtr2;
+typedef funcptr : int (int a, int b) MYPTRALIAS;
+MYPTRALIAS myPtr1 = nullptr, myPtr2 = nullptr;
 
 function : int addition(int x, int y) {
     return x + y;
@@ -12,7 +12,7 @@ function : int subtraction(int x, int y) {
 }
 
 function : int main() {
-    if (myPtr1 == NULL) {
+    if (myPtr1 == nullptr) {
         myPtr1 = addition;
     }
     cout << myPtr1(4, 6) << endl;
@@ -20,6 +20,6 @@ function : int main() {
     cout << myPtr2(5, 2) << endl;
     myPtr2 = myPtr1;
     cout << myPtr2(5, 2) << endl;
-    myPtr2 = NULL;
+    myPtr2 = nullptr;
     return 0;
 }
