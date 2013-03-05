@@ -23,9 +23,9 @@ class EqualToOp extends ComparisonOp
         
         boolean bothNumeric = o1Type.isNumeric() && o2Type.isNumeric();
         boolean bothBoolean = o1Type.isBool() && o2Type.isBool();
-        boolean bothPointer = o1Type.isPointer() && o2Type.isPointer();
+        boolean bothPointer = o1Type.isPtrGrp() && o2Type.isPtrGrp();
         boolean bothNullPtr = o1Type.isNullPtr() && o2Type.isNullPtr();
-        boolean eitherPointer = o1Type.isPointer() || o2Type.isPointer();
+        boolean eitherPointer = o1Type.isPtrGrp() || o2Type.isPtrGrp();
         boolean eitherNullPtr = o1Type.isNullPtr() || o2Type.isNullPtr();
         
         // Check #1 - EqualTo - Both operands must be numeric or boolean

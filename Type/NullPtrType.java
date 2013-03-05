@@ -46,7 +46,7 @@ class NullPtrType extends PointerType
     public boolean isAssignable(Type type)
     {
         // If trying to assign to pointer, check if pointer type is this array's element type
-        if(type.isPointer())
+        if(type.isPtrGrp())
             return true;    
         else
             return false;

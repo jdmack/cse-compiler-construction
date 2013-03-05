@@ -91,6 +91,7 @@ class FuncPtrType extends PtrGrpType
     {
         m_parameters = params;
         setNumOfParams(params.size());
+        setFuncPtrName();
     }
 
     //////////////////////////////
@@ -175,7 +176,7 @@ class FuncPtrType extends PtrGrpType
                 name += ")";
             }
         }
-        
+        System.out.println("Setting name to: " + name);        
         setName(name);
     }
 }
