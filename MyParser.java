@@ -1256,8 +1256,9 @@ class MyParser extends parser
     		m_nNumErrors++;
 			m_errors.print(ErrorMsg.error16_New_var);
     	}
-        // TODO: Can you do "new" on a function pointer? - I think the answer is yes
-    	if(!sto.getType().isPtrGrp()) {
+
+        // Can't call "new" on nullptr or function pointers - see @115
+    	if(!sto.getType().isPtrGrp() || sto.getType().isNullPtr()) {
     		m_nNumErrors++;
     		m_errors.print(Formatter.toString(ErrorMsg.error16_New, sto.getType().getName()));
     	}
@@ -1271,8 +1272,9 @@ class MyParser extends parser
     		m_nNumErrors++;
 			m_errors.print(ErrorMsg.error16_Delete_var);
     	}
-        // TODO: Can you do "delete" on a function pointer?
-    	if(!sto.getType().isPointer()) {
+        
+        // Can't call "delete" on nullptr or function pointer - see @115
+    	if(!sto.getType().isPointer() || sto.getType().isNullPtr()) {
     		m_nNumErrors++;
     		m_errors.print(Formatter.toString(ErrorMsg.error16_Delete, sto.getType().getName()));
     	}
