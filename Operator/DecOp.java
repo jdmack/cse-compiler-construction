@@ -36,6 +36,9 @@ class DecOp extends UnaryOp
         else if(operand.getType().isFloat()) {
             resultSTO = new ExprSTO("IncOp.checkOperand() Result", new FloatType());
         }
+        else if(operand.getType().isPointer()) {
+            resultSTO = new ExprSTO("IncOp.checkOperand() Result", new PointerType());
+        }
         else {
             return(new ErrorSTO("This will never happen, making compiler happy"));
         }
