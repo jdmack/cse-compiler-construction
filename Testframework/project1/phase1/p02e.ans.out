@@ -1,0 +1,7 @@
+Error, "project1/phase1/p02e.rc", line 5:
+  Operand to -- is not a modifiable L-value.
+Error, "project1/phase1/p02e.rc", line 6:
+  Operand to ++ is not a modifiable L-value.
+Error, "project1/phase1/p02e.rc", line 7:
+  Operand to ++ is not a modifiable L-value.
+Compile: failure.
