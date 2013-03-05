@@ -223,7 +223,6 @@ GlobalDecl ::=      ExternDecl
     |               FuncDef
     ;
 
-                    // TODO: Possibly check Type as null for error
 ExternDecl ::=      T_EXTERN Type:_2 IdList:_3 T_SEMI
                     {:
                          ((MyParser) parser).DoExternDecl (_2, _3);
