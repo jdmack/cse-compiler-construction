@@ -106,22 +106,17 @@ class PointerType extends PtrGrpType
 
                 String temp;
 
-                if(m_pointsToType.isArray()) {
+                if(m_pointsToType.isArray())
                     temp = m_pointsToType.getName();
-                    temp = temp.substring(0, temp.lastIndexOf("[")) + "*" + temp.substring(temp.lastIndexOf("["));
-                }
-                else {
-                    temp = ((PointerType) m_pointsToType).setInitialName();
-                    temp = temp.substring(0, temp.lastIndexOf("*")) + "*" + temp.substring(temp.lastIndexOf("*"));
-                }
-/*
-                if(temp.contains("*")) {
-                }
-                else if(temp.contains("[")) {
-                }
                 else 
-                    System.out.println("WTF IS GOING ON?");
-*/
+                    temp = ((PointerType) m_pointsToType).setInitialName();
+
+                if(temp.contains("*"))
+                    temp = temp.substring(0, temp.lastIndexOf("*")) + "*" + temp.substring(temp.lastIndexOf("*"));
+                else if(temp.contains("["))
+                    temp = temp.substring(0, temp.lastIndexOf("[")) + "*" + temp.substring(temp.lastIndexOf("["));
+                else 
+                    temp = temp + "*";
 
                 setName(temp);
             }
