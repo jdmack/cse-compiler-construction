@@ -1,7 +1,10 @@
 function : void main()
 {
    int a;
-   float b = &(float)(a*a);
+   float b = &(float)(a*a);     // Error - result of float cast is an r-val
+   // a * a: int - r val
+   // (float) - r-val
+   // trying to & on an r-val
    
    return;
 }
