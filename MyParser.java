@@ -473,16 +473,18 @@ class MyParser extends parser
         else
             accessedSTO = m_symtab.accessLocal(id);
 
-
         // Check for func already existing in localScope
         if(accessedSTO != null) {
             m_nNumErrors++;
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
 
-        FuncSTO sto = new FuncSTO(id, retByRef);
-        // Set return type
-        sto.setReturnType(returnType);
+        // Create function pointer that contains function information to use for new FuncSTO
+        FuncPtrType funcPtr = new FuncPtrType(id, returnType, retByRef);
+
+        // Create new FuncSTO with function pointer holding it's info
+        FuncSTO sto = new FuncSTO(id, funcPtr);
+
 
         if(m_inStructdef) 
             m_currentStructdef.InsertLocal(sto);
@@ -553,14 +555,6 @@ class MyParser extends parser
             */
             m_symtab.insert(thisParam);
         }
-    }
-
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
-    Type DoFuncPtrDef(Type returnType, boolean returnByRef, Vector<ParamSTO> paramList)
-    {
-        return new FuncPtrType(returnType, returnByRef, paramList);
     }
 
     //----------------------------------------------------------------
