@@ -722,12 +722,12 @@ DeleteStmt ::=      T_DELETE Designator:_1 T_SEMI
 WritePairList ::=   WritePair:_1
                     {:
                         RESULT = new Vector<STO>();
-                        RESULT.addElement((STO)_1);
+                        ((Vector<STO>) RESULT).addElement((STO)_1);
                     :}
     |               WritePairList:_1 T_OSTREAM WritePair:_2
                     {:
                         RESULT = _1;
-                        RESULT.addElement((STO)_2);
+                        ((Vector<STO>) RESULT).addElement((STO)_2);
                         
                     :}
     ;

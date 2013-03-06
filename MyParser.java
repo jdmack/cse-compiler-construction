@@ -156,6 +156,8 @@ class MyParser extends parser
     {
         // Opens the global scope.
         m_symtab.openScope();
+
+        m_codegen.DoProgramStart(GetFile());
     }
 
     //----------------------------------------------------------------

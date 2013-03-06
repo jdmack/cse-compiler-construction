@@ -113,6 +113,14 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      String Utility Functions
+    //-------------------------------------------------------------------------
+    public String quoted(String str)
+    {
+        return "\"" + str + "\"";
+    }
+
+    //-------------------------------------------------------------------------
     //
     //      Code Generation Functions
     //  
@@ -123,8 +131,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoProgramStart(String filename)
     {
-         
-
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FILE_DIR, quoted(filename));
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.IDENT_DIR, quoted(COMPILER_IDENT));
     }
 
 
