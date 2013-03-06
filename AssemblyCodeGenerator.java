@@ -134,12 +134,12 @@ public class AssemblyCodeGenerator {
         AssemblyCodeGenerator myAsWriter = new AssemblyCodeGenerator("output.s");
 
         myAsWriter.increaseIndent();
-        myAsWriter.writeAssembly(TWO_PARAM, SET_OP, String.valueOf(4095), "%l0");
+        myAsWriter.writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(4095), "%l0");
         myAsWriter.increaseIndent();
-        myAsWriter.writeAssembly(TWO_PARAM, SET_OP, String.valueOf(1024), "%l1");
+        myAsWriter.writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1024), "%l1");
         myAsWriter.decreaseIndent();
         
-        myAsWriter.writeAssembly(TWO_PARAM, SET_OP, String.valueOf(512), "%l2");
+        myAsWriter.writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(512), "%l2");
         
         myAsWriter.decreaseIndent();
         myAsWriter.dispose();
