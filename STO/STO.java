@@ -10,6 +10,8 @@ abstract class STO
     private Type    m_type;
     private boolean m_isAddressable;
     private boolean m_isModifiable;
+    private String  m_base;
+    private String  m_offset;
 
     //---------------------------------------------------------------------
     //      Constructors
@@ -113,6 +115,43 @@ abstract class STO
         setIsModifiable(m);
         setIsAddressable(m);
     }
+
+    //---------------------------------
+    //      Base and Offset
+    //---------------------------------
+
+    public String getBase()
+    {
+        return m_base;
+    }
+
+    public void setBase(String base)
+    {
+        m_base = base;
+    }
+
+    public String getOffset()
+    {
+        return m_offset;
+    }
+
+    public void setOffset(String offset)
+    {
+        m_offset = offset;
+    }
+    
+    // Load and store just do a get and set for both at same time
+    public String load()
+    {
+        return m_base + m_offset;
+    }
+
+    public void store(String base, String offset)
+    {
+        m_base = base;
+        m_offset = offset;
+    }
+
 
     //----------------------------------------------------------------
     //    It will be helpful to ask a STO what specific STO it is.
