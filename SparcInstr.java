@@ -70,7 +70,6 @@ class SparcInstr
     public static final String BLE_OP = "ble";
     public static final String BGE_OP = "bge";
     public static final String BL_OP  = "bl";
-    public static final String BLE_OP = "ble";
     public static final String BE_OP  = "be";
     public static final String BNE_OP = "bne";
     public static final String BA_OP  = "ba";
@@ -102,7 +101,7 @@ class SparcInstr
     // Bitwise Ops
     /////////////////////////////////////////////////////////////
     public static final String AND_OP = "and";
-    public static final String ADDCC_OP = "andcc";
+    public static final String ANDCC_OP = "andcc";
     public static final String OR_OP = "or";
     public static final String ORCC = "orcc";
     public static final String XOR_OP = "xor";
