@@ -5,6 +5,7 @@
 
 class SparcWords
 {
+    
     private static final String SET_OP = "set";
     private static final String TWO_PARAM = "%s" + SEPARATOR + "%s, %s\n";
 
