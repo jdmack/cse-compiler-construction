@@ -78,3 +78,7 @@ turnin:
 test:
 	cd Testframework; ./testAllP1.sh
 
+CC=cc
+compiler:
+	$(CC) rc.s input.c output.s $(LINKOBJ)
+

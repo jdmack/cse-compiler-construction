@@ -57,3 +57,8 @@ restore:
 	rm -r *
 	mv ../.git .
 	git reset --hard
+
+CC=cc
+compiler:
+	$(CC) rc.s input.c output.s $(LINKOBJ)
+
