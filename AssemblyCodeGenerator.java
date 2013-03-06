@@ -127,15 +127,36 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
 
     //-------------------------------------------------------------------------
+    //      WriteComment
+    //-------------------------------------------------------------------------
+    public void writeComment(String comment)
+    {
+        writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + " " + comment);
+    }
+
+    //-------------------------------------------------------------------------
     //      DoProgramStart
     //-------------------------------------------------------------------------
     public void DoProgramStart(String filename)
     {
+        increaseIndent();
+    
+        writeComment("Starting Program");
+
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.FILE_DIR, quoted(filename));
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.IDENT_DIR, quoted(COMPILER_IDENT));
     }
 
-
+    //-------------------------------------------------------------------------
+    //      DoProgramStart
+    //-------------------------------------------------------------------------
+    public void DoFuncStart(FuncSTO funcSto)
+    {
+        increaseIndent();
+        //writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.FILE_DIR, quoted(filename));
+        //writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.IDENT_DIR, quoted(COMPILER_IDENT));
+    }
+    
 
 
 }
