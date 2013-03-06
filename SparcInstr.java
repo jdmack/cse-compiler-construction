@@ -3,6 +3,12 @@
 // This static final singleton class provides string literals for
 // 131 programming assignment 2. Each is a SPARC instruction
 /////////////////////////////////////////////////////////////////
+
+
+// I recommend defining all operations as well as formats.  
+// Operations are things like add, mul, set, etc.
+// Formats are like {OPERATION} {REG_1}, {REG_2}, {REG_3} etc.
+
 class SparcInstr
 {
     /////////////////////////////////////////////////////////////
