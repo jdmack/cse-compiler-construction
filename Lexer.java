@@ -884,5 +884,4 @@ class Lexer
     {
         m_errors = ep;
     }
-
 }
