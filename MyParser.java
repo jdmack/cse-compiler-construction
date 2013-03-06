@@ -10,6 +10,11 @@ class MyParser extends parser
 {
 
     //----------------------------------------------------------------
+    //    Constants 
+    //----------------------------------------------------------------
+    private final String OUTPUT_FILENAME = "rc.s";
+
+    //----------------------------------------------------------------
     //    Instance variables
     //----------------------------------------------------------------
     private Lexer        m_lexer;
@@ -26,6 +31,8 @@ class MyParser extends parser
 
     private int          m_whileLevel;
 
+    private AssemblyCodeGenerator m_codegen;
+
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -36,8 +43,9 @@ class MyParser extends parser
         m_errors = errors;
         m_nNumErrors = 0;
         m_whileLevel = 0;
-    }
 
+        m_codegen = new AssemblyCodeGenerator(OUTPUT_FILENAME);
+    }
 
     //----------------------------------------------------------------
     //
@@ -46,7 +54,6 @@ class MyParser extends parser
     {
         return (m_nNumErrors == 0);
     }
-
 
     //----------------------------------------------------------------
     //
@@ -73,14 +80,12 @@ class MyParser extends parser
         }
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     public void syntax_error(Symbol s)
     {
     }
-
 
     //----------------------------------------------------------------
     //
@@ -100,7 +105,6 @@ class MyParser extends parser
         }
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -108,7 +112,6 @@ class MyParser extends parser
     {
         report_fatal_error(s);
     }
-
 
     //----------------------------------------------------------------
     //
@@ -122,7 +125,6 @@ class MyParser extends parser
     {
         m_bSyntaxError = true;
     }
-
 
     //----------------------------------------------------------------
     //
@@ -147,7 +149,6 @@ class MyParser extends parser
         return (m_nSavedLineNum);
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -155,8 +156,8 @@ class MyParser extends parser
     {
         // Opens the global scope.
         m_symtab.openScope();
-    }
 
+    }
 
     //----------------------------------------------------------------
     //
@@ -165,7 +166,6 @@ class MyParser extends parser
     {
         m_symtab.closeScope();
     }
-
 
     //----------------------------------------------------------------
     //
@@ -290,7 +290,6 @@ class MyParser extends parser
         }
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -333,7 +332,6 @@ class MyParser extends parser
             STO sto = new ConstSTO(id, type, ((ConstSTO)value).getValue());
             m_symtab.insert(sto);
 
-
         }
     }
 
@@ -366,7 +364,6 @@ class MyParser extends parser
             m_symtab.insert(sto);
         }
     }
-
 
     //----------------------------------------------------------------
     //
@@ -413,7 +410,6 @@ class MyParser extends parser
 
     }
 
-
     void DoStructdefDeclFinish(String id, Vector<STO> fieldList)
     {
         // check for struct in scope
@@ -433,7 +429,6 @@ class MyParser extends parser
         }
         m_inStructdef = false;
     }
-
 
     //----------------------------------------------------------------
     //
@@ -459,7 +454,6 @@ class MyParser extends parser
         // Create new FuncSTO with function pointer holding it's info
         FuncSTO sto = new FuncSTO(id, funcPtr);
 
-
         if(m_inStructdef) 
             m_currentStructdef.InsertLocal(sto);
         else
@@ -473,7 +467,6 @@ class MyParser extends parser
 
         return sto;
     }
-
 
     //----------------------------------------------------------------
     //
@@ -500,7 +493,6 @@ class MyParser extends parser
         m_symtab.closeScope();
         m_symtab.setFunc(null);
     }
-
 
     //----------------------------------------------------------------
     //
@@ -540,7 +532,6 @@ class MyParser extends parser
         m_symtab.openScope();
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -548,7 +539,6 @@ class MyParser extends parser
     {
         m_symtab.closeScope();
     }
-
 
     //----------------------------------------------------------------
     //
@@ -599,7 +589,6 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.not_function, sto.getName()));
             return (new ErrorSTO(sto.getName()));
         }
-
 
         // We know it's a function, do function call checks
         FuncPtrType funcType = (FuncPtrType) sto.getType();
@@ -662,7 +651,6 @@ class MyParser extends parser
         }
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -712,7 +700,6 @@ class MyParser extends parser
                 return new ErrorSTO("Struct Error - field not found in type");
             }
         }
-
 
         return returnSTO;
     }
@@ -781,10 +768,8 @@ class MyParser extends parser
             }
         }
 
-
         return returnSTO;
     }
-
 
     //----------------------------------------------------------------
     //
@@ -837,7 +822,6 @@ class MyParser extends parser
         return desSTO;
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -853,7 +837,6 @@ class MyParser extends parser
         return (sto);
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -868,7 +851,6 @@ class MyParser extends parser
         }
         return (sto);
     }
-
 
     //----------------------------------------------------------------
     //
@@ -1149,7 +1131,6 @@ class MyParser extends parser
     	
     	return new ConstSTO("ConstInt", new IntType("int",4), (double)size);
     }
-
 
     //----------------------------------------------------------------
     //      DoBuildType
