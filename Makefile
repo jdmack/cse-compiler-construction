@@ -79,6 +79,6 @@ test:
 	cd Testframework; ./testAllP1.sh
 
 CC=cc
-compiler:
+compile:
 	$(CC) rc.s input.c output.s $(LINKOBJ)
 
