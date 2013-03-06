@@ -121,15 +121,21 @@ class SparcInstr
     //public static final String INDENTOR  = "    ";
     
     //-----------------------------------------------------------------------------
+    //      Save
+    //-----------------------------------------------------------------------------
+    public static final String SAVE_OP   = "save";
+    public static final String SAVE_WORD = "SAVE";
+
+    //-----------------------------------------------------------------------------
     //      Set
     //-----------------------------------------------------------------------------
-
     public static final String SET_OP = "set";
+
     //-----------------------------------------------------------------------------
     //      Ret
     //-----------------------------------------------------------------------------
-
     public static final String RET = "ret";
+
     //-----------------------------------------------------------------------------
     //      Restore
     //-----------------------------------------------------------------------------
@@ -225,9 +231,15 @@ class SparcInstr
     //-----------------------------------------------------------------------------
     //      Templates
     //-----------------------------------------------------------------------------
-    public static final String LINE      = "%s\n";
-    public static final String ONE_PARAM = "%s" + SEPARATOR + "%s\n";
-    public static final String TWO_PARAM = "%s" + SEPARATOR + "%s, %s\n";
+    public static final String LINE        = "%s\n";
+    public static final String LABEL       = "%s:\n";
+    public static final String BLANK_LINE  = "\n";
 
+    public static final String NO_PARAM    = "%s\n";
+    public static final String ONE_PARAM   = "%s" + SEPARATOR + "%s\n";
+    public static final String TWO_PARAM   = "%s" + SEPARATOR + "%s, %s\n";
+    public static final String THREE_PARAM = "%s" + SEPARATOR + "%s, %s, %s\n";
+
+    public static final String SAVE_FUNC   = SAVE_WORD + ".%s = -(%s + %s) & -8\n";
 
 }

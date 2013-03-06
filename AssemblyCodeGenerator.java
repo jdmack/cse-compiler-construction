@@ -120,6 +120,11 @@ public class AssemblyCodeGenerator {
         return "\"" + str + "\"";
     }
 
+    public String sqBracketed(String str)
+    {
+        return "[" + str + "]";
+    }
+
     //-------------------------------------------------------------------------
     //
     //      Code Generation Functions
@@ -134,6 +139,12 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + " " + comment);
     }
 
+    public void writeCommentHeader(String comment)
+    {
+        writeAssembly(SparcInstr.BLANK_LINE);
+        writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + "----" + comment + "----");
+    }
+
     //-------------------------------------------------------------------------
     //      DoProgramStart
     //-------------------------------------------------------------------------
@@ -141,22 +152,64 @@ public class AssemblyCodeGenerator {
     {
         increaseIndent();
     
-        writeComment("Starting Program");
+        writeCommentHeader("Starting Program");
 
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.FILE_DIR, quoted(filename));
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.IDENT_DIR, quoted(COMPILER_IDENT));
     }
 
     //-------------------------------------------------------------------------
-    //      DoProgramStart
+    //      DoFuncStart
     //-------------------------------------------------------------------------
     public void DoFuncStart(FuncSTO funcSto)
     {
+        writeCommentHeader("Function: " + funcSto.getName());
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, String.valueOf(4));
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.GLOBAL_DIR, funcSto.getName());
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        // Write the function label
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, funcSto.getName());
         increaseIndent();
-        //writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.FILE_DIR, quoted(filename));
-        //writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.IDENT_DIR, quoted(COMPILER_IDENT));
+
+        // Move the saved offset for this function into %g1 and then execute the save instruction that shifts the stack
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.SAVE_WORD + "." + funcSto.getName(), SparcInstr.REG_GLOBAL1);
+        writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.SAVE_OP, SparcInstr.REG_STACK, SparcInstr.REG_GLOBAL1, SparcInstr.REG_STACK);
+        writeAssembly(SparcInstr.BLANK_LINE);
+    }
+
+    //-------------------------------------------------------------------------
+    //      DoFuncFinish
+    //-------------------------------------------------------------------------
+    public void DoFuncFinish(FuncSTO funcSto)
+    {
+        // Perform return/restore
+        // TODO: Right now, two sets of ret/restore will be printed if the function did explicit "return"
+        writeAssembly(SparcInstr.BLANK_LINE);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RET);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RESTORE);
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        // Write the assembler directive to save the amount of bytes needed for the save operation
+        decreaseIndent();
+        writeAssembly(SparcInstr.SAVE_FUNC, funcSto.getName(), String.valueOf(92), String.valueOf(funcSto.getLocalVarBytes()));
     }
     
+    //-------------------------------------------------------------------------
+    //      DoReturn
+    //-------------------------------------------------------------------------
+    public void DoReturn(STO returnSto)
+    {
+        // Load the return value into the return register
+        if(!returnSto.getType().isVoid())
+            writeAssembly(SparcInstr.TWO_PARAM, returnSto.load(), SparcInstr.REG_SET_RETURN);
+
+        // Perform return/restore
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RET);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RESTORE);
+    }
 
 
 }

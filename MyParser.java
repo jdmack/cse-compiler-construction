@@ -467,6 +467,8 @@ class MyParser extends parser
         // Set the function's level
         sto.setLevel(m_symtab.getLevel());
 
+        m_codegen.DoFuncStart(sto);
+
         return sto;
     }
 
@@ -491,6 +493,8 @@ class MyParser extends parser
             }
 
         }
+
+        m_codegen.DoFuncFinish(stoFunc);
 
         m_symtab.closeScope();
         m_symtab.setFunc(null);
@@ -978,7 +982,7 @@ class MyParser extends parser
     }
 
     //----------------------------------------------------------------
-    //      DoReturnStmt_1
+    //      DoReturnStmt_1 - No return value
     //----------------------------------------------------------------
     STO DoReturnStmt_1()
     {
@@ -1002,12 +1006,15 @@ class MyParser extends parser
             stoFunc.setHasReturnStatement(true);
         }
 
-        return (new ExprSTO(stoFunc.getName() + " Return", new VoidType()));
+        ExprSTO returnSto = new ExprSTO(stoFunc.getName() + " Return", new VoidType());
 
+        m_codegen.DoReturn(returnSto); 
+
+        return returnSto;
     }
 
     //----------------------------------------------------------------
-    //      DoReturnStmt_2
+    //      DoReturnStmt_2 - With return value
     //----------------------------------------------------------------
     STO DoReturnStmt_2(STO stoExpr)
     {
@@ -1052,6 +1059,8 @@ class MyParser extends parser
         if(stoFunc.getLevel() == m_symtab.getLevel()) {
             stoFunc.setHasReturnStatement(true);
         }
+
+        m_codegen.DoReturn(stoExpr); 
 
         return stoExpr;
     }
