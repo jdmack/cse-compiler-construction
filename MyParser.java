@@ -25,6 +25,8 @@ class MyParser extends parser
     private Scope        m_currentStructdef;
 
     private int          m_whileLevel;
+    
+    private AssemblyCodeGenerator m_codeGen;
 
     //----------------------------------------------------------------
     //
@@ -155,6 +157,7 @@ class MyParser extends parser
     {
         // Opens the global scope.
         m_symtab.openScope();
+        m_codeGen = new AssemblyCodeGenerator("output.s");
     }
 
 
@@ -164,6 +167,7 @@ class MyParser extends parser
     void DoProgramEnd()
     {
         m_symtab.closeScope();
+        m_codeGen.dispose();
     }
 
 
@@ -1276,5 +1280,9 @@ class MyParser extends parser
     		m_nNumErrors++;
     		m_errors.print(Formatter.toString(ErrorMsg.error16_Delete, sto.getType().getName()));
     	}
+    }
+    
+    void DoWrite(Vector<STO> exprSTOs) {
+    	
     }
 }
