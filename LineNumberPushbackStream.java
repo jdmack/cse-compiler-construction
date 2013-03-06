@@ -4,9 +4,17 @@
 
 import java.io.*;
 
-
 class LineNumberPushbackStream extends PushbackInputStream
 {
+    //-----------------------------------------------------------------
+    // Instance variables.
+    //-----------------------------------------------------------------
+    private int m_nLine;
+
+    // I'm saving the name directly because I cannot see
+    // how to get the filename out of a created FileInputStream.
+    // Either I'm stupid or I'm totally missing something.
+    private String m_streamName;
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
@@ -37,18 +45,16 @@ class LineNumberPushbackStream extends PushbackInputStream
     //-----------------------------------------------------------------
     public String getName()
     {
-        return    m_streamName;
+        return m_streamName;
     }
-
 
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
     public int getLineNumber()
     {
-        return(m_nLine);
+        return m_nLine;
     }
-
 
     //-----------------------------------------------------------------
     //
@@ -58,7 +64,6 @@ class LineNumberPushbackStream extends PushbackInputStream
         m_nLine++;
     }
 
-
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
@@ -67,20 +72,18 @@ class LineNumberPushbackStream extends PushbackInputStream
         m_nLine--;
     }
 
-
     //-----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
     public int read() throws IOException
     {
-        int    nextChar = super.read();
+        int nextChar = super.read();
 
         if(nextChar == '\n')
             incLineNumber();
 
-        return    nextChar;
+        return nextChar;
     }
-
 
     //-----------------------------------------------------------------
     //
@@ -92,15 +95,4 @@ class LineNumberPushbackStream extends PushbackInputStream
         if(b == '\n')
             decLineNumber();
     }
-
-
-//-----------------------------------------------------------------
-// Instance variables.
-//-----------------------------------------------------------------
-    private int m_nLine;
-
-    // I'm saving the name directly because I cannot see
-    // how to get the filename out of a created FileInputStream.
-    // Either I'm stupid or I'm totally missing something.
-    private String m_streamName;
 }
