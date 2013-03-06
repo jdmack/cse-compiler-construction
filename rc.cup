@@ -700,7 +700,10 @@ ReadStmt ::=        T_CIN T_ISTREAM Designator T_SEMI
     ;
 
 
-WriteStmt ::=       T_COUT T_OSTREAM WritePairList T_SEMI
+WriteStmt ::=       T_COUT T_OSTREAM WritePairList:_1 T_SEMI
+                    {:
+                        ((MyParser) parser).DoWrite((Vector<STO>)_1);
+                    :}
     ;
 
 NewStmt ::=         T_NEW Designator:_1 T_SEMI
@@ -716,13 +719,28 @@ DeleteStmt ::=      T_DELETE Designator:_1 T_SEMI
     ;
 
 
-WritePairList ::=   WritePair
-    |               WritePairList T_OSTREAM WritePair
+WritePairList ::=   WritePair:_1
+                    {:
+                        RESULT = new Vector<STO>();
+                        RESULT.addElement((STO)_1);
+                    :}
+    |               WritePairList:_1 T_OSTREAM WritePair:_2
+                    {:
+                        RESULT = _1;
+                        RESULT.addElement((STO)_2);
+                        
+                    :}
     ;
 
 
-WritePair ::=       Expr
+WritePair ::=       Expr:_1
+                    {:
+                        RESULT = _1;
+                    :}
     |               T_ENDL
+                    {:
+                        RESULT = new ConstSTO ("\\n", new VoidType());
+                    :}
     ;
 
 
