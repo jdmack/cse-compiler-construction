@@ -292,9 +292,6 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoCout(STO sto) {
 
-        String output;
-
-
         if(sto.getType().isInt()) {
             // set _intFmt, %o0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
@@ -331,6 +328,7 @@ public class AssemblyCodeGenerator {
             }
             else {
                 // TODO: THink we need to actually write a if/else in assembly for it to decide whether to print "true" or "false"
+                // if so, can wait and use DoIf() and DoElse() once we've written it
 
             }
 
