@@ -11,6 +11,7 @@ class FuncSTO extends STO
 
     private boolean m_hasReturnStatement;
     private int     m_level;
+    private int     m_localVarBytes;
 
     //---------------------------------------------------------------------
     //      Constructors
@@ -22,6 +23,7 @@ class FuncSTO extends STO
 
         setHasReturnStatement(false);
         setLevel(0);
+        setLocalVarBytes(0);
     }
 
     //---------------------------------------------------------------------
@@ -115,4 +117,38 @@ class FuncSTO extends STO
     {
         return m_level;
     }
+
+    //////////////////////////////
+    //      m_localVarBytes     //
+    //////////////////////////////
+    public void setLocalVarBytes(int bytes)
+    {
+        m_localVarBytes = bytes;
+    }
+
+    public int getLocalVarBytes()
+    {
+        return m_localVarBytes;
+    }
+
+    public void addInt()
+    {
+        m_localVarBytes = m_localVarBytes + 4;
+    }
+
+    public void addFloat()
+    {
+        m_localVarBytes = m_localVarBytes + 4;
+    }
+
+    public void addBool()
+    {
+        m_localVarBytes = m_localVarBytes + 4;
+    }
+
+    public void addBytes(int bytes)
+    {
+        m_localVarBytes = m_localVarBytes + bytes;
+    }
+
 }
