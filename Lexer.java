@@ -2,14 +2,37 @@
 //---------------------------------------------------------------------
 //
 //---------------------------------------------------------------------
-import     java.util.*;
-import    java.io.*;
-
+import java.util.*;
+import java.io.*;
 
 class Lexer
 {
     //----------------------------------------------------------------
-    //
+    // Instance variables
+    //----------------------------------------------------------------
+    // Some RC constants
+    private int MAXIDLEN = 40;
+    private int MAXNUMLEN = 10;
+    private int MAXSTRLEN = 80;
+    private int MAXCHARLEN = 3;
+    private int MAXEXPLEN = 3;
+
+    // This error printer will format line numbers and file
+    // names and whatever else appropriately.
+    private ErrorPrinter m_errors;
+
+    // This is the list of RC keywords.
+    private Hashtable<String, Integer> m_htKeywords;
+
+    // This is the list of input files to read from.
+    private Stack<LineNumberPushbackStream> m_stkInputs;
+
+    // This is the list of files that we've read so far.  We must
+    // keep track of this to not read a file twice.
+    private Vector<String> m_lstFiles;
+
+    //----------------------------------------------------------------
+    //      Constructors
     //----------------------------------------------------------------
     public Lexer(Vector<String> filenames)
     {
@@ -49,11 +72,11 @@ class Lexer
 
             // If not an ID, this can go out right away
             if(token.GetCode() != sym.T_ID)
-                return(token);
+                return token;
 
             // Otherwise, check for RC includes first
             if(!token.GetLexeme().equals("INCLUDE"))
-                return(token);
+                return token;
 
             token = getAToken();
             if(token.GetCode() != sym.T_STR_LITERAL)
@@ -65,17 +88,16 @@ class Lexer
             token = null;
         }
 
-        return(null);
+        return null;
     }
-
 
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     private Token getAToken()
     {
-        Token        token = null;
-        char        c;
+        char c;
+        Token token = null;
 
         while(token == null) {
             c = getChar();
@@ -99,7 +121,7 @@ class Lexer
                 token = getPunctToken(c);
         }
 
-        return(token);
+        return token;
     }
 
 
@@ -108,12 +130,13 @@ class Lexer
     //----------------------------------------------------------------
     private Token getAlphaToken(char cFirst)
     {
-        StringBuffer        buffer = new StringBuffer(MAXIDLEN);
-        int             nCount = 0;
-        char            c;
-        boolean            bDone = false;
-        String            strLexeme;
-        int             nKeyword;
+        char    c;
+        int     nKeyword;
+        int     nCount = 0;
+        boolean bDone = false;
+        String  strLexeme;
+
+        StringBuffer buffer = new StringBuffer(MAXIDLEN);
 
         buffer.append(cFirst);
         nCount++;
@@ -145,31 +168,31 @@ class Lexer
             return(new Token(sym.T_ID, new String(buffer)));
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     private Token getNumToken(char cFirst)
     {
-        int             nState;
-        char            c;
+        int  nState;
+        char c;
+        int  nCount;
+
+        int     nExpCount = 0;
+        Token   token     = null;
+        boolean bError    = false;
+        boolean bExpError = false;
+        boolean bAddChar;
+
+        final int S_ZEROES   = 0;
+        final int S_DIGITS   = 2;
+        final int S_MANTISSA = 4;
+        final int S_EXP      = 5;
+        final int S_EXPSIGN  = 6;
+        final int S_EXPONENT = 7;
+        final int S_OCTAL    = 8;
+        final int S_HEX      = 9;
+
         StringBuffer        buffer = new StringBuffer(20);
-        int             nCount;
-        int             nExpCount = 0;
-        Token            token = null;
-        boolean            bAddChar;
-        boolean         bError = false;
-        boolean            bExpError = false;
-
-        final int         S_ZEROES = 0;
-        final int        S_DIGITS = 2;
-        final int        S_MANTISSA = 4;
-        final int        S_EXP = 5;
-        final int        S_EXPSIGN = 6;
-        final int        S_EXPONENT = 7;
-        final int        S_OCTAL = 8;
-        final int        S_HEX = 9;
-
 
         if(cFirst == '0') {
             nState = S_ZEROES;
@@ -366,7 +389,6 @@ class Lexer
             }
         }
 
-
         if(bError) {
             if(token.GetCode() == sym.T_FLOAT_LITERAL) {
                 m_errors.print("float literal(mantissa) too long");
@@ -383,17 +405,16 @@ class Lexer
             m_errors.print("float literal(exponent) too long");
         }
 
-        return(token);
+        return token;
     }
-
 
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     private Token getPunctToken(char cFirst)
     {
-        Token        token = null;
-        char        c;
+        Token token = null;
+        char  c;
 
         switch(cFirst) {
             case '&':
@@ -568,18 +589,17 @@ class Lexer
                 break;
         }
 
-        return(token);
+        return token;
     }
-
 
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     private void readComment()
     {
-        int         nCount = 1;
-        boolean        bSlash = false, bStar = false;
-        char        c;
+        int     nCount = 1;
+        boolean bSlash = false, bStar = false;
+        char    c;
 
         while(nCount > 0) {
             c = getChar();
@@ -618,31 +638,31 @@ class Lexer
         }
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     private void readCommentLn()
     {
-        char        c;
+        char c;
 
         while(true) {
             c = getChar();
-            if(c == '\n'  || c == '\0')
+
+            if((c == '\n') || (c == '\0'))
                 break;
         }
     }
-
 
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     private Token getStrLitToken(char cFirst)
     {
-        char            c;
-        int             nCount = 0;
-        StringBuffer    buffer = new StringBuffer(MAXSTRLEN);
-        boolean            bDone = false;
+        char    c;
+        int     nCount = 0;
+        boolean bDone = false;
+
+        StringBuffer buffer = new StringBuffer(MAXSTRLEN);
 
         while(!bDone) {
             c = getChar();
@@ -674,7 +694,6 @@ class Lexer
         return(new Token(sym.T_STR_LITERAL, new String(buffer)));
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -695,20 +714,18 @@ class Lexer
                c == '6' || c == '7');
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     private int lookupKeyword(String strLexeme)
     {
-        Integer        n;
+        Integer n;
 
         if((n = m_htKeywords.get(strLexeme)) != null)
             return(n.intValue());
         else
             return(0);
     }
-
 
     //----------------------------------------------------------------
     //
@@ -717,39 +734,38 @@ class Lexer
     {
         m_htKeywords = new Hashtable<String, Integer>();
 
-        m_htKeywords.put("bool", new Integer(sym.T_BOOL));
-        m_htKeywords.put("break", new Integer(sym.T_BREAK));
-        m_htKeywords.put("char", new Integer(sym.T_CHAR));
-        m_htKeywords.put("cin", new Integer(sym.T_CIN));
-        m_htKeywords.put("continue", new Integer(sym.T_CONTINUE));
-        m_htKeywords.put("cout", new Integer(sym.T_COUT));
-        m_htKeywords.put("const", new Integer(sym.T_CONST));
-        m_htKeywords.put("delete", new Integer(sym.T_DELETE));
-        m_htKeywords.put("else", new Integer(sym.T_ELSE));
-        m_htKeywords.put("endl", new Integer(sym.T_ENDL));
-        m_htKeywords.put("exit", new Integer(sym.T_EXIT));
-        m_htKeywords.put("extern", new Integer(sym.T_EXTERN));
-        m_htKeywords.put("false", new Integer(sym.T_FALSE));
-        m_htKeywords.put("float", new Integer(sym.T_FLOAT));
-        m_htKeywords.put("for", new Integer(sym.T_FOR));
-        m_htKeywords.put("function", new Integer(sym.T_FUNCTION));
-        m_htKeywords.put("funcptr", new Integer(sym.T_FUNCPTR));
-        m_htKeywords.put("if", new Integer(sym.T_IF));
-        m_htKeywords.put("int", new Integer(sym.T_INT));
-        m_htKeywords.put("new", new Integer(sym.T_NEW));
-        m_htKeywords.put("nullptr", new Integer(sym.T_NULLPTR));
-        m_htKeywords.put("return", new Integer(sym.T_RETURN));
-        m_htKeywords.put("sizeof", new Integer(sym.T_SIZEOF));
-        m_htKeywords.put("static", new Integer(sym.T_STATIC));
-        m_htKeywords.put("structdef", new Integer(sym.T_STRUCTDEF));
-        m_htKeywords.put("this", new Integer(sym.T_THIS));
-        m_htKeywords.put("true", new Integer(sym.T_TRUE));
-        m_htKeywords.put("typedef", new Integer(sym.T_TYPEDEF));
-        m_htKeywords.put("void", new Integer(sym.T_VOID));
-        m_htKeywords.put("while", new Integer(sym.T_WHILE));
-        m_htKeywords.put("auto", new Integer(sym.T_AUTO));
+        m_htKeywords.put("bool",        new Integer(sym.T_BOOL));
+        m_htKeywords.put("break",       new Integer(sym.T_BREAK));
+        m_htKeywords.put("char",        new Integer(sym.T_CHAR));
+        m_htKeywords.put("cin",         new Integer(sym.T_CIN));
+        m_htKeywords.put("continue",    new Integer(sym.T_CONTINUE));
+        m_htKeywords.put("cout",        new Integer(sym.T_COUT));
+        m_htKeywords.put("const",       new Integer(sym.T_CONST));
+        m_htKeywords.put("delete",      new Integer(sym.T_DELETE));
+        m_htKeywords.put("else",        new Integer(sym.T_ELSE));
+        m_htKeywords.put("endl",        new Integer(sym.T_ENDL));
+        m_htKeywords.put("exit",        new Integer(sym.T_EXIT));
+        m_htKeywords.put("extern",      new Integer(sym.T_EXTERN));
+        m_htKeywords.put("false",       new Integer(sym.T_FALSE));
+        m_htKeywords.put("float",       new Integer(sym.T_FLOAT));
+        m_htKeywords.put("for",         new Integer(sym.T_FOR));
+        m_htKeywords.put("function",    new Integer(sym.T_FUNCTION));
+        m_htKeywords.put("funcptr",     new Integer(sym.T_FUNCPTR));
+        m_htKeywords.put("if",          new Integer(sym.T_IF));
+        m_htKeywords.put("int",         new Integer(sym.T_INT));
+        m_htKeywords.put("new",         new Integer(sym.T_NEW));
+        m_htKeywords.put("nullptr",     new Integer(sym.T_NULLPTR));
+        m_htKeywords.put("return",      new Integer(sym.T_RETURN));
+        m_htKeywords.put("sizeof",      new Integer(sym.T_SIZEOF));
+        m_htKeywords.put("static",      new Integer(sym.T_STATIC));
+        m_htKeywords.put("structdef",   new Integer(sym.T_STRUCTDEF));
+        m_htKeywords.put("this",        new Integer(sym.T_THIS));
+        m_htKeywords.put("true",        new Integer(sym.T_TRUE));
+        m_htKeywords.put("typedef",     new Integer(sym.T_TYPEDEF));
+        m_htKeywords.put("void",        new Integer(sym.T_VOID));
+        m_htKeywords.put("while",       new Integer(sym.T_WHILE));
+        m_htKeywords.put("auto",        new Integer(sym.T_AUTO));
     }
-
 
     //----------------------------------------------------------------
     //
@@ -759,11 +775,10 @@ class Lexer
         if(m_stkInputs.isEmpty())
             return 0;
 
-        LineNumberPushbackStream
-        input = m_stkInputs.peek();
-        return(input.getLineNumber());
-    }
+        LineNumberPushbackStream input = m_stkInputs.peek();
 
+        return input.getLineNumber();
+    }
 
     //----------------------------------------------------------------
     //
@@ -773,11 +788,10 @@ class Lexer
         if(m_stkInputs.isEmpty())
             return "";
 
-        LineNumberPushbackStream
-        input = m_stkInputs.peek();
-        return(input.getName());
-    }
+        LineNumberPushbackStream input = m_stkInputs.peek();
 
+        return input.getName();
+    }
 
     //----------------------------------------------------------------
     //
@@ -785,19 +799,19 @@ class Lexer
     private boolean addAFile(String strFile, boolean bInclude)
     {
         // First, see if the file exists
-        LineNumberPushbackStream        stream;
+        LineNumberPushbackStream stream;
+
         try {
             stream = new LineNumberPushbackStream(strFile);
 
             // Ok, now see if it has been included already
             if(m_lstFiles.indexOf(strFile) > 0) {
                 if(bInclude)
-                    m_errors.print("multiple included file \"" +
-                                   strFile + "\"");
+                    m_errors.print("multiple included file \"" + strFile + "\"");
                 else
-                    System.out.println("multiple read file \"" +
-                                       strFile + "\"");
-                return(false);
+                    System.out.println("multiple read file \"" + strFile + "\"");
+
+                return false;
             }
 
             m_stkInputs.push(stream);
@@ -806,15 +820,13 @@ class Lexer
         }
         catch(FileNotFoundException e) {
             if(bInclude)
-                m_errors.print("bad include file \"" +
-                               strFile + "\"");
+                m_errors.print("bad include file \"" + strFile + "\"");
             else
-                System.out.println("Error, " +
-                                   e.getMessage());
-            return  (false);
+                System.out.println("Error, " + e.getMessage());
+            return false;
         }
 
-        return  (true);
+        return true;
     }
 
     //----------------------------------------------------------------
@@ -822,9 +834,8 @@ class Lexer
     //----------------------------------------------------------------
     private char getChar()
     {
-        int        c = 0;
-        LineNumberPushbackStream
-        input;
+        int c = 0;
+        LineNumberPushbackStream input;
 
         while(!m_stkInputs.isEmpty() && c <= 0) {
             input = m_stkInputs.peek();
@@ -848,7 +859,6 @@ class Lexer
         return((char)c);
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -857,8 +867,7 @@ class Lexer
         if(m_stkInputs.isEmpty())
             return;
 
-        LineNumberPushbackStream     input =
-            m_stkInputs.peek();
+        LineNumberPushbackStream input = m_stkInputs.peek();
 
         try {
             input.unread(c);
@@ -868,7 +877,6 @@ class Lexer
         }
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -877,27 +885,4 @@ class Lexer
         m_errors = ep;
     }
 
-
-//----------------------------------------------------------------
-// Instance variables
-//----------------------------------------------------------------
-    // Some RC constants
-    private int MAXIDLEN = 40;
-    private int MAXNUMLEN = 10;
-    private int MAXSTRLEN = 80;
-    private int MAXCHARLEN = 3;
-    private int MAXEXPLEN = 3;
-
-    // This error printer will format line numbers and file
-    // names and whatever else appropriately.
-    private ErrorPrinter m_errors;
-
-    // This is the list of RC keywords.
-    private Hashtable<String, Integer> m_htKeywords;
-
-    // This is the list of input files to read from.
-    private Stack<LineNumberPushbackStream> m_stkInputs;
-    // This is the list of files that we've read so far.  We must
-    // keep track of this to not read a file twice.
-    private Vector<String> m_lstFiles;
 }
