@@ -103,10 +103,11 @@ class SparcInstr
     //-----------------------------------------------------------------------------
     //      Constants
     //-----------------------------------------------------------------------------
-    public static final String ENDL   = "_endl";
-    public static final String INTFMT = "_intFmt";
-    public static final String BOOLT  = "_boolT";
-    public static final String BOOLF  = "_boolF";
+    public static final String ENDL    = "_endl";
+    public static final String INTFMT  = "_intFmt";
+    public static final String BOOLFMT = "_intFmt";
+    public static final String BOOLT   = "_boolT";
+    public static final String BOOLF   = "_boolF";
 
     //-----------------------------------------------------------------------------
     //      Comment
@@ -134,12 +135,12 @@ class SparcInstr
     //-----------------------------------------------------------------------------
     //      Ret
     //-----------------------------------------------------------------------------
-    public static final String RET = "ret";
+    public static final String RET_OP = "ret";
 
     //-----------------------------------------------------------------------------
     //      Restore
     //-----------------------------------------------------------------------------
-    public static final String RESTORE  = "restore";
+    public static final String RESTORE_OP  = "restore";
     
     //-----------------------------------------------------------------------------
     //      Move
@@ -227,6 +228,11 @@ class SparcInstr
     public static final String ORCC     = "orcc";
     public static final String XOR_OP   = "xor";
     public static final String XORCC_OP = "xorcc";
+
+    //-----------------------------------------------------------------------------
+    //      Functions
+    //-----------------------------------------------------------------------------
+    public static final String PRINTF = "printf";
     
     //-----------------------------------------------------------------------------
     //      Templates
@@ -241,5 +247,7 @@ class SparcInstr
     public static final String THREE_PARAM = "%s" + SEPARATOR + "%s, %s, %s\n";
 
     public static final String SAVE_FUNC   = SAVE_WORD + ".%s = -(%s + %s) & -8\n";
+    public static final String RO_DEFINE   = "%s:" + SEPARATOR + "%s" + SEPARATOR + "%s\n";
+
 
 }

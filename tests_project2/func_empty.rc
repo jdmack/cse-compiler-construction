@@ -1,0 +1,7 @@
+function: int foo(int x, int y) { 
+    return y; 
+}
+
+function: void main() {
+
+}

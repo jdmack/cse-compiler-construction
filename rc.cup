@@ -702,7 +702,7 @@ ReadStmt ::=        T_CIN T_ISTREAM Designator T_SEMI
 
 WriteStmt ::=       T_COUT T_OSTREAM WritePairList:_1 T_SEMI
                     {:
-                        ((MyParser) parser).DoWrite((Vector<STO>)_1);
+                        ((MyParser) parser).DoCout((Vector<STO>)_1);
                     :}
     ;
 

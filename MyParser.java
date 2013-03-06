@@ -1008,7 +1008,7 @@ class MyParser extends parser
 
         ExprSTO returnSto = new ExprSTO(stoFunc.getName() + " Return", new VoidType());
 
-        m_codegen.DoReturn(returnSto); 
+        m_codegen.DoReturn(stoFunc, returnSto); 
 
         return returnSto;
     }
@@ -1060,7 +1060,7 @@ class MyParser extends parser
             stoFunc.setHasReturnStatement(true);
         }
 
-        m_codegen.DoReturn(stoExpr); 
+        m_codegen.DoReturn(stoFunc, stoExpr); 
 
         return stoExpr;
     }
@@ -1270,7 +1270,12 @@ class MyParser extends parser
     	}
     }
     
-    void DoWrite(Vector<STO> exprSTOs) {
-    	
+    //----------------------------------------------------------------
+    //      DoCout
+    //----------------------------------------------------------------
+    void DoCout(Vector<STO> exprSTOs) {
+        for(STO thisSto: exprSTOs) {
+            m_codegen.DoCout(thisSto);
+        }
     }
 }
