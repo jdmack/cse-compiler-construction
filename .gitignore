@@ -8,6 +8,7 @@ parser.java
 sym.java
 java-cup-v11a.jar
 javacup
+rc.s
 
 #eclipse stuff
 .classpath
