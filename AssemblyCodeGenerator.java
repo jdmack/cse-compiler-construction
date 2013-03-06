@@ -131,8 +131,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoProgramStart(String filename)
     {
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FILE_DIR, quoted(filename));
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.IDENT_DIR, quoted(COMPILER_IDENT));
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.FILE_DIR, quoted(filename));
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.IDENT_DIR, quoted(COMPILER_IDENT));
     }
 
 
