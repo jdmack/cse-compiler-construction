@@ -222,9 +222,11 @@ class SparcInstr
     public static final String XORCC_OP = "xorcc";
     
     //-----------------------------------------------------------------------------
-    //      Param
+    //      Templates
     //-----------------------------------------------------------------------------
+    public static final String LINE      = "%s\n";
     public static final String ONE_PARAM = "%s" + SEPARATOR + "%s\n";
     public static final String TWO_PARAM = "%s" + SEPARATOR + "%s, %s\n";
+
 
 }
