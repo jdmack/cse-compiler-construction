@@ -117,7 +117,8 @@ class SparcInstr
     //      Separator
     //-----------------------------------------------------------------------------
     public static final String SEPARATOR = "\t";
-    public static final String INDENTOR  = "    ";
+    public static final String INDENTOR  = "\t";    // tabs might actually be better :(
+    //public static final String INDENTOR  = "    ";
     
     //-----------------------------------------------------------------------------
     //      Set
