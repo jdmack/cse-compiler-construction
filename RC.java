@@ -3,7 +3,7 @@
 // the command line(all names preceeded with "-" are ignored)
 // or by entering standard input.
 //---------------------------------------------------------------------
-import    java.util.Vector;
+import java.util.Vector;
 
 
 class RC
@@ -21,17 +21,14 @@ class RC
                 filenames.addElement(args[i]);
         }
 
-
         // Now, start up the lexer with the files found.  If there
         // were no files, the lexer will default to reading in from
         // System.in.
         Lexer lexer = new Lexer(filenames);
 
-
         // The error printer uses the lexer to get the name
         // of the current file & line number.
         ErrorPrinter errors = new ErrorPrinter(lexer, false);
-
 
         // Finally, the parser takes in everybody.
         MyParser parser = new MyParser(lexer, errors);
