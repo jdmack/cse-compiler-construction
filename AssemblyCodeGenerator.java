@@ -349,15 +349,13 @@ public class AssemblyCodeGenerator {
             // .align 4
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
             // set tmp1, %l0
-        	writeAssembly(SparcInstr.SET_OP, "tmp1", "%l0");
+        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "tmp1", "%l0");
             // ld [%l0], %f0
-        	writeAssembly(SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
+        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
             // call printFloat
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
             // nop
         	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
     }
-
-
 }
