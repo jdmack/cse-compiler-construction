@@ -233,6 +233,12 @@ class SparcInstr
     //      Functions
     //-----------------------------------------------------------------------------
     public static final String PRINTF = "printf";
+    public static final String PRINTFLOAT = "printFloat";
+    
+    //-----------------------------------------------------------------------------
+    //      Precisions
+    //-----------------------------------------------------------------------------
+    public static final String SINGLEP = ".single";
     
     //-----------------------------------------------------------------------------
     //      Templates
