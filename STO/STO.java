@@ -151,8 +151,17 @@ abstract class STO
         m_base = base;
         m_offset = offset;
     }
-
-
+    
+    public void setGlobal(boolean global) 
+    {
+    	if(global) {
+    		setBase("%g0");
+    	}
+    	else {
+    		setBase("%fp");
+    	}
+    }
+    
     //----------------------------------------------------------------
     //    It will be helpful to ask a STO what specific STO it is.
     //    The Java operator instanceof will do this, but these methods
