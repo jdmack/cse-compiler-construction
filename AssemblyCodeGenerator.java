@@ -204,6 +204,9 @@ public class AssemblyCodeGenerator {
         // _boolF: .asciz "false"
         writeAssembly(SparcInstr.RO_DEFINE, SparcInstr.BOOLF, SparcInstr.ASCIZ_DIR, quoted("false"));
 
+        // _strFmt: .asciz "%s"
+        writeAssembly(SparcInstr.RO_DEFINE, SparcInstr.STRFMT, SparcInstr.ASCIZ_DIR, quoted("%s"));
+        
         writeAssembly(SparcInstr.BLANK_LINE);
     }
 
@@ -371,8 +374,10 @@ public class AssemblyCodeGenerator {
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
             // .align 4
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
-            // set tmp1, %l0
+            // set str_(str_count), %l0
         	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "str_"+str_count, "%l0");
+        	// set _strFmt, %l0
+        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "_strFmt", "%l0");
             // ld [%l0], %f0
         	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
             // call printf
