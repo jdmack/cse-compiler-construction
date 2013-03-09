@@ -31,6 +31,10 @@ class SymbolTable
     {
         Scope scope = m_stkScopes.peek();
 
+        // if scope is global, setIsGlobal on sto
+        if(isGlobalScope())
+            sto.setIsGlobal();
+
         scope.InsertLocal(sto);
     }
 
