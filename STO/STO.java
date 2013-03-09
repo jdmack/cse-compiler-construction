@@ -156,7 +156,7 @@ abstract class STO
         m_offset = offset;
     }
 
-    public boolean getIsGolbal()
+    public boolean isGlobal()
     {
         return m_isGlobal;
     }
