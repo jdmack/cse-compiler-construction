@@ -1,14 +1,13 @@
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
+import java.util.*;
 
 public class AssemblyCodeGenerator {
 
-    // Compiler identifier
     private final String COMPILER_IDENT = "WRC 1.0";
-    // level of indentation for current code
     private int indent_level = 0;
+    private Stack<Integer> stackPointer;
     
     // Error Messages
     private static final String ERROR_IO_CLOSE     = "Unable to close fileWriter";
@@ -134,6 +133,22 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      Other Utility Functions
+    //-------------------------------------------------------------------------
+    public Integer getNextOffset(int size)
+    {
+        Integer temp = stackPointer.pop(); 
+        temp = temp + size;
+        stackPointer.push(temp);
+        return stackPointer.peek();
+    }
+
+    public int getOffset(int size)
+    {
+        return stackPointer.peek();
+    }
+
+    //-------------------------------------------------------------------------
     //
     //      Code Generation Functions
     //  
@@ -173,6 +188,8 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.BLANK_LINE);
 
         DoROPrintDefines();
+
+        stackPointer.push(new Integer(0));
 
     }
 
@@ -237,6 +254,8 @@ public class AssemblyCodeGenerator {
         // save %sp, %g1, %sp
         writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.SAVE_OP, SparcInstr.REG_STACK, SparcInstr.REG_GLOBAL1, SparcInstr.REG_STACK);
         writeAssembly(SparcInstr.BLANK_LINE);
+
+
     }
 
     //-------------------------------------------------------------------------
@@ -339,23 +358,23 @@ public class AssemblyCodeGenerator {
 
         else if(sto.getType().isFloat()) {
             // .section ".data"
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
             // .align 4
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
             // tmp1: .single 0r5.75 
-        	writeAssembly(SparcInstr.RO_DEFINE, "tmp1", SparcInstr.SINGLEP, "0r"+(String.valueOf(((ConstSTO) sto).getFloatValue())));
+            writeAssembly(SparcInstr.RO_DEFINE, "tmp1", SparcInstr.SINGLEP, "0r"+(String.valueOf(((ConstSTO) sto).getFloatValue())));
             // .section ".text"
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
             // .align 4
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
             // set tmp1, %l0
-        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "tmp1", "%l0");
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "tmp1", "%l0");
             // ld [%l0], %f0
-        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
             // call printFloat
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
             // nop
-        	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
     }
 
@@ -365,14 +384,16 @@ public class AssemblyCodeGenerator {
     public void DoVarDecl(STO sto)
     {
         // Global
-        /*
         if(sto.isGlobal()) {
 
         }
-        */
 
         // Local basic type (int, float, boolean)
+        String offset = getNextOffset(sto.getType().getSize()).toString();
+        sto.store(SparcInstr.REG_FRAME, offset);
 
+        
+        // For float, check DI6 Page on "What about float?"
 
         // Array (TODO: In Phase 2)
 
@@ -381,28 +402,96 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      functionName371
+    //      DoAssignExpr
     //-------------------------------------------------------------------------
-    public void functionName373()
+    public void DoAssignExpr(STO stoDes, STO stoValue)
     {
+        // TODO: My isConst check can go away after we allocate constants onto stack
+        // If storing a float
+        /*
+        // TODO: Float needs to be reconsidered for how you access floats
+        if(stoDes.getType().isFloat()) {
 
+            // Put value-to-assign into %f0
+            if(stoValue.isConst()) {
+                // Set the value of constant into %f0
+                // set <value>, %f0
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, stoValue.getValue(), SparcInstr.REG_FLOAT0);
+            }
+            else if(stoValue.isVar()) {
+                // Load value of var into %f0
+                // ld [<stoValue location>], %f0
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(stoValue.load()), SparcInstr.REG_FLOAT0);
+            }
+
+            // If value is not a float, convert it to a float
+            if(!stoValue.getType().isFloat()) {
+                // fitos %f0, %f0 ! Convert bit pattern to FP
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FITOS_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FLOAT0);
+            }
+
+            // Store value in %f0 into address of destination sto
+            // st %f0, [<stoDes location>]
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, sqBracketed(stoDes.load()));
+        }
+        */
+        //else {
+            // Put value-to-assign into %l0
+            if(stoValue.isConst()) {
+                // Set the value of constant into %l0
+                // set <value>, %l0
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) stoValue).getValue()), SparcInstr.REG_LOCAL0);
+            }
+            else if(stoValue.isVar()) {
+                // Load value of var into %l0
+                // ld [<stoValue location>], %l0
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(stoValue.load()), SparcInstr.REG_LOCAL0);
+            }
+
+            // Store value in %l0 into address of destination sto
+            // st %l0, [<stoDes location>]
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, sqBracketed(stoDes.load()));
+       // }
+    }
+
+    /*
+    //-------------------------------------------------------------------------
+    //      LoadIntoReg
+    //-------------------------------------------------------------------------
+    public void functionName389(String reg, String offset, String base)
+    {
+        // set <offset>, <reg>
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, offset, reg);
+
+        //add <base> , %l0 
+        writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, base, reg, reg);
     }
 
     //-------------------------------------------------------------------------
-    //      functionName379
+    //      LoadStoIntoReg
     //-------------------------------------------------------------------------
-    public void functionName381()
+    public void functionName389(String reg, STO sto)
     {
+        // PUT ADDRESS OF STO INTO <reg>
+        LoadIntoReg(reg, sto.getOffset(), sto.getBase());
 
+        // LOAD VALUE AT ADDRESS INTO <reg>
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(reg), reg);
     }
 
     //-------------------------------------------------------------------------
-    //      functionName387
+    //      StoreStoIntoSto
     //-------------------------------------------------------------------------
-    public void functionName389()
+    public void functionName389(String reg, STO stoDes, STO stoValue)
     {
+        // PUT ADDRESS OF STO INTO <reg>
+        LoadIntoReg(reg, sto.getOffset(), sto.getBase());
 
+        // LOAD VALUE AT ADDRESS INTO <reg>
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(reg), reg);
     }
+    */
+
 
     //-------------------------------------------------------------------------
     //      functionName395
