@@ -4,7 +4,6 @@
 
 import java.util.Vector;
 
-
 class Scope
 {
     //----------------------------------------------------------------
@@ -21,22 +20,20 @@ class Scope
         m_lstLocals = new Vector<STO>();
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     public STO access(String strName)
     {
-        return    accessLocal(strName);
+        return accessLocal(strName);
     }
-
 
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     public STO accessLocal(String strName)
     {
-        STO        sto = null;
+        STO sto = null;
 
         for(int i = 0; i < m_lstLocals.size(); i++) {
             sto = m_lstLocals.elementAt(i);
@@ -48,6 +45,13 @@ class Scope
         return(null);
     }
 
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
+    public void Insert(STO sto)
+    {
+        InsertLocal(sto);
+    }
 
     //----------------------------------------------------------------
     //
@@ -56,6 +60,5 @@ class Scope
     {
         m_lstLocals.addElement(sto);
     }
-
 
 }
