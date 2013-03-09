@@ -1296,4 +1296,8 @@ class MyParser extends parser
             m_codegen.DoCout(thisSto);
         }
     }
+    
+    STO DoLiteral(ConstSTO sto) {
+    	return null;
+    }
 }

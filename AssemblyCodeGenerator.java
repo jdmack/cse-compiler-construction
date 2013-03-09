@@ -296,7 +296,8 @@ public class AssemblyCodeGenerator {
     //      DoCout
     //-------------------------------------------------------------------------
     public void DoCout(STO sto) {
-
+        // !----cout << <sto name>----
+        writeCommentHeader("cout << " + sto.getName());
         if(sto.getType().isInt()) {
             // set _intFmt, %o0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
