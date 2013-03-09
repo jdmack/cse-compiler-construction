@@ -232,33 +232,40 @@ ExternDecl ::=      T_EXTERN Type:_2 IdList:_3 T_SEMI
                                 // static int (z = )
                                 // _2: Type - could be null
                                 // _3: Vector<IdValueTuple>
-VarDecl ::=         OptStatic UndecoratedType:_2 IdListWOptInit:_3 T_SEMI
+VarDecl ::=         OptStatic:_1 UndecoratedType:_2 IdListWOptInit:_3 T_SEMI
                     {:
-                        ((MyParser) parser).DoVarDecl (_2, _3);
+                        ((MyParser) parser).DoVarDecl (_1, _2, _3);
+                        // _1: static: boolean
                         // _2: UType
                         // _3: Vector<IdValueTuple>
                     :}
-    |               OptStatic T_AUTO T_ID:_1 T_ASSIGN Expr:_2 T_SEMI
+    |               OptStatic:_1 T_AUTO T_ID:_1 T_ASSIGN Expr:_2 T_SEMI
                     {:
-                        
+                        // TODO: implement auto
                     :}
 
     ;
 
                                         // _2: Type - could be null
-ConstDecl ::=       OptStatic T_CONST UndecoratedType:_2 IdListWInit:_3 T_SEMI
+ConstDecl ::=       OptStatic:_1 T_CONST UndecoratedType:_2 IdListWInit:_3 T_SEMI
                     {:
-                        ((MyParser) parser).DoConstDecl (_2, _3);
+                        ((MyParser) parser).DoConstDecl (_1, _2, _3);
                     :}
-    |               OptStatic T_CONST T_AUTO T_ID T_ASSIGN Expr T_SEMI
+    |               OptStatic:_1 T_CONST T_AUTO T_ID T_ASSIGN Expr:_2 T_SEMI
                     {:
-                        
+                        // TODO: Implement auto
                     :}
     ;
 
 
 OptStatic ::=       T_STATIC
+                    {:
+                        RESULT = true;
+                    :}
     |               /* empty */
+                    {:
+                        RESULT = false;
+                    :}
     ;
 
 
