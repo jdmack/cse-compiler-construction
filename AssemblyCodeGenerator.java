@@ -23,6 +23,8 @@ public class AssemblyCodeGenerator {
         "/*\n" +
         " * Generated %s\n" + 
         " */\n\n";
+    
+    private int str_count = 0;
         
     //-------------------------------------------------------------------------
     //      Constructors
@@ -356,6 +358,30 @@ public class AssemblyCodeGenerator {
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
             // nop
         	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        }
+        
+        else if (sto.getType().isString()) {
+        	// .section ".data"
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+            // .align 4
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+        	// str_(str_count): .asciz "string literal" 
+        	writeAssembly(SparcInstr.RO_DEFINE, "str_"+str_count, SparcInstr.ASCIZ_DIR, sto.getName());
+        	// .section ".text"
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+            // .align 4
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+            // set tmp1, %l0
+        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "str_"+str_count, "%l0");
+            // ld [%l0], %f0
+        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
+            // call printf
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
+            // nop
+        	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        	
+        	// increment str count
+        	str_count++;
         }
     }
 

@@ -1059,7 +1059,7 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
                     :}
     |               T_STR_LITERAL:_1
                     {:
-                        RESULT = new ConstSTO (_1);
+                        RESULT = new ConstSTO (_1, new StringType(_1,4));
                     :}
     |               T_TRUE
                     {:
