@@ -369,15 +369,15 @@ public class AssemblyCodeGenerator {
             // .align 4
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
         	// str_(str_count): .asciz "string literal" 
-        	writeAssembly(SparcInstr.RO_DEFINE, "str_"+str_count, SparcInstr.ASCIZ_DIR, sto.getName());
+        	writeAssembly(SparcInstr.RO_DEFINE, "str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(sto.getName()));
         	// .section ".text"
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
             // .align 4
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
             // set str_(str_count), %l0
         	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "str_"+str_count, "%l0");
-        	// set _strFmt, %l0
-        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "_strFmt", "%l0");
+        	// set _strFmt, %l0 TODO: may not be needed for this case
+        	// writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "_strFmt", "%l0");
             // ld [%l0], %f0
         	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
             // call printf
