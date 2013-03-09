@@ -4,7 +4,6 @@
 //---------------------------------------------------------------------
 import java.util.*;
 
-
 class SymbolTable
 {
     //----------------------------------------------------------------
@@ -25,17 +24,15 @@ class SymbolTable
         m_scopeGlobal = null;
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     public void insert(STO sto)
     {
-        Scope        scope = m_stkScopes.peek();
+        Scope scope = m_stkScopes.peek();
 
         scope.InsertLocal(sto);
     }
-
 
     //----------------------------------------------------------------
     //
@@ -45,27 +42,24 @@ class SymbolTable
         return(m_scopeGlobal.access(strName));
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     public STO accessLocal(String strName)
     {
-        Scope        scope = m_stkScopes.peek();
+        Scope scope = m_stkScopes.peek();
 
         return(scope.accessLocal(strName));
     }
-
 
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
     public STO access(String strName)
     {
-        Stack        stk = new Stack();
-        Scope        scope;
-        STO        stoReturn = null;
-
+        Stack stk = new Stack();
+        Scope scope;
+        STO stoReturn = null;
 
         stk.addAll(m_stkScopes);
         Collections.reverse(stk);
@@ -79,7 +73,6 @@ class SymbolTable
         return(null);
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -92,9 +85,9 @@ class SymbolTable
             m_scopeGlobal = scope;
 
         m_stkScopes.push(scope);
-        m_nLevel++;
+        // m_nLevel = 1 is Global Scope
+        m_nLevel++;         
     }
-
 
     //----------------------------------------------------------------
     //
@@ -105,7 +98,6 @@ class SymbolTable
         m_nLevel--;
     }
 
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -114,6 +106,13 @@ class SymbolTable
         return m_nLevel;
     }
 
+    public boolean isGlobalScope()
+    {
+        if(m_nLevel == 1)
+            return true;
+        else
+            return false;
+    }
 
     //----------------------------------------------------------------
     //    This is the function currently being parsed.
