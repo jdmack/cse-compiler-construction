@@ -12,6 +12,7 @@ class SymbolTable
     private Stack<Scope> m_stkScopes;
     private int          m_nLevel;
     private Scope        m_scopeGlobal;
+    private Scope        m_scopeStatic;
     private FuncSTO      m_func = null;
 
     //----------------------------------------------------------------
@@ -35,7 +36,14 @@ class SymbolTable
         if(isGlobalScope())
             sto.setIsGlobal(true);
 
+        // If it's a static
+        /*
+        if(sto.isStatic())
+            m_scopeStatic.Insert(sto);
+
+        */
         scope.InsertLocal(sto);
+
     }
 
     //----------------------------------------------------------------
