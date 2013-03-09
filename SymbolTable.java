@@ -33,7 +33,7 @@ class SymbolTable
 
         // if scope is global, setIsGlobal on sto
         if(isGlobalScope())
-            sto.setIsGlobal();
+            sto.setIsGlobal(true);
 
         scope.InsertLocal(sto);
     }

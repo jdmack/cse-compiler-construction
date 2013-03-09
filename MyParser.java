@@ -43,7 +43,6 @@ class MyParser extends parser
         m_errors      = errors;
         m_nNumErrors  = 0;
         m_whileLevel  = 0;
-        m_scopeLevels = 0;
 
         m_codegen = new AssemblyCodeGenerator(OUTPUT_FILENAME);
     }
@@ -237,6 +236,8 @@ class MyParser extends parser
 
             stoVar = new VarSTO(id, finalType);
             m_symtab.insert(stoVar);
+
+            m_codegen.DoVarDecl(stoVar);
 
             if(!value.isNull()) {
                 DoAssignExpr(stoVar, value);
