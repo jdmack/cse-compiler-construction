@@ -364,7 +364,20 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoVarDecl(STO sto)
     {
+        // Global
+        /*
+        if(sto.isGlobal()) {
 
+        }
+        */
+
+        // Local basic type (int, float, boolean)
+
+
+        // Array (TODO: In Phase 2)
+
+
+        // Pointer (TODO: In Phase 3)
     }
 
     //-------------------------------------------------------------------------

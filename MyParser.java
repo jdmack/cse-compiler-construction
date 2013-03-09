@@ -172,7 +172,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
-    void DoVarDecl(Type type, Vector<IdValueTuple> lstIDs)
+    void DoVarDecl(boolean isStatic, Type type, Vector<IdValueTuple> lstIDs)
     {
         for(int i = 0; i < lstIDs.size(); i++) {
             String id = lstIDs.elementAt(i).getId();
@@ -297,7 +297,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
-    void DoConstDecl(Type type, Vector<IdValueTuple> lstIDs)
+    void DoConstDecl(boolean isStatic, Type type, Vector<IdValueTuple> lstIDs)
     {
         // Check for previous errors
         for(int i = 0; i < lstIDs.size(); i++) {
