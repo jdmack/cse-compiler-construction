@@ -11,6 +11,7 @@ abstract class STO
     private boolean m_isAddressable;
     private boolean m_isModifiable;
     private boolean m_isGlobal;
+    private boolean m_isStatic;
     private String  m_base;
     private String  m_offset;
 
@@ -29,6 +30,7 @@ abstract class STO
         setIsAddressable(false);
         setIsModifiable(false);
         setIsGlobal(false);
+        setIsStatic(false);
     }
     
     public STO(String strName, Type typ, boolean addressable, boolean modifiable)
@@ -38,6 +40,7 @@ abstract class STO
         setIsAddressable(addressable);
         setIsModifiable(modifiable);
         setIsGlobal(false);
+        setIsStatic(false);
     }
 
     public STO(String strName, Type typ, boolean isModLvalue)
@@ -46,6 +49,7 @@ abstract class STO
         setType(typ);
         setIsModLValue(isModLvalue);
         setIsGlobal(false);
+        setIsStatic(false);
     }
 
     //---------------------------------------------------------------------
@@ -164,6 +168,16 @@ abstract class STO
     public void setIsGlobal(boolean global)
     {
         m_isGlobal = global;
+    }
+    
+    public boolean isStatic()
+    {
+        return m_isStatic;
+    }
+
+    public void setIsStatic(boolean isStatic)
+    {
+        m_isStatic = isStatic;
     }
     
     public void setGlobal(boolean global) 
