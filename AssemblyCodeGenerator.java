@@ -362,7 +362,7 @@ public class AssemblyCodeGenerator {
             // nop
         	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
-        
+        // String literal
         else if (sto.getType().isString()) {
         	// .section ".data"
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
@@ -374,12 +374,10 @@ public class AssemblyCodeGenerator {
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
             // .align 4
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
-            // set str_(str_count), %l0
-        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "str_"+str_count, "%l0");
-        	// set _strFmt, %l0 TODO: may not be needed for this case
-        	// writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "_strFmt", "%l0");
-            // ld [%l0], %f0
-        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
+        	// set _strFmt, %o0
+        	 writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "_strFmt", "%l0");
+        	// set str_(str_count), %o1
+        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "str_"+str_count, "%l1");
             // call printf
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
             // nop
@@ -387,6 +385,17 @@ public class AssemblyCodeGenerator {
         	
         	// increment str count
         	str_count++;
+        }
+        // endl
+        else if (sto.getType().isVoid()) {
+        	// set _strFmt %o0
+        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.STRFMT, "%o0");
+        	// set _endl, %o1
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.ENDL, "%o1");
+            // call printf
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
+            // nop
+        	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
     }
 
