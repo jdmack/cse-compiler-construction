@@ -38,11 +38,12 @@ class MyParser extends parser
     //----------------------------------------------------------------
     public MyParser(Lexer lexer, ErrorPrinter errors)
     {
-        m_lexer = lexer;
-        m_symtab = new SymbolTable();
-        m_errors = errors;
-        m_nNumErrors = 0;
-        m_whileLevel = 0;
+        m_lexer       = lexer;
+        m_symtab      = new SymbolTable();
+        m_errors      = errors;
+        m_nNumErrors  = 0;
+        m_whileLevel  = 0;
+        m_scopeLevels = 0;
 
         m_codegen = new AssemblyCodeGenerator(OUTPUT_FILENAME);
     }
