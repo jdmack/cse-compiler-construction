@@ -22,6 +22,8 @@ public class AssemblyCodeGenerator {
         "/*\n" +
         " * Generated %s\n" + 
         " */\n\n";
+    
+    private int str_count = 0;
         
     //-------------------------------------------------------------------------
     //      Constructors
@@ -219,6 +221,9 @@ public class AssemblyCodeGenerator {
         // _boolF: .asciz "false"
         writeAssembly(SparcInstr.RO_DEFINE, SparcInstr.BOOLF, SparcInstr.ASCIZ_DIR, quoted("false"));
 
+        // _strFmt: .asciz "%s"
+        writeAssembly(SparcInstr.RO_DEFINE, SparcInstr.STRFMT, SparcInstr.ASCIZ_DIR, quoted("%s"));
+        
         writeAssembly(SparcInstr.BLANK_LINE);
     }
 
@@ -310,7 +315,8 @@ public class AssemblyCodeGenerator {
     //      DoCout
     //-------------------------------------------------------------------------
     public void DoCout(STO sto) {
-
+        // !----cout << <sto name>----
+        writeCommentHeader("cout << " + sto.getName());
         if(sto.getType().isInt()) {
             // set _intFmt, %o0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
@@ -375,6 +381,41 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
             // nop
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        }
+        // String literal
+        else if (sto.getType().isString()) {
+        	// .section ".data"
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+            // .align 4
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+        	// str_(str_count): .asciz "string literal" 
+        	writeAssembly(SparcInstr.RO_DEFINE, "str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(sto.getName()));
+        	// .section ".text"
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+            // .align 4
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+        	// set _strFmt, %o0
+        	 writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "_strFmt", "%l0");
+        	// set str_(str_count), %o1
+        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "str_"+str_count, "%l1");
+            // call printf
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
+            // nop
+        	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        	
+        	// increment str count
+        	str_count++;
+        }
+        // endl
+        else if (sto.getType().isVoid()) {
+        	// set _strFmt %o0
+        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.STRFMT, "%o0");
+        	// set _endl, %o1
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.ENDL, "%o1");
+            // call printf
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
+            // nop
+        	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
     }
 

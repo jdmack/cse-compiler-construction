@@ -118,5 +118,8 @@ abstract class Type
     {
         return false;
     }
-
+    public boolean isString()
+    {
+    	return false;
+    }
 }

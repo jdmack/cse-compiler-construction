@@ -1,4 +1,6 @@
 function : int main() {
     cout << 5.5;
+    cout << "test";
+    cout << "test2" << endl;
     return 0;
 }

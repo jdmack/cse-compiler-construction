@@ -172,6 +172,22 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
+    void DoAutoDecl(boolean isStatic, boolean isConst, String id, STO expr)
+    {
+    	STO resultSTO;
+    	if(isConst) {
+    		resultSTO = new ConstSTO(id, expr.getType(), ((ConstSTO)expr).getValue());
+    	}
+    	else {
+    		resultSTO = new VarSTO(id, expr.getType());
+    	}
+    	resultSTO.setIsStatic(isStatic);
+        m_symtab.insert(resultSTO);
+    }
+    
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
     void DoVarDecl(boolean isStatic, Type type, Vector<IdValueTuple> lstIDs)
     {
         for(int i = 0; i < lstIDs.size(); i++) {
@@ -1279,5 +1295,9 @@ class MyParser extends parser
         for(STO thisSto: exprSTOs) {
             m_codegen.DoCout(thisSto);
         }
+    }
+    
+    STO DoLiteral(ConstSTO sto) {
+    	return null;
     }
 }

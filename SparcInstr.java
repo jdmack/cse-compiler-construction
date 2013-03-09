@@ -105,9 +105,10 @@ class SparcInstr
     //-----------------------------------------------------------------------------
     public static final String ENDL    = "_endl";
     public static final String INTFMT  = "_intFmt";
-    public static final String BOOLFMT = "_intFmt";
+    public static final String BOOLFMT = "_boolFmt";
     public static final String BOOLT   = "_boolT";
     public static final String BOOLF   = "_boolF";
+    public static final String STRFMT  = "_strFmt";
 
     //-----------------------------------------------------------------------------
     //      Comment

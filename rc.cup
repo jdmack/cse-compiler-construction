@@ -239,9 +239,9 @@ VarDecl ::=         OptStatic:_1 UndecoratedType:_2 IdListWOptInit:_3 T_SEMI
                         // _2: UType
                         // _3: Vector<IdValueTuple>
                     :}
-    |               OptStatic:_3 T_AUTO T_ID:_1 T_ASSIGN Expr:_2 T_SEMI
+    |               OptStatic:_1 T_AUTO T_ID:_2 T_ASSIGN Expr:_3 T_SEMI
                     {:
-                        // TODO: implement auto
+                        ((MyParser) parser).DoAutoDecl((boolean) _1, false, _2, _3);
                     :}
 
     ;
@@ -251,9 +251,9 @@ ConstDecl ::=       OptStatic:_1 T_CONST UndecoratedType:_2 IdListWInit:_3 T_SEM
                     {:
                         ((MyParser) parser).DoConstDecl ((boolean) _1, _2, _3);
                     :}
-    |               OptStatic:_1 T_CONST T_AUTO T_ID T_ASSIGN Expr:_2 T_SEMI
+    |               OptStatic:_1 T_CONST T_AUTO T_ID:_2 T_ASSIGN Expr:_3 T_SEMI
                     {:
-                        // TODO: Implement auto
+                        ((MyParser) parser).DoAutoDecl((boolean) _1, true, _2, _3);
                     :}
     ;
 
@@ -1059,7 +1059,7 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
                     :}
     |               T_STR_LITERAL:_1
                     {:
-                        RESULT = new ConstSTO (_1);
+                        RESULT = new ConstSTO (_1, new StringType(_1,4));
                     :}
     |               T_TRUE
                     {:
