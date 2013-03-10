@@ -248,20 +248,28 @@ public class AssemblyCodeGenerator {
 
         // Do Init Guard
 
+        writeComment("Check if init is already done");
         // set _init, %l0
         writeAssembly(SparcInstr.TWO_PARAM, "_init", SparcInstr.REG_LOCAL0);
 
         // ld [%l0], %l1
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0));
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_LOCAL1);
 
         // cmp %l1, %g0
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.COMP_OP, SparcInstr.REG_LOCAL1, SparcInstr.REG_GLOBAL0);
+
         // bne _init_done ! Global initialization guard
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BNE_OP, "_init_done");
+
         // mov 1, %l1 ! Branch delay slot
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, String.valueOf(1), SparcInstr.REG_LOCAL1);
+
+        writeComment("Set init flag to 1 now that we're about to do the init");
         // st %l1, [%l0] ! Mark _init = 1
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0));
+        writeAssembly(SparcInstr.BLANK_LINE);
 
-
-
-
+        // Setup Stack iteration
         Stack stk = new Stack();
         StoPair stopair;
         STO varSto;
@@ -270,29 +278,30 @@ public class AssemblyCodeGenerator {
         stk.addAll(globalInitStack);
         Collections.reverse(stk);
 
+        // Loop through all the initialization pairs on the stack
         for(Enumeration<StoPair> e = stk.elements(); e.hasMoreElements(); ) {
             stopair = e.nextElement();
             varSto = stopair.getVarSto();
             valueSto = stopair.getValueSto();
 
-             
-        // ! x = 4
-        // set 4, %l1
-        // set x, %l0
-        // add %g0, %l0, %l0
-        // st %l1, [%l0]
+            writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
 
+            // ld [<value>], %l1
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(valueSto.load()), SparcInstr.REG_LOCAL1);
 
+            // set x, %l0
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(varSto.load()), SparcInstr.REG_LOCAL0);
 
+            // add %g0, %l0, %l0
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL0);
 
+            // st %l1, [%l0]
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0));
+            writeAssembly(SparcInstr.BLANK_LINE);
         }
 
-
-
-
-
-
         // _init_done:
+        writeAssembly(SparcInstr.LABEL, "_init_done");
 
     }
 
@@ -507,6 +516,9 @@ public class AssemblyCodeGenerator {
         // Push these for later to initialize when main() starts
         if(!valueSto.isNull())
             globalInitStack.push(new StoPair(varSto, valueSto));    
+
+        // set the base and offset to the sto
+        varSto.store(SparcInstr.REG_GLOBAL1, varSto.getName());
     }
 
     //-------------------------------------------------------------------------
