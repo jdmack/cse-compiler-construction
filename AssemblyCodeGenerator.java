@@ -637,7 +637,7 @@ public class AssemblyCodeGenerator {
     {
         String offset = getNextOffset(sto.getType().getSize());
 
-        if(sto.getType().isInt() && sto.getType().isBool()) {
+        if(sto.getType().isInt() || sto.getType().isBool()) {
             // put the literal in memory            
             // set <value>, %l0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getIntValue()), SparcInstr.REG_LOCAL0);
