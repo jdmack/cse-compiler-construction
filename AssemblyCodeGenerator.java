@@ -529,6 +529,9 @@ public class AssemblyCodeGenerator {
         // Local basic type (int, float, boolean)
         String offset = getNextOffset(sto.getType().getSize());
         sto.store(SparcInstr.REG_FRAME, offset);
+
+        // Initialize to 0, mostly for testing purposed
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(0), sto.load());
         
         // For float, check DI6 Page on "What about float?"
 
