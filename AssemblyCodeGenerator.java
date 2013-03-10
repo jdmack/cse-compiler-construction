@@ -490,6 +490,7 @@ public class AssemblyCodeGenerator {
     	    ifLabel_count++;
 
             // If the condition is true, don't branch and load "true", if false, branch to end of if and load "false"
+            // value == 0
             writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0, "Compare boolean value " + sto.getName() + " to 0");
             writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, ifLabel, "If <cond> is true, don't branch, if false, branch");
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
@@ -501,13 +502,17 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
 
             // Print label
+            decreaseIndent();
             writeAssembly(SparcInstr.LABEL, ifLabel);
+            increaseIndent();
             
             // Else code: load "false" into %o1 here
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.BOOLF, SparcInstr.REG_ARG1);
             
             // Else done, print label
+            decreaseIndent();
             writeAssembly(SparcInstr.LABEL, elseLabel);
+            increaseIndent();
             
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
