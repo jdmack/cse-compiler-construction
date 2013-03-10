@@ -312,13 +312,13 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_LOCAL1);
 
         // cmp %l1, %g0
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.COMP_OP, SparcInstr.REG_LOCAL1, SparcInstr.REG_GLOBAL0);
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL1, SparcInstr.REG_GLOBAL0);
 
         // bne _init_done ! Global initialization guard
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BNE_OP, "_init_done");
 
-        // mov 1, %l1 ! Branch delay slot
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, String.valueOf(1), SparcInstr.REG_LOCAL1);
+        // set 1, %l1 ! Branch delay slot
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL1);
 
         writeComment("Set init flag to 1 now that we're about to do the init");
         // st %l1, [%l0] ! Mark _init = 1
@@ -479,57 +479,42 @@ public class AssemblyCodeGenerator {
         else if(sto.getType().isBool()) {
             // set _intFmt, %o0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
-/*
 
+            // Set the condition STO into LOCAL0
             LoadSto(sto, SparcInstr.REG_LOCAL0);
-            String ifL = ".ifL_et b1, %l0
-            ld [%l0], %l0
-            cmp %l0, %g0
-            be IfL1! Opposite logic
-            nop
-            // statements here
-            IfL1:4
+            String ifLabel = ".ifL_" + ifLabel_count;
+            String elseLabel = ".elseL_" + ifLabel_count;
+
+            // If the condition is true, don't branch and load "true", if false, branch to end of if and load "false"
             writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0, "Compare boolean value " + sto.getName() + " to 0");
-            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, , "Compare boolean value " + sto.getName() + " to 0");
+            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, ifLabel, "If <cond> is true, don't branch, if false, branch");
+            writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
 
-            be IfL1! Opposite logic
-            nop
-            // statements here
-            IfL1:
+            // If Code: Load "true" into %o1 here
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.BOOLT, SparcInstr.REG_ARG1);
+            // Branch to end of else block
+            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, ifLabel, "Did if code, branch always to bottom of else");
 
-            if(sto.isConst()) {
-                String val;
-
-                if(((ConstSTO) sto).getValue() == 1)
-                    val = SparcInstr.BOOLT;
-                else
-                    val = SparcInstr.BOOLF;
-
-                // set <value>, %o1
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, val, SparcInstr.REG_ARG1);
-            }
-            else {
-                // TODO: THink we need to actually write a if/else in assembly for it to decide whether to print "true" or "false"
-                // if so, can wait and use DoIf() and DoElse() once we've written it
-
-            }
-
+            // Print label
+            writeAssembly(SparcInstr.LABEL, ifLabel);
+            
+            // Else code: load "false" into %o1 here
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.BOOLF, SparcInstr.REG_ARG1);
+            
+            // Else done, print label
+            writeAssembly(SparcInstr.LABEL, elseLabel);
+            
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-            */
         }
 
         else if(sto.getType().isFloat()) {
             // ld [sto] %f0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(sto.getBase()+sto.getOffset()), "%f0");
-            // set tmp1, %l0
-            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "tmp1", "%l0");
-            // ld [%l0], %f0
-            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket("%l0"), "%f0");
+            LoadSto(sto, SparcInstr.REG_FLOAT0);
+
             // call printFloat
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
-            // nop
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
 
@@ -946,7 +931,7 @@ public class AssemblyCodeGenerator {
     	// ld [%l0], %l0
     	//writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%l0");
     	// cmp %l0, %g0
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.COMP_OP, "%l0", "%g0");
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, "%l0", "%g0");
     	// be IfL1! Opposite logic
     	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, ifL);
     	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
