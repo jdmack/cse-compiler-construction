@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [[ -n $1 ]]; then
+    tests=$(find Testframework/project2/$1 -name "*${2}*.rc" | sort -n)
+else
+    tests=$(find Testframework/project2/* -mindepth 1 -name "*${2}*.rc" | sort -n)
+fi
+for f in $tests; do
+    echo "\n================================================================================\n"
+    echo "Compiling $f..."
+    ./RC $f
+    echo "Compiling assembly..."
+    make compile
+    echo "Running a.out..."
+    echo "\nOutput:"
+    echo "----------------------------------------"
+    ./a.out
+    echo "----------------------------------------"
+done

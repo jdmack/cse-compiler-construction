@@ -253,10 +253,14 @@ class MyParser extends parser
             stoVar = new VarSTO(id, finalType);
             m_symtab.insert(stoVar);
 
-            m_codegen.DoVarDecl(stoVar);
+            if(stoVar.isGlobal())
+                m_codegen.DoGlobalDecl(stoVar, value);
+            else {
+                m_codegen.DoVarDecl(stoVar);
 
-            if(!value.isNull()) {
-                DoAssignExpr(stoVar, value);
+                if(!value.isNull()) {
+                    DoAssignExpr(stoVar, value);
+                }
             }
         }
     }
@@ -486,6 +490,9 @@ class MyParser extends parser
         sto.setLevel(m_symtab.getLevel());
 
         m_codegen.DoFuncStart(sto);
+
+        if(id.equals("main"))
+            m_codegen.DoGlobalInit();
 
         return sto;
     }
