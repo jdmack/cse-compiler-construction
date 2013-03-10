@@ -1308,7 +1308,7 @@ class MyParser extends parser
     }
     
     //----------------------------------------------------------------
-    //      DoLiteral
+    //      DoIfCodeBlock
     //----------------------------------------------------------------
     void DoIfCodeBlock() {
     	m_codegen.DoIfCodeBlock();
