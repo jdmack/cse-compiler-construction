@@ -881,34 +881,46 @@ public class AssemblyCodeGenerator {
     {
     	String operation = "";
     	
-    	if(op.getName().equals("+")){
-    		operation = SparcInstr.ADD_OP;
+    	if(op.getName().equals("*") || op.getName().equals("/") || op.getName().equals("%")){
+        	LoadSto(operand1, SparcInstr.REG_OUTPUT0);
+        	LoadSto(operand2, SparcInstr.REG_OUTPUT1);
+        	
+        	if(op.getName().equals("*")){
+        		// call .mul
+        		writeAssembly(SparcInstr.NO_PARAM, SparcInstr.CALL_OP, SparcInstr.MUL_OP);
+        	}
+        	else if(op.getName().equals("/")){
+        		// call .div
+        		writeAssembly(SparcInstr.NO_PARAM, SparcInstr.CALL_OP, SparcInstr.DIV_OP);
+        	}
+        	else if(op.getName().equals("%")){
+        		// call .rem
+        		writeAssembly(SparcInstr.NO_PARAM, SparcInstr.CALL_OP, SparcInstr.REM_OP);
+        	}
+    		writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+    		// mov %o0, %l0
+    		writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, SparcInstr.REG_OUTPUT0, SparcInstr.REG_LOCAL0);
     	}
-    	else if(op.getName().equals("-")){
-    		operation = SparcInstr.SUB_OP;
+    	else {
+        	if(op.getName().equals("+")){
+        		operation = SparcInstr.ADD_OP;
+        	}
+        	else if(op.getName().equals("-")){
+        		operation = SparcInstr.SUB_OP;
+        	}
+        	else if(op.getName().equals("&")){
+        		operation = SparcInstr.AND_OP;
+        	}
+        	else if(op.getName().equals("|")){
+        		operation = SparcInstr.OR_OP;
+        	}
+        	else if(op.getName().equals("^")){
+        		operation = SparcInstr.XOR_OP;
+        	}
+        	LoadSto(operand1, SparcInstr.REG_LOCAL0);
+        	LoadSto(operand2, SparcInstr.REG_LOCAL1);
+        	writeAssembly(SparcInstr.THREE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0, "Adding Values!");
     	}
-    	else if(op.getName().equals("*")){
-    		operation = SparcInstr.MUL_OP;
-    	}
-    	else if(op.getName().equals("/")){
-    		operation = SparcInstr.DIV_OP;
-    	}
-    	else if(op.getName().equals("%")){
-    		operation = SparcInstr.REM_OP;
-    	}
-    	else if(op.getName().equals("&")){
-    		operation = SparcInstr.AND_OP;
-    	}
-    	else if(op.getName().equals("|")){
-    		operation = SparcInstr.OR_OP;
-    	}
-    	else if(op.getName().equals("^")){
-    		operation = SparcInstr.XOR_OP;
-    	}
-    	
-    	LoadSto(operand1, SparcInstr.REG_LOCAL0);
-    	LoadSto(operand2, SparcInstr.REG_LOCAL1);
-    	writeAssembly(SparcInstr.THREE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0, "Adding Values!");
     	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
     	StoreValueIntoSto(SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, resultSTO);
     }
