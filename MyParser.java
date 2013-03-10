@@ -599,6 +599,8 @@ class MyParser extends parser
             return (new ErrorSTO("DoAssignExpr Error - bad types"));
         }
 
+        m_codegen.DoAssignExpr(stoDes, stoValue);
+
         return stoDes;
     }
 
