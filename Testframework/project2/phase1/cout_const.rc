@@ -1,4 +1,9 @@
 function : int main() {
-    cout << 1 + 2 << endl;
+    cout << "should print 5: "<< 5 << endl;
+    cout << "should print 2: "<< 1 + 2 << endl;
+    cout << "should print 6.7: "<< 5.5 + 1.2 << endl;
+    cout << "should print 4.3: "<< 5.5 - 1.2 << endl;
+    cout << "should print 15: " << 5 * 3 << endl;
+    cout << "should print 1: " << 5 / 3 << endl;
     return 0;
 }
