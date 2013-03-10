@@ -7,7 +7,7 @@ public class AssemblyCodeGenerator {
 
     private final String COMPILER_IDENT = "WRC 1.0";
     private int indent_level = 0;
-    private Stack<STO> currentFunc;
+    private Stack<FuncSTO> currentFunc;
     private Stack<Integer> stackPointer;
     private Stack<StoPair> globalInitStack;
     private Stack<String> stackIfLabel;
@@ -48,7 +48,7 @@ public class AssemblyCodeGenerator {
             System.exit(1);
         }
 
-        currentFunc = new Stack<STO>();
+        currentFunc = new Stack<FuncSTO>();
         stackPointer = new Stack<Integer>();
         globalInitStack = new Stack<StoPair>();
         stackIfLabel = new Stack<String>();
@@ -270,7 +270,7 @@ public class AssemblyCodeGenerator {
 
         // set the base and offset to the sto
         varSto.store(SparcInstr.REG_GLOBAL1, varSto.getName());
-        stackValues.addElement(new StackRecord("global"), varSto.getName(), varSto.load()));
+        stackValues.addElement(new StackRecord("global", varSto.getName(), varSto.load()));
     }
 
     //-------------------------------------------------------------------------
