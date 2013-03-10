@@ -521,7 +521,8 @@ public class AssemblyCodeGenerator {
 
         else if(sto.getType().isFloat()) {
             // ld [sto] %f0
-            LoadSto(sto, SparcInstr.REG_FLOAT0);
+            //LoadSto(sto, SparcInstr.REG_FLOAT0);
+            LoadStoAddr(sto, SparcInstr.REG_LOCAL0);
 
             // call printFloat
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
@@ -644,15 +645,15 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      LoadSto
+    //      LoadSto - Uses %l7 as a temp
     //-------------------------------------------------------------------------
     public void LoadSto(STO sto, String reg)
     {
         writeComment("Load " + sto.getName() + " into " + reg);
-        // PUT ADDRESS OF STO INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), reg, "Put the offset/name of " + sto.getName() + " into " + reg);
+        // PUT ADDRESS OF STO INTO tmpReg
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), SparcInstr.REG_LOCAL7, "Put the offset/name of " + sto.getName() + " into " + SparcInstr.REG_LOCAL7);
 
-        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), reg, reg, "Add offset/name to base reg " + reg);
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), SparcInstr.REG_LOCAL7, SparcInstr.REG_LOCAL7, "Add offset/name to base reg " + SparcInstr.REG_LOCAL7);
 
         // LOAD VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "Load value of " + sto.getName() + " into " + reg);
