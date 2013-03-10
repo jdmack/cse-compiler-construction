@@ -250,7 +250,7 @@ public class AssemblyCodeGenerator {
 
         writeComment("Check if init is already done");
         // set _init, %l0
-        writeAssembly(SparcInstr.TWO_PARAM, "_init", SparcInstr.REG_LOCAL0);
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "_init", SparcInstr.REG_LOCAL0);
 
         // ld [%l0], %l1
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_LOCAL1);
