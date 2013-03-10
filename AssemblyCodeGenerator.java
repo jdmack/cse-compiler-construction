@@ -702,9 +702,11 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      functionName523
     //-------------------------------------------------------------------------
-    public void functionName525()
+    public void DoBinaryOp(BinaryOp op, STO operand1, STO operand2)
     {
-
+    	if(op.getName().equals("+")) {
+    		
+    	}
     }
 
     //-------------------------------------------------------------------------
@@ -733,6 +735,9 @@ public class AssemblyCodeGenerator {
     	increaseIndent();
     }
     
+    //-------------------------------------------------------------------------
+    //      DoIfCodeBlock
+    //-------------------------------------------------------------------------
     public void DoIfCodeBlock()
     {
     	decreaseIndent();
