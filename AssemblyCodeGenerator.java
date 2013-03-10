@@ -199,6 +199,7 @@ public class AssemblyCodeGenerator {
         MakeGlobalInitGuard();
 
         stackPointer.push(new Integer(0));
+        currentFunc.push(new FuncSTO("global", new FuncPtrType(new NullType, false)));
 
     }
 
