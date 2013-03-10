@@ -7,7 +7,7 @@ public class AssemblyCodeGenerator {
 
     private final String COMPILER_IDENT = "WRC 1.0";
     private int indent_level = 0;
-    private Stack<String> currentFunc;
+    private Stack<STO> currentFunc;
     private Stack<Integer> stackPointer;
     private Stack<StoPair> globalInitStack;
     private Stack<String> stackIfLabel;
@@ -48,7 +48,7 @@ public class AssemblyCodeGenerator {
             System.exit(1);
         }
 
-        currentFunc = new Stack<String>();
+        currentFunc = new Stack<STO>();
         stackPointer = new Stack<Integer>();
         globalInitStack = new Stack<StoPair>();
         stackIfLabel = new Stack<String>();
@@ -136,6 +136,7 @@ public class AssemblyCodeGenerator {
         Integer temp = stackPointer.pop(); 
         temp = temp - size;
         stackPointer.push(temp);
+        currentFunc.peek().addBytes(size);
         return stackPointer.peek().toString();
     }
 
@@ -198,7 +199,6 @@ public class AssemblyCodeGenerator {
         MakeGlobalInitGuard();
 
         stackPointer.push(new Integer(0));
-        currentFunc.push("global");
 
     }
 
@@ -270,7 +270,7 @@ public class AssemblyCodeGenerator {
 
         // set the base and offset to the sto
         varSto.store(SparcInstr.REG_GLOBAL1, varSto.getName());
-        stackValues.addElement(new StackRecord(currentFunc.peek(), varSto.getName(), varSto.load()));
+        stackValues.addElement(new StackRecord("global"), varSto.getName(), varSto.load()));
     }
 
     //-------------------------------------------------------------------------
@@ -365,7 +365,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoFuncStart(FuncSTO funcSto)
     {
-        currentFunc.push(funcSto.getName());
+        currentFunc.push(funcSto);
         stackPointer.push(0);
 
         // !----Function: <funcName>----
@@ -561,7 +561,7 @@ public class AssemblyCodeGenerator {
         // Local basic type (int, float, boolean)
         String offset = getNextOffset(sto.getType().getSize());
         sto.store(SparcInstr.REG_FRAME, offset);
-        stackValues.addElement(new StackRecord(currentFunc.peek(), sto.getName(), sto.load()));
+        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
 
         // Initialize to 0, mostly for testing purposed
         writeAssembly(SparcInstr.BLANK_LINE);
@@ -710,7 +710,7 @@ public class AssemblyCodeGenerator {
 
         // store the address on sto
         sto.store(SparcInstr.REG_FRAME, offset);
-        stackValues.addElement(new StackRecord(currentFunc.peek(), sto.getName(), sto.load()));
+        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
     }
 
     //-------------------------------------------------------------------------
