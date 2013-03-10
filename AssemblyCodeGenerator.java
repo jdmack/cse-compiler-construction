@@ -8,6 +8,7 @@ public class AssemblyCodeGenerator {
     private final String COMPILER_IDENT = "WRC 1.0";
     private int indent_level = 0;
     private Stack<Integer> stackPointer;
+    private Stack<StoPair> globalInitStack;
     
     // Error Messages
     private static final String ERROR_IO_CLOSE     = "Unable to close fileWriter";
@@ -44,6 +45,7 @@ public class AssemblyCodeGenerator {
         }
 
         stackPointer = new Stack<Integer>();
+        globalInitStack = new Stack<StoPair>();
     }
 
     //-------------------------------------------------------------------------
@@ -107,24 +109,6 @@ public class AssemblyCodeGenerator {
     }
     
     //-------------------------------------------------------------------------
-    //      example
-    //-------------------------------------------------------------------------
-    public void example() {
-        AssemblyCodeGenerator myAsWriter = new AssemblyCodeGenerator("output.s");
-
-        myAsWriter.increaseIndent();
-        myAsWriter.writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(4095), "%l0");
-        myAsWriter.increaseIndent();
-        myAsWriter.writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1024), "%l1");
-        myAsWriter.decreaseIndent();
-        
-        myAsWriter.writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(512), "%l2");
-        
-        myAsWriter.decreaseIndent();
-        myAsWriter.dispose();
-    }
-
-    //-------------------------------------------------------------------------
     //      String Utility Functions
     //-------------------------------------------------------------------------
     public String quoted(String str)
@@ -132,7 +116,7 @@ public class AssemblyCodeGenerator {
         return "\"" + str + "\"";
     }
 
-    public String sqBracketed(String str)
+    public String bracket(String str)
     {
         return "[" + str + "]";
     }
@@ -185,7 +169,7 @@ public class AssemblyCodeGenerator {
         writeCommentHeader("Starting Program");
 
         // .file "<filename>"
-        //writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.FILE_DIR, quoted(filename));
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.FILE_DIR, quoted(filename));
 
         // .ident <COMPILER_IDENT
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.IDENT_DIR, quoted(COMPILER_IDENT));
@@ -193,6 +177,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.BLANK_LINE);
 
         DoROPrintDefines();
+        MakeGlobalInitGuard();
 
         stackPointer.push(new Integer(0));
 
@@ -231,6 +216,84 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      MakeGlobalInitGuard
+    //-------------------------------------------------------------------------
+    public void MakeGlobalInitGuard()
+    {
+        // !----Create _init for global init guard----
+        writeCommentHeader("Create _init for global init guard");
+
+        // .section ".bss"
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.BSS_SEC);
+
+        // .align 4
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, String.valueOf(4));
+
+        // _init: .skip 4
+        writeAssembly(SparcInstr.GLOBAL_DEFINE, "_init", SparcInstr.SKIP_DIR, String.valueOf(4));
+
+        writeAssembly(SparcInstr.BLANK_LINE);
+    }
+
+    //-------------------------------------------------------------------------
+    //      DoGlobalInit
+    //-------------------------------------------------------------------------
+    public void DoGlobalInit()
+    {
+        // !----Initialize Globals----
+        writeCommentHeader("Initialize Globals");
+
+        // Do Init Guard
+
+        // set _init, %l0
+        writeAssembly(SparcInstr.TWO_PARAM, "_init", SparcInstr.REG_LOCAL0);
+
+        // ld [%l0], %l1
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0));
+
+        // cmp %l1, %g0
+        // bne _init_done ! Global initialization guard
+        // mov 1, %l1 ! Branch delay slot
+        // st %l1, [%l0] ! Mark _init = 1
+
+
+
+
+        Stack stk = new Stack();
+        StoPair stopair;
+        STO varSto;
+        STO valueSto;
+
+        stk.addAll(globalInitStack);
+        Collections.reverse(stk);
+
+        for(Enumeration<StoPair> e = stk.elements(); e.hasMoreElements(); ) {
+            stopair = e.nextElement();
+            varSto = stopair.getVarSto();
+            valueSto = stopair.getValueSto();
+
+             
+        // ! x = 4
+        // set 4, %l1
+        // set x, %l0
+        // add %g0, %l0, %l0
+        // st %l1, [%l0]
+
+
+
+
+        }
+
+
+
+
+
+
+        // _init_done:
+
+    }
+
+    //-------------------------------------------------------------------------
     //      DoFuncStart
     //-------------------------------------------------------------------------
     public void DoFuncStart(FuncSTO funcSto)
@@ -251,6 +314,7 @@ public class AssemblyCodeGenerator {
 
         // Write the function label
         decreaseIndent();
+
         // <funcName>: 
         writeAssembly(SparcInstr.LABEL, funcSto.getName());
         increaseIndent();
@@ -302,7 +366,7 @@ public class AssemblyCodeGenerator {
             }
             else { 
                 // ld [<location>], %i0
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(returnSto.load()), SparcInstr.REG_SET_RETURN);
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(returnSto.load()), SparcInstr.REG_SET_RETURN);
             }
         }
 
@@ -325,14 +389,8 @@ public class AssemblyCodeGenerator {
             // set _intFmt, %o0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
 
-            //if(sto.isConst()) {
-            //    // set <value>, %o1
-            //   writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getIntValue()), SparcInstr.REG_ARG1);
-            //}
-            //else {
-                // ld [<value>], %o1
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(sto.load()), SparcInstr.REG_ARG1);
-            //}
+            // ld [<value>], %o1
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(sto.load()), SparcInstr.REG_ARG1);
 
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
@@ -367,51 +425,85 @@ public class AssemblyCodeGenerator {
 
         else if(sto.getType().isFloat()) {
             // ld [sto] %f0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(sto.getBase()+sto.getOffset()), "%f0");
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(sto.getBase()+sto.getOffset()), "%f0");
             // set tmp1, %l0
             //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "tmp1", "%l0");
             // ld [%l0], %f0
-            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
+            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket("%l0"), "%f0");
             // call printFloat
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
             // nop
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
+
         // String literal
         else if (sto.getType().isString()) {
+
         	// .section ".rodata"
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.RODATA_SEC);
-            // .align 4
-        	//writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
         	// str_(str_count): .asciz "string literal" 
         	writeAssembly(SparcInstr.RO_DEFINE, ".str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(sto.getName()));
+
         	// .section ".text"
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+
             // .align 4
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
         	// set _strFmt, %o0
         	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.STRFMT, "%o0");
+
         	// set str_(str_count), %o1
         	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".str_"+str_count, "%o1");
+
             // call printf
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
-            // nop
         	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         	
         	// increment str count
         	str_count++;
         }
+
         // endl
         else if (sto.getType().isVoid()) {
+
         	// set _strFmt %o0
         	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.STRFMT, "%o0");
         	// set _endl, %o1
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.ENDL, "%o1");
+
             // call printf
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
-            // nop
         	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
+    }
+
+    //-------------------------------------------------------------------------
+    //      DoGlobalDecl
+    //-------------------------------------------------------------------------
+    public void DoGlobalDecl(STO varSto, STO valueSto)
+    {
+
+        // .global <id>
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.GLOBAL_DIR, varSto.getName());
+
+        // .section ".bss"
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+
+        // .align 4
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
+        decreaseIndent();
+
+        // <id>: .skip 4
+        writeAssembly(SparcInstr.GLOBAL_DEFINE, varSto.getName(), SparcInstr.SKIP_DIR, String.valueOf(4));
+
+        increaseIndent();
+
+        // Push these for later to initialize when main() starts
+        if(!valueSto.isNull())
+            globalInitStack.push(new StoPair(varSto, valueSto));    
     }
 
     //-------------------------------------------------------------------------
@@ -419,15 +511,9 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoVarDecl(STO sto)
     {
-        // Global
-        if(sto.isGlobal()) {
-
-        }
-
         // Local basic type (int, float, boolean)
         String offset = getNextOffset(sto.getType().getSize());
         sto.store(SparcInstr.REG_FRAME, offset);
-
         
         // For float, check DI6 Page on "What about float?"
 
@@ -457,7 +543,7 @@ public class AssemblyCodeGenerator {
             else if(stoValue.isVar()) {
                 // Load value of var into %f0
                 // ld [<stoValue location>], %f0
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(stoValue.load()), SparcInstr.REG_FLOAT0);
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(stoValue.load()), SparcInstr.REG_FLOAT0);
             }
 
             // If value is not a float, convert it to a float
@@ -468,7 +554,7 @@ public class AssemblyCodeGenerator {
 
             // Store value in %f0 into address of destination sto
             // st %f0, [<stoDes location>]
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, sqBracketed(stoDes.load()));
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, bracket(stoDes.load()));
         }
         */
         //else {
@@ -481,12 +567,12 @@ public class AssemblyCodeGenerator {
             else if(stoValue.isVar()) {
                 // Load value of var into %l0
                 // ld [<stoValue location>], %l0
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(stoValue.load()), SparcInstr.REG_LOCAL0);
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(stoValue.load()), SparcInstr.REG_LOCAL0);
             }
 
             // Store value in %l0 into address of destination sto
             // st %l0, [<stoDes location>]
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, sqBracketed(stoDes.load()));
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, bracket(stoDes.load()));
        // }
     }
 
@@ -512,7 +598,7 @@ public class AssemblyCodeGenerator {
         LoadIntoReg(reg, sto.getOffset(), sto.getBase());
 
         // LOAD VALUE AT ADDRESS INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(reg), reg);
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(reg), reg);
     }
 
     //-------------------------------------------------------------------------
@@ -524,7 +610,7 @@ public class AssemblyCodeGenerator {
         LoadIntoReg(reg, sto.getOffset(), sto.getBase());
 
         // LOAD VALUE AT ADDRESS INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(reg), reg);
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(reg), reg);
     }
     */
 
@@ -565,24 +651,16 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".float_" + String.valueOf(float_count), SparcInstr.REG_LOCAL0);
 
             // ld [%l0], %f0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(SparcInstr.REG_LOCAL0), SparcInstr.REG_FLOAT0);
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_FLOAT0);
 
             // st %f0, [%fp-offset]
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, sqBracketed(SparcInstr.REG_FRAME + offset));
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, bracket(SparcInstr.REG_FRAME + offset));
 
             float_count++;
         }
 
         // store the address on sto
         sto.store(SparcInstr.REG_FRAME, offset);
-    }
-
-    //-------------------------------------------------------------------------
-    //      functionName403
-    //-------------------------------------------------------------------------
-    public void functionName405()
-    {
-
     }
 
     //-------------------------------------------------------------------------
