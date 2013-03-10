@@ -1,0 +1,10 @@
+function : int main() {
+    cout << "test";
+    if(true) {
+        if(true) {
+            cout << "nested if works!" << endl;
+        }
+    }
+    cout << "After if statement" << endl;
+    return 0;
+}
