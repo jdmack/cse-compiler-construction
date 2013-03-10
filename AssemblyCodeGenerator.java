@@ -479,6 +479,23 @@ public class AssemblyCodeGenerator {
         else if(sto.getType().isBool()) {
             // set _intFmt, %o0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
+/*
+
+            LoadSto(sto, SparcInstr.REG_LOCAL0);
+            String ifL = ".ifL_et b1, %l0
+            ld [%l0], %l0
+            cmp %l0, %g0
+            be IfL1! Opposite logic
+            nop
+            // statements here
+            IfL1:4
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0, "Compare boolean value " + sto.getName() + " to 0");
+            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, , "Compare boolean value " + sto.getName() + " to 0");
+
+            be IfL1! Opposite logic
+            nop
+            // statements here
+            IfL1:
 
             if(sto.isConst()) {
                 String val;
@@ -500,6 +517,7 @@ public class AssemblyCodeGenerator {
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            */
         }
 
         else if(sto.getType().isFloat()) {
@@ -669,6 +687,17 @@ public class AssemblyCodeGenerator {
 
         // STORE VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, tmpReg, bracket(destReg), "Store value of " + valueSto.getName() + " into " + destReg);
+    }
+
+    //-------------------------------------------------------------------------
+    //      StoreValue
+    //-------------------------------------------------------------------------
+    public void StoreValue(String valueReg, String destReg)
+    {
+        writeComment("Store value in " + valueReg + " into " + destReg);
+
+        // STORE VALUE IN valueReg INTO destReg
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, valueReg, bracket(destReg), "Store value in " + valueReg  + " into " + destReg);
     }
 
     //-------------------------------------------------------------------------
@@ -884,7 +913,7 @@ public class AssemblyCodeGenerator {
     	writeComment("if "+condition.getIntValue());
     	
     	// create if label and increment the count
-    	String ifL = "ifL_"+ifLabel_count;
+    	String ifL = ".ifL_"+ifLabel_count;
     	ifLabel_count++;
     	// add the label to the stack
     	stackIfLabel.add(ifL);
