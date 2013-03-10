@@ -531,8 +531,11 @@ public class AssemblyCodeGenerator {
         sto.store(SparcInstr.REG_FRAME, offset);
 
         // Initialize to 0, mostly for testing purposed
+        writeAssembly(SparcInstr.BLANK_LINE);
+        writeComment("Declare " + sto.getName());
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, bracket(sto.load()));
+        writeAssembly(SparcInstr.BLANK_LINE);
         
         // For float, check DI6 Page on "What about float?"
 
