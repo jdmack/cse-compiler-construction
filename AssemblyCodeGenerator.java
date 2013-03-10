@@ -676,7 +676,7 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      StoreSto
+    //      StoreSto - Stores a sto's value into destReg
     //-------------------------------------------------------------------------
     public void StoreSto(STO valueSto, String tmpReg, String destReg)
     {
@@ -698,6 +698,20 @@ public class AssemblyCodeGenerator {
 
         // STORE VALUE IN valueReg INTO destReg
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, valueReg, bracket(destReg), "Store value in " + valueReg  + " into " + destReg);
+    }
+
+    //-------------------------------------------------------------------------
+    //      StoreValueIntoSto - Stores value in valueReg into destSto
+    //-------------------------------------------------------------------------
+    public void StoreValueIntoSto(String valueReg, String tmpReg, STO destSto)
+    {
+        writeComment("Store value in " + valueReg + " into sto " + destSto.getName());
+        
+        // Load sto addr into tmpReg
+        LoadStoAddr(destSto, tmpReg);
+
+        // STORE VALUE IN valueReg INTO destSto (which has addr in tmpReg)
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, valueReg, bracket(tmpReg), "Store value in " + valueReg  + " into sto " + destSto.getName());
     }
 
     //-------------------------------------------------------------------------
