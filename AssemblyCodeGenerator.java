@@ -842,7 +842,7 @@ public class AssemblyCodeGenerator {
     public void DoBinaryOp(BinaryOp op, STO operand1, STO operand2, STO resultSTO)
     {
     	String operation = "";
-    	getNextOffset(4);
+    	
     	if(op.getName().equals("+")){
     		operation = SparcInstr.ADD_OP;
     	}
@@ -867,21 +867,12 @@ public class AssemblyCodeGenerator {
     	else if(op.getName().equals("^")){
     		operation = SparcInstr.XOR_OP;
     	}
-    	// set operand1, %l0
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, operand1.load(), "%l0");
-    	// add %g0, %l0, %l0
-    	writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, "%g0", "%l0", "%l0");
-    	// ld [%l0], %l1
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket("%l0"), "%l1");
-    	// set operand2, %l0
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, operand2.load(), "%l0");
-    	// add %g0, %l0, %l0
-    	writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, "%g0", "%l0", "%l0");
-    	// ld [%l0], %l1
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket("%l0"), "%l1");
     	
-    	
-    	writeAssembly(SparcInstr.THREE_PARAM, operation, operand1.load(), operand2.load(), resultSTO.load());
+    	LoadSto(operand1, SparcInstr.REG_LOCAL0);
+    	LoadSto(operand2, SparcInstr.REG_LOCAL1);
+    	writeAssembly(SparcInstr.THREE_PARAM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+    	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+    	LoadStoAddr(resultSTO, SparcInstr.REG_LOCAL1);
     }
 
     //-------------------------------------------------------------------------
