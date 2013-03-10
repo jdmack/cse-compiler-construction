@@ -330,7 +330,7 @@ public class AssemblyCodeGenerator {
             }
             else {
                 // ld [<value>], %o1
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sto.load(), SparcInstr.REG_ARG1);
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketd(sto.load()), SparcInstr.REG_ARG1);
             }
 
             // call printf
