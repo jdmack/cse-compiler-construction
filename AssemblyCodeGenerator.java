@@ -169,7 +169,7 @@ public class AssemblyCodeGenerator {
     public void writeStackValues()
     {
         writeCommentHeader("Stack Records");
-        writeCommentHeader("======================================");
+        writeComment("======================================");
         for(StackRecord thisRecord: stackValues) {
             writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + thisRecord.getFunction() + SparcInstr.SEPARATOR 
                 + thisRecord.getId() + SparcInstr.SEPARATOR + thisRecord.getLocation());
@@ -614,16 +614,9 @@ public class AssemblyCodeGenerator {
         */
         //else {
             // Put value-to-assign into %l0
-            if(stoValue.isConst()) {
-                // Set the value of constant into %l0
-                // set <value>, %l0
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) stoValue).getValue()), SparcInstr.REG_LOCAL0);
-            }
-            else if(stoValue.isVar()) {
                 // Load value of var into %l0
                 // ld [<stoValue location>], %l0
                 writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(stoValue.load()), SparcInstr.REG_LOCAL0);
-            }
 
             // Store value in %l0 into address of destination sto
             // st %l0, [<stoDes location>]
