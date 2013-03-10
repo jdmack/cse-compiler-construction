@@ -842,6 +842,7 @@ public class AssemblyCodeGenerator {
     public void DoBinaryOp(BinaryOp op, STO operand1, STO operand2, STO resultSTO)
     {
     	String operation = "";
+    	getNextOffset(4);
     	if(op.getName().equals("+")){
     		operation = SparcInstr.ADD_OP;
     	}

@@ -930,13 +930,16 @@ class MyParser extends parser
         if((!resultSTO.isError()) && (resultSTO.isConst())) {
             resultSTO =  op.doOperation((ConstSTO)operand1, (ConstSTO)operand2, resultSTO.getType());
         }
-
+        else {
+        	resultSTO.setBase("%fp");
+        	resultSTO.setOffset(m_codegen.getNextOffset(resultSTO.getType().getSize()));
+        	m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
+        }
         // Process/Print errors
         if(resultSTO.isError()) {
             m_nNumErrors++;
             m_errors.print(resultSTO.getName());
         }
-
         return resultSTO;
     }
 
