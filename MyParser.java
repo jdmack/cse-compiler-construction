@@ -166,6 +166,7 @@ class MyParser extends parser
     void DoProgramEnd()
     {
         m_symtab.closeScope();
+        m_codegen.DoProgramEnd();
         m_codegen.dispose();
     }
 
