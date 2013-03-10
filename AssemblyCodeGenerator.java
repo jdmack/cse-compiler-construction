@@ -219,6 +219,36 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      DoGlobalDecl
+    //-------------------------------------------------------------------------
+    public void DoGlobalDecl(STO varSto, STO valueSto)
+    {
+
+        // .global <id>
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.GLOBAL_DIR, varSto.getName());
+
+        // .section ".bss"
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+
+        // .align 4
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
+        decreaseIndent();
+
+        // <id>: .skip 4
+        writeAssembly(SparcInstr.GLOBAL_DEFINE, varSto.getName(), SparcInstr.SKIP_DIR, String.valueOf(4));
+
+        increaseIndent();
+
+        // Push these for later to initialize when main() starts
+        if(!valueSto.isNull())
+            globalInitStack.push(new StoPair(varSto, valueSto));    
+
+        // set the base and offset to the sto
+        varSto.store(SparcInstr.REG_GLOBAL1, varSto.getName());
+    }
+
+    //-------------------------------------------------------------------------
     //      MakeGlobalInitGuard
     //-------------------------------------------------------------------------
     public void MakeGlobalInitGuard()
@@ -489,36 +519,6 @@ public class AssemblyCodeGenerator {
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
         	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
-    }
-
-    //-------------------------------------------------------------------------
-    //      DoGlobalDecl
-    //-------------------------------------------------------------------------
-    public void DoGlobalDecl(STO varSto, STO valueSto)
-    {
-
-        // .global <id>
-        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.GLOBAL_DIR, varSto.getName());
-
-        // .section ".bss"
-        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
-
-        // .align 4
-        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
-
-        decreaseIndent();
-
-        // <id>: .skip 4
-        writeAssembly(SparcInstr.GLOBAL_DEFINE, varSto.getName(), SparcInstr.SKIP_DIR, String.valueOf(4));
-
-        increaseIndent();
-
-        // Push these for later to initialize when main() starts
-        if(!valueSto.isNull())
-            globalInitStack.push(new StoPair(varSto, valueSto));    
-
-        // set the base and offset to the sto
-        varSto.store(SparcInstr.REG_GLOBAL1, varSto.getName());
     }
 
     //-------------------------------------------------------------------------
