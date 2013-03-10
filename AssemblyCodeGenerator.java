@@ -729,13 +729,16 @@ public class AssemblyCodeGenerator {
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.COMP_OP, "%l0", "g0");
     	// be IfL1! Opposite logic
     	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, ifL);
-    	// nop
     	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+    	increaseIndent();
     }
     
     public void DoIfCodeBlock()
     {
+    	decreaseIndent();
     	String label = stackIfLabel.pop();
+        // !----<iflabel>----
+    	writeComment(label);
     	writeAssembly(SparcInstr.LABEL, label);
     }
 
