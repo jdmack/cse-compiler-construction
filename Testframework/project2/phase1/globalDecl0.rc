@@ -1,5 +1,0 @@
-int x;
-
-function: void main() {
-    cout << x << endl;
-}
