@@ -1,0 +1,8 @@
+int x;
+int y;
+
+function: void main() {
+    cout << x << endl;
+    cout << y << endl;
+}
+
