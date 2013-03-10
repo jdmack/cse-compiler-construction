@@ -463,7 +463,7 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
 
             // ld [<value>], %o1
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(sto.load()), SparcInstr.REG_ARG1);
+            LoadSto(sto, SparcInstr.REG_ARG1);
 
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
@@ -624,45 +624,20 @@ public class AssemblyCodeGenerator {
        // }
     }
 
-    /*
     //-------------------------------------------------------------------------
-    //      LoadIntoReg
+    //      LoadSto
     //-------------------------------------------------------------------------
-    public void functionName389(String reg, String offset, String base)
+    public void LoadSto(STO sto, String reg)
     {
-        // set <offset>, <reg>
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, offset, reg);
-
-        //add <base> , %l0 
-        writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, base, reg, reg);
-    }
-
-    //-------------------------------------------------------------------------
-    //      LoadStoIntoReg
-    //-------------------------------------------------------------------------
-    public void functionName389(String reg, STO sto)
-    {
+        writeComment("Load " + sto.getName() + " into " + reg);
         // PUT ADDRESS OF STO INTO <reg>
-        LoadIntoReg(reg, sto.getOffset(), sto.getBase());
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), reg, "Put the offset/name of " + sto.getName() + " into " + reg);
+
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), reg, reg, "Add offset/name to base reg " + reg);
 
         // LOAD VALUE AT ADDRESS INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(reg), reg);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "Load value of " + sto.getName() + " into " + reg);
     }
-
-    //-------------------------------------------------------------------------
-    //      StoreStoIntoSto
-    //-------------------------------------------------------------------------
-    public void functionName389(String reg, STO stoDes, STO stoValue)
-    {
-        // PUT ADDRESS OF STO INTO <reg>
-        LoadIntoReg(reg, sto.getOffset(), sto.getBase());
-
-        // LOAD VALUE AT ADDRESS INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(reg), reg);
-    }
-    */
-
-
     //-------------------------------------------------------------------------
     //      DoLiteral
     //-------------------------------------------------------------------------
