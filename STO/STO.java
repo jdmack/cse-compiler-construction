@@ -153,9 +153,22 @@ abstract class STO
     }
     
     // Load and store just do a get and set for both at same time
-    public String load()
+    public String load() throws NumberFormatException
     {
-        return m_base + m_offset;
+        if(isGlobal()) {
+            return m_offset;
+        }
+
+        else {
+            int offset = Integer.parseInt(m_offset);
+
+            if(offset < 0)
+                return m_base + "+" + m_offset;
+            else
+                return m_base + m_offset;
+
+        }
+
     }
 
     public void store(String base, String offset)
