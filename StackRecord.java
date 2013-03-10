@@ -20,7 +20,7 @@ public class StackRecord
     {
         setFunction(function);
         setId(id);
-        set(location);
+        setLocation(location);
     }
 
     //---------------------------------------------------------------------

@@ -7,9 +7,11 @@ public class AssemblyCodeGenerator {
 
     private final String COMPILER_IDENT = "WRC 1.0";
     private int indent_level = 0;
+    private Stack<String> currentFunc;
     private Stack<Integer> stackPointer;
     private Stack<StoPair> globalInitStack;
     private Stack<String> stackIfLabel;
+    private Vector<StackRecord> stackValues;
 
     // Error Messages
     private static final String ERROR_IO_CLOSE     = "Unable to close fileWriter";
@@ -46,9 +48,11 @@ public class AssemblyCodeGenerator {
             System.exit(1);
         }
 
+        currentFunc = new Stack<String>();
         stackPointer = new Stack<Integer>();
         globalInitStack = new Stack<StoPair>();
         stackIfLabel = new Stack<String>();
+        stackValues = new Vector<StackRecord>();
     }
 
     //-------------------------------------------------------------------------
@@ -162,6 +166,17 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + "----" + comment + "----");
     }
 
+    public void writeStackValues()
+    {
+        writeCommentHeader("Stack Records");
+        writeCommentHeader("======================================");
+        for(StackRecord thisRecord: stackValues) {
+            writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + thisRecord.getFunction() + SparcInstr.SEPARATOR 
+                + thisRecord.getId() + SparcInstr.SEPARATOR + thisRecord.getLocation());
+        }
+    }
+
+
     //-------------------------------------------------------------------------
     //      DoProgramStart
     //-------------------------------------------------------------------------
@@ -183,7 +198,16 @@ public class AssemblyCodeGenerator {
         MakeGlobalInitGuard();
 
         stackPointer.push(new Integer(0));
+        currentFunc.push("global");
 
+    }
+
+    //-------------------------------------------------------------------------
+    //      DoProgramEnd
+    //-------------------------------------------------------------------------
+    public void DoProgramEnd()
+    {
+        writeStackValues();
     }
 
     //-------------------------------------------------------------------------
@@ -246,6 +270,7 @@ public class AssemblyCodeGenerator {
 
         // set the base and offset to the sto
         varSto.store(SparcInstr.REG_GLOBAL1, varSto.getName());
+        stackValues.addElement(new StackRecord(currentFunc.peek(), varSto.getName(), varSto.load()));
     }
 
     //-------------------------------------------------------------------------
@@ -340,6 +365,9 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoFuncStart(FuncSTO funcSto)
     {
+        currentFunc.push(funcSto.getName());
+        stackPointer.push(0);
+
         // !----Function: <funcName>----
         writeCommentHeader("Function: " + funcSto.getName());
 
@@ -393,6 +421,9 @@ public class AssemblyCodeGenerator {
         // SAVE.<func> = -(92 + BytesOfLocalVarsAndTempStackSpaceNeeded) & -8
         writeAssembly(SparcInstr.SAVE_FUNC, funcSto.getName(), String.valueOf(92), String.valueOf(funcSto.getLocalVarBytes()));
         increaseIndent();
+
+        stackPointer.pop();
+        currentFunc.pop();
     }
     
     //-------------------------------------------------------------------------
@@ -526,9 +557,11 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoVarDecl(STO sto)
     {
+        // TODO: Need to store how many bytes used in function
         // Local basic type (int, float, boolean)
         String offset = getNextOffset(sto.getType().getSize());
         sto.store(SparcInstr.REG_FRAME, offset);
+        stackValues.addElement(new StackRecord(currentFunc.peek(), sto.getName(), sto.load()));
 
         // Initialize to 0, mostly for testing purposed
         writeAssembly(SparcInstr.BLANK_LINE);
@@ -683,6 +716,7 @@ public class AssemblyCodeGenerator {
 
         // store the address on sto
         sto.store(SparcInstr.REG_FRAME, offset);
+        stackValues.addElement(new StackRecord(currentFunc.peek(), sto.getName(), sto.load()));
     }
 
     //-------------------------------------------------------------------------
