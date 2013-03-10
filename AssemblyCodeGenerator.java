@@ -724,9 +724,9 @@ public class AssemblyCodeGenerator {
     	// set condition, %l0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(condition.getIntValue()), "%l0");
     	// ld [%l0], %l0
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%l0");
+    	//writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%l0");
     	// cmp %l0, %g0
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.COMP_OP, "%l0", "g0");
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.COMP_OP, "%l0", "%g0");
     	// be IfL1! Opposite logic
     	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, ifL);
     	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
@@ -737,8 +737,6 @@ public class AssemblyCodeGenerator {
     {
     	decreaseIndent();
     	String label = stackIfLabel.pop();
-        // !----<iflabel>----
-    	writeComment(label);
     	writeAssembly(SparcInstr.LABEL, label);
     }
 
