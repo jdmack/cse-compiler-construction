@@ -340,6 +340,9 @@ public class AssemblyCodeGenerator {
             varSto = stopair.getVarSto();
             valueSto = stopair.getValueSto();
 
+            if(valueSto.isConst())
+                DoLiteral((ConstSTO) valueSto);
+
             writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
 
             // ld [<value>], %l1
@@ -659,6 +662,9 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoLiteral(ConstSTO sto)
     {
+        if(currentFunc.peek().getName().equals("global"))
+            return;
+
         String offset = getNextOffset(sto.getType().getSize());
 
         writeComment("Put literal onto stack");
