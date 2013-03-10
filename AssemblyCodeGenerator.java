@@ -915,8 +915,7 @@ public class AssemblyCodeGenerator {
     	LoadSto(operand2, SparcInstr.REG_LOCAL1);
     	writeAssembly(SparcInstr.THREE_PARAM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
     	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-    	LoadStoAddr(resultSTO, SparcInstr.REG_LOCAL1);
-    	StoreValue(SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1);
+    	StoreValueIntoSto(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0, resultSTO);
     }
 
     //-------------------------------------------------------------------------
