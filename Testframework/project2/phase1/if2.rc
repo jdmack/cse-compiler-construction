@@ -1,5 +1,5 @@
 function : int main() {
-    cout << "test";
+    cout << "test" << endl;
     if(2 > 1) {
         cout << "if works!" << endl;
     }
