@@ -325,7 +325,7 @@ public class AssemblyCodeGenerator {
 
             if(sto.isConst()) {
                 // set <value>, %o1
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getValue()), SparcInstr.REG_ARG1);
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getIntValue()), SparcInstr.REG_ARG1);
             }
             else {
                 // ld [<value>], %o1
