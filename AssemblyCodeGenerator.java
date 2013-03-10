@@ -587,7 +587,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      DoAssignExpr
     //-------------------------------------------------------------------------
-    public void DoAssignExpr(STO stoDes, STO stoValue)
+    public void DoAssignExpr(STO stoVar, STO stoValue)
     {
         // TODO: My isConst check can go away after we allocate constants onto stack
         // If storing a float
@@ -622,11 +622,11 @@ public class AssemblyCodeGenerator {
             // Put value-to-assign into %l0
                 // Load value of var into %l0
                 // ld [<stoValue location>], %l0
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(stoValue.load()), SparcInstr.REG_LOCAL0);
+        LoadStoAddr(stoVar, SparcInstr.REG_LOCAL0);
+        StoreSto(stoValue, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
 
             // Store value in %l0 into address of destination sto
             // st %l0, [<stoDes location>]
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, bracket(stoDes.load()));
        // }
     }
 
@@ -655,6 +655,23 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), reg, "Put the offset/name of " + sto.getName() + " into " + reg);
 
         writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), reg, reg, "Add offset/name to base reg " + reg);
+    }
+
+    //-------------------------------------------------------------------------
+    //      StoreSto
+    //-------------------------------------------------------------------------
+    public void StoreSto(STO valueSto, String tmpReg, String destReg)
+    {
+        writeComment("Store " + valueSto.getName() + " into " + destReg);
+
+        // Load value into tmpReg
+        // PUT ADDRESS OF STO INTO <reg>
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, valueSto.getOffset(), tmpReg, "Put the offset/name of " + valueSto.getName() + " into " + tmpReg);
+
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, valueSto.getBase(), tmpReg, tmpReg, "Add offset/name to base reg " + tmpReg);
+
+        // STORE VALUE AT ADDRESS INTO <reg>
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, tmpReg, bracket(destReg), "Store value of " + valueSto.getName() + " into " + destReg);
     }
 
     //-------------------------------------------------------------------------
