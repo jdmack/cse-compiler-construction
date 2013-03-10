@@ -343,13 +343,15 @@ public class AssemblyCodeGenerator {
             writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
 
             // ld [<value>], %l1
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(valueSto.load()), SparcInstr.REG_LOCAL1);
+            LoadSto(valueSto, SparcInstr.REG_LOCAL1);
 
+            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(valueSto.load()), SparcInstr.REG_LOCAL1);
             // set x, %l0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(varSto.load()), SparcInstr.REG_LOCAL0);
-
+            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(varSto.load()), SparcInstr.REG_LOCAL0);
             // add %g0, %l0, %l0
-            writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL0);
+            //writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL0);
+
+            LoadStoAddr(varSto, SparcInstr.REG_LOCAL0);
 
             // st %l1, [%l0]
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0));
@@ -639,6 +641,19 @@ public class AssemblyCodeGenerator {
         // LOAD VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "Load value of " + sto.getName() + " into " + reg);
     }
+
+    //-------------------------------------------------------------------------
+    //      LoadStoAddr
+    //-------------------------------------------------------------------------
+    public void LoadStoAddr(STO sto, String reg)
+    {
+        writeComment("Load " + sto.getName() + " into " + reg);
+        // PUT ADDRESS OF STO INTO <reg>
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), reg, "Put the offset/name of " + sto.getName() + " into " + reg);
+
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), reg, reg, "Add offset/name to base reg " + reg);
+    }
+
     //-------------------------------------------------------------------------
     //      DoLiteral
     //-------------------------------------------------------------------------
