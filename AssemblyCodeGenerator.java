@@ -498,7 +498,7 @@ public class AssemblyCodeGenerator {
             // If Code: Load "true" into %o1 here
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.BOOLT, SparcInstr.REG_ARG1);
             // Branch to end of else block
-            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, ifLabel, "Did if code, branch always to bottom of else");
+            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, elseLabel, "Did if code, branch always to bottom of else");
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
 
             // Print label
