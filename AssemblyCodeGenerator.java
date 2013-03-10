@@ -330,7 +330,7 @@ public class AssemblyCodeGenerator {
             }
             else {
                 // ld [<value>], %o1
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sto.load(), SparcInstr.REG_ARG1);
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(sto.load()), SparcInstr.REG_ARG1);
             }
 
             // call printf
@@ -578,7 +578,7 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(SparcInstr.REG_LOCAL0), SparcInstr.REG_FLOAT0);
 
             // st %f0, [%fp-offset]
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FRAME + offset);
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, sqBracketed(SparcInstr.REG_FRAME + offset));
 
             float_count++;
         }
