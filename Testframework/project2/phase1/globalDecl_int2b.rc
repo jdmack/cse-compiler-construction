@@ -1,0 +1,6 @@
+int x, y = 1;
+
+function: void main() {
+    cout << "x: " << x << endl;
+    cout << "y: " << y << endl;
+}

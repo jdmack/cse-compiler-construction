@@ -166,6 +166,7 @@ class MyParser extends parser
     void DoProgramEnd()
     {
         m_symtab.closeScope();
+        m_codegen.DoProgramEnd();
         m_codegen.dispose();
     }
 
@@ -597,6 +598,8 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, stoValue.getType().getName(), stoDes.getType().getName()));
             return (new ErrorSTO("DoAssignExpr Error - bad types"));
         }
+
+        m_codegen.DoAssignExpr(stoDes, stoValue);
 
         return stoDes;
     }

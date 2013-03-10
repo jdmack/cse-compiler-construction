@@ -1,0 +1,10 @@
+int x;
+int y;
+
+function: void main() {
+    x = 1;
+    y = 2;
+    cout << "x: " << x << endl;
+    cout << "y: " << y << endl;
+}
+

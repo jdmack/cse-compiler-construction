@@ -9,6 +9,9 @@ sym.java
 java-cup-v11a.jar
 javacup
 rc.s
+a.out
+input.c
+output.s
 
 #eclipse stuff
 .classpath
