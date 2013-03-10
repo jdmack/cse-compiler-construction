@@ -3,6 +3,6 @@ function : int main() {
     cout << "int x = "<< x << endl;
     int y = 1;
     cout << "int y = "<< y << endl;
-    cout << "x + y = " << x+y << endl;
+    cout << "Local ((x+y)-y)-10 = " << ((x+y)-y)-10 << endl;
     return 0;
 }
