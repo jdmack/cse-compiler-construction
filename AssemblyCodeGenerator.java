@@ -670,6 +670,7 @@ public class AssemblyCodeGenerator {
     {
         String offset = getNextOffset(sto.getType().getSize());
 
+        writeComment("Put literal onto stack");
         if(sto.getType().isInt() || sto.getType().isBool()) {
             // put the literal in memory            
             // set <value>, %l0
