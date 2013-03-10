@@ -652,7 +652,10 @@ IfStmt ::=          T_IF Expr:_1
                         RESULT = ((MyParser) parser).DoIfExpr(_1);
                     :}
                     CodeBlock 
-                        OptElse
+                    {:
+                        ((MyParser) parser).DoIfCodeBlock();
+                    :}
+                    OptElse
     ;
 
 

@@ -9,7 +9,8 @@ public class AssemblyCodeGenerator {
     private int indent_level = 0;
     private Stack<Integer> stackPointer;
     private Stack<StoPair> globalInitStack;
-    
+    private Stack<String> stackIfLabel;
+
     // Error Messages
     private static final String ERROR_IO_CLOSE     = "Unable to close fileWriter";
     private static final String ERROR_IO_CONSTRUCT = "Unable to construct FileWriter for file %s";
@@ -26,6 +27,7 @@ public class AssemblyCodeGenerator {
     
     private int str_count = 0;
     private int float_count = 0;
+    private int ifLabel_count = 0;
         
     //-------------------------------------------------------------------------
     //      Constructors
@@ -46,6 +48,7 @@ public class AssemblyCodeGenerator {
 
         stackPointer = new Stack<Integer>();
         globalInitStack = new Stack<StoPair>();
+        stackIfLabel = new Stack<String>();
     }
 
     //-------------------------------------------------------------------------
@@ -784,11 +787,36 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      functionName531
+    //      DoIf
     //-------------------------------------------------------------------------
-    public void functionName533()
+    public void DoIf(ConstSTO condition)
     {
-
+        // !----if <condition>----
+    	writeComment("if "+condition.getIntValue());
+    	
+    	// create if label and increment the count
+    	String ifL = "ifL_"+ifLabel_count;
+    	ifLabel_count++;
+    	// add the label to the stack
+    	stackIfLabel.add(ifL);
+    	
+    	// set condition, %l0
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(condition.getIntValue()), "%l0");
+    	// ld [%l0], %l0
+    	//writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%l0");
+    	// cmp %l0, %g0
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.COMP_OP, "%l0", "%g0");
+    	// be IfL1! Opposite logic
+    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, ifL);
+    	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+    	increaseIndent();
+    }
+    
+    public void DoIfCodeBlock()
+    {
+    	decreaseIndent();
+    	String label = stackIfLabel.pop();
+    	writeAssembly(SparcInstr.LABEL, label);
     }
 
 }
