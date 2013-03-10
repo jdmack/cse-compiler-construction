@@ -362,7 +362,10 @@ public class AssemblyCodeGenerator {
         }
 
         // _init_done:
+        decreaseIndent();
         writeAssembly(SparcInstr.LABEL, "_init_done");
+        writeAssembly(SparcInstr.BLANK_LINE);
+        increaseIndent();
 
     }
 
@@ -478,12 +481,13 @@ public class AssemblyCodeGenerator {
         
         else if(sto.getType().isBool()) {
             // set _intFmt, %o0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.BOOLFMT, SparcInstr.REG_ARG0);
 
             // Set the condition STO into LOCAL0
             LoadSto(sto, SparcInstr.REG_LOCAL0);
             String ifLabel = ".ifL_" + ifLabel_count;
             String elseLabel = ".elseL_" + ifLabel_count;
+    	    ifLabel_count++;
 
             // If the condition is true, don't branch and load "true", if false, branch to end of if and load "false"
             writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0, "Compare boolean value " + sto.getName() + " to 0");
@@ -493,7 +497,8 @@ public class AssemblyCodeGenerator {
             // If Code: Load "true" into %o1 here
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.BOOLT, SparcInstr.REG_ARG1);
             // Branch to end of else block
-            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, ifLabel, "Did if code, branch always to bottom of else");
+            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, ifLabel, "Did if code, branch always to bottom of else");
+            writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
 
             // Print label
             writeAssembly(SparcInstr.LABEL, ifLabel);
