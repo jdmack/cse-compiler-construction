@@ -349,7 +349,7 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(varSto.load()), SparcInstr.REG_LOCAL0);
 
             // add %g0, %l0, %l0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL0);
+            writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL0);
 
             // st %l1, [%l0]
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0));
