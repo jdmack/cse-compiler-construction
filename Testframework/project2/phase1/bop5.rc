@@ -1,12 +1,11 @@
 function : int main() {
-    float x = 5.8;
-    cout << "float x = "<< x << endl;
-    float y = 3.1;
-    cout << "float y = "<< y << endl;
-
-    cout << "x + y = " << x/y << endl;
-    cout << "x - y = " << x/y << endl;
-    cout << "x * y = " << x/y << endl;
-    cout << "x / y = " << x/y << endl;
+    int x = 5;
+    cout << "int x = "<< x << endl;
+    int y = 3;
+    cout << "int y = "<< y << endl;
+    
+    cout << "x & y = " << x&y << endl;
+    cout << "x | y = " << x|y << endl;
+    cout << "x ^ y = " << x^y << endl;
     return 0;
 }
