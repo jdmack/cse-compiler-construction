@@ -269,7 +269,7 @@ public class AssemblyCodeGenerator {
             globalInitStack.push(new StoPair(varSto, valueSto));    
 
         // set the base and offset to the sto
-        varSto.store(SparcInstr.REG_GLOBAL1, varSto.getName());
+        varSto.store(SparcInstr.REG_GLOBAL0, varSto.getName());
         stackValues.addElement(new StackRecord("global", varSto.getName(), varSto.load()));
     }
 
