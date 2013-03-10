@@ -41,6 +41,8 @@ public class AssemblyCodeGenerator {
             e.printStackTrace();
             System.exit(1);
         }
+
+        stackPointer = new Stack<Integer>();
     }
 
     //-------------------------------------------------------------------------
@@ -182,7 +184,7 @@ public class AssemblyCodeGenerator {
         writeCommentHeader("Starting Program");
 
         // .file "<filename>"
-        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.FILE_DIR, quoted(filename));
+        //writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.FILE_DIR, quoted(filename));
 
         // .ident <COMPILER_IDENT
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.IDENT_DIR, quoted(COMPILER_IDENT));
@@ -323,7 +325,7 @@ public class AssemblyCodeGenerator {
 
             if(sto.isConst()) {
                 // set <value>, %o1
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getValue()), SparcInstr.REG_ARG1);
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getIntValue()), SparcInstr.REG_ARG1);
             }
             else {
                 // ld [<value>], %o1
