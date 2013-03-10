@@ -888,15 +888,15 @@ public class AssemblyCodeGenerator {
         	
         	if(op.getName().equals("*")){
         		// call .mul
-        		writeAssembly(SparcInstr.NO_PARAM, SparcInstr.CALL_OP, SparcInstr.MUL_OP);
+        		writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, SparcInstr.MUL_OP, "Multiplying");
         	}
         	else if(op.getName().equals("/")){
         		// call .div
-        		writeAssembly(SparcInstr.NO_PARAM, SparcInstr.CALL_OP, SparcInstr.DIV_OP);
+        		writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, SparcInstr.DIV_OP, "Dividing");
         	}
         	else if(op.getName().equals("%")){
         		// call .rem
-        		writeAssembly(SparcInstr.NO_PARAM, SparcInstr.CALL_OP, SparcInstr.REM_OP);
+        		writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, SparcInstr.REM_OP, "Modulus");
         	}
     		writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
     		// mov %o0, %l0
