@@ -650,7 +650,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void LoadStoAddr(STO sto, String reg)
     {
-        writeComment("Load " + sto.getName() + " into " + reg);
+        writeComment("Load address of " + sto.getName() + " into " + reg);
         // PUT ADDRESS OF STO INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), reg, "Put the offset/name of " + sto.getName() + " into " + reg);
 
@@ -665,10 +665,7 @@ public class AssemblyCodeGenerator {
         writeComment("Store " + valueSto.getName() + " into " + destReg);
 
         // Load value into tmpReg
-        // PUT ADDRESS OF STO INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, valueSto.getOffset(), tmpReg, "Put the offset/name of " + valueSto.getName() + " into " + tmpReg);
-
-        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, valueSto.getBase(), tmpReg, tmpReg, "Add offset/name to base reg " + tmpReg);
+        LoadSto(valueSto, tmpReg);
 
         // STORE VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, tmpReg, bracket(destReg), "Store value of " + valueSto.getName() + " into " + destReg);
