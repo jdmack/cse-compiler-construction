@@ -813,13 +813,13 @@ public class AssemblyCodeGenerator {
     	// add %g0, %l0, %l0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.ADD_OP, "%l0", "%l0");
     	// ld [%l0], %l1
-    	writeAssembly(SparcInstr.TWO_PARAM, bracket("%l0"), "%l1");
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket("%l0"), "%l1");
     	// set operand2, %l0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, operand2.load(), "%l0");
     	// add %g0, %l0, %l0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.ADD_OP, "%l0", "%l0");
     	// ld [%l0], %l1
-    	writeAssembly(SparcInstr.TWO_PARAM, bracket("%l0"), "%l1");
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket("%l0"), "%l1");
     	
     	writeAssembly(SparcInstr.THREE_PARAM, operation, operand1.load(), operand2.load(), resultSTO.load());
     }
