@@ -162,7 +162,7 @@ abstract class STO
         else {
             int offset = Integer.parseInt(m_offset);
 
-            if(offset < 0)
+            if(offset > 0)
                 return m_base + "+" + m_offset;
             else
                 return m_base + m_offset;
