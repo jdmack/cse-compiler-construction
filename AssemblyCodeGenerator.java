@@ -367,19 +367,21 @@ public class AssemblyCodeGenerator {
 
         else if(sto.getType().isFloat()) {
             // .section ".data"
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+            //writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
             // .align 4
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+           // writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
             // tmp1: .single 0r5.75 
-            writeAssembly(SparcInstr.RO_DEFINE, "tmp1", SparcInstr.SINGLEP, "0r"+(String.valueOf(((ConstSTO) sto).getFloatValue())));
+            //writeAssembly(SparcInstr.RO_DEFINE, "tmp1", SparcInstr.SINGLEP, "0r"+(String.valueOf(((ConstSTO) sto).getFloatValue())));
             // .section ".text"
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
             // .align 4
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+            // ld [sto] %f0
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(sto.getBase()+sto.getOffset()), "%f0");
             // set tmp1, %l0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "tmp1", "%l0");
+            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "tmp1", "%l0");
             // ld [%l0], %f0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
+            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%f0");
             // call printFloat
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
             // nop
