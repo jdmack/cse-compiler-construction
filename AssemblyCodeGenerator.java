@@ -656,7 +656,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), SparcInstr.REG_LOCAL7, SparcInstr.REG_LOCAL7, "Add offset/name to base reg " + SparcInstr.REG_LOCAL7);
 
         // LOAD VALUE AT ADDRESS INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "Load value of " + sto.getName() + " into " + reg);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value of " + sto.getName() + " into " + reg);
     }
 
     //-------------------------------------------------------------------------
