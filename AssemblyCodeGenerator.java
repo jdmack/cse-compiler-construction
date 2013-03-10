@@ -163,7 +163,7 @@ public class AssemblyCodeGenerator {
     {
         writeAssembly(SparcInstr.BLANK_LINE);
         // !----Comment----
-        writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + "----" + comment + "----");
+        writeComment("----" + comment + "----");
     }
 
     public void writeStackValues()
