@@ -321,22 +321,22 @@ public class AssemblyCodeGenerator {
         // !----cout << <sto name>----
         writeCommentHeader("cout << " + sto.getName());
         if(sto.getType().isInt()) {
+
             // set _intFmt, %o0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
 
-            if(sto.isConst()) {
-                // set <value>, %o1
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getIntValue()), SparcInstr.REG_ARG1);
-            }
-            else {
+            //if(sto.isConst()) {
+            //    // set <value>, %o1
+            //   writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getIntValue()), SparcInstr.REG_ARG1);
+            //}
+            //else {
                 // ld [<value>], %o1
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(sto.load()), SparcInstr.REG_ARG1);
-            }
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(sto.load()), SparcInstr.REG_ARG1);
+            //}
 
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-
         }
         
         else if(sto.getType().isBool()) {
@@ -366,16 +366,6 @@ public class AssemblyCodeGenerator {
         }
 
         else if(sto.getType().isFloat()) {
-            // .section ".data"
-            //writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
-            // .align 4
-           // writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
-            // tmp1: .single 0r5.75 
-            //writeAssembly(SparcInstr.RO_DEFINE, "tmp1", SparcInstr.SINGLEP, "0r"+(String.valueOf(((ConstSTO) sto).getFloatValue())));
-            // .section ".text"
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
-            // .align 4
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
             // ld [sto] %f0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(sto.getBase()+sto.getOffset()), "%f0");
             // set tmp1, %l0
