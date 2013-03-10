@@ -362,7 +362,10 @@ public class AssemblyCodeGenerator {
         }
 
         // _init_done:
+        decreaseIndent();
         writeAssembly(SparcInstr.LABEL, "_init_done");
+        writeAssembly(SparcInstr.BLANK);
+        increaseIndent();
 
     }
 
@@ -900,7 +903,7 @@ public class AssemblyCodeGenerator {
     	
     	LoadSto(operand1, SparcInstr.REG_LOCAL0);
     	LoadSto(operand2, SparcInstr.REG_LOCAL1);
-    	writeAssembly(SparcInstr.THREE_PARAM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+    	writeAssembly(SparcInstr.THREE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0, "Adding Values!");
     	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
     	StoreValueIntoSto(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0, resultSTO);
     }
