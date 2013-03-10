@@ -1297,7 +1297,13 @@ class MyParser extends parser
         }
     }
     
+    //----------------------------------------------------------------
+    //      DoLiteral
+    //----------------------------------------------------------------
     STO DoLiteral(ConstSTO sto) {
-    	return null;
+
+        m_codegen.DoLiteral(sto);
+
+    	return sto;
     }
 }

@@ -1047,11 +1047,11 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
                     :}
     |               T_INT_LITERAL:_1
                     {:
-                        RESULT = new ConstSTO (_1, new IntType(), _1);
+                        RESULT = ((MyParser) parser).DoLiteral(new ConstSTO (_1, new IntType(), _1));
                     :}
     |               T_FLOAT_LITERAL:_1
                     {:
-                        RESULT = new ConstSTO (_1, new FloatType(), _1);
+                        RESULT = ((MyParser) parser).DoLiteral(new ConstSTO (_1, new FloatType(), _1));
                     :}
     |               T_CHAR_LITERAL:_1
                     {:
@@ -1063,11 +1063,11 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
                     :}
     |               T_TRUE
                     {:
-                        RESULT = new ConstSTO("true", new BoolType(), "true");
+                        RESULT = ((MyParser) parser).DoLiteral(new ConstSTO("true", new BoolType(), "true"));
                     :}
     |               T_FALSE
                     {:
-                        RESULT = new ConstSTO("false", new BoolType(), "false");
+                        RESULT = ((MyParser) parser).DoLiteral(new ConstSTO("false", new BoolType(), "false"));
                     :}
     |               T_NULLPTR
                     {:

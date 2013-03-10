@@ -24,6 +24,7 @@ public class AssemblyCodeGenerator {
         " */\n\n";
     
     private int str_count = 0;
+    private int float_count = 0;
         
     //-------------------------------------------------------------------------
     //      Constructors
@@ -139,17 +140,17 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      Other Utility Functions
     //-------------------------------------------------------------------------
-    public Integer getNextOffset(int size)
+    public String getNextOffset(int size)
     {
         Integer temp = stackPointer.pop(); 
-        temp = temp + size;
+        temp = temp - size;
         stackPointer.push(temp);
-        return stackPointer.peek();
+        return stackPointer.peek().toString();
     }
 
-    public int getOffset(int size)
+    public String getOffset()
     {
-        return stackPointer.peek();
+        return stackPointer.peek().toString();
     }
 
     //-------------------------------------------------------------------------
@@ -432,7 +433,7 @@ public class AssemblyCodeGenerator {
         }
 
         // Local basic type (int, float, boolean)
-        String offset = getNextOffset(sto.getType().getSize()).toString();
+        String offset = getNextOffset(sto.getType().getSize());
         sto.store(SparcInstr.REG_FRAME, offset);
 
         
@@ -537,11 +538,51 @@ public class AssemblyCodeGenerator {
 
 
     //-------------------------------------------------------------------------
-    //      functionName395
+    //      DoLiteral
     //-------------------------------------------------------------------------
-    public void functionName397()
+    public void DoLiteral(ConstSTO sto)
     {
+        String offset = getNextOffset(sto.getType().getSize());
 
+        if(sto.getType().isInt() && sto.getType().isBool()) {
+            // put the literal in memory            
+            // set <value>, %l0
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getIntValue()), SparcInstr.REG_LOCAL0);
+            
+            // st %l0, [%fp-offset]
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_FRAME + offset);
+        }
+
+        else if(sto.getType().isFloat()) {
+            // store literal in rodata section
+            // .section ".data"
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+            // .align 4
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
+            // float<xxx>: .single 0r5.75 
+            writeAssembly(SparcInstr.RO_DEFINE, ".float_" + String.valueOf(float_count), SparcInstr.SINGLEP, "0r" + (String.valueOf(((ConstSTO) sto).getFloatValue())));
+
+            // .section ".text"
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+
+            // .align 4
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
+            // set label, %l0
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".float_" + String.valueOf(float_count), SparcInstr.REG_LOCAL0);
+
+            // ld [%l0], %f0
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed(SparcInstr.REG_LOCAL0), SparcInstr.REG_FLOAT0);
+
+            // st %f0, [%fp-offset]
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FRAME + offset);
+
+            float_count++;
+        }
+
+        // store the address on sto
+        sto.store(SparcInstr.REG_FRAME, offset);
     }
 
     //-------------------------------------------------------------------------
