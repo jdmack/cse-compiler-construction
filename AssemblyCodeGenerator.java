@@ -392,13 +392,13 @@ public class AssemblyCodeGenerator {
             // .align 4
         	//writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
         	// str_(str_count): .asciz "string literal" 
-        	writeAssembly(SparcInstr.RO_DEFINE, "str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(sto.getName()));
+        	writeAssembly(SparcInstr.RO_DEFINE, ".str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(sto.getName()));
         	// .section ".text"
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
             // .align 4
         	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
         	// set _strFmt, %o0
-        	 writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "_strFmt", "%l0");
+        	 writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".strFmt", "%l0");
         	// set str_(str_count), %o1
         	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "str_"+str_count, "%l1");
             // call printf
