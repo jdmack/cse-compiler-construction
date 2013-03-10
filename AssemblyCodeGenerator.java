@@ -364,7 +364,7 @@ public class AssemblyCodeGenerator {
         // _init_done:
         decreaseIndent();
         writeAssembly(SparcInstr.LABEL, "_init_done");
-        writeAssembly(SparcInstr.BLANK);
+        writeAssembly(SparcInstr.BLANK_LINE);
         increaseIndent();
 
     }
