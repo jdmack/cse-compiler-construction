@@ -211,9 +211,9 @@ class SparcInstr
     //-----------------------------------------------------------------------------
     //      Multiplication/Division/Modulus Arithmetic
     //-----------------------------------------------------------------------------
-    public static final String MUL_OP = "mul";
-    public static final String DIV_OP = "div";
-    public static final String REM_OP = "rem";
+    public static final String MUL_OP = ".mul";
+    public static final String DIV_OP = ".div";
+    public static final String REM_OP = ".rem";
 
     //-----------------------------------------------------------------------------
     //      Negating/2's Complement
