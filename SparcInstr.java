@@ -259,9 +259,9 @@ class SparcInstr
     public static final String THREE_PARAM   = "%s" + SEPARATOR + "%s, %s, %s\n";
 
     public static final String NO_PARAM_COMM    = "%s" + SEPARATOR + SEPARATOR + "! %s\n";
-    public static final String ONE_PARAM_COMM   = "%s" + SEPARATOR + "%s" + SEPARATOR + SEPARATOR + " %s\n";
-    public static final String TWO_PARAM_COMM   = "%s" + SEPARATOR + "%s, %s" + SEPARATOR + SEPARATOR + SEPARATOR + " %s\n";
-    public static final String THREE_PARAM_COMM = "%s" + SEPARATOR + "%s, %s, %s" + SEPARATOR + SEPARATOR + " %s\n";
+    public static final String ONE_PARAM_COMM   = "%s" + SEPARATOR + "%s" + SEPARATOR + SEPARATOR + "! %s\n";
+    public static final String TWO_PARAM_COMM   = "%s" + SEPARATOR + "%s, %s" + SEPARATOR + SEPARATOR + SEPARATOR + "! %s\n";
+    public static final String THREE_PARAM_COMM = "%s" + SEPARATOR + "%s, %s, %s" + SEPARATOR + SEPARATOR + "! %s\n";
 
     public static final String SAVE_FUNC     = SAVE_WORD + ".%s = -(%s + %s) & -8\n";
     public static final String RO_DEFINE     = "%s:" + SEPARATOR + "%s" + SEPARATOR + "%s\n";
