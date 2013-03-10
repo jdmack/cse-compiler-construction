@@ -1,0 +1,7 @@
+function : int main() {
+    cout << "test" << endl;
+    int x = 5;
+    int y = 1;
+    cout << x+y << endl;
+    return 0;
+}
