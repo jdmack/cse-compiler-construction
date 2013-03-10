@@ -384,10 +384,10 @@ public class AssemblyCodeGenerator {
         }
         // String literal
         else if (sto.getType().isString()) {
-        	// .section ".data"
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+        	// .section ".rodata"
+        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.RODATA_SEC);
             // .align 4
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+        	//writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
         	// str_(str_count): .asciz "string literal" 
         	writeAssembly(SparcInstr.RO_DEFINE, "str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(sto.getName()));
         	// .section ".text"
