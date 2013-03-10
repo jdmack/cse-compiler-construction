@@ -643,7 +643,7 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) sto).getIntValue()), SparcInstr.REG_LOCAL0);
             
             // st %l0, [%fp-offset]
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_FRAME + offset);
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, bracket(SparcInstr.REG_FRAME + offset));
         }
 
         else if(sto.getType().isFloat()) {
