@@ -845,9 +845,9 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      functionName507
+    //      DoUnaryOp
     //-------------------------------------------------------------------------
-    public void DoUnary(UnaryOp op, STO operand)
+    public void DoUnaryOp(UnaryOp op, STO operand)
     {
     	String operation = "";
 
@@ -857,8 +857,7 @@ public class AssemblyCodeGenerator {
     	LoadSto(operand, SparcInstr.REG_OUTPUT0);
 		// mov %o0, %l0
 		writeAssembly(SparcInstr.TWO_PARAM, operation, SparcInstr.REG_OUTPUT0, SparcInstr.REG_OUTPUT0);
-    	
-    	//StoreValueIntoSto(SparcInstr.REG_OUTPUT0, Sparc, destSto)
+    	StoreValueIntoSto(SparcInstr.REG_OUTPUT0, operand);
     }
 
 /*    //-------------------------------------------------------------------------
