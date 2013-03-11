@@ -847,16 +847,17 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      DoUnaryOp
     //-------------------------------------------------------------------------
-    public void DoUnaryOp(UnaryOp op, STO operand)
+    public void DoUnaryOp(UnaryOp op, STO operand, STO resultSTO)
     {
     	String operation = "";
-    	operand.store(SparcInstr.REG_FRAME, getNextOffset(operand.getType().getSize()));
 
     	if(op.getName().equals("-")){
     		operation = SparcInstr.NEG_OP;
+    		operand.store(SparcInstr.REG_FRAME, getNextOffset(operand.getType().getSize()));
     		LoadSto(operand, SparcInstr.REG_OUTPUT0);
     		writeAssembly(SparcInstr.TWO_PARAM, operation, SparcInstr.REG_OUTPUT0, SparcInstr.REG_OUTPUT0);
-    		StoreValueIntoSto(SparcInstr.REG_OUTPUT0, operand);
+    		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+    		StoreValueIntoSto(SparcInstr.REG_OUTPUT0, resultSTO);
     	}
     }
 

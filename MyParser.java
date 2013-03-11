@@ -962,7 +962,7 @@ class MyParser extends parser
             m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
         else {
-        	m_codegen.DoUnaryOp(op, resultSTO);
+        	m_codegen.DoUnaryOp(op, operand, resultSTO);
         }
         // Process/Print errors
         if(resultSTO.isError()) {
