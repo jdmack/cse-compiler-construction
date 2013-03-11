@@ -19,11 +19,7 @@ abstract class STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-/*    public STO(String strName)
-    {
-        this(strName, null);
-    }
-*/
+
     public STO(String strName, Type typ)
     {
         setName(strName);
