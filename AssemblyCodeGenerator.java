@@ -853,10 +853,11 @@ public class AssemblyCodeGenerator {
 
     	if(op.getName().equals("-")){
     		operation = SparcInstr.NEG_OP;
-    		operand.store(SparcInstr.REG_FRAME, getNextOffset(operand.getType().getSize()));
+    		//operand.store(SparcInstr.REG_FRAME, getNextOffset(operand.getType().getSize()));
     		LoadSto(operand, SparcInstr.REG_OUTPUT0);
     		writeAssembly(SparcInstr.TWO_PARAM, operation, SparcInstr.REG_OUTPUT0, SparcInstr.REG_OUTPUT0);
     		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+            stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
     		StoreValueIntoSto(SparcInstr.REG_OUTPUT0, resultSTO);
     	}
     }
@@ -949,10 +950,11 @@ public class AssemblyCodeGenerator {
         	writeAssembly(SparcInstr.THREE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0, "Adding Values!");
     	}
     	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
     	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
     }
 
-    //-------------------------------------------------------------------------
+    //--------------------------------e-----------------------------------------
     //      DoIf
     //-------------------------------------------------------------------------
     public void DoIf(ConstSTO condition)
