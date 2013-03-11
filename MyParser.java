@@ -682,9 +682,9 @@ class MyParser extends parser
         else {
             // Func call legal, return function return type
             if(funcType.getReturnByRef())
-                returnSto = new VarSTO(sto.getName() + " return type", funcType.getReturnType());
+                returnSto = new VarSTO(sto.getName() + "Return", funcType.getReturnType());
             else
-                returnSto = new ExprSTO(sto.getName() + " return type", funcType.getReturnType());
+                returnSto = new ExprSTO(sto.getName() + "Return", funcType.getReturnType());
         }
 
         m_codegen.DoFuncCall((FuncSTO) sto, args, returnSto);
