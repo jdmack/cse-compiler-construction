@@ -1,0 +1,20 @@
+function: int bar() {
+    cout << "5. Inside bar() - returning 2" << endl;
+    return 2;
+}
+
+function: int foo() {
+    cout << "2. Inside foo() - returning 1" << endl;
+    return 1;
+}
+
+function: void main() {
+
+    cout << "1. Before foo()" << endl;
+    int x = foo();
+    cout << "3. After foo() - returned value: " << x << endl;
+
+    cout << "4. Before bar()" << endl;
+    x = bar();
+    cout << "6. After bar() - returned value: " << x << endl;
+}

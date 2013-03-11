@@ -1,0 +1,12 @@
+function: int foo() {
+
+    cout << "2. Inside foo() - Returning 1 as local" << endl;
+    int y = 1;
+    return y;
+}
+
+function: void main() {
+    cout << "1. Before foo()" << endl;
+    int x = foo();
+    cout << "3. After foo() - returned value: " << x << endl;
+}
