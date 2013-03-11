@@ -1310,6 +1310,8 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoCout(Vector<STO> exprSTOs) {
         for(STO thisSto: exprSTOs) {
+            if(thisSto.isError())
+                continue;
             m_codegen.DoCout(thisSto);
         }
     }
