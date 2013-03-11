@@ -356,6 +356,7 @@ class MyParser extends parser
 
             STO sto = new ConstSTO(id, type, ((ConstSTO)value).getValue());
             m_symtab.insert(sto);
+            m_codegen.DoVarDecl(sto);
             m_codegen.DoAssignExpr(sto, value);
         }
     }
