@@ -635,8 +635,14 @@ public class AssemblyCodeGenerator {
             // Put value-to-assign into %l0
                 // Load value of var into %l0
                 // ld [<stoValue location>], %l0
+        String 
+        float y = 1;
         LoadStoAddr(stoVar, SparcInstr.REG_LOCAL0);
-        StoreSto(stoValue, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+        if(stoVar.getType().isFloat())
+            StoreSto(stoValue, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
+        else
+            StoreSto(stoValue, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+
         writeAssembly(SparcInstr.BLANK_LINE);
 
             // Store value in %l0 into address of destination sto
