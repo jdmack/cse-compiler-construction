@@ -636,7 +636,12 @@ public class AssemblyCodeGenerator {
                 // Load value of var into %l0
                 // ld [<stoValue location>], %l0
         LoadStoAddr(stoVar, SparcInstr.REG_LOCAL0);
-        StoreSto(stoValue, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+        if(stoVar.getType().isFloat())
+            StoreSto(stoValue, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
+        else
+            StoreSto(stoValue, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+
+        writeAssembly(SparcInstr.BLANK_LINE);
 
             // Store value in %l0 into address of destination sto
             // st %l0, [<stoDes location>]
@@ -658,6 +663,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value of " + sto.getName() + " into " + reg);
         if(isFloatReg(reg) && sto.getType().isInt())
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FITOS_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FLOAT0);
+
     }
 
     //-------------------------------------------------------------------------
