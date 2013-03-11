@@ -763,9 +763,14 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
 
         // Now we can write the code for after the return, which is store the return value to stack
+        // Get spot on stack and save to Sto
         String offset = getNextOffset(returnSto.getType().getSize());
         returnSto.store(SparcInstr.REG_FRAME, offset);
         stackValues.addElement(new StackRecord(currentFunc.peek().getName(), returnSto.getName(), returnSto.load()));
+
+        // Store the value, it's in %o0
+        writeComment("Save return from " + funcSto.getName() + " onto stack");
+        StoreValueIntoSto(SparcInstr.REG_GET_RETURN, returnSto);
 
         // Now we're good
     }
