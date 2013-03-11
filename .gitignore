@@ -10,8 +10,6 @@ java-cup-v11a.jar
 javacup
 rc.s
 a.out
-input.c
-output.s
 
 #eclipse stuff
 .classpath
@@ -21,4 +19,3 @@ output.s
 build.xml
 javacupv11a.jar
 MakefileBackup
-bin/
