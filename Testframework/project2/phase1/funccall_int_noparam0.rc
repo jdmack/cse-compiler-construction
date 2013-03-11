@@ -43,6 +43,8 @@ function: int foo1() {
 int w = 5;
 
 function: void main() {
+    cout << "Testing function calls returning VOID" << endl;
+
     cout << " 1. Before foo()'s" << endl;
 
     int x1 = foo1();
