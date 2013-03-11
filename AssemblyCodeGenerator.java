@@ -850,11 +850,11 @@ public class AssemblyCodeGenerator {
     public void DoUnaryOp(UnaryOp op, STO operand)
     {
     	String operation = "";
+    	operand.store(SparcInstr.REG_FRAME, getNextOffset(operand.getType().getSize()));
 
     	if(op.getClass().equals("-")){
     		operation = SparcInstr.NEG_OP;
     		LoadSto(operand, SparcInstr.REG_OUTPUT0);
-    		// mov %o0, %l0
     		writeAssembly(SparcInstr.TWO_PARAM, operation, SparcInstr.REG_OUTPUT0, SparcInstr.REG_OUTPUT0);
     		StoreValueIntoSto(SparcInstr.REG_OUTPUT0, operand);
     	}
