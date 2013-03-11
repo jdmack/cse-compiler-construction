@@ -1,0 +1,16 @@
+function: void bar() {
+    cout << "3. Inside bar()" << endl;
+}
+
+function: void foo() {
+    cout << "2. Inside foo() - Before bar()" << endl;
+    bar();
+    cout << "4. Inside foo() - After bar()" << endl;
+}
+
+function: void main() {
+
+    cout << "1. Before foo()" << endl;
+    foo();
+    cout << "5. After foo()" << endl;
+}

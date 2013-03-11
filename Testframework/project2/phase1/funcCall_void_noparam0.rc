@@ -1,0 +1,9 @@
+function: void foo() {
+    cout << "2. Inside foo()" << endl;
+}
+
+function: void main() {
+    cout << "1. Before foo()" << endl;
+    foo();
+    cout << "3. After foo()" << endl;
+}

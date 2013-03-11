@@ -1,0 +1,6 @@
+function: void main() {
+
+    const int x = y;
+    cout << "x: " << x << endl;
+    cout << "if this didn't crash with nullptrexception, it passes" << endl;
+}

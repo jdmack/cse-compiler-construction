@@ -1,4 +1,5 @@
 function: void main() {
+
     const bool x = true;
     const bool y = false, w = true;
     const bool z = y;
