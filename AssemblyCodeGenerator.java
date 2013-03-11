@@ -869,9 +869,24 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      functionName515
     //-------------------------------------------------------------------------
-    public void functionName517()
+    public void DoConstBinaryOp(STO resultSTO)
     {
-
+    	String value = "";
+    	if(resultSTO.getType().isInt()){
+    		int val = ((ConstSTO)resultSTO).getIntValue();
+    		value = String.valueOf(val);
+    	}
+    	else if(resultSTO.getType().isBool()){
+    		boolean val = ((ConstSTO)resultSTO).getBoolValue();
+    		value = String.valueOf(val);
+    	} 
+    	else if(resultSTO.getType().isFloat()){
+    		double val = ((ConstSTO)resultSTO).getFloatValue();
+    		value = String.valueOf(val);
+    	}
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, value, SparcInstr.REG_LOCAL0);
+    	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, resultSTO);
     }
 
     //-------------------------------------------------------------------------
