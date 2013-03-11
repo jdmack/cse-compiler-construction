@@ -957,6 +957,7 @@ public class AssemblyCodeGenerator {
     //--------------------------------e-----------------------------------------
     //      DoIf
     //-------------------------------------------------------------------------
+    //public void DoIf(ComparisonOp op, STO operand1, STO operand2, STO resultSto)
     public void DoIf(ConstSTO condition)
     {
         // !----if <condition>----
