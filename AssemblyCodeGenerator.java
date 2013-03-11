@@ -521,8 +521,7 @@ public class AssemblyCodeGenerator {
 
         else if(sto.getType().isFloat()) {
             // ld [sto] %f0
-            //LoadSto(sto, SparcInstr.REG_FLOAT0);
-            LoadStoAddr(sto, SparcInstr.REG_LOCAL0);
+            LoadSto(sto, SparcInstr.REG_FLOAT0);
 
             // call printFloat
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
