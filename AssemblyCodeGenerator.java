@@ -451,8 +451,20 @@ public class AssemblyCodeGenerator {
                 LoadStoAddr(returnSto, SparcInstr.REG_SET_RETURN);
             }
             else { 
-                // ld [<location>], %i0
-                LoadSto(returnSto, SparcInstr.REG_SET_RETURN);
+
+                // If return type is float, put into %f0 (possibly fitos)
+                if(funcSto.getReturnType().isFloat()) {
+                    LoadSto(returnSto, SparcInstr.REG_FLOAT0);
+
+                    if(returnSto.getType().isInt())
+                        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FITOS_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FLOAT0);
+
+                }
+                // return type is not float, store into %i0
+                else {
+                    // ld [<location>], %i0
+                    LoadSto(returnSto, SparcInstr.REG_SET_RETURN);
+                }
             }
         }
 
