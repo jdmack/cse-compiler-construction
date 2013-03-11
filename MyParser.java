@@ -959,13 +959,15 @@ class MyParser extends parser
         if((!resultSTO.isError()) && (resultSTO.isConst())) {
             resultSTO =  op.doOperation((ConstSTO)operand, resultSTO.getType());
         }
-
+        
         // Process/Print errors
         if(resultSTO.isError()) {
             m_nNumErrors++;
             m_errors.print(resultSTO.getName());
         }
-
+        
+        m_codegen.DoUnaryOp(op, operand);
+        
         return resultSTO;
     }
 
