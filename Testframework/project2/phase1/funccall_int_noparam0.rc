@@ -1,19 +1,13 @@
 int y = 1;
 
 function: int bar2() {
-    cout << "14. Inside bar2() - returning 6" << endl;
+    cout << "11. Inside bar2() - returning 6" << endl;
     return 6;
 }
 
 function: int bar1() {
-    cout << "13. Inside bar1() - Before bar2() - directly returning value from bar2()" << endl;
+    cout << "10. Inside bar1() - Before bar2() - directly returning value from bar2()" << endl;
     return bar2();
-}
-
-function: int foo5() {
-    cout << "10. Inside foo5() - Returning 5 as global" << endl;
-
-    return w;
 }
 
 function: int foo4() {
@@ -40,8 +34,6 @@ function: int foo1() {
     return y;
 }
 
-int w = 5;
-
 function: void main() {
     cout << "Testing function calls returning VOID" << endl;
 
@@ -58,9 +50,6 @@ function: void main() {
 
     int x4 = foo4();
     cout << " 9. After foo4() - returned value: " << x4 << endl;
-
-    int x5 = foo5();
-    cout << "11. After foo5() - returned value: " << x5 << endl;
 
     int b = bar1();
     cout << "12. After bar1() - returned value: " << b << endl;
