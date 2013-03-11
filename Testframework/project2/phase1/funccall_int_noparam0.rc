@@ -1,0 +1,66 @@
+int y = 1;
+
+function: int bar2() {
+    cout << "14. Inside bar2() - returning 6" << endl;
+    return 6;
+}
+
+function: int bar1() {
+    cout << "13. Inside bar1() - Before bar2() - directly returning value from bar2()" << endl;
+    return bar2();
+}
+
+function: int foo5() {
+    cout << "10. Inside foo5() - Returning 5 as global" << endl;
+
+    return w;
+}
+
+function: int foo4() {
+    cout << " 8. Inside foo4() - Returning 4 as literal" << endl;
+
+    return 4;
+}
+
+function: int foo3() {
+
+    cout << " 6. Inside foo3() - Returning 3 as const local" << endl;
+    const int y = 3;
+    return y;
+}
+
+function: int foo2() {
+    cout << " 4. Inside foo2() - Returning 2 as local" << endl;
+    int y = 2;
+    return y;
+}
+
+function: int foo1() {
+    cout << " 2. Inside foo1() - Returning 1 as global" << endl;
+    return y;
+}
+
+int w = 5;
+
+function: void main() {
+    cout << " 1. Before foo()'s" << endl;
+
+    int x1 = foo1();
+    cout << " 3. After foo1() - returned value: " << x1 << endl;
+
+    int x2 = foo2();
+    cout << " 5. After foo2() - returned value: " << x2 << endl;
+
+    int x3 = foo3();
+    cout << " 7. After foo3() - returned value: " << x3 << endl;
+
+    int x4 = foo4();
+    cout << " 9. After foo4() - returned value: " << x4 << endl;
+
+    int x5 = foo5();
+    cout << "11. After foo5() - returned value: " << x5 << endl;
+
+    int b = bar1();
+    cout << "12. After bar1() - returned value: " << b << endl;
+
+}
