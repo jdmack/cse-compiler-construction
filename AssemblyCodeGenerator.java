@@ -440,6 +440,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoReturn(FuncSTO funcSto, STO returnSto)
     {
+        writeCommentHeader("Set return value (if needed) and return");
+
         // Load the return value into the return register
         if(!returnSto.getType().isVoid()) {
             if(funcSto.getReturnByRef()) {
