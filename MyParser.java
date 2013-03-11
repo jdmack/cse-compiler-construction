@@ -673,6 +673,8 @@ class MyParser extends parser
             }
         }
 
+        STO returnSto;
+
         if(error_flag) {
             // Error occured in at least one arg, return error
             return (new ErrorSTO("DoFuncCall - Check 5"));
@@ -680,10 +682,14 @@ class MyParser extends parser
         else {
             // Func call legal, return function return type
             if(funcType.getReturnByRef())
-                return (new VarSTO(sto.getName() + " return type", funcType.getReturnType()));
+                returnSto = new VarSTO(sto.getName() + " return type", funcType.getReturnType());
             else
-                return (new ExprSTO(sto.getName() + " return type", funcType.getReturnType()));
+                returnSto = new ExprSTO(sto.getName() + " return type", funcType.getReturnType());
         }
+
+        m_codegen.DoFuncCall((FuncSTO) sto, args, returnSto);
+
+        return returnSto;
     }
 
     //----------------------------------------------------------------
@@ -933,9 +939,7 @@ class MyParser extends parser
             m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
         else {
-            //if(op.isComparison())
-        	//    m_codegen.DoIfStart(op, operand1, operand2, resultSTO);
-            //else
+            if(!op.isComparison())
         	    m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
         }
         // Process/Print errors

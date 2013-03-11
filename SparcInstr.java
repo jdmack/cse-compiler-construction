@@ -89,6 +89,7 @@ class SparcInstr
     public static final String REG_PARAM3 = REG_INPUT3;
     public static final String REG_PARAM4 = REG_INPUT4;
     public static final String REG_PARAM5 = REG_INPUT5;
+    public static final String[] PARAM_REGS = new String[]{REG_INPUT0, REG_INPUT1, REG_INPUT2, REG_INPUT3, REG_INPUT4, REG_INPUT5};
 
     public static final String REG_ARG0 = REG_OUTPUT0;
     public static final String REG_ARG1 = REG_OUTPUT1;
@@ -96,6 +97,7 @@ class SparcInstr
     public static final String REG_ARG3 = REG_OUTPUT3;
     public static final String REG_ARG4 = REG_OUTPUT4;
     public static final String REG_ARG5 = REG_OUTPUT5;
+    public static final String[] ARG_REGS = new String[]{REG_OUTPUT0, REG_OUTPUT1, REG_OUTPUT2, REG_OUTPUT3, REG_OUTPUT4, REG_OUTPUT5};
 
     public static final String REG_SET_RETURN = REG_INPUT0;
     public static final String REG_GET_RETURN = REG_OUTPUT0;

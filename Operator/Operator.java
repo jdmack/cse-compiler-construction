@@ -31,10 +31,12 @@ abstract class Operator
         m_opName = str;
     }
 
-// Decided this should go in BinaryOp then Unary Op gets checkOperand
-    /*  public STO checkOperands(STO operand1, STO operand2)
-        {
-            return(new ErrorSTO("Operator: abstract class"));
-        }
-    */
+    //---------------------------------------------------------------------
+    //      Is Methods
+    //---------------------------------------------------------------------
+    public boolean isComparison()
+    {
+        return false;
+    }
+
 }

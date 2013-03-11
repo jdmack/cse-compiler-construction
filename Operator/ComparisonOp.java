@@ -40,4 +40,13 @@ class ComparisonOp extends BinaryOp
         return resultSTO;
 
     }
+
+    //---------------------------------------------------------------------
+    //      Is Methods
+    //---------------------------------------------------------------------
+    public boolean isComparison()
+    {
+        return true;
+    }
+
 }

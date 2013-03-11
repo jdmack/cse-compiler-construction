@@ -444,20 +444,19 @@ public class AssemblyCodeGenerator {
         if(!returnSto.getType().isVoid()) {
             if(funcSto.getReturnByRef()) {
                 // TODO: Set the return value for return by reference
+                // This is the gist of it, but needs to be done with the heap address
 
+                LoadStoAddr(returnSto, SparcInstr.REG_SET_RETURN);
             }
             else { 
                 // ld [<location>], %i0
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(returnSto.load()), SparcInstr.REG_SET_RETURN);
+                LoadSto(returnSto, SparcInstr.REG_SET_RETURN);
             }
         }
 
         // Perform return/restore
-        // ret
-        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RET_OP);
-
-        // restore
-        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RESTORE_OP);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RET_OP);      // ret
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RESTORE_OP);  // restore
     }
 
     //-------------------------------------------------------------------------
@@ -744,10 +743,23 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      functionName419
+    //      DoFuncCall
     //-------------------------------------------------------------------------
-    public void functionName421()
+    public void DoFuncCall(FuncSTO funcSto, Vector<STO> args, STO returnSto)
     {
+        // returnSto is VarSTO if returnByRef, ExprSTO otherwise
+
+        writeCommentHeader("Function Call: " + funcSto.getName());
+        
+        // Load all arguments into out registers - assuming no more than 6 parameters
+        for(int i = 0; i < args.size(); i++) {
+            LoadSto(args.elementAt(i), SparcInstr.ARG_REGS[i]);
+        }
+
+        // call <funcName>
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, funcSto.getName()); 
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+
 
     }
 
@@ -863,7 +875,7 @@ public class AssemblyCodeGenerator {
     }
 
 /*    //-------------------------------------------------------------------------
-    //      functionName515
+    //      DoConst
     //-------------------------------------------------------------------------
     public void DoConst(STO resultSTO)
     {
