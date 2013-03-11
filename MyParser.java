@@ -356,6 +356,7 @@ class MyParser extends parser
 
             STO sto = new ConstSTO(id, type, ((ConstSTO)value).getValue());
             m_symtab.insert(sto);
+            m_codegen.DoVarDecl(sto);
             m_codegen.DoAssignExpr(sto, value);
         }
     }
@@ -1312,6 +1313,8 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoCout(Vector<STO> exprSTOs) {
         for(STO thisSto: exprSTOs) {
+            if(thisSto.isError())
+                continue;
             m_codegen.DoCout(thisSto);
         }
     }

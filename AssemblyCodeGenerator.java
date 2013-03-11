@@ -666,17 +666,17 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      StoreValueIntoSto - Stores value in valueReg into destSto
+    //      StoreValueIntoSto - Stores value in valueReg into destSto - uses %l7 as tmmp
     //-------------------------------------------------------------------------
-    public void StoreValueIntoSto(String valueReg, String tmpReg, STO destSto)
+    public void StoreValueIntoSto(String valueReg, STO destSto)
     {
         writeComment("Store value in " + valueReg + " into sto " + destSto.getName());
         
-        // Load sto addr into tmpReg
-        LoadStoAddr(destSto, tmpReg);
+        // Load sto addr into %l7
+        LoadStoAddr(destSto, SparcInstr.REG_LOCAL7);
 
-        // STORE VALUE IN valueReg INTO destSto (which has addr in tmpReg)
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, valueReg, bracket(tmpReg), "Store value in " + valueReg  + " into sto " + destSto.getName());
+        // STORE VALUE IN valueReg INTO destSto (which has addr in %l6)
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, valueReg, bracket(SparcInstr.REG_LOCAL7), "Store value in " + valueReg  + " into sto " + destSto.getName());
     }
 
     //-------------------------------------------------------------------------
@@ -898,7 +898,7 @@ public class AssemblyCodeGenerator {
     	}
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, value, SparcInstr.REG_LOCAL0);
     	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, resultSTO);
+    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
     }*/
 
     //-------------------------------------------------------------------------
@@ -949,7 +949,7 @@ public class AssemblyCodeGenerator {
         	writeAssembly(SparcInstr.THREE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0, "Adding Values!");
     	}
     	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, resultSTO);
+    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
     }
 
     //-------------------------------------------------------------------------
