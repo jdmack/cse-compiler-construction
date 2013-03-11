@@ -842,7 +842,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      functionName515
     //-------------------------------------------------------------------------
-    public void DoConstBinaryOp(STO resultSTO)
+    public void DoConst(STO resultSTO)
     {
     	String value = "";
     	if(resultSTO.getType().isInt()){
@@ -856,6 +856,23 @@ public class AssemblyCodeGenerator {
     	else if(resultSTO.getType().isFloat()){
     		double val = ((ConstSTO)resultSTO).getFloatValue();
     		value = String.valueOf(val);
+    		// .section ".data"
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+            // .align 4
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
+            // float<xxx>: .single 0r5.75 
+            writeAssembly(SparcInstr.RO_DEFINE, ".float_" + String.valueOf(float_count), SparcInstr.SINGLEP, "0r" + (String.valueOf(((ConstSTO) resultSTO).getFloatValue())));
+
+            // .section ".text"
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+
+            // .align 4
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
+            // set label, %l0
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".float_" + String.valueOf(float_count), SparcInstr.REG_LOCAL0);
+    		
     	}
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, value, SparcInstr.REG_LOCAL0);
     	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));

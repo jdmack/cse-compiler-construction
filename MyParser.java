@@ -356,7 +356,7 @@ class MyParser extends parser
 
             STO sto = new ConstSTO(id, type, ((ConstSTO)value).getValue());
             m_symtab.insert(sto);
-
+            m_codegen.DoAssignExpr(sto, value);
         }
     }
 
@@ -929,7 +929,7 @@ class MyParser extends parser
         // If operands are constants, do the op
         if((!resultSTO.isError()) && (resultSTO.isConst())) {
             resultSTO =  op.doOperation((ConstSTO)operand1, (ConstSTO)operand2, resultSTO.getType());
-            m_codegen.DoConstBinaryOp(resultSTO);
+            m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
         else {
         	m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
@@ -1148,10 +1148,13 @@ class MyParser extends parser
         m_whileLevel--;
     }
     
+    //----------------------------------------------------------------
+    //      DoSizeOf
+    //----------------------------------------------------------------
     STO DoSizeOf(STO sto, Type type)
     {
     	int size = 0;
-    	
+    	ConstSTO constSTO;
     	//Either type or type is null
     	if (sto == null) {
     		size = type.getSize();
@@ -1170,7 +1173,9 @@ class MyParser extends parser
 			m_errors.print(ErrorMsg.error19_Sizeof);
     	}
     	
-    	return new ConstSTO("ConstInt", new IntType("int",4), (double)size);
+    	constSTO = new ConstSTO("ConstInt", new IntType("int",4), (double)size);
+    	m_codegen.DoLiteral(constSTO);
+    	return constSTO;
     }
 
     //----------------------------------------------------------------
