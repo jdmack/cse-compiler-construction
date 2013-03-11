@@ -852,7 +852,7 @@ public class AssemblyCodeGenerator {
     	String operation = "";
     	operand.store(SparcInstr.REG_FRAME, getNextOffset(operand.getType().getSize()));
 
-    	if(op.getClass().equals("-")){
+    	if(op.getName().equals("-")){
     		operation = SparcInstr.NEG_OP;
     		LoadSto(operand, SparcInstr.REG_OUTPUT0);
     		writeAssembly(SparcInstr.TWO_PARAM, operation, SparcInstr.REG_OUTPUT0, SparcInstr.REG_OUTPUT0);
