@@ -929,6 +929,7 @@ class MyParser extends parser
         // If operands are constants, do the op
         if((!resultSTO.isError()) && (resultSTO.isConst())) {
             resultSTO =  op.doOperation((ConstSTO)operand1, (ConstSTO)operand2, resultSTO.getType());
+            m_codegen.DoConstBinaryOp(resultSTO);
         }
         else {
         	m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
