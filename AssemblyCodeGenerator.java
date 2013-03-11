@@ -794,11 +794,17 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      functionName427
+    //      DoExit
     //-------------------------------------------------------------------------
-    public void functionName429()
+    public void DoExit(STO sto)
     {
+        // sto can only be int
+        // load sto into %o0
+        LoadSto(sto, SparcInstr.REG_ARG0);
 
+        // call exit
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.EXIT);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
     }
 
     //-------------------------------------------------------------------------

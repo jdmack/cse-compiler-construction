@@ -1124,6 +1124,8 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.error7_Exit, stoExpr.getType().getName()));
         }
 
+        m_codegen.DoExit(stoExpr);
+
         return stoExpr;
     }
 
