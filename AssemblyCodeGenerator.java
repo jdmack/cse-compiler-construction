@@ -826,20 +826,42 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      functionName499
     //-------------------------------------------------------------------------
-    public void functionName501()
+    public String LoadString(String string)
     {
+    	// .section ".rodata"
+    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.RODATA_SEC);
 
+    	// str_(str_count): .asciz "string literal" 
+    	writeAssembly(SparcInstr.RO_DEFINE, ".str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(string));
+
+    	// .section ".text"
+    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+
+        // .align 4
+    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+    	
+    	return ".str_"+str_count++;
+    	// increment str count
     }
 
     //-------------------------------------------------------------------------
-    //      functionName507
+    //      DoUnaryOp
     //-------------------------------------------------------------------------
-    public void functionName509()
+    public void DoUnaryOp(UnaryOp op, STO operand, STO resultSTO)
     {
+    	String operation = "";
 
+    	if(op.getName().equals("-")){
+    		operation = SparcInstr.NEG_OP;
+    		operand.store(SparcInstr.REG_FRAME, getNextOffset(operand.getType().getSize()));
+    		LoadSto(operand, SparcInstr.REG_OUTPUT0);
+    		writeAssembly(SparcInstr.TWO_PARAM, operation, SparcInstr.REG_OUTPUT0, SparcInstr.REG_OUTPUT0);
+    		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+    		StoreValueIntoSto(SparcInstr.REG_OUTPUT0, resultSTO);
+    	}
     }
 
-    //-------------------------------------------------------------------------
+/*    //-------------------------------------------------------------------------
     //      functionName515
     //-------------------------------------------------------------------------
     public void DoConst(STO resultSTO)
@@ -877,7 +899,7 @@ public class AssemblyCodeGenerator {
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, value, SparcInstr.REG_LOCAL0);
     	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
     	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
-    }
+    }*/
 
     //-------------------------------------------------------------------------
     //      DoBinaryOp

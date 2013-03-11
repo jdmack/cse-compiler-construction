@@ -962,14 +962,18 @@ class MyParser extends parser
         // If operand is a constant, do the op
         if((!resultSTO.isError()) && (resultSTO.isConst())) {
             resultSTO =  op.doOperation((ConstSTO)operand, resultSTO.getType());
+            m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
-
+        else {
+        	m_codegen.DoUnaryOp(op, operand, resultSTO);
+        }
         // Process/Print errors
         if(resultSTO.isError()) {
             m_nNumErrors++;
             m_errors.print(resultSTO.getName());
         }
-
+        
+        
         return resultSTO;
     }
 

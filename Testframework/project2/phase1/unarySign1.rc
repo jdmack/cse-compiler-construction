@@ -1,0 +1,6 @@
+function : int main() {
+    int x = 5;
+    cout << "int x = " << x << endl;
+    cout << "should print -5: "<< -x << endl;
+    return 0;
+}
