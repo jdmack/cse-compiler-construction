@@ -1,9 +1,13 @@
 #!/bin/bash
 
-if [[ -n $1 ]]; then
-    tests=$(find Testframework/project2/$1 -name "*${2}*.rc" | sort -n)
+if [[ -n $2 ]]; then
+    if [[ $1 == "f" ]]; then
+        tests=$2
+    else
+        tests=$(find Testframework/project2/$1 -name "*${2}*.rc" | sort -n)
+    fi
 else
-    tests=$(find Testframework/project2/* -mindepth 1 -name "*${2}*.rc" | sort -n)
+    tests=$(find Testframework/project2/* -mindepth 1 -name "*${1}*.rc" | sort -n)
 fi
 for f in $tests; do
     echo "\n================================================================================\n"
