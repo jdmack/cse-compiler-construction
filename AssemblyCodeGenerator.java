@@ -572,7 +572,7 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      DoVarDecl
+    //      DoVarDecl - allocates memory on stack and stores location in STO
     //-------------------------------------------------------------------------
     public void DoVarDecl(STO sto)
     {
@@ -582,59 +582,23 @@ public class AssemblyCodeGenerator {
         sto.store(SparcInstr.REG_FRAME, offset);
         stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
 
-        // Initialize to 0, mostly for testing purposed
+        // Initialize to 0, mostly for testing purpose
         writeAssembly(SparcInstr.BLANK_LINE);
         writeComment("Declare " + sto.getName());
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, bracket(sto.load()));
         writeAssembly(SparcInstr.BLANK_LINE);
         
-        // For float, check DI6 Page on "What about float?"
-
         // Array (TODO: In Phase 2)
-
 
         // Pointer (TODO: In Phase 3)
     }
 
     //-------------------------------------------------------------------------
-    //      DoAssignExpr
+    //      DoAssignExpr - Stores value in stoValue into stoVar
     //-------------------------------------------------------------------------
     public void DoAssignExpr(STO stoVar, STO stoValue)
     {
-        // TODO: My isConst check can go away after we allocate constants onto stack
-        // If storing a float
-        /*
-        // TODO: Float needs to be reconsidered for how you access floats
-        if(stoDes.getType().isFloat()) {
-
-            // Put value-to-assign into %f0
-            if(stoValue.isConst()) {
-                // Set the value of constant into %f0
-                // set <value>, %f0
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, stoValue.getValue(), SparcInstr.REG_FLOAT0);
-            }
-            else if(stoValue.isVar()) {
-                // Load value of var into %f0
-                // ld [<stoValue location>], %f0
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(stoValue.load()), SparcInstr.REG_FLOAT0);
-            }
-
-            // If value is not a float, convert it to a float
-            if(!stoValue.getType().isFloat()) {
-                // fitos %f0, %f0 ! Convert bit pattern to FP
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FITOS_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FLOAT0);
-            }
-
-            // Store value in %f0 into address of destination sto
-            // st %f0, [<stoDes location>]
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, bracket(stoDes.load()));
-        }
-        */
-        //else {
-            // Put value-to-assign into %l0
-                // Load value of var into %l0
-                // ld [<stoValue location>], %l0
         LoadStoAddr(stoVar, SparcInstr.REG_LOCAL0);
         if(stoVar.getType().isFloat())
             StoreSto(stoValue, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
@@ -642,10 +606,6 @@ public class AssemblyCodeGenerator {
             StoreSto(stoValue, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
 
         writeAssembly(SparcInstr.BLANK_LINE);
-
-            // Store value in %l0 into address of destination sto
-            // st %l0, [<stoDes location>]
-       // }
     }
 
     //-------------------------------------------------------------------------
