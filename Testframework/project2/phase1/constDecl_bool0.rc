@@ -1,0 +1,13 @@
+function: void main() {
+    const bool x = true;
+    const bool y = false, w = true;
+    const bool z = y;
+
+    bool a = w;
+
+    cout << "x: " << x << endl;
+    cout << "y: " << y << endl;
+    cout << "w: " << w << endl;
+    cout << "z: " << z << endl;
+    cout << "a: " << a << endl;
+}
