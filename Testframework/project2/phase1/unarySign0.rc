@@ -1,5 +1,5 @@
 function : int main() {
-    cout << "should print 2 "<< +2 << endl;
-    cout << "should print -2"<< -2 << endl;
+    cout << "should print 2: "<< +2 << endl;
+    cout << "should print -2: "<< -2 << endl;
     return 0;
 }
