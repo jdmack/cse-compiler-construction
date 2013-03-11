@@ -656,6 +656,8 @@ public class AssemblyCodeGenerator {
 
         // LOAD VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value of " + sto.getName() + " into " + reg);
+        if(isFloatReg(reg))
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FITOS_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FLOAT0);
     }
 
     //-------------------------------------------------------------------------
@@ -763,11 +765,14 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      functionName411
+    //      isFloatReg
     //-------------------------------------------------------------------------
-    public void functionName413()
+    public boolean isFloatReg(String reg)
     {
-
+        if(reg.contains("%f"))
+            return true;
+        else
+            return false;
     }
 
     //-------------------------------------------------------------------------
