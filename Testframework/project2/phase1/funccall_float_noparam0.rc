@@ -1,12 +1,12 @@
 float y = 4;
 
 function: float bar2() {
-    cout << "11. bar2() - returning 5" << endl;
+    cout << "10. bar2() - returning 5" << endl;
     return 5;
 }
 
 function: float bar1() {
-    cout << " 9. bar1() - returning 5" << endl;
+    cout << " 9. bar1() - returning 5 as direct" << endl;
     return bar2();
 }
 
@@ -50,6 +50,6 @@ function: void main() {
     cout << " 8. foo4() -  received " << x4 << endl;
 
     float b = bar1();
-    cout << "10. bar1() -  received " << b << endl;
+    cout << "11. bar1() -  received " << b << endl;
 
 }

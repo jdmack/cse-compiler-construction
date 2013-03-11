@@ -344,21 +344,16 @@ public class AssemblyCodeGenerator {
                 DoLiteral((ConstSTO) valueSto);
 
             writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
-
+            DoAssignExpr(varSto, valueSto);
+        /*
             // ld [<value>], %l1
             LoadSto(valueSto, SparcInstr.REG_LOCAL1);
-
-            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(valueSto.load()), SparcInstr.REG_LOCAL1);
-            // set x, %l0
-            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(varSto.load()), SparcInstr.REG_LOCAL0);
-            // add %g0, %l0, %l0
-            //writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL0);
-
             LoadStoAddr(varSto, SparcInstr.REG_LOCAL0);
 
             // st %l1, [%l0]
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0));
             writeAssembly(SparcInstr.BLANK_LINE);
+        */
         }
 
         // _init_done:
@@ -442,29 +437,20 @@ public class AssemblyCodeGenerator {
     public void DoReturn(FuncSTO funcSto, STO returnSto)
     {
         writeCommentHeader("Set return value (if needed) and return");
-
         // Load the return value into the return register
         if(!returnSto.getType().isVoid()) {
             if(funcSto.getReturnByRef()) {
                 // TODO: Set the return value for return by reference
                 // This is the gist of it, but needs to be done with the heap address
-
                 LoadStoAddr(returnSto, SparcInstr.REG_SET_RETURN);
             }
             else { 
                 // If return type is float, put into %f0 (possibly fitos)
-                if(funcSto.getReturnType().isFloat()) {
+                if(funcSto.getReturnType().isFloat())
                     LoadSto(returnSto, SparcInstr.REG_FLOAT0);
-
-                    if(returnSto.getType().isInt())
-                        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FITOS_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FLOAT0);
-
-                }
                 // return type is not float, store into %i0
-                else {
-                    // ld [<location>], %i0
+                else
                     LoadSto(returnSto, SparcInstr.REG_SET_RETURN);
-                }
             }
         }
 
@@ -637,8 +623,10 @@ public class AssemblyCodeGenerator {
 
         // LOAD VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value of " + sto.getName() + " into " + reg);
-        if(isFloatReg(reg) && sto.getType().isInt())
+        if(isFloatReg(reg) && sto.getType().isInt()) {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FITOS_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FLOAT0);
+            // System.out.println("[DEBUG] FITOSing in LoadSto");
+        }
 
     }
 

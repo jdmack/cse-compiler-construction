@@ -6,7 +6,7 @@ function: bool bar2() {
 }
 
 function: bool bar1() {
-    cout << " 9. bar1() - returning true" << endl;
+    cout << " 9. bar1() - returning true as direct" << endl;
     return bar2();
 }
 

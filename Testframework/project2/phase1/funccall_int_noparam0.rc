@@ -6,7 +6,7 @@ function: int bar2() {
 }
 
 function: int bar1() {
-    cout << " 9. bar1() - returning 5" << endl;
+    cout << " 9. bar1() - returning 5 as direct" << endl;
     return bar2();
 }
 
