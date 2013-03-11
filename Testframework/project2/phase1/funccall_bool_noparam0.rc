@@ -1,5 +1,20 @@
 bool y = false;
 
+int recurse = 5;
+int r = 11;
+
+function: bool foo5() {
+    recurse = recurse - 1;
+    r = r + 1;
+    if(recurse) {
+        bool rtn = foo5();
+        cout << r << ". foo5() - returning " << rtn << endl;
+        return rtn;
+    }
+    cout << r << ". foo5() - returning true" << endl;
+    return true;
+}
+
 function: bool bar2() {
     cout << "11. bar2() - returning true" << endl;
     return true;
@@ -52,4 +67,7 @@ function: void main() {
     bool b = bar1();
     cout << "10. bar1() -  received " << b << endl;
 
+    cout << "11. foo5() - recursive start" << endl;
+    bool x5 = foo5();
+    cout << r << ". foo5() - recursive end - final value: " << x5 << endl;
 }

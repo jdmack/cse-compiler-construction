@@ -1,7 +1,23 @@
 int y = 4;
 
+int recurse = 5;
+int r = 11;
+
+function: int foo5() {
+    recurse = recurse - 1;
+    r = r + 1;
+    if(recurse) {
+        int rtn = foo5() + 1;
+        cout << r << ". foo5() - returning " << rtn << endl;
+        return rtn;
+    }
+    cout << r << ". foo5() - returning 1" << endl;
+    return 1;
+}
+
+
 function: int bar2() {
-    cout << "11. bar2() - returning 5" << endl;
+    cout << "10. bar2() - returning 5" << endl;
     return 5;
 }
 
@@ -51,5 +67,10 @@ function: void main() {
 
     int b = bar1();
     cout << "10. bar1() -  received " << b << endl;
+
+    cout << "11. foo5() - recursive start" << endl;
+    int x5 = foo5();
+    cout << r << ". foo5() - recursive end - final value: " << x5 << endl;
+
 
 }

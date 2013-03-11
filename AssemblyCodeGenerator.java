@@ -1000,25 +1000,23 @@ public class AssemblyCodeGenerator {
     //      DoIf
     //-------------------------------------------------------------------------
     //public void DoIf(ComparisonOp op, STO operand1, STO operand2, STO resultSto)
-    public void DoIf(ConstSTO condition)
+    public void DoIf(STO condition)
     {
         // !----if <condition>----
-    	writeComment("if "+condition.getIntValue());
+    	writeComment("if " + condition.getName());
     	
-    	// create if label and increment the count
-    	String ifL = ".ifL_"+ifLabel_count;
+    	// create if label, increment the count and add to stack
+    	String ifLabel = ".ifL_" + ifLabel_count;
     	ifLabel_count++;
-    	// add the label to the stack
-    	stackIfLabel.add(ifL);
+    	stackIfLabel.add(ifLabel);
     	
-    	// set condition, %l0
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(condition.getIntValue()), "%l0");
-    	// ld [%l0], %l0
-    	//writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, sqBracketed("%l0"), "%l0");
+        // Load condition into %l0 for comparison
+        LoadSto(condition, SparcInstr.REG_LOCAL0);
+
     	// cmp %l0, %g0
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, "%l0", "%g0");
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
     	// be IfL1! Opposite logic
-    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, ifL);
+    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, ifLabel);
     	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
     	increaseIndent();
     }

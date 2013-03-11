@@ -1019,7 +1019,8 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.error4_Test, stoExpr.getType().getName()));
             return (new ErrorSTO("DoIf error"));
         }
-        m_codegen.DoIf((ConstSTO) stoExpr);
+        //m_codegen.DoIf((ConstSTO) stoExpr);
+        m_codegen.DoIf(stoExpr);
         return stoExpr;
     }
 
