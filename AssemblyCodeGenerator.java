@@ -583,11 +583,13 @@ public class AssemblyCodeGenerator {
         stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
 
         // Initialize to 0, mostly for testing purpose
-        writeAssembly(SparcInstr.BLANK_LINE);
-        writeComment("Declare " + sto.getName());
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, bracket(sto.load()));
-        writeAssembly(SparcInstr.BLANK_LINE);
+        /*
+            writeAssembly(SparcInstr.BLANK_LINE);
+            writeComment("Declare " + sto.getName());
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, bracket(sto.load()));
+            writeAssembly(SparcInstr.BLANK_LINE);
+        */
         
         // Array (TODO: In Phase 2)
 
