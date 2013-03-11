@@ -933,7 +933,10 @@ class MyParser extends parser
             m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
         else {
-        	m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
+            //if(op.isComparison())
+        	//    m_codegen.DoIfStart(op, operand1, operand2, resultSTO);
+            //else
+        	    m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
         }
         // Process/Print errors
         if(resultSTO.isError()) {
