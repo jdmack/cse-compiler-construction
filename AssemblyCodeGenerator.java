@@ -759,8 +759,6 @@ public class AssemblyCodeGenerator {
         // call <funcName>
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, funcSto.getName()); 
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-
-
     }
 
     //-------------------------------------------------------------------------
