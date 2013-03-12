@@ -589,12 +589,10 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void AllocateSto(STO sto)
     {
-
-        // TODO: Need to store how many bytes used in function
-        // Local basic type (int, float, boolean)
         String offset = getNextOffset(sto.getType().getSize());
         sto.store(SparcInstr.REG_FRAME, offset);
         stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
+        System.out.println(sto.getName() + " allocated to: " + sto.load());
     }
 
     //-------------------------------------------------------------------------
@@ -813,9 +811,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoComparisonOp(ComparisonOp op, STO operand1, STO operand2, STO resultSto)
     {
-    	resultSto.store(SparcInstr.REG_FRAME, getNextOffset(resultSto.getType().getSize()));
-        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSto.getName(), resultSto.load()));
-    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSto);
+        System.out.println("Inside codegen.DoComparisonOp");
+        AllocateSto(resultSto);
 
         String branchOp = "";
         String regOp1 = SparcInstr.REG_LOCAL1;
@@ -889,17 +886,17 @@ public class AssemblyCodeGenerator {
         LoadSto(operand1, regOp1);
         LoadSto(operand2, regOp2);
 
-        // %l2 is going to hold our boolean result of the comparison
+        // %l0 is going to hold our boolean result of the comparison
         // We initialize it to 1 (true) and branch over the %l0 = 0 (false) statement if the comparison is true
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL0, "Init result to true");
 
         // Perform comparison, branch if true, if false, fall through and set 0 (false)
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, regOp1, regOp2, "operand1 <cond> operand2");
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, cmpOp, regOp1, regOp2, "operand1 <cond> operand2");
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, compLabel, "if the result is true, branch and do nothing");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
 
         // It was false, set 0
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, "It was false, set 0");
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.MOV_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, "It was false, set 0");
 
         // Print label, this label facilitates "true"
         decreaseIndent();
