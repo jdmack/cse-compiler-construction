@@ -34,7 +34,7 @@ abstract class Operator
     //---------------------------------------------------------------------
     //      Is Methods
     //---------------------------------------------------------------------
-    public boolean isComparison()
+    protected boolean isComparison()
     {
         return false;
     }
