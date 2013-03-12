@@ -577,6 +577,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoVarDecl(STO sto)
     {
+        System.out.println("Inside codegen.DoVarDecl");
+
         // TODO: Need to store how many bytes used in function
         // Local basic type (int, float, boolean)
         String offset = getNextOffset(sto.getType().getSize());

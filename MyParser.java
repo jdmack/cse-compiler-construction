@@ -192,6 +192,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoVarDecl(boolean isStatic, Type type, Vector<IdValueTuple> lstIDs)
     {
+        System.out.println("Iniside MyParser.DoVarDecl");
         for(int i = 0; i < lstIDs.size(); i++) {
             String id = lstIDs.elementAt(i).getId();
             STO value = lstIDs.elementAt(i).getValue();
