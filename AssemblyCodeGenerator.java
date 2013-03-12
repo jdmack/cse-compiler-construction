@@ -30,6 +30,7 @@ public class AssemblyCodeGenerator {
     private int str_count = 0;
     private int float_count = 0;
     private int ifLabel_count = 0;
+    private int compLabel_count = 0;
         
     //-------------------------------------------------------------------------
     //      Constructors
@@ -808,10 +809,103 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      functionName435
+    //      DoComparisonOp
     //-------------------------------------------------------------------------
-    public void functionName437()
+    public void DoIfComparison(ComparisonOp op, STO operand1, STO operand2, STO resultSto)
     {
+        String branchOp = "";
+        String regOp1 = SparcInstr.REG_LOCAL1;
+        String regOp2 = SparcInstr.REG_LOCAL2;
+        String cmpOp = SparcInstr.CMP_OP;
+        boolean isFloatOp = false;
+        
+        // If either is float, then we'll use float registers
+        if(operand1.getType().isFloat() || operand2.getType().isFloat()) {
+            regOp1 = SparcInstr.REG_FLOAT0;
+            regOp2 = SparcInstr.REG_FLOAT1;
+            isFloatOp = true;
+            cmpOp = SparcInstr.FCMPS_OP;
+        }
+
+        // Determine operator to set branch, regular or float version
+
+        // We can use the actual branch ops because we're going to set the value
+        // to 1 (true) initially and then branch to the bottom of the "if" if the 
+        // condition is true, giving us 1. If it's false, we fall through and set
+        // 0
+
+        // EqualToOp
+        if(op.isEqualToOp()) {
+            if(isFloatOp)
+                branchOp = SparcInstr.FBE_OP;
+            else
+                branchOp = SparcInstr.BE_OP;
+        }
+        // GreaterThanEqualOp
+        else if(op.GreaterThanEqualOp()) {
+            if(isFloatOp)
+                branchOp = SparcInstr.FBGE_OP;
+            else
+                branchOp = SparcInstr.BGE_OP;
+        }
+        // GreaterThanOp
+        else if(op.GreaterThanOp()) {
+            if(isFloatOp)
+                branchOp = SparcInstr.FBG_OP;
+            else
+                branchOp = SparcInstr.BG_OP;
+        }
+        // LessThanEqualOp
+        else if(op.LessThanEqualOp()) {
+            if(isFloatOp)
+                branchOp = SparcInstr.FBLE_OP;
+            else
+                branchOp = SparcInstr.BLE_OP;
+        }
+        // LessThanOp
+        else if(op.LessThanOp()) {
+            if(isFloatOp)
+                branchOp = SparcInstr.FBL_OP;
+            else
+                branchOp = SparcInstr.BL_OP;
+        }
+        // NEqualToOp
+        else if(op.NEqualToOp()) {
+            if(isFloatOp)
+                branchOp = SparcInstr.FBNE_OP;
+            else
+                branchOp = SparcInstr.BNE_OP;
+        }
+
+        // Get label ready
+        String compLabel = ".compL_" + compLabel_count;
+        compLabel_count++;
+        
+        // Load the operands
+        LoadSto(operand1, reg1);
+        LoadSto(operand2, reg2);
+
+        // %l2 is going to hold our boolean result of the comparison
+        // We initialize it to 1 (true) and branch over the %l0 = 0 (false) statement if the comparison is true
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL0, "Init result to true");
+
+        // Perform comparison, branch if true, if false, fall through and set 0 (false)
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, regOp1, regOp2, "operand1 <cond> operand2");
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, compLabel, "if the result is true, branch and do nothing");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+
+        // It was false, set 0
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, "It was false, set 0");
+
+        // Print label, this label facilitates "true"
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, compLabel);
+        increaseIndent();
+        
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        // Comparison done, result is in %l0, store it in the resultSto
+        StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSto);
 
     }
 
@@ -1049,7 +1143,6 @@ public class AssemblyCodeGenerator {
     //--------------------------------e-----------------------------------------
     //      DoIf
     //-------------------------------------------------------------------------
-    //public void DoIf(ComparisonOp op, STO operand1, STO operand2, STO resultSto)
     public void DoIf(STO condition)
     {
         // !----if <condition>----
