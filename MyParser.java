@@ -601,6 +601,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     STO DoAssignExpr(STO stoDes, STO stoValue)
     {
+        System.out.println("in MyParser.DoAssignExpr");
         // Check for previous errors in line and short circuit
         if(stoDes.isError()) {
             return stoDes;
