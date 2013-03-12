@@ -49,4 +49,8 @@ class ComparisonOp extends BinaryOp
         return true;
     }
 
+    public boolean isComparisonOp()
+    {
+        return true;
+    }
 }

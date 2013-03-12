@@ -30,4 +30,8 @@ class MulOp extends ArithmeticOp
         return new ConstSTO("MulOp.doOperation Result", resultType, value);
     }
 
+    public boolean isMulOp()
+    {
+        return true;
+    }
 }

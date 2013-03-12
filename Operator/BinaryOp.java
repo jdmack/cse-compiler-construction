@@ -25,4 +25,8 @@ class BinaryOp extends Operator
         return new ErrorSTO("BinaryOp.doOperation Error");
     }
 
+    public boolean isBinaryOp()
+    {
+        return true;
+    }
 }

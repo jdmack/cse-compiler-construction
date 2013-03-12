@@ -996,7 +996,7 @@ class MyParser extends parser
         if(resultSTO.isConst())
             if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
         else 
-            if(!op.isComparison() && (!ERROR))
+            if(!op.isComparisonOp() && (!ERROR))
                 m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
 
         return resultSTO;

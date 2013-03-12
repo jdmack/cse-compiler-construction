@@ -34,4 +34,8 @@ class GreaterThanOp extends ComparisonOp
         return new ConstSTO("GreaterThanOp.doOperation Result", resultType, value);
     }
 
+    public boolean isGreaterThanOp()
+    {
+        return true;
+    }
 }

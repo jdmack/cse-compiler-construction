@@ -31,11 +31,11 @@ class NEqualToOp extends ComparisonOp
         // Check #1 - NotEqualTo - Both operands must be numeric or boolean
         // Check #17- NotEqualTo - Both operands be numeric, boolean, pointer, or nullptr
         if(!bothNumeric && !bothBoolean && !bothPointer && !bothNullPtr) {
-        	// if either operand is a pointer type or nullptr use check 17 error
-        	if(eitherPointer || eitherNullPtr) {
-        		return(new ErrorSTO(Formatter.toString(ErrorMsg.error17_Expr, this.getName(), o1Type.getName(), o2Type.getName())));
-        	} 
-        	return(new ErrorSTO(Formatter.toString(ErrorMsg.error1b_Expr, operand1.getType().getName(), this.getName(), operand2.getType().getName())));
+            // if either operand is a pointer type or nullptr use check 17 error
+            if(eitherPointer || eitherNullPtr) {
+                return(new ErrorSTO(Formatter.toString(ErrorMsg.error17_Expr, this.getName(), o1Type.getName(), o2Type.getName())));
+            } 
+            return(new ErrorSTO(Formatter.toString(ErrorMsg.error1b_Expr, operand1.getType().getName(), this.getName(), operand2.getType().getName())));
         }
 
         if((operand1.isConst() && operand2.isConst()) || (o1Type.isNullPtr() && o2Type.isNullPtr())) {
@@ -62,10 +62,10 @@ class NEqualToOp extends ComparisonOp
             b_value = operand1.getFloatValue() != operand2.getFloatValue();
         }
         else if(resultType.isBool()) {
-        	if(operand1.getType().isNullPtr() && operand2.getType().isNullPtr())
-        		b_value = false;
-        	else
-        		b_value = operand1.getBoolValue() != operand2.getBoolValue();
+            if(operand1.getType().isNullPtr() && operand2.getType().isNullPtr())
+                b_value = false;
+            else
+                b_value = operand1.getBoolValue() != operand2.getBoolValue();
         }
 
         if(b_value)
@@ -74,5 +74,10 @@ class NEqualToOp extends ComparisonOp
             value = new Double(0);
 
         return new ConstSTO("NEqualToOp.doOperation Result", resultType, value);
+    }
+
+    public boolean isNEqualToOp()
+    {
+        return true;
     }
 }

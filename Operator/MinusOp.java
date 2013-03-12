@@ -30,4 +30,8 @@ class MinusOp extends ArithmeticOp
         return new ConstSTO("MinusOp.doOperation Result", resultType, value);
     }
 
+    public boolean isMinusOp()
+    {
+        return true;
+    }
 }

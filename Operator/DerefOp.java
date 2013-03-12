@@ -47,4 +47,9 @@ class DerefOp extends UnaryOp
 
         return new ConstSTO("DerefOp.doOperation Result", resultType, value);
     }
+
+    public boolean isDerefOp()
+    {
+        return true;
+    }
 }

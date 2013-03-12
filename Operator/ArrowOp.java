@@ -35,4 +35,9 @@ class ArrowOp extends UnaryOp
 
         return resultSTO;
     }
+
+    public boolean isArrowOp()
+    {
+        return true;
+    }
 }

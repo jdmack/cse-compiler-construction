@@ -31,4 +31,8 @@ class AndOp extends BooleanOp
         return new ConstSTO("AndOp.doOperation Result", resultType, value);
     }
 
+    public boolean isAndOp()
+    {
+        return true;
+    }
 }

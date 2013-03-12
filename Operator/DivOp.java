@@ -45,5 +45,8 @@ class DivOp extends ArithmeticOp
         return new ConstSTO("DivOp.doOperation Result", resultType, value);
     }
 
-
+    public boolean isDivOp()
+    {
+        return true;
+    }
 }

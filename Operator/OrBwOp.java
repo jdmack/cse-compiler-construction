@@ -22,4 +22,8 @@ class OrBwOp extends BitwiseOp
         return new ConstSTO("OrBwOp.doOperation Result", resultType, value);
     }
 
+    public boolean isOrBwOp()
+    {
+        return true;
+    }
 }

@@ -22,4 +22,8 @@ class XorOp extends BitwiseOp
         return new ConstSTO("XorOp.doOperation Result", resultType, value);
     }
 
+    public boolean isXorOp()
+    {
+        return true;
+    }
 }

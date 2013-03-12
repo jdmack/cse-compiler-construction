@@ -25,4 +25,8 @@ class UnaryOp extends Operator
         return new ErrorSTO("UnaryOp.doOperation Error");
     }
 
+    public boolean isUnaryOp()
+    {
+        return true;
+    }
 }

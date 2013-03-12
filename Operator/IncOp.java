@@ -4,7 +4,7 @@
 
 class IncOp extends UnaryOp
 {
-	private boolean isPost = false;
+    private boolean isPost = false;
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
@@ -38,7 +38,7 @@ class IncOp extends UnaryOp
             resultSTO = new ExprSTO("IncOp.checkOperand() Result", new FloatType());
         }
         else if(operand.getType().isPointer()) {
-        	resultSTO = new ExprSTO("IncOp.checkOperand() Result", new PointerType());
+            resultSTO = new ExprSTO("IncOp.checkOperand() Result", new PointerType());
         }
         else {
             return(new ErrorSTO("This will never happen, making compiler happy"));
@@ -47,11 +47,16 @@ class IncOp extends UnaryOp
         return resultSTO;
     }
 
-	public boolean isPost() {
-		return isPost;
-	}
+    public boolean isPost() {
+        return isPost;
+    }
 
-	public void setPost(boolean isPost) {
-		this.isPost = isPost;
-	}
+    public void setPost(boolean isPost) {
+        this.isPost = isPost;
+    }
+
+    public boolean isIncOp()
+    {
+        return true;
+    }
 }

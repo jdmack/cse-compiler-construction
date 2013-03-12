@@ -31,11 +31,11 @@ class EqualToOp extends ComparisonOp
         // Check #1 - EqualTo - Both operands must be numeric or boolean
         // Check #17 -EqualTo - Both operands be numeric, boolean, pointer, or nullptr
         if(!bothNumeric && !bothBoolean && !bothPointer && !bothNullPtr) {
-        	// if either operand is a pointer type or nullptr use check 17 error
-        	if(eitherPointer || eitherNullPtr) {
-        		return(new ErrorSTO(Formatter.toString(ErrorMsg.error17_Expr, this.getName(), o1Type.getName(), o2Type.getName())));
-        	} 
-        	return(new ErrorSTO(Formatter.toString(ErrorMsg.error1b_Expr, operand1.getType().getName(), this.getName(), operand2.getType().getName())));
+            // if either operand is a pointer type or nullptr use check 17 error
+            if(eitherPointer || eitherNullPtr) {
+                return(new ErrorSTO(Formatter.toString(ErrorMsg.error17_Expr, this.getName(), o1Type.getName(), o2Type.getName())));
+            } 
+            return(new ErrorSTO(Formatter.toString(ErrorMsg.error1b_Expr, operand1.getType().getName(), this.getName(), operand2.getType().getName())));
         }
 
         if((operand1.isConst() && operand2.isConst()) || (o1Type.isNullPtr() && o2Type.isNullPtr())) {
@@ -61,10 +61,10 @@ class EqualToOp extends ComparisonOp
             b_value = operand1.getFloatValue() == operand2.getFloatValue();
         }
         else if(resultType.isBool()) {
-        	if(operand1.getType().isNullPtr() && operand2.getType().isNullPtr())
-        		b_value = true;
-        	else
-        		b_value = operand1.getBoolValue() == operand2.getBoolValue();
+            if(operand1.getType().isNullPtr() && operand2.getType().isNullPtr())
+                b_value = true;
+            else
+                b_value = operand1.getBoolValue() == operand2.getBoolValue();
         }
 
         if(b_value)
@@ -75,4 +75,8 @@ class EqualToOp extends ComparisonOp
         return new ConstSTO("EqualToOp.doOperation Result", resultType, value);
     }
 
+    public boolean isEqualToOp()
+    {
+        return true;
+    }
 }

@@ -23,4 +23,9 @@ class AndBwOp extends BitwiseOp
         return new ConstSTO("AddBwOp.doOperation Result", resultType, value);
     }
 
+
+    public boolean isAndBwOp()
+    {
+        return true;
+    }
 }

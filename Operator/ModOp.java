@@ -47,4 +47,8 @@ class ModOp extends ArithmeticOp
         return new ConstSTO("ModOp.doOperation Result", resultType, value);
     }
 
+    public boolean isModOp()
+    {
+        return true;
+    }
 }

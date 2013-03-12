@@ -39,4 +39,9 @@ class BooleanOp extends BinaryOp
         return resultSTO;
 
     }
+
+    public boolean isBooleanOp()
+    {
+        return true;
+    }
 }

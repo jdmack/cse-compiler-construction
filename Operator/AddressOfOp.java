@@ -32,4 +32,9 @@ class AddressOfOp extends UnaryOp
 
         return resultSTO;
     }
+
+    public boolean isAddressOfOp()
+    {
+        return true;
+    }
 }

@@ -4,7 +4,7 @@
 
 class DecOp extends UnaryOp
 {
-	private boolean isPost = false;
+    private boolean isPost = false;
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
@@ -46,11 +46,16 @@ class DecOp extends UnaryOp
 
         return resultSTO;
     }
-	public boolean isPost() {
-		return isPost;
-	}
+    public boolean isPost() {
+        return isPost;
+    }
 
-	public void setPost(boolean isPost) {
-		this.isPost = isPost;
-	}
+    public void setPost(boolean isPost) {
+        this.isPost = isPost;
+    }
+
+    public boolean isDecOp()
+    {
+        return true;
+    }
 }

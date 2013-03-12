@@ -30,4 +30,8 @@ class AddOp extends ArithmeticOp
         return new ConstSTO("AddOp.doOperation Result", resultType, value);
     }
 
+    public boolean isAddOp()
+    {
+        return true;
+    }
 }

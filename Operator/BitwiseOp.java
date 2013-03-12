@@ -39,4 +39,9 @@ class BitwiseOp extends BinaryOp
 
         return resultSTO;
     }
+
+    public boolean isBitwiseOp()
+    {
+        return true;
+    }
 }

@@ -49,4 +49,9 @@ class NotOp extends UnaryOp
 
         return new ConstSTO("NotOp.doOperation Result", resultType, value);
     }
+
+    public boolean isNotOp()
+    {
+        return true;
+    }
 }

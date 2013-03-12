@@ -50,4 +50,8 @@ class ArithmeticOp extends BinaryOp
         return resultSTO;
     }
 
+    public boolean isArithmeticOp()
+    {
+        return true;
+    }
 }

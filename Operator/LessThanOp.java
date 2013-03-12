@@ -33,4 +33,8 @@ class LessThanOp extends ComparisonOp
         return new ConstSTO("LessThanOp.doOperation Result", resultType, value);
     }
 
+    public boolean isLessThanOp()
+    {
+        return true;
+    }
 }

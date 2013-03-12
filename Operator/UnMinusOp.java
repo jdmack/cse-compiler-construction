@@ -47,4 +47,9 @@ class UnMinusOp extends UnaryOp
 
         return new ConstSTO("UnMinusOp.doOperation Result", resultType, value);
     }
+
+    public boolean isUnMinusOp()
+    {
+        return true;
+    }
 }

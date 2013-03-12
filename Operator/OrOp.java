@@ -29,4 +29,9 @@ class OrOp extends BooleanOp
 
         return new ConstSTO("OrOp.doOperation Result", resultType, value);
     }
+
+    public boolean isOrOp()
+    {
+        return true;
+    }
 }
