@@ -748,11 +748,11 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      DoFuncCall
     //-------------------------------------------------------------------------
-    public void DoFuncCall(FuncSTO funcSto, Vector<STO> args, STO returnSto)
+    public void DoFuncCall(STO sto, Vector<STO> args, STO returnSto)
     {
         // returnSto is VarSTO if returnByRef, ExprSTO otherwise
 
-        writeCommentHeader("Function Call: " + funcSto.getName());
+        writeCommentHeader("Function Call: " + sto.getName());
         
         // Load all arguments into out registers - assuming no more than 6 parameters
         for(int i = 0; i < args.size(); i++) {
@@ -760,27 +760,27 @@ public class AssemblyCodeGenerator {
         }
 
         // call <funcName>
-        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, funcSto.getName()); 
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, sto.getName()); 
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
 
         // Now we can write the code for after the return, which is store the return value to stack
         // If the return type isn't void, save the return value
         if(!returnSto.getType().isVoid()) {
 
-            writeComment("Save return from " + funcSto.getName() + " onto stack");
+            writeComment("Save return from " + sto.getName() + " onto stack");
 
             // Get spot on stack and save to Sto
             String offset = getNextOffset(returnSto.getType().getSize());
             returnSto.store(SparcInstr.REG_FRAME, offset);
             stackValues.addElement(new StackRecord(currentFunc.peek().getName(), returnSto.getName(), returnSto.load()));
 
-            if(funcSto.getReturnByRef()) {
+            if(((FuncPtrType) sto.getType()).getReturnByRef()) {
                 // TODO: Save the return value for return by reference
                 // LoadStoAddr(returnSto, SparcInstr.REG_SET_RETURN);
             }
             else { 
                 // If return type is float, put into %f0 (possibly fitos)
-                if(funcSto.getReturnType().isFloat()) {
+                if(((FuncPtrType) sto.getType()).getReturnType().isFloat()) {
                     // Store the value, it's in %f0
                     StoreValueIntoSto(SparcInstr.REG_FLOAT0, returnSto);
                 }

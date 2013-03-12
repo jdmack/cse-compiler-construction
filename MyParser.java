@@ -264,10 +264,12 @@ class MyParser extends parser
             else {
                 if(!ERROR) m_codegen.DoVarDecl(stoVar);
 
-                if(!value.isNull()) {
-                    DoAssignExpr(stoVar, value);
-                }
             }
+
+            if(!value.isNull()) {
+                DoAssignExpr(stoVar, value);
+            }
+
         }
     }
     //----------------------------------------------------------------
@@ -715,7 +717,7 @@ class MyParser extends parser
                 returnSto = new ExprSTO(sto.getName() + "Return", funcType.getReturnType());
         }
 
-        if(!ERROR) m_codegen.DoFuncCall((FuncSTO) sto, args, returnSto);
+        if(!ERROR) m_codegen.DoFuncCall(sto, args, returnSto);
 
         return returnSto;
     }
@@ -976,20 +978,27 @@ class MyParser extends parser
         STO resultSTO = op.checkOperands(operand1, operand2);
 
         // If operands are constants, do the op
-        if((!resultSTO.isError()) && (resultSTO.isConst())) {
+        if((!resultSTO.isError()) && (resultSTO.isConst()))
             resultSTO =  op.doOperation((ConstSTO)operand1, (ConstSTO)operand2, resultSTO.getType());
-            if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
-        }
-        else {
-            if(!op.isComparison())
-                if(!ERROR) m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
-        }
+
+        // DON'T REFACTOR UNLESS YOU RUN PROJECT1 TESTS
+        // THIS CODE IS IN THIS ORDER FOR A VERY SPECIFIC REASON
+
         // Process/Print errors
         if(resultSTO.isError()) {
             m_nNumErrors++;
             m_errors.print(resultSTO.getName());
             ERROR = true;
+            return resultSTO;
         }
+
+        // And better to have all the codegen code at the end of the function
+        if(resultSTO.isConst())
+            if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
+        else 
+            if(!op.isComparison() && (!ERROR))
+                m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
+
         return resultSTO;
     }
 
@@ -1006,6 +1015,14 @@ class MyParser extends parser
         // Use UnaryOp.checkOperand() to perform error checks
         STO resultSTO = op.checkOperand(operand);
 
+        // Process/Print errors
+        if(resultSTO.isError()) {
+            m_nNumErrors++;
+            m_errors.print(resultSTO.getName());
+            ERROR = true;
+            return resultSTO;
+        }
+
         // If operand is a constant, do the op
         if((!resultSTO.isError()) && (resultSTO.isConst())) {
             resultSTO =  op.doOperation((ConstSTO)operand, resultSTO.getType());
@@ -1013,12 +1030,6 @@ class MyParser extends parser
         }
         else {
             if(!ERROR) m_codegen.DoUnaryOp(op, operand, resultSTO);
-        }
-        // Process/Print errors
-        if(resultSTO.isError()) {
-            m_nNumErrors++;
-            m_errors.print(resultSTO.getName());
-            ERROR = true;
         }
         
         
