@@ -577,21 +577,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoVarDecl(STO sto)
     {
-
-        // TODO: Need to store how many bytes used in function
-        // Local basic type (int, float, boolean)
-        String offset = getNextOffset(sto.getType().getSize());
-        sto.store(SparcInstr.REG_FRAME, offset);
-        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
-
-        // Initialize to 0, mostly for testing purpose
-        /*
-            writeAssembly(SparcInstr.BLANK_LINE);
-            writeComment("Declare " + sto.getName());
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL0, bracket(sto.load()));
-            writeAssembly(SparcInstr.BLANK_LINE);
-        */
+        AllocateSto(sto);
         
         // Array (TODO: In Phase 2)
 
@@ -609,6 +595,7 @@ public class AssemblyCodeGenerator {
         String offset = getNextOffset(sto.getType().getSize());
         sto.store(SparcInstr.REG_FRAME, offset);
         stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
+    }
 
     //-------------------------------------------------------------------------
     //      DoAssignExpr - Stores value in stoValue into stoVar
@@ -826,9 +813,9 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoComparisonOp(ComparisonOp op, STO operand1, STO operand2, STO resultSto)
     {
-    	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
-    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
+    	resultSto.store(SparcInstr.REG_FRAME, getNextOffset(resultSto.getType().getSize()));
+        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSto.getName(), resultSto.load()));
+    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSto);
 
         String branchOp = "";
         String regOp1 = SparcInstr.REG_LOCAL1;

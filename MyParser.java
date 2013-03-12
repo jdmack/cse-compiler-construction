@@ -998,9 +998,9 @@ class MyParser extends parser
         else {
             if(!ERROR) {
                 if(op.isComparisonOp()) {
-                    m_codegen.DoComparisonOp(op, operand1, operand2, resultSTO);
+                    m_codegen.DoComparisonOp((ComparisonOp) op, operand1, operand2, resultSTO);
                 }
-                else
+                else {
                     m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
                 }
             }
