@@ -21,10 +21,13 @@ class GreaterThanEqualOp extends ComparisonOp
         Double value = 0.0;
         boolean b_value = true;
 
-        if(resultType.isInt())
-            b_value = operand1.getIntValue() >= operand2.getIntValue();
-        else if(resultType.isFloat())
+        if(operand1.getType().isFloat() || operand2.getType().isFloat()) {
             b_value = operand1.getFloatValue() >= operand2.getFloatValue();
+        }
+
+        else {
+            b_value = operand1.getIntValue() >= operand2.getIntValue();
+        }
 
         if(b_value)
             value = new Double(1);

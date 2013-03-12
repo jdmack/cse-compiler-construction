@@ -53,19 +53,19 @@ class NEqualToOp extends ComparisonOp
     {
         Double value = 0.0;
         boolean b_value = true;
-        
-        
-        if(resultType.isInt()) {
-            b_value = operand1.getIntValue() != operand2.getIntValue();
-        }
-        else if(resultType.isFloat()) {
+
+        if(operand1.getType().isFloat() || operand2.getType().isFloat()) {
             b_value = operand1.getFloatValue() != operand2.getFloatValue();
         }
-        else if(resultType.isBool()) {
-            if(operand1.getType().isNullPtr() && operand2.getType().isNullPtr())
-                b_value = false;
-            else
-                b_value = operand1.getBoolValue() != operand2.getBoolValue();
+
+        else if(operand1.getType().isNullPtr() && operand2.getType().isNullPtr()) {
+            b_value = false;
+        }
+        else if(operand1.getType().isInt() && operand2.getType().isInt()) {
+            b_value = operand1.getIntValue() != operand2.getIntValue();
+        }
+        else {
+            b_value = operand1.getBoolValue() != operand2.getBoolValue();
         }
 
         if(b_value)
