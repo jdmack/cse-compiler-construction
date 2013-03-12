@@ -842,35 +842,35 @@ public class AssemblyCodeGenerator {
                 branchOp = SparcInstr.BE_OP;
         }
         // GreaterThanEqualOp
-        else if(op.GreaterThanEqualOp()) {
+        else if(op.isGreaterThanEqualOp()) {
             if(isFloatOp)
                 branchOp = SparcInstr.FBGE_OP;
             else
                 branchOp = SparcInstr.BGE_OP;
         }
         // GreaterThanOp
-        else if(op.GreaterThanOp()) {
+        else if(op.isGreaterThanOp()) {
             if(isFloatOp)
                 branchOp = SparcInstr.FBG_OP;
             else
                 branchOp = SparcInstr.BG_OP;
         }
         // LessThanEqualOp
-        else if(op.LessThanEqualOp()) {
+        else if(op.isLessThanEqualOp()) {
             if(isFloatOp)
                 branchOp = SparcInstr.FBLE_OP;
             else
                 branchOp = SparcInstr.BLE_OP;
         }
         // LessThanOp
-        else if(op.LessThanOp()) {
+        else if(op.isLessThanOp()) {
             if(isFloatOp)
                 branchOp = SparcInstr.FBL_OP;
             else
                 branchOp = SparcInstr.BL_OP;
         }
         // NEqualToOp
-        else if(op.NEqualToOp()) {
+        else if(op.isNEqualToOp()) {
             if(isFloatOp)
                 branchOp = SparcInstr.FBNE_OP;
             else
@@ -882,8 +882,8 @@ public class AssemblyCodeGenerator {
         compLabel_count++;
         
         // Load the operands
-        LoadSto(operand1, reg1);
-        LoadSto(operand2, reg2);
+        LoadSto(operand1, regOp1);
+        LoadSto(operand2, regOp2);
 
         // %l2 is going to hold our boolean result of the comparison
         // We initialize it to 1 (true) and branch over the %l0 = 0 (false) statement if the comparison is true

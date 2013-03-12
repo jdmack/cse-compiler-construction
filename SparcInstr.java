@@ -197,21 +197,21 @@ class SparcInstr
     //-----------------------------------------------------------------------------
     //      Branch
     //-----------------------------------------------------------------------------
-    public static final String BG_OP   = "bg";
-    public static final String BGE_OP  = "bge";
-    public static final String BL_OP   = "bl";
     public static final String BE_OP   = "be";
+    public static final String BGE_OP  = "bge";
+    public static final String BG_OP   = "bg";
+    public static final String BLE_OP  = "ble";
+    public static final String BL_OP   = "bl";
     public static final String BNE_OP  = "bne";
     public static final String BA_OP   = "ba";
     public static final String BN_OP   = "bn";
 
-    public static final String FBG_OP  = "fbg";
-    public static final String FBGE_OP = "fbge";
-    public static final String FBL_OP  = "fbl";
     public static final String FBE_OP  = "fbe";
+    public static final String FBGE_OP = "fbge";
+    public static final String FBG_OP  = "fbg";
+    public static final String FBLE_OP = "fble";
+    public static final String FBL_OP  = "fbl";
     public static final String FBNE_OP = "fbne";
-    public static final String FBA_OP  = "fba";
-    public static final String FBN_OP  = "fbn";
     
     //-----------------------------------------------------------------------------
     //      Call
