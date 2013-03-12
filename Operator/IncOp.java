@@ -4,6 +4,7 @@
 
 class IncOp extends UnaryOp
 {
+	private boolean isPost = false;
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
@@ -45,4 +46,12 @@ class IncOp extends UnaryOp
 
         return resultSTO;
     }
+
+	public boolean isPost() {
+		return isPost;
+	}
+
+	public void setPost(boolean isPost) {
+		this.isPost = isPost;
+	}
 }
