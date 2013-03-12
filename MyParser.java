@@ -995,11 +995,19 @@ class MyParser extends parser
         }
 
         // And better to have all the codegen code at the end of the function
-        if(resultSTO.isConst())
+        if(resultSTO.isConst()) {
             if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
-        else 
-            if(!op.isComparisonOp() && (!ERROR))
-                m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
+        }
+        else {
+            if(!ERROR) {
+                if(op.isComparisonOp()) {
+                    m_codegen.DoComparisonOp(op, operand1, operand2, resultSTO);
+                }
+                else
+                    m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
+                }
+            }
+        }
 
         return resultSTO;
     }

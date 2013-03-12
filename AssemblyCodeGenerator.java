@@ -600,6 +600,18 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      AllocateSto - allocates memory on stack and stores location in STO
+    //-------------------------------------------------------------------------
+    public void AllocateSto(STO sto)
+    {
+
+        // TODO: Need to store how many bytes used in function
+        // Local basic type (int, float, boolean)
+        String offset = getNextOffset(sto.getType().getSize());
+        sto.store(SparcInstr.REG_FRAME, offset);
+        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
+
+    //-------------------------------------------------------------------------
     //      DoAssignExpr - Stores value in stoValue into stoVar
     //-------------------------------------------------------------------------
     public void DoAssignExpr(STO stoVar, STO stoValue)
@@ -814,8 +826,12 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      DoComparisonOp
     //-------------------------------------------------------------------------
-    public void DoIfComparison(ComparisonOp op, STO operand1, STO operand2, STO resultSto)
+    public void DoComparisonOp(ComparisonOp op, STO operand1, STO operand2, STO resultSto)
     {
+    	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
+    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
+
         String branchOp = "";
         String regOp1 = SparcInstr.REG_LOCAL1;
         String regOp2 = SparcInstr.REG_LOCAL2;
@@ -1138,9 +1154,8 @@ public class AssemblyCodeGenerator {
         	LoadSto(operand2, SparcInstr.REG_LOCAL1);
         	writeAssembly(SparcInstr.THREE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0, "Adding Values!");
     	}
-    	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-        stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
-    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
+
+        DoVarDecl(resultSTO);
     }
 
     //--------------------------------e-----------------------------------------
