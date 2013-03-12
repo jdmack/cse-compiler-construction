@@ -1,0 +1,4 @@
+function: void main() {
+    int x = 2;
+    cout << "x: " << x << endl;
+}

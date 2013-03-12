@@ -577,7 +577,6 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoVarDecl(STO sto)
     {
-        System.out.println("Inside codegen.DoVarDecl");
 
         // TODO: Need to store how many bytes used in function
         // Local basic type (int, float, boolean)
@@ -616,7 +615,6 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoAssignExpr(STO stoVar, STO stoValue)
     {
-        System.out.println("In codegen.DoAssignExpr");
         LoadStoAddr(stoVar, SparcInstr.REG_LOCAL0);
         if(stoVar.getType().isFloat())
             StoreSto(stoValue, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
