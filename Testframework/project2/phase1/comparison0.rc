@@ -36,23 +36,23 @@ function: void compareBool(bool x, bool y) {
 
 int i3g = 3;
 int i7g = 7;
-float f2g = 2.0;
-float f6g = 6.0;
+float f3g = 3.0;
+float f7g = 7.0;
 bool bTg = true;
 bool bFg = false;
 
 function: void main() {
     int i3l = 3;
     int i7l = 7;
-    float f1 l= 2.0;
-    float f5l = 6.0;
+    float f3l = 3.0;
+    float f7l = 7.0;
     bool bTl = true;
     bool bFl = false;
 
     const int i3c = 3;
     const int i7c = 7;
-    const float f2c = 2.0;
-    const float f6c = 6.0;
+    const float f3c = 3.0;
+    const float f7c = 7.0;
     const bool bTc = true;
     const bool bFc = false;
 
@@ -75,6 +75,4 @@ function: void main() {
     compareBool(bTl, bFc);
     compareBool(bTc, true);
     compareBool(false, false);
-
-
 }
