@@ -1410,4 +1410,16 @@ class MyParser extends parser
     void DoIfCodeBlock() {
         if(!ERROR) m_codegen.DoIfCodeBlock();
     }
+    
+    //----------------------------------------------------------------
+    //      DoPrePost
+    //----------------------------------------------------------------
+    void DoPost(Operator op, boolean isPost) {
+    	if (op.getName().equals("++")) {
+    		((IncOp)op).setPost(isPost);
+    	}
+    	else if(op.getName().equals("--")) {
+    		((DecOp)op).setPost(isPost);
+    	}
+    }
 }

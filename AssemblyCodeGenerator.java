@@ -905,8 +905,52 @@ public class AssemblyCodeGenerator {
     		LoadSto(operand, SparcInstr.REG_OUTPUT0);
     		writeAssembly(SparcInstr.TWO_PARAM, operation, SparcInstr.REG_OUTPUT0, SparcInstr.REG_OUTPUT0);
     		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-            stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
+    		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
     		StoreValueIntoSto(SparcInstr.REG_OUTPUT0, resultSTO);
+    	}
+    	else if(op.getName().equals("++")){
+    		operation = SparcInstr.INC_OP;
+    		// load value to l0
+    		LoadSto(operand, SparcInstr.REG_LOCAL0);
+    		/*
+    		//TODO
+    		if(((IncOp)op).isPost()) {
+  			// backup unincremented value to l1
+        		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.MOV_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, "Backup un-incremented value");
+        		// increment l0 value
+        		writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, "Increment the value");
+        		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+        		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
+        		StoreValueIntoSto(SparcInstr.REG_LOCAL1, resultSTO);
+    		}
+    		*/
+    		// increment l0 value
+    		writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, "Increment the value");
+    		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+    		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
+    		StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
+    	}
+    	else if(op.getName().equals("--")){
+    		operation = SparcInstr.DEC_OP;
+    		LoadSto(operand, SparcInstr.REG_LOCAL0);
+/*
+    		//TODO
+    		if(((DecOp)op).isPost()) {
+    			// backup undecremented value to l1
+        		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.MOV_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, "Backup un-incremented value");
+        		// increment l0 value
+        		writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, "Increment the value");
+        		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+        		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
+        		StoreValueIntoSto(SparcInstr.REG_LOCAL1, resultSTO);
+
+    		}
+    		*/
+    		// decrement l0 value
+    		writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, "Decrement the value");
+    		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
+    		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
+    		StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
     	}
     }
 

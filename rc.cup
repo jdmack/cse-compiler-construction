@@ -1007,6 +1007,7 @@ Designator ::=      T_STAR Designator:_1
                     :}
     |               IncDecOp:_1 Designator:_2
                     {:
+                        ((MyParser) parser).DoPost(_1, false);
 			            RESULT = ((MyParser) parser).DoUnaryOp(_1, _2);
                     :}
     |               Designator2:_1 
@@ -1032,6 +1033,7 @@ Designator2 ::=     Designator2:_1 T_DOT T_ID:_3
                     :}
     |               Designator2:_1 IncDecOp:_2
                     {:
+                        ((MyParser) parser).DoPost(_2, true);
 			            RESULT = ((MyParser) parser).DoUnaryOp(_2, _1);
                     :}
     |               Designator2:_1 T_LPAREN OptExprList:_2 T_RPAREN
