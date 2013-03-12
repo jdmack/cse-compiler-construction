@@ -263,11 +263,12 @@ class MyParser extends parser
             }
             else {
                 if(!ERROR) m_codegen.DoVarDecl(stoVar);
+
+                if(!value.isNull()) {
+                    DoAssignExpr(stoVar, value);
+                }
             }
 
-            if(!value.isNull()) {
-                DoAssignExpr(stoVar, value);
-            }
 
         }
     }
