@@ -30,7 +30,7 @@ cd ..
 cd $d
 
 # Select the diff tool to use
-if [[ -x /usr/bin/colordiff ]]; then
+if [[ -x /usr/bin/colordiff || /home/solaris/ieng9/oce/1e/jdmack/bin/colordiff ]]; then
     differ=colordiff
 else
     differ=diff
@@ -61,22 +61,22 @@ for f in $tests; do
 
     # Run test
     cd ..
-    comp_err=$($compile Testframework/$f 3>&1 2>&3)
+    comp_out=$($compile Testframework/$f 3>&1 2>&3)
 
-    if [[ "$comp_err" != *success* ]]; then
+    if [[ "$comp_out" != *success* ]]; then
         msg=$fail
     #    echo "Compile: failure."
         cd $d
     else
-        ass_err=$($assemble 3>&1 2>&3)
+        ass_out=$($assemble 3>&1 2>&3)
 
-        if [[ $ass_err == *Error* ]]; then
+        if [[ $ass_out == *Error* ]]; then
             msg=$fail
             echo "Assemble: failure."
             cd $d
         else
             cd $d
-            err=$($program $f 3>&1 1>$my 2>&3)
+            prog_out=$($program $f 3>&1 1>$my 2>&3)
             # redirect execution 
             # send stderr to stdout, then send stdout to $my
 
@@ -95,11 +95,11 @@ for f in $tests; do
             if [[ -e $ans ]]; then
                 mydiff="`dirname $f`/mydiff"
                 $($differ -uw $myans $mytemp > $mydiff)
-                if [[ ! -s $mydiff && "$(head -n 1 $mydif)" != *No* ]]; then 
-                    msg=$fail
-                else
+                if [[ ! -s $mydiff || "$(head -n 1 $mydiff)" == *No* ]]; then 
                     msg=$pass
                     let pass_count=pass_count+1
+                else
+                    msg=$fail
                 fi
             else
                 cp $my $ans
@@ -110,8 +110,8 @@ for f in $tests; do
     fi
     echo -en $msg
     echo " $f"
-    if [[ -n $err ]]; then echo "$err"; fi
-    # if [[ -s $mydiff && $mydiff != *No* ]]; then cat "$mydiff"; fi
+    if [[ -n $prog_out ]]; then echo "$prog_out"; fi
+    if [[ -s $mydiff && $mydiff != *No* ]]; then cat "$mydiff"; fi
     if [[ -n $my ]]; then rm $my; fi
     if [[ -n $mydiff ]]; then rm $mydiff; fi
     if [[ -n $mytemp ]]; then rm $mytemp; fi

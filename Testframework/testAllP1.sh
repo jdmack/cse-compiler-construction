@@ -28,7 +28,7 @@ make -s debug
 cd $d
 
 # Select the diff tool to use
-if [[ -x /usr/bin/colordiff ]]; then
+if [[ -x /usr/bin/colordiff || /home/solaris/ieng9/oce/1e/jdmack/bin/colordiff ]]; then
     differ=colordiff
 else
     differ=diff

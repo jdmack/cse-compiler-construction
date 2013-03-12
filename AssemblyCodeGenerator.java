@@ -600,7 +600,7 @@ public class AssemblyCodeGenerator {
         String offset = getNextOffset(sto.getType().getSize());
         sto.store(SparcInstr.REG_FRAME, offset);
         stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
-        System.out.println(sto.getName() + " allocated to: " + sto.load());
+        //System.out.println(sto.getName() + " allocated to: " + sto.load());
     }
 
     //-------------------------------------------------------------------------
@@ -828,7 +828,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoComparisonOp(ComparisonOp op, STO operand1, STO operand2, STO resultSto)
     {
-        System.out.println("Inside codegen.DoComparisonOp");
+        //System.out.println("Inside codegen.DoComparisonOp");
         AllocateSto(resultSto);
 
         String branchOp = "";
