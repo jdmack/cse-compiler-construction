@@ -402,6 +402,14 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.SAVE_OP, SparcInstr.REG_STACK, SparcInstr.REG_GLOBAL1, SparcInstr.REG_STACK);
         writeAssembly(SparcInstr.BLANK_LINE);
 
+        /*
+        Vector<ParamSTO> params = funcSto.getType().getParameters();
+        // Store parameters into memory
+        for(int i = 0; i < params.size(); i++) {
+            AllocateSto(params.elementAt(i));
+            StoreSto(params.elementAt(i), SparcInstr.ARG_REGS[i]);
+        }
+        */
 
     }
 
@@ -681,6 +689,15 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      MoveRegToReg - Moves value from one reg into another
+    //-------------------------------------------------------------------------
+    public void MoveRegToReg(String destReg, String valueReg)
+    {
+        // Move value in valueReg into destReg:w
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.MOV_OP, valueReg, valueReg, "Moving value in " + valueReg  + " into  " + destReg);
+    }
+
+    //-------------------------------------------------------------------------
     //      DoLiteral
     //-------------------------------------------------------------------------
     public void DoLiteral(ConstSTO sto)
@@ -896,7 +913,8 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
 
         // It was false, set 0
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.MOV_OP, SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0, "It was false, set 0");
+        writeComment("It was false, set 0");
+        MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
 
         // Print label, this label facilitates "true"
         decreaseIndent();
@@ -1049,95 +1067,111 @@ public class AssemblyCodeGenerator {
     	}
     }
 
-/*    //-------------------------------------------------------------------------
-    //      DoConst
-    //-------------------------------------------------------------------------
-    public void DoConst(STO resultSTO)
-    {
-    	String value = "";
-    	if(resultSTO.getType().isInt()){
-    		int val = ((ConstSTO)resultSTO).getIntValue();
-    		value = String.valueOf(val);
-    	}
-    	else if(resultSTO.getType().isBool()){
-    		boolean val = ((ConstSTO)resultSTO).getBoolValue();
-    		value = String.valueOf(val);
-    	} 
-    	else if(resultSTO.getType().isFloat()){
-    		double val = ((ConstSTO)resultSTO).getFloatValue();
-    		value = String.valueOf(val);
-    		// .section ".data"
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
-            // .align 4
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
-
-            // float<xxx>: .single 0r5.75 
-            writeAssembly(SparcInstr.RO_DEFINE, ".float_" + String.valueOf(float_count), SparcInstr.SINGLEP, "0r" + (String.valueOf(((ConstSTO) resultSTO).getFloatValue())));
-
-            // .section ".text"
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
-
-            // .align 4
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
-
-            // set label, %l0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".float_" + String.valueOf(float_count), SparcInstr.REG_LOCAL0);
-    		
-    	}
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, value, SparcInstr.REG_LOCAL0);
-    	resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-    	StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
-    }*/
-
     //-------------------------------------------------------------------------
     //      DoBinaryOp
     //-------------------------------------------------------------------------
-    public void DoBinaryOp(BinaryOp op, STO operand1, STO operand2, STO resultSTO)
+    public void DoBinaryOp(BinaryOp op, STO operand1, STO operand2, STO resultSto)
     {
-    	String operation = "";
-    	
-    	if(op.getName().equals("*") || op.getName().equals("/") || op.getName().equals("%")){
-        	LoadSto(operand1, SparcInstr.REG_OUTPUT0);
-        	LoadSto(operand2, SparcInstr.REG_OUTPUT1);
-        	
-        	if(op.getName().equals("*")){
-        		// call .mul
-        		writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, SparcInstr.MUL_OP, "Multiplying");
-        	}
-        	else if(op.getName().equals("/")){
-        		// call .div
-        		writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, SparcInstr.DIV_OP, "Dividing");
-        	}
-        	else if(op.getName().equals("%")){
-        		// call .rem
-        		writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, SparcInstr.REM_OP, "Modulus");
-        	}
-    		writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-    		// mov %o0, %l0
-    		writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, SparcInstr.REG_OUTPUT0, SparcInstr.REG_LOCAL0);
-    	}
-    	else {
-        	if(op.getName().equals("+")){
-        		operation = SparcInstr.ADD_OP;
-        	}
-        	else if(op.getName().equals("-")){
-        		operation = SparcInstr.SUB_OP;
-        	}
-        	else if(op.getName().equals("&")){
-        		operation = SparcInstr.AND_OP;
-        	}
-        	else if(op.getName().equals("|")){
-        		operation = SparcInstr.OR_OP;
-        	}
-        	else if(op.getName().equals("^")){
-        		operation = SparcInstr.XOR_OP;
-        	}
-        	LoadSto(operand1, SparcInstr.REG_LOCAL0);
-        	LoadSto(operand2, SparcInstr.REG_LOCAL1);
-        	writeAssembly(SparcInstr.THREE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0, "Adding Values!");
-    	}
+    	String binaryOp = "";
+        String regOp1 = SparcInstr.REG_LOCAL0;
+        String regOp2 = SparcInstr.REG_LOCAL1;
+        String comment = operand1.getName() + " and " + operand2.getName();
+        boolean isFloatOp = false;
+        boolean isCallOp = false;
 
-        DoVarDecl(resultSTO);
+        if(operand1.getType().isFloat() || operand2.getType().isFloat()) {
+            regOp1 = SparcInstr.REG_FLOAT0;
+            regOp2 = SparcInstr.REG_FLOAT0;
+            isFloatOp = true;
+        }
+        
+        // Addition
+        if(op.getName().equals("+")){
+            if(isFloatOp)
+                binaryOp = SparcInstr.FADDS_OP;
+            else
+                binaryOp = SparcInstr.ADD_OP;
+            comment = "Addition on " + comment;
+        }
+        // Subtraction
+        else if(op.getName().equals("-")) {
+            if(isFloatOp)
+                binaryOp = SparcInstr.FSUBS_OP;
+            else
+                binaryOp = SparcInstr.SUB_OP;
+            comment = "Subtraction on " + comment;
+        }
+        // Multiplication
+        else if(op.getName().equals("*")) {
+            if(isFloatOp)
+                binaryOp = SparcInstr.FMULS_OP;
+            else {
+                binaryOp = SparcInstr.MUL_OP;
+                isCallOp = true;
+            }
+            comment = "Multiplication on " + comment;
+        }
+        // Divison
+        else if(op.getName().equals("/")) {
+            if(isFloatOp)
+                binaryOp = SparcInstr.FDIVS_OP;
+            else {
+                binaryOp = SparcInstr.DIV_OP;
+                isCallOp = true;
+            }
+            comment = "Division on " + comment;
+        }
+        // Following Operations Can't be Float
+        // Modulus
+        else if(op.getName().equals("%")) {
+            binaryOp = SparcInstr.REM_OP;
+            isCallOp = true;
+            comment = "Modulus on " + comment;
+        }
+        // Bitwise And
+        else if(op.getName().equals("&")) {
+            binaryOp = SparcInstr.AND_OP;
+            comment = "AND on " + comment;
+        }
+        // Bitwise Or
+        else if(op.getName().equals("|")) {
+            binaryOp = SparcInstr.OR_OP;
+            comment = "OR on " + comment;
+        }
+        // Bitwise Xor
+        else if(op.getName().equals("^")) {
+            binaryOp = SparcInstr.XOR_OP;
+            comment = "XOR on " + comment;
+        }
+
+        // Load operands into registers
+        LoadSto(operand1, regOp1);
+        LoadSto(operand2, regOp2);
+
+        // Call Operator
+        if(isCallOp) {
+            // If not Float, move arguments into out registers
+            if(!isFloatOp) {
+                MoveRegToReg(regOp1, SparcInstr.REG_ARG0);
+                MoveRegToReg(regOp2, SparcInstr.REG_ARG1);
+            }
+
+            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, binaryOp, comment);
+            writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+
+            // If not Float, store result in regOp1
+            if(!isFloatOp) {
+                MoveRegToReg(SparcInstr.REG_GET_RETURN, regOp1);
+            }
+
+        }
+        // Regular Operator
+        else {
+            writeAssembly(SparcInstr.THREE_PARAM_COMM, binaryOp, regOp1, regOp2, regOp1, comment);
+        }
+
+        AllocateSto(resultSto);
+        StoreValueIntoSto(regOp1, resultSto);
     }
 
     //--------------------------------e-----------------------------------------

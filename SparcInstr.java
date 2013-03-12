@@ -167,6 +167,14 @@ class SparcInstr
     public static final String DECCC_OP = "deccc";
     
     //-----------------------------------------------------------------------------
+    //      Float Ops
+    //-----------------------------------------------------------------------------
+    public static final String FADDS_OP = "fadds";
+    public static final String FSUBS_OP = "fsubs";
+    public static final String FMULS_OP = "fmuls";
+    public static final String FDIVS_OP = "fdivs";
+
+    //-----------------------------------------------------------------------------
     //      Fitos
     //-----------------------------------------------------------------------------
     public static final String FITOS_OP = "fitos";
