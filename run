@@ -13,9 +13,9 @@ for f in $tests; do
     echo "\n================================================================================\n"
     echo "Compiling $f..."
     ./RC $f
-    echo "Compiling assembly..."
+    echo "\nCompiling assembly..."
     make compile
-    echo "Running a.out..."
+    echo "\nRunning a.out..."
     echo "\nOutput:"
     echo "----------------------------------------\n"
     ./a.out

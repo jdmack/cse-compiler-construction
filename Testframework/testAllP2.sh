@@ -18,7 +18,7 @@ fail="[ ${red}FAIL${clear} ]"
 
 # Assign executable vars
 rc="RC.sh"
-compile="../RC"
+compile="./RC"
 assemble="make compile"
 program="../a.out"
 d=`pwd`
@@ -26,7 +26,7 @@ tname=$d/testAll.sh
 
 # Make the program
 cd ..
-make -s debug
+# make -s debug
 cd $d
 
 # Select the diff tool to use
@@ -37,10 +37,10 @@ else
 fi
 
 # Get lists of tests based on script args
-if [[ -n $1 ]]; then
+if [[ -n $2 ]]; then
     tests=$(find project2/$1 -name "*${2}*.rc" | sort -n)
 else
-    tests=$(find project2/* -mindepth 1 -name "*${2}*.rc" | sort -n)
+    tests=$(find project2/* -mindepth 1 -name "*${1}*.rc" | sort -n)
 fi
 
 pass_count=0
@@ -61,20 +61,21 @@ for f in $tests; do
 
     # Run test
     cd ..
-    comp_err=$($compile $f 3>&1 2>&3)
+    comp_err=$($compile Testframework/$f 3>&1 2>&3)
 
-    if [[ "$comp_err" != "Compile: success."]] then
+    if [[ "$comp_err" != *success* ]]; then
         msg=$fail
-        echo "Compile: failure."
+    #    echo "Compile: failure."
         cd $d
     else
         ass_err=$($assemble 3>&1 2>&3)
 
-        if [[ "$ass_err" == *Error* ]] then
+        if [[ $ass_err == *Error* ]]; then
             msg=$fail
             echo "Assemble: failure."
             cd $d
         else
+            cd $d
             err=$($program $f 3>&1 1>$my 2>&3)
             # redirect execution 
             # send stderr to stdout, then send stdout to $my
@@ -84,32 +85,36 @@ for f in $tests; do
             dos2unix $ans&> /dev/null
 
             # Remove line numbers
-            sed -e "/Error,* line /d" $my > `dirname $f`/mytemp
-            sed -e "/Error,* line /d" $ans > `dirname $f`/myans
+            # sed -e "/Error,* line /d" $my > `dirname $f`/mytemp
+            # sed -e "/Error,* line /d" $ans > `dirname $f`/myans
+            cat $my > `dirname $f`/mytemp
+            cat $ans > `dirname $f`/myans 2> /dev/null
 
             mytemp="`dirname $f`/mytemp"
             myans="`dirname $f`/myans"
             if [[ -e $ans ]]; then
-                diff=$($differ -uw $myans $mytemp)
-                if [[ -z $diff ]]; then
+                mydiff="`dirname $f`/mydiff"
+                $($differ -uw $myans $mytemp > $mydiff)
+                if [[ ! -s $mydiff && "$(head -n 1 $mydif)" != *No* ]]; then 
+                    msg=$fail
+                else
                     msg=$pass
                     let pass_count=pass_count+1
-                  else
-                      msg=$fail
-                  fi
+                fi
             else
-                  mv $my $ans
-                  diff=$(<$ans)
-                  msg=$new
+                cp $my $ans
+                diff=$(<$ans)
+                msg=$new
             fi
         fi
     fi
     echo -en $msg
     echo " $f"
     if [[ -n $err ]]; then echo "$err"; fi
-    if [[ -n $diff ]]; then echo "$diff"; fi
-    rm $my
-    rm $mytemp
-    rm $myans
+    # if [[ -s $mydiff && $mydiff != *No* ]]; then cat "$mydiff"; fi
+    if [[ -n $my ]]; then rm $my; fi
+    if [[ -n $mydiff ]]; then rm $mydiff; fi
+    if [[ -n $mytemp ]]; then rm $mytemp; fi
+    if [[ -n $myans ]]; then rm $myans; fi
 done
 echo -e "\nPass: $pass_count / $total_count\n"
