@@ -192,7 +192,6 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoVarDecl(boolean isStatic, Type type, Vector<IdValueTuple> lstIDs)
     {
-        System.out.println("Iniside MyParser.DoVarDecl");
         for(int i = 0; i < lstIDs.size(); i++) {
             String id = lstIDs.elementAt(i).getId();
             STO value = lstIDs.elementAt(i).getValue();
@@ -259,12 +258,11 @@ class MyParser extends parser
 
             stoVar = new VarSTO(id, finalType);
             m_symtab.insert(stoVar);
-
-            if(stoVar.isGlobal())
+            if(stoVar.isGlobal()) {
                 if(!ERROR) m_codegen.DoGlobalDecl(stoVar, value);
+            }
             else {
                 if(!ERROR) m_codegen.DoVarDecl(stoVar);
-
             }
 
             if(!value.isNull()) {
@@ -602,7 +600,6 @@ class MyParser extends parser
     //----------------------------------------------------------------
     STO DoAssignExpr(STO stoDes, STO stoValue)
     {
-        System.out.println("in MyParser.DoAssignExpr");
         // Check for previous errors in line and short circuit
         if(stoDes.isError()) {
             return stoDes;
