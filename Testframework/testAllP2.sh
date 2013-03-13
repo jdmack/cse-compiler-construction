@@ -26,7 +26,7 @@ tname=$d/testAll.sh
 
 # Make the program
 cd ..
-make -s debug
+# make -s debug
 cd $d
 
 # Select the diff tool to use
@@ -111,7 +111,8 @@ for f in $tests; do
     echo -en $msg
     echo " $f"
     if [[ -n $prog_out ]]; then echo "$prog_out"; fi
-    if [[ -s $mydiff && $mydiff != *No* ]]; then cat "$mydiff"; fi
+    if [[ "$(head -n 1 $mydiff)" != *No* ]]; then cat "$mydiff"; fi 
+    #if [[ -s $mydiff && $mydiff != *No* ]]; then cat "$mydiff"; fi
     if [[ -n $my ]]; then rm $my; fi
     if [[ -n $mydiff ]]; then rm $mydiff; fi
     if [[ -n $mytemp ]]; then rm $mytemp; fi
