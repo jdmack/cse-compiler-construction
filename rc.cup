@@ -491,7 +491,13 @@ OptStmtList ::=     StmtList
 
 
 StmtList ::=        Stmt
+                    {:
+                        //(MyParser) parser).DoStmtEnd()
+                    :}
     |               StmtList Stmt
+                    {:
+                        //(MyParser) parser).DoStmtEnd()
+                    :}
     ;
 
 
