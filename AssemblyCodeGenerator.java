@@ -5,6 +5,8 @@ import java.util.*;
 
 public class AssemblyCodeGenerator {
 
+    private static final boolean DEBUG = true;
+
     private final String COMPILER_IDENT = "WRC 1.0";
     private int indent_level = 0;
     private Stack<FuncSTO> currentFunc;
@@ -408,9 +410,12 @@ public class AssemblyCodeGenerator {
 
         Vector<ParamSTO> params = ((FuncPtrType) funcSto.getType()).getParameters();
 
-        writeComment("funcSto: " + funcSto.getName());
-        writeComment("numOfParams: " + ((FuncPtrType) funcSto.getType()).getNumOfParams());
-        writeComment("getParameters.size(): " + params.size());
+        if(DEBUG) {
+            System.out.println("AssemblyCodeGenerator.DoFuncStart()");
+            System.out.println("Function: " + funcSto.getName());
+            System.out.println("numOfParams: " + ((FuncPtrType) funcSto.getType()).getNumOfParams());
+            System.out.println("getParameters.size(): " + params.size());
+        }
 
         for(int i = 0; i < params.size(); i++) {
             ParamSTO thisParam = params.elementAt(i);
