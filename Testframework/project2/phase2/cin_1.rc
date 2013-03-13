@@ -8,7 +8,7 @@ function: void main() {
     cout << "Enter an float: ";
     float y;
     cin >> y;
-    coutn << "You entered: " << y << endl;
+    cout << "You entered: " << y << endl;
 
 
 }

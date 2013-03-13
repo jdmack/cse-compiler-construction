@@ -404,6 +404,16 @@ public class AssemblyCodeGenerator {
 
         // TODO: Receive and store values transferred via param registers
 
+        Vector<ParamSTO> params = ((FuncPtrType) funcSto.getType()).getParameters();
+
+        for(int i = 0; i < params.size(); i++) {
+            ParamSTO thisParam = params.elementAt(i);
+
+            LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
+            AllocateSto(thisParam)
+            thisParam.store(SparcInstr.ARG_REGS[i], String.valueOf(0));
+        }
+
 
         //  6. [Callee] Save registers used by called subroutine (if Callee-Save convention) - DONE - have caller do it
         //  7. [Callee] Change the frame pointer to refer to the new stack frame - DONE auto
@@ -465,7 +475,7 @@ public class AssemblyCodeGenerator {
             // 5. [PASS] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
             // 7. [PASS] global variable as value arg       - load value from it's location (ex. %g0 + local)
             LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
-            thisParam.store(SparcInstr.ARG_REGS[i], String.valueOf(0));
+            StoreValueIntoSto(SparcInstr.ARGS_REGS[i], thisParam);
 /*
 
             // Non-pointer
