@@ -379,7 +379,6 @@ public class AssemblyCodeGenerator {
         // .section ".text"
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
 
-        // TODO: Is this always 4? Otherwise, calculate the value in general
         // .align 4
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, String.valueOf(4));
 
@@ -398,18 +397,18 @@ public class AssemblyCodeGenerator {
         // set SAVE.<funcName>, %g1
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.SAVE_WORD + "." + funcSto.getName(), SparcInstr.REG_GLOBAL1);
 
+        //  5. [Callee] Allocate space for local variables (adjust stack pointer) - DONE
         // save %sp, %g1, %sp
         writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.SAVE_OP, SparcInstr.REG_STACK, SparcInstr.REG_GLOBAL1, SparcInstr.REG_STACK);
         writeAssembly(SparcInstr.BLANK_LINE);
 
-        /*
-        Vector<ParamSTO> params = funcSto.getType().getParameters();
-        // Store parameters into memory
-        for(int i = 0; i < params.size(); i++) {
-            AllocateSto(params.elementAt(i));
-            StoreSto(params.elementAt(i), SparcInstr.ARG_REGS[i]);
-        }
-        */
+        // TODO: Receive and store values transferred via param registers
+
+
+        //  6. [Callee] Save registers used by called subroutine (if Callee-Save convention) - DONE - have caller do it
+        //  7. [Callee] Change the frame pointer to refer to the new stack frame - DONE auto
+        //  8. [Callee] Execute initialization code for local vars/objects that are initialized
+
     }
 
     //-------------------------------------------------------------------------
@@ -418,9 +417,14 @@ public class AssemblyCodeGenerator {
     public void DoFuncFinish(FuncSTO funcSto)
     {
         // Perform return/restore
-        // TODO: Right now, two sets of ret/restore will be printed if the function did explicit "return"
         writeAssembly(SparcInstr.BLANK_LINE);
 
+        // 10. [Callee] Execute any finalization code for any local objects - DONE
+        // 11. [Callee] Deallocate the local variables / restore the stack pointer - DONE
+        // 12. [Callee] Restore other saved registers / restore the frame pointer - DONE
+        // 13. [Callee] Restore the program counter from saved return address (return/rts) - DONE
+
+        // Also executed in DoReturn()
         if(funcSto.getReturnType().isVoid()) {
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RET_OP);          // ret
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.RESTORE_OP);      // restore
@@ -442,49 +446,83 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      DoFuncCall
     //-------------------------------------------------------------------------
-    public void DoFuncCall(STO sto, Vector<STO> args, STO returnSto)
+    public void DoFuncCall(STO funcSto, Vector<STO> args, STO returnSto)
     {
         // returnSto is VarSTO if returnByRef, ExprSTO otherwise
+        // called funcSto funcSto for convience but it could be a VarSto (pointer)
+        // Just operate on it's type field
 
-        writeCommentHeader("Function Call: " + sto.getName());
+        writeCommentHeader("Function Call: " + funcSto.getName());
+
+        Vector<ParamSTO> params = ((FuncPtrType) funcSto.getType()).getParameters();
         
-        // Load all arguments into out registers - assuming no more than 6 parameters
+        //  1. [Caller] Allocate space for and copy arguments - TODO:
         for(int i = 0; i < args.size(); i++) {
-            LoadSto(args.elementAt(i), SparcInstr.ARG_REGS[i]);
+            STO thisArg = args.elementAt(i);
+            ParamSTO thisParam = params.elementAt(i);
+
+            if(!thisArg.getType().isPointer()) {
+
+                // 1. [Pass] value param as value param         - put in out register (ex. %o0)
+                // 5. [Pass] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
+                if(!thisParam.isPassByReference()) {
+                    LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
+                    thisParam.store(ARG_REGS[i], String.valueOf(0));
+                }
+
+                // TODO: How to tell the difference between this and others? - Will be a ParamSTO?
+                // 2. [Pass] value param as reference param     - store in param location (ex. %fp + 68)
+                else {
+                    String offset = setParamAddr(i, SparcInstr.REG_LOCAL0);
+                    StoreSto(thisArg, SparcInstr.REG_LOCAL0);
+                    thisParam.store(SparcInstr.REG_FRAME, offset);
+                }
+            }
+
+            // 3. [Pass] reference param as value arg       - load from address into out register (ex. %o0)
+            // 4. [Pass] reference param as reference param - put address in register (ex. %o0)
+            // 6. [Pass] local variable as reference arg    - load address of location (ex. %fp - 4) into register (ex. %o0) 
+            // 7. [Pass] global variable as value param     - load value from it's location (ex. %g0 + local)
+            // 8. [Pass] global variable as reference param - load address of location into register (ex. %o0)
+
         }
 
-        // call <funcName>
-        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, sto.getName()); 
+        //  3. [Caller] Save registers use by the calling subroutine (if Caller-Save convention) - TODO:
+        //  4. [Caller] Subroutine call - DONE
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, funcSto.getName()); 
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+
 
         // Now we can write the code for after the return, which is store the return value to stack
         // If the return type isn't void, save the return value
+
+        // 14. [Caller] Copy return value out of return value location - DONE
         if(!returnSto.getType().isVoid()) {
 
-            writeComment("Save return from " + sto.getName() + " onto stack");
+            writeComment("Save return from " + funcSto.getName() + " onto stack");
 
-            // Get spot on stack and save to Sto
+            //  2. [Caller] Allocate space for return value (if on the stack) - DONE
             String offset = getNextOffset(returnSto.getType().getSize());
             returnSto.store(SparcInstr.REG_FRAME, offset);
             stackValues.addElement(new StackRecord(currentFunc.peek().getName(), returnSto.getName(), returnSto.load()));
 
-            if(((FuncPtrType) sto.getType()).getReturnByRef()) {
+            if(((FuncPtrType) funcSto.getType()).getReturnByRef()) {
                 // TODO: Save the return value for return by reference
                 // LoadStoAddr(returnSto, SparcInstr.REG_SET_RETURN);
             }
             else { 
                 // If return type is float, put into %f0 (possibly fitos)
-                if(((FuncPtrType) sto.getType()).getReturnType().isFloat()) {
-                    // Store the value, it's in %f0
+                if(((FuncPtrType) funcSto.getType()).getReturnType().isFloat()) {
                     StoreValueIntoSto(SparcInstr.REG_FLOAT0, returnSto);
                 }
-                // return type is not float, store into %i0
+                // return type is not float, store into %i0 from %o0
                 else {
-                    // Store the value, it's in %o0
                     StoreValueIntoSto(SparcInstr.REG_GET_RETURN, returnSto);
                 }
             }
         }
+
+        // 15. [Caller] Deallocate argument space and return value location (if on the stack) - TODO:
     }
 
     
@@ -494,6 +532,9 @@ public class AssemblyCodeGenerator {
     public void DoReturn(FuncSTO funcSto, STO returnSto)
     {
         writeCommentHeader("Set return value (if needed) and return");
+
+        //  9. [Callee] Place return value into return value location - DONE
+
         // Load the return value into the return register
         if(!returnSto.getType().isVoid()) {
             if(funcSto.getReturnByRef()) {
@@ -666,7 +707,22 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      LoadSto - Uses %l7 as a temp
+    //      setParamAddr  - Puts the stack param memory address for param i into register
+    //-------------------------------------------------------------------------
+    public String setParamAddre(int i, String reg)
+    {
+        writeComment("Set param address for param" + i + " into " + reg);
+
+        int offset = 68 + (4 * i);
+
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(offset), reg);
+        writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_FRAME, reg, reg, "Add offset/name to base reg " + reg);
+
+        return String.valueOf(offset);
+    }
+
+    //-------------------------------------------------------------------------
+    //      LoadSto - Load value of sto into reg - Uses %l7 as a temp - "takes out of memory"
     //-------------------------------------------------------------------------
     public void LoadSto(STO sto, String reg)
     {
@@ -682,11 +738,10 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FITOS_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FLOAT0);
             // System.out.println("[DEBUG] FITOSing in LoadSto");
         }
-
     }
 
     //-------------------------------------------------------------------------
-    //      LoadStoAddr
+    //      LoadStoAddr - Sets the address value of a sto into register
     //-------------------------------------------------------------------------
     public void LoadStoAddr(STO sto, String reg)
     {
@@ -698,7 +753,7 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      StoreSto - Stores a sto's value into destReg
+    //      StoreSto - Stores a sto's value into address in destReg - "puts into memory"
     //-------------------------------------------------------------------------
     public void StoreSto(STO valueSto, String tmpReg, String destReg)
     {
