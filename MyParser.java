@@ -13,6 +13,8 @@ class MyParser extends parser
     //    Constants 
     //----------------------------------------------------------------
     private final String OUTPUT_FILENAME = "rc.s";
+    private static final boolean DEBUG = true;
+
 
     //----------------------------------------------------------------
     //    Instance variables
@@ -156,7 +158,7 @@ class MyParser extends parser
     void DoProgramStart()
     {
         // Opens the global scope.
-        m_symtab.openScope();
+        m_symtab.openScope();       // Open Global Scope
 
         if(!ERROR) if(!ERROR) m_codegen.DoProgramStart(GetFile());
     }
@@ -166,7 +168,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoProgramEnd()
     {
-        m_symtab.closeScope();
+        m_symtab.closeScope();      // Close Global Scope
         if(!ERROR) m_codegen.DoProgramEnd();
         if(!ERROR) m_codegen.dispose();
     }
@@ -504,7 +506,7 @@ class MyParser extends parser
         else
             m_symtab.insert(sto);
 
-        m_symtab.openScope();
+        m_symtab.openScope();               // FuncStart, function scope will be open by the time params are added
         m_symtab.setFunc(sto);
 
         // Set the function's level
@@ -564,21 +566,20 @@ class MyParser extends parser
         // Insert parameters
         funcSto.setParameters(params);
 
-        System.out.println("Function: " + funcSto.getName());
-        System.out.println("numOfParams: " + ((FuncPtrType) funcSto.getType()).getNumOfParams());
-        System.out.println("params.size(): " + params.size());
+        if(DEBUG) {
+            System.out.println("MyParser.DoFuncCall()");
+            System.out.println("---------------------");
+            System.out.println("Function: " + funcSto.getName());
+            System.out.println("numOfParams: " + funcSto.getNumOfParams());
+            System.out.println("params.size(): " + params.size());
+        }
 
         // Add parameters to local scope
         for(STO thisParam: params) {
-            /* Not sure if want this check
-            if(m_symtab.accessLocal(id) != null)
-            {
-                m_nNumErrors++;
-                m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
-                ERROR = true;
-            }
-            */
-            m_symtab.insert(thisParam);
+            if(DEBUG) System.out.println("param: " + thisParam.getName() + "\n");
+            
+            m_symtab.insert(thisParam);         // This is only for checking the code
+                                                // Need to add params to scope for function calls
         }
     }
 
@@ -588,7 +589,8 @@ class MyParser extends parser
     void DoBlockOpen()
     {
         // Open a scope.
-        m_symtab.openScope();
+        m_symtab.openScope();           // anytime { is encountered, doesn't affect function openScope
+
     }
 
     //----------------------------------------------------------------
@@ -656,6 +658,15 @@ class MyParser extends parser
 
         // We know it's a function, do function call checks
         FuncPtrType funcType = (FuncPtrType) sto.getType();
+
+        if(DEBUG) {
+            System.out.println("MyParser.DoFuncCall()");
+            System.out.println("---------------------");
+            System.out.println("Function: " + sto.getName());
+            System.out.println("numOfParams: " + funcType.getNumOfParams());
+            System.out.println("args.size(): " + args.size());
+        }
+
 
         // Check #5
         // Check #5a - # args = # params
