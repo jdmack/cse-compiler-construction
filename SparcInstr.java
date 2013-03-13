@@ -260,6 +260,8 @@ class SparcInstr
     public static final String PRINTF = "printf";
     public static final String PRINTFLOAT = "printFloat";
     public static final String EXIT = "exit";
+    public static final String INPUTINT = "inputInt";
+    public static final String INPUTFLOAT = "inputFloat";
     
     //-----------------------------------------------------------------------------
     //      Precisions
