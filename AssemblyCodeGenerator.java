@@ -461,29 +461,40 @@ public class AssemblyCodeGenerator {
             STO thisArg = args.elementAt(i);
             ParamSTO thisParam = params.elementAt(i);
 
+            // Local and global variables as value args
+            // 5. [PASS] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
+            // 7. [PASS] global variable as value arg       - load value from it's location (ex. %g0 + local)
+            LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
+            thisParam.store(SparcInstr.ARG_REGS[i], String.valueOf(0));
+/*
+
+            // Non-pointer
             if(!thisArg.getType().isPointer()) {
 
-                // 1. [Pass] value param as value param         - put in out register (ex. %o0)
-                // 5. [Pass] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
+                // 1. [PASS] value param as value arg         - put in out register (ex. %o0)
                 if(!thisParam.isPassByReference()) {
                     LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
                     thisParam.store(ARG_REGS[i], String.valueOf(0));
                 }
 
                 // TODO: How to tell the difference between this and others? - Will be a ParamSTO?
-                // 2. [Pass] value param as reference param     - store in param location (ex. %fp + 68)
-                else {
+                // 2. [PASS] value param as reference param     - store in param location (ex. %fp + 68)
+                else if{
                     String offset = setParamAddr(i, SparcInstr.REG_LOCAL0);
                     StoreSto(thisArg, SparcInstr.REG_LOCAL0);
                     thisParam.store(SparcInstr.REG_FRAME, offset);
                 }
             }
+            // Pointer
+            else {
 
-            // 3. [Pass] reference param as value arg       - load from address into out register (ex. %o0)
-            // 4. [Pass] reference param as reference param - put address in register (ex. %o0)
-            // 6. [Pass] local variable as reference arg    - load address of location (ex. %fp - 4) into register (ex. %o0) 
-            // 7. [Pass] global variable as value param     - load value from it's location (ex. %g0 + local)
-            // 8. [Pass] global variable as reference param - load address of location into register (ex. %o0)
+            }
+*/
+
+            // 3. [PASS] reference param as value arg       - load from address into out register (ex. %o0)
+            // 4. [PASS] reference param as reference arg - put address in register (ex. %o0)
+            // 6. [PASS] local variable as reference arg    - load address of location (ex. %fp - 4) into register (ex. %o0) 
+            // 8. [PASS] global variable as reference arg - load address of location into register (ex. %o0)
 
         }
 

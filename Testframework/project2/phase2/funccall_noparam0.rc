@@ -1,0 +1,30 @@
+function: void foo4() {
+    cout << " 7. foo4()" << endl;
+}
+
+function: void foo3() {
+    cout << "6. foo3()" << endl;
+    foo4()
+    cout << "8. foo3()" << endl;
+}
+
+function: void foo2() {
+    cout << "4. foo2()" << endl;
+}
+
+function: void foo1() {
+    cout << "2. foo1()" << endl;
+}
+
+function: void main() {
+
+    cout << "1. main()" << endl;
+    foo1();
+    cout << "3. main()" << endl;
+
+    foo2();
+    cout << "5. main()" << endl;
+
+    foo3();
+    cout << "9. main()" << endl;
+}
