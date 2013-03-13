@@ -61,8 +61,9 @@ for f in $tests; do
     mytemp="`dirname $f`/mytemp"
     myans="`dirname $f`/myans"
     if [[ -e $ans ]]; then
-        diff=$($differ -uw $myans $mytemp)
-        if [[ -z $diff ]]; then
+        mydiff="`dirname $f`/mydiff"
+        $($differ -uw $myans $mytemp > $mydiff)
+        if [[ ! -s $mydiff || "$(head -n 1 $mydiff)" == *No* ]]; then
             msg=$pass
             let pass_count=pass_count+1
           else
