@@ -1,0 +1,10 @@
+function : int main() {
+    float x = 5.8;
+    cout << "float x = "<< x << endl;
+
+    cout << "x + 5 = " << x + 5 << endl;
+    cout << "x - 5 = " << x - 5 << endl;
+    cout << "x * 5 = " << x * 5 << endl;
+    cout << "x / 5 = " << x / 5 << endl;
+    return 0;
+}
