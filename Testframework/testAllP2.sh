@@ -26,7 +26,7 @@ tname=$d/testAll.sh
 
 # Make the program
 cd ..
-# make -s debug
+make -s debug
 cd $d
 
 # Select the diff tool to use
