@@ -5,6 +5,7 @@
 
 import java_cup.runtime.*;
 import java.util.Vector;
+import java.util.Stack;
 
 class MyParser extends parser
 {
@@ -13,8 +14,7 @@ class MyParser extends parser
     //    Constants 
     //----------------------------------------------------------------
     private final String OUTPUT_FILENAME = "rc.s";
-    private static final boolean DEBUG = true;
-
+    private static final boolean DEBUG = false;
 
     //----------------------------------------------------------------
     //    Instance variables
@@ -36,7 +36,7 @@ class MyParser extends parser
     private AssemblyCodeGenerator m_codegen;
     private boolean ERROR = false;
 
-    private STO         postIncDecSto = null;
+    private Stack<StoOpPair> endStmtOps = new Stack<StoOpPair>();
 
 
     //----------------------------------------------------------------
@@ -1054,6 +1054,10 @@ class MyParser extends parser
             if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
         else {
+            if(op.isPost()) {
+                endStmtOps.push(new StoOpPair(operand, op));
+            }
+
             if(!ERROR) m_codegen.DoUnaryOp(op, operand, resultSTO);
         }
         
@@ -1469,44 +1473,15 @@ class MyParser extends parser
     //      DoStmtEnd
     //----------------------------------------------------------------
     void DoStmtEnd() {
-        // Post Inc/Dec Check
-        if(postIncDec != null) {
-            m_codegen.DoUnaryOp(STO postIncDecSto, postIncDec, postIncDecSto);
-            postIncDec = null;
+
+        while(!endStmtOps.empty()) {
+            StoOpPair thisStoOpPair = endStmtOps.pop();
+            STO thisSto = thisStoOpPair.getSto();
+            Operator thisOp = thisStoOpPair.getOp();
+
+            if(thisOp.isPost()) { 
+                m_codegen.DoUnaryOp((UnaryOp) thisOp, thisSto, thisSto);
+            }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -496,6 +496,7 @@ StmtList ::=        Stmt
                     :}
     |               StmtList Stmt
                     {:
+                        //System.out.println("Statement");
                         //(MyParser) parser).DoStmtEnd()
                     :}
     ;
