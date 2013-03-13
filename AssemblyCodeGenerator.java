@@ -404,14 +404,20 @@ public class AssemblyCodeGenerator {
 
         // TODO: Receive and store values transferred via param registers
 
+        writeComment("Get PARAMS from %i0 registers and allocate on local stack");
+
         Vector<ParamSTO> params = ((FuncPtrType) funcSto.getType()).getParameters();
+
+        writeComment("funcSto: " + funcSto.getName());
+        writeComment("numOfParams: " + ((FuncPtrType) funcSto.getType()).getNumOfParams());
+        writeComment("getParameters.size(): " + params.size());
 
         for(int i = 0; i < params.size(); i++) {
             ParamSTO thisParam = params.elementAt(i);
 
-            LoadSto(thisParam, SparcInstr.PARAM_REGS[i]);
             AllocateSto(thisParam);
             thisParam.store(SparcInstr.PARAM_REGS[i], String.valueOf(0));
+            LoadSto(thisParam, SparcInstr.PARAM_REGS[i]);
         }
 
 
