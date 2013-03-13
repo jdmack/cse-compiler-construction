@@ -4,9 +4,9 @@ function : int main() {
     float y = 3.1;
     cout << "float y = "<< y << endl;
 
-    cout << "x + y = " << x/y << endl;
-    cout << "x - y = " << x/y << endl;
-    cout << "x * y = " << x/y << endl;
-    cout << "x / y = " << x/y << endl;
+    cout << "x + y = " << x + y << endl;
+    cout << "x - y = " << x - y << endl;
+    cout << "x * y = " << x * y << endl;
+    cout << "x / y = " << x / y << endl;
     return 0;
 }

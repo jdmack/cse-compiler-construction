@@ -1081,7 +1081,7 @@ public class AssemblyCodeGenerator {
 
         if(operand1.getType().isFloat() || operand2.getType().isFloat()) {
             regOp1 = SparcInstr.REG_FLOAT0;
-            regOp2 = SparcInstr.REG_FLOAT0;
+            regOp2 = SparcInstr.REG_FLOAT1;
             isFloatOp = true;
         }
         
