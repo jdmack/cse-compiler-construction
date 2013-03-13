@@ -739,10 +739,10 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      MoveRegToReg - Moves value from one reg into another
     //-------------------------------------------------------------------------
-    public void MoveRegToReg(String destReg, String valueReg)
+    public void MoveRegToReg(String valueReg, String destReg)
     {
-        // Move value in valueReg into destReg:w
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.MOV_OP, valueReg, valueReg, "Moving value in " + valueReg  + " into  " + destReg);
+        // Move value in valueReg into destReg
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.MOV_OP, valueReg, destReg, "Moving value in " + valueReg  + " into  " + destReg);
     }
 
     //-------------------------------------------------------------------------
