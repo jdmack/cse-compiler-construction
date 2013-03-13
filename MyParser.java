@@ -1405,23 +1405,16 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //      DoCout
     //----------------------------------------------------------------
-    //void DoCout(Vector<STO> exprSTOs) {
-    void DoCout(STO exprSto) {
-        /*
-        for(STO thisSto: exprSTOs) {
-            if(thisSto.isError())
-                continue;
-            if(!ERROR) m_codegen.DoCout(thisSto);
-        }
-        */
+    void DoCout(STO exprSto) 
+    {
         if(!ERROR) m_codegen.DoCout(exprSto);
     }
     
     //----------------------------------------------------------------
     //      DoLiteral
     //----------------------------------------------------------------
-    STO DoLiteral(ConstSTO sto) {
-
+    STO DoLiteral(ConstSTO sto) 
+    {
         if(!ERROR) m_codegen.DoLiteral(sto);
 
         return sto;
@@ -1430,14 +1423,16 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //      DoIfCodeBlock
     //----------------------------------------------------------------
-    void DoIfCodeBlock() {
+    void DoIfCodeBlock() 
+    {
         if(!ERROR) m_codegen.DoIfCodeBlock();
     }
     
     //----------------------------------------------------------------
     //      DoPrePost
     //----------------------------------------------------------------
-    void DoPost(Operator op, boolean isPost) {
+    void DoPost(Operator op, boolean isPost) 
+    {
     	if (op.getName().equals("++")) {
     		((IncOp)op).setPost(isPost);
     	}
