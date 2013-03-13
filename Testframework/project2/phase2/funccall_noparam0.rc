@@ -1,10 +1,10 @@
 function: void foo4() {
-    cout << " 7. foo4()" << endl;
+    cout << "7. foo4()" << endl;
 }
 
 function: void foo3() {
     cout << "6. foo3()" << endl;
-    foo4()
+    foo4();
     cout << "8. foo3()" << endl;
 }
 

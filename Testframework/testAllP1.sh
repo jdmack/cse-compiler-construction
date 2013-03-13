@@ -24,7 +24,7 @@ tname=$d/testAll.sh
 
 # Make the program
 cd ..
-make -s debug
+# make -s debug
 cd $d
 
 # Select the diff tool to use
@@ -35,10 +35,10 @@ else
 fi
 
 # Get lists of tests based on script args
-if [[ -n $1 ]]; then
+if [[ -n $2 ]]; then
     tests=$(find project1/$1 -name "*${2}*.rc" | sort -n)
 else
-    tests=$(find project1/* -mindepth 1 -name "*${2}*.rc" | sort -n)
+    tests=$(find project1/* -mindepth 1 -name "*${1}*.rc" | sort -n)
 fi
 
 pass_count=0
