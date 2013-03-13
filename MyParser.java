@@ -36,6 +36,9 @@ class MyParser extends parser
     private AssemblyCodeGenerator m_codegen;
     private boolean ERROR = false;
 
+    private STO         postIncDecSto = null;
+
+
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -1455,7 +1458,55 @@ class MyParser extends parser
     	}
     }
     
+    //----------------------------------------------------------------
+    //      DoCin
+    //----------------------------------------------------------------
     void DoCin(STO sto) {
     	if(!ERROR) m_codegen.DoCin(sto);
     }
+
+    //----------------------------------------------------------------
+    //      DoStmtEnd
+    //----------------------------------------------------------------
+    void DoStmtEnd() {
+        // Post Inc/Dec Check
+        if(postIncDec != null) {
+            m_codegen.DoUnaryOp(STO postIncDecSto, postIncDec, postIncDecSto);
+            postIncDec = null;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
