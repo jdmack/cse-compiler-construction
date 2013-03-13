@@ -280,8 +280,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void MakeGlobalInitGuard()
     {
-        // !----Create _init for global init guard----
-        writeCommentHeader("Create _init for global init guard");
+        // !----Create .init for global init guard----
+        writeCommentHeader("Create .init for global init guard");
 
         // .section ".bss"
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.BSS_SEC);
@@ -289,8 +289,8 @@ public class AssemblyCodeGenerator {
         // .align 4
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, String.valueOf(4));
 
-        // _init: .skip 4
-        writeAssembly(SparcInstr.GLOBAL_DEFINE, "_init", SparcInstr.SKIP_DIR, String.valueOf(4));
+        // .init: .skip 4
+        writeAssembly(SparcInstr.GLOBAL_DEFINE, ".init", SparcInstr.SKIP_DIR, String.valueOf(4));
 
         writeAssembly(SparcInstr.BLANK_LINE);
     }
@@ -306,8 +306,8 @@ public class AssemblyCodeGenerator {
         // Do Init Guard
 
         writeComment("Check if init is already done");
-        // set _init, %l0
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, "_init", SparcInstr.REG_LOCAL0);
+        // set .init, %l0
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".init", SparcInstr.REG_LOCAL0);
 
         // ld [%l0], %l1
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_LOCAL1);
@@ -315,14 +315,14 @@ public class AssemblyCodeGenerator {
         // cmp %l1, %g0
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL1, SparcInstr.REG_GLOBAL0);
 
-        // bne _init_done ! Global initialization guard
-        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BNE_OP, "_init_done");
+        // bne .init_done ! Global initialization guard
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BNE_OP, ".init_done");
 
         // set 1, %l1 ! Branch delay slot
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL1);
 
         writeComment("Set init flag to 1 now that we're about to do the init");
-        // st %l1, [%l0] ! Mark _init = 1
+        // st %l1, [%l0] ! Mark .init = 1
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0));
         writeAssembly(SparcInstr.BLANK_LINE);
 
@@ -357,9 +357,9 @@ public class AssemblyCodeGenerator {
         */
         }
 
-        // _init_done:
+        // .init_done:
         decreaseIndent();
-        writeAssembly(SparcInstr.LABEL, "_init_done");
+        writeAssembly(SparcInstr.LABEL, ".init_done");
         writeAssembly(SparcInstr.BLANK_LINE);
         increaseIndent();
 
