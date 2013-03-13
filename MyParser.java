@@ -553,17 +553,20 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoFormalParams(Vector<ParamSTO> params)
     {
-        FuncSTO stoFunc;
+        FuncSTO funcSto;
 
-        if((stoFunc = m_symtab.getFunc()) == null) {
+        if((funcSto = m_symtab.getFunc()) == null) {
             m_nNumErrors++;
             m_errors.print("internal: DoFormalParams says no proc!");
             ERROR = true;
             return;
         }
-
         // Insert parameters
-        stoFunc.setParameters(params);
+        funcSto.setParameters(params);
+
+        System.out.println("Function: " + funcSto.getName());
+        System.out.println("numOfParams: " + ((FuncPtrType) funcSto.getType()).getNumOfParams());
+        System.out.println("params.size(): " + params.size());
 
         // Add parameters to local scope
         for(STO thisParam: params) {

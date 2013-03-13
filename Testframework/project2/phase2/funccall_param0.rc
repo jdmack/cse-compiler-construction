@@ -17,7 +17,10 @@ function: void foo1(int x) {
 
 function: void main() {
 
+    int x = 1;
+
     cout << "Passing (1) to foo1()" << endl;
+
     foo1(1);
 
     //foo2();
