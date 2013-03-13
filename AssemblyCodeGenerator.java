@@ -735,7 +735,7 @@ public class AssemblyCodeGenerator {
         // LOAD VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value of " + sto.getName() + " into " + reg);
         if(isFloatReg(reg) && sto.getType().isInt()) {
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.FITOS_OP, SparcInstr.REG_FLOAT0, SparcInstr.REG_FLOAT0);
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, reg,reg, "Promoting");
             // System.out.println("[DEBUG] FITOSing in LoadSto");
         }
     }
@@ -1133,11 +1133,21 @@ public class AssemblyCodeGenerator {
         String comment = operand1.getName() + " and " + operand2.getName();
         boolean isFloatOp = false;
         boolean isCallOp = false;
+/*        boolean promoteOperand1 = false;
+        boolean promoteOperand2 = false;*/
 
         if(operand1.getType().isFloat() || operand2.getType().isFloat()) {
             regOp1 = SparcInstr.REG_FLOAT0;
-            regOp2 = SparcInstr.REG_FLOAT0;
+            regOp2 = SparcInstr.REG_FLOAT1;
             isFloatOp = true;
+            
+/*            // Check if operand needs promotion
+            if (operand1.getType().isFloat() && operand2.getType().isInt()) {
+            	promoteOperand2 = true;
+            }
+            else if (operand1.getType().isInt() && operand2.getType().isFloat()) {
+            	promoteOperand1 = true;
+            }*/
         }
         
         // Addition
@@ -1203,6 +1213,14 @@ public class AssemblyCodeGenerator {
         LoadSto(operand1, regOp1);
         LoadSto(operand2, regOp2);
 
+        // Promote int operand to float
+/*        if(promoteOperand1) {
+        	writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, regOp1, regOp1, "Promoting Operand 1");
+        }
+        else if(promoteOperand2) {
+        	writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, regOp2, regOp2, "Promoting Operand 2");
+        }
+        */
         // Call Operator
         if(isCallOp) {
             // If not Float, move arguments into out registers

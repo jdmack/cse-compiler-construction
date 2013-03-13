@@ -1,0 +1,8 @@
+float x, y;
+function : int main() {
+    x = 94.25;
+    cout << "x = " << x;
+    y = (x + 1)/x;
+    cout << endl <<"(x + 1)/x = " << y;
+    return 0;
+}
