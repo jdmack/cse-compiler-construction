@@ -409,9 +409,9 @@ public class AssemblyCodeGenerator {
         for(int i = 0; i < params.size(); i++) {
             ParamSTO thisParam = params.elementAt(i);
 
-            LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
-            AllocateSto(thisParam)
-            thisParam.store(SparcInstr.ARG_REGS[i], String.valueOf(0));
+            LoadSto(thisParam, SparcInstr.PARAM_REGS[i]);
+            AllocateSto(thisParam);
+            thisParam.store(SparcInstr.PARAM_REGS[i], String.valueOf(0));
         }
 
 
@@ -475,7 +475,7 @@ public class AssemblyCodeGenerator {
             // 5. [PASS] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
             // 7. [PASS] global variable as value arg       - load value from it's location (ex. %g0 + local)
             LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
-            StoreValueIntoSto(SparcInstr.ARGS_REGS[i], thisParam);
+            StoreValueIntoSto(SparcInstr.ARG_REGS[i], thisParam);
 /*
 
             // Non-pointer
