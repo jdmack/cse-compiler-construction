@@ -3,6 +3,6 @@ function : int main() {
     x = 94.25;
     cout << "x = " << x;
     y = (x + 1)/x;
-    cout << "(x + 1)/x" << y;
+    cout << endl <<"(x + 1)/x = " << y;
     return 0;
 }
