@@ -1225,5 +1225,24 @@ public class AssemblyCodeGenerator {
     	String label = stackIfLabel.pop();
     	writeAssembly(SparcInstr.LABEL, label);
     }
-
+    
+    //-------------------------------------------------------------------------
+    //      DoInput
+    //-------------------------------------------------------------------------
+    public void DoCin(STO sto) 
+    {
+    	if(sto.isModLValue()) {
+    		String function = "";
+    		if(sto.getType().isInt()) {
+    			LoadSto(sto, SparcInstr.REG_ARG0);
+    			function = SparcInstr.INPUTINT;
+    		}
+    		else if(sto.getType().isFloat()) {
+    			LoadSto(sto, SparcInstr.REG_FLOAT0);
+    			function = SparcInstr.INPUTFLOAT;
+    		}
+        	writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, function, "Inputing");
+        	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+    	}
+    }
 }
