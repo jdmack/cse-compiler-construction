@@ -10,6 +10,7 @@ java-cup-v11a.jar
 javacup
 rc.s
 a.out
+bin/*
 
 #eclipse stuff
 .classpath

@@ -1,5 +1,14 @@
-function : int main() {
+function: int main() {
+
+    cout << "Enter an int: ";
     int x;
     cin >> x;
+    cout << endl << "You entered: " << x << endl;
+
+    cout << "Enter a float: ";
+    float y;
+    cin >> y;
+    cout << endl << "You entered: " << y << endl;
+
     return 0;
 }
