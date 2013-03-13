@@ -1308,17 +1308,22 @@ public class AssemblyCodeGenerator {
     public void DoCin(STO sto) 
     {
     	if(sto.isModLValue()) {
+    		String reg = "";
     		String function = "";
+    		
     		if(sto.getType().isInt()) {
-    			LoadSto(sto, SparcInstr.REG_ARG0);
+    			reg = SparcInstr.REG_ARG0;
     			function = SparcInstr.INPUTINT;
     		}
     		else if(sto.getType().isFloat()) {
-    			LoadSto(sto, SparcInstr.REG_FLOAT0);
+    			reg = SparcInstr.REG_FLOAT0;
     			function = SparcInstr.INPUTFLOAT;
     		}
+
+    		LoadSto(sto, reg);
         	writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, function, "Inputing");
         	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        	StoreValueIntoSto(reg, sto);
     	}
     }
 }
