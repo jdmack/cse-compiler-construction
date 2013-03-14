@@ -1012,6 +1012,9 @@ class MyParser extends parser
                 if(op.isComparisonOp()) {
                     m_codegen.DoComparisonOp((ComparisonOp) op, operand1, operand2, resultSTO);
                 }
+                else if (op.isBooleanOp()) {
+                    m_codegen.DoBooleanOp((BooleanOp) op, operand1, operand2, resultSTO);
+                } 
                 else {
                     m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
                 }

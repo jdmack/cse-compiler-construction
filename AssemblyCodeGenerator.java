@@ -1318,21 +1318,12 @@ public class AssemblyCodeGenerator {
         String comment = operand1.getName() + " and " + operand2.getName();
         boolean isFloatOp = false;
         boolean isCallOp = false;
-/*        boolean promoteOperand1 = false;
-        boolean promoteOperand2 = false;*/
 
         if(operand1.getType().isFloat() || operand2.getType().isFloat()) {
             regOp1 = SparcInstr.REG_FLOAT0;
             regOp2 = SparcInstr.REG_FLOAT1;
             isFloatOp = true;
             
-/*            // Check if operand needs promotion
-            if (operand1.getType().isFloat() && operand2.getType().isInt()) {
-                promoteOperand2 = true;
-            }
-            else if (operand1.getType().isInt() && operand2.getType().isFloat()) {
-                promoteOperand1 = true;
-            }*/
         }
         
         // Addition
@@ -1398,14 +1389,6 @@ public class AssemblyCodeGenerator {
         LoadSto(operand1, regOp1);
         LoadSto(operand2, regOp2);
 
-        // Promote int operand to float
-/*        if(promoteOperand1) {
-            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, regOp1, regOp1, "Promoting Operand 1");
-        }
-        else if(promoteOperand2) {
-            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, regOp2, regOp2, "Promoting Operand 2");
-        }
-        */
         // Call Operator
         if(isCallOp) {
             // If not Float, move arguments into out registers
@@ -1431,6 +1414,69 @@ public class AssemblyCodeGenerator {
 
         AllocateSto(resultSto);
         StoreValueIntoSto(regOp1, resultSto);
+    }
+
+    //-------------------------------------------------------------------------
+    //      DoBooleanOp
+    //-------------------------------------------------------------------------
+    public void DoBooleanOp(BooleanOp op, STO operand1, STO operand2, STO resultSto)
+    {
+        String regOp1 = SparcInstr.REG_LOCAL1;
+        String regOp2 = SparcInstr.REG_LOCAL2;
+        String branchOp = "";  
+        String returnReg = SparcInstr.REG_LOCAL3;
+
+        // Load operands into registers
+        LoadSto(operand1, regOp1);
+        LoadSto(operand2, regOp2);
+
+        // Get label ready
+        String compLabel = ".compL_" + compLabel_count;
+        compLabel_count++;
+
+        // &&
+        if(op.isAndOp()) {
+            // %l0 is going to hold our boolean result of the comparison
+            MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
+            branchOp = SparcInstr.BE_OP; 
+
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, String.valueOf(1), SparcInstr.REG_LOCAL3);
+        }
+
+        // ||
+        else {
+            // %l0 is going to hold our boolean result of the comparison
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL0);
+            branchOp = SparcInstr.BNE_OP; 
+            MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL3);
+
+        }
+
+        // Perform first condition, branch if true, if false, fall through and check second condition
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, regOp1, SparcInstr.REG_GLOBAL0);
+        writeAssembly(SparcInstr.ONE_PARAM, branchOp, compLabel);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        // Perform second condition, branch if true, if false, fall through and set return
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, regOp2, SparcInstr.REG_GLOBAL0);
+        writeAssembly(SparcInstr.ONE_PARAM, branchOp, compLabel);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        writeComment("Swap return value since we never branched");
+        MoveRegToReg(SparcInstr.REG_LOCAL3, SparcInstr.REG_LOCAL0);
+
+        // Print label
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, compLabel);
+        increaseIndent();
+        
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        // Comparison done, result is in %l0, store it in the resultSto
+        AllocateSto(resultSto);
+        StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSto);
     }
 
     //-------------------------------------------------------------------------
