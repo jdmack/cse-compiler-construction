@@ -36,9 +36,6 @@ class MyParser extends parser
     private AssemblyCodeGenerator m_codegen;
     private boolean ERROR = false;
 
-    private Stack<StoOpPair> endStmtOps = new Stack<StoOpPair>();
-
-
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -1063,13 +1060,7 @@ class MyParser extends parser
             if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
         else {
-            if(!ERROR) {
-                if(op.isPost()) {
-                    endStmtOps.push(new StoOpPair(operand, op));
-                }
-
-                m_codegen.DoUnaryOp(op, operand, resultSTO);
-            }
+            if(!ERROR) m_codegen.DoUnaryOp(op, operand, resultSTO);
         }
         
         return resultSTO;
@@ -1491,22 +1482,4 @@ class MyParser extends parser
     {
     	if(!ERROR) m_codegen.DoIncrementIfElseCount();
     } 
-
-    //----------------------------------------------------------------
-    //      DoStmtEnd
-    //----------------------------------------------------------------
-    void DoStmtEnd() {
-
-        while(!endStmtOps.empty()) {
-            StoOpPair thisStoOpPair = endStmtOps.pop();
-            STO thisSto = thisStoOpPair.getSto();
-            Operator thisOp = thisStoOpPair.getOp();
-
-
-            if(thisOp.isPost()) { 
-                ((UnaryOp) thisOp).setPost(false);
-                DoUnaryOp((UnaryOp) thisOp, thisSto);
-            }
-        }
-    }
 }

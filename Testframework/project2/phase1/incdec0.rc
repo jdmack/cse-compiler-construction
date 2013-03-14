@@ -1,5 +1,7 @@
 function: void main() {
 
+    cout << "Int" << "----------------------------------------------------" << endl;
+
     int x = 2;
     cout << "Pre Increment" << "-------------" << endl;
     cout << "should print 3: " << ++x << endl;
@@ -19,4 +21,25 @@ function: void main() {
     cout << "Post Decrement" << "-------------" << endl;
     cout << "should print 2: " << x-- << endl;
     cout << "should print 1: " << x << endl << endl;
+
+    cout << "Int" << "----------------------------------------------------" << endl;
+    float x = 2.0;
+    cout << "Pre Increment" << "-------------" << endl;
+    cout << "should print 3.00: " << ++x << endl;
+    cout << "should print 3.00: " << x << endl << endl;
+
+    x = 2.0;
+    cout << "Post Increment" << "-------------" << endl;
+    cout << "should print 2.00: " << x++ << endl;
+    cout << "should print 3.00: " << x << endl << endl;
+
+    x = 2.0;
+    cout << "Pre Decrement" << "-------------" << endl;
+    cout << "should print 1.00: " << --x << endl;
+    cout << "should print 1.00: " << x << endl << endl;
+
+    x = 2.0;
+    cout << "Post Decrement" << "-------------" << endl;
+    cout << "should print 2.00: " << x-- << endl;
+    cout << "should print 1.00: " << x << endl << endl;
 }

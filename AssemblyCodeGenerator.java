@@ -1139,17 +1139,22 @@ public class AssemblyCodeGenerator {
             // Load operand into regOp
             LoadSto(operand, regOp);
 
+            // Store un-incremented, un-decremented value into result if it's pre
+            if(op.isPost()) {
+                AllocateSto(resultSto);
+                StoreValueIntoSto(regOp, resultSto);
+            }
+
             // perform the operation
             writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, regOp, comment);
 
-            // Store Result In Operand
+            // Store incremented, decremented value into result if not post op
             if(!op.isPost()) {
-                StoreValueIntoSto(regOp, operand);
+                AllocateSto(resultSto);
+                StoreValueIntoSto(regOp, resultSto);
             }
 
-            // Store Result in ResultSTO
-            AllocateSto(resultSto);
-            StoreValueIntoSto(regOp, resultSto);
+            StoreValueIntoSto(regOp, operand);
         }
     }
 
