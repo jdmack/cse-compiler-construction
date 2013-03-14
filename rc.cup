@@ -118,6 +118,7 @@ non terminal
     IfStmt,
     IfOnlyStmt,
     IfElseStmt,
+    //OptElse,
     ForStmt,
     WhileStmt,
     BreakStmt,
@@ -179,7 +180,7 @@ non terminal Type
     UndecoratedType,
     ReturnType
     ;
-    	
+        
 non terminal Vector
     IdList,
     IdListUpper,
@@ -479,7 +480,7 @@ CodeBlock ::=       T_LBRACE                                                    
                         ((MyParser) parser).DoBlockOpen();                      //                  - if statements 
                     :}                                                          //                  - else statements
                     OptStmtList                                                 //                  - loop statements
-		            {:
+                    {:
                         ((MyParser) parser).DoBlockClose(); 
                     :}
                     T_RBRACE    // ReturnStatement: No
@@ -616,14 +617,14 @@ IdListWOptInit ::=  OptModifierList:_4 OptArrayDef:_3 T_ID:_1 OptInit:_2
                     // This OptModiferList not needed because constant pointers WNBT
 IdListWInit ::=     OptModifierList: OptArrayDef T_ID:_1 T_ASSIGN ConstExpr:_2
                     {:
-			            RESULT = new Vector<IdValueTuple>();
-			            RESULT.addElement (new IdValueTuple(_1, (STO)_2));
+                        RESULT = new Vector<IdValueTuple>();
+                        RESULT.addElement (new IdValueTuple(_1, (STO)_2));
                     :}
     |               IdListWInit:_1 T_COMMA OptModifierList OptArrayDef T_ID:_3 T_ASSIGN ConstExpr:_4
                     {:
-			            RESULT = _1;
-			            RESULT.addElement (new IdValueTuple(_3, (STO)_4));
-		            :}
+                        RESULT = _1;
+                        RESULT.addElement (new IdValueTuple(_3, (STO)_4));
+                    :}
     ;
 
 
@@ -655,30 +656,26 @@ ArrElemsList ::=    Expr:_1
                     :}
     ;
 
-IfStmt ::=          IfOnlyStmt
-    |               IfElseStmt
-    ;
 
-IfOnlyStmt ::=          T_IF Expr:_1 
+IfStmt ::=          T_IF Expr:_1 
                     {:
-                            RESULT = ((MyParser) parser).DoIfExpr(_1);
+                        //RESULT = ((MyParser) parser).DoIfExpr(_1);
                     :}
-                    CodeBlock
+                    CodeBlock OptElse
                     {:
-                        ((MyParser) parser).DoIfCodeBlock();
+                        //((MyParser) parser).DoIfCodeBlock();
                     :}
     ;
 
-IfElseStmt ::=          T_IF Expr:_1 
+
+OptElse ::=         T_ELSE CodeBlock
                     {:
-                            RESULT = ((MyParser) parser).DoIfExpr(_1);
+                        RESULT = true;
                     :}
-                    CodeBlock T_ELSE CodeBlock
-                    {:
-                        ((MyParser) parser).DoIfCodeBlock();
+    |               {:
+                        RESULT = false;
                     :}
     ;
-
 
 
 WhileStmt ::=       T_WHILE Expr:_1 
@@ -811,36 +808,36 @@ Expr ::=            Designator:_1 T_ASSIGN Expr:_2
                     :}
     |               Expr0:_1
                     {:
-			            RESULT = _1;
+                        RESULT = _1;
                     :}
     ;
 
 
 Expr0 ::=           Expr0:_1 T_OR Expr1:_2
                     {:
-			            RESULT = ((MyParser) parser).DoBinaryOp(new OrOp("||"), _1, _2);
+                        RESULT = ((MyParser) parser).DoBinaryOp(new OrOp("||"), _1, _2);
                     :}
     |               Expr1:_1
                     {:
-			            RESULT = _1;
+                        RESULT = _1;
                     :}
     ;
 
 
 Expr1 ::=           Expr1:_1 T_AND Expr2:_2
                     {:
-			            RESULT = ((MyParser) parser).DoBinaryOp(new AndOp("&&"), _1, _2);
+                        RESULT = ((MyParser) parser).DoBinaryOp(new AndOp("&&"), _1, _2);
                     :}
     |               Expr2:_1
                     {:
-			            RESULT = _1;
+                        RESULT = _1;
                     :}
     ;
 
 
 Expr2 ::=           Expr2:_1 T_BAR Expr3:_2
                     {:
-			            RESULT = ((MyParser) parser).DoBinaryOp(new OrBwOp("|"), _1, _2);
+                        RESULT = ((MyParser) parser).DoBinaryOp(new OrBwOp("|"), _1, _2);
                     :}
     |               Expr3:_1
                     {:
@@ -851,7 +848,7 @@ Expr2 ::=           Expr2:_1 T_BAR Expr3:_2
 
 Expr3 ::=           Expr3:_1 T_CARET Expr4:_2
                     {:
-			            RESULT = ((MyParser) parser).DoBinaryOp(new XorOp("^"), _1, _2);
+                        RESULT = ((MyParser) parser).DoBinaryOp(new XorOp("^"), _1, _2);
                     :}
     |               Expr4:_1
                     {:
@@ -862,7 +859,7 @@ Expr3 ::=           Expr3:_1 T_CARET Expr4:_2
 
 Expr4 ::=           Expr4:_1 T_AMPERSAND Expr5:_2
                     {:
-			            RESULT = ((MyParser) parser).DoBinaryOp(new AndBwOp("&"), _1, _2);
+                        RESULT = ((MyParser) parser).DoBinaryOp(new AndBwOp("&"), _1, _2);
                     :}
     |               Expr5:_1
                     {:
@@ -873,7 +870,7 @@ Expr4 ::=           Expr4:_1 T_AMPERSAND Expr5:_2
 
 Expr5 ::=           Expr5:_1 Equality:_2 Expr6:_3
                     {:
-			            RESULT = ((MyParser) parser).DoBinaryOp(_2, _1, _3);
+                        RESULT = ((MyParser) parser).DoBinaryOp(_2, _1, _3);
                     :}
     |               Expr6:_1
                     {:
@@ -998,32 +995,32 @@ Designator ::=      T_STAR Designator:_1
                     :}
     |               T_AMPERSAND Designator:_1
                     {:
-			            RESULT = ((MyParser) parser).DoUnaryOp(new AddressOfOp("&"), _1);
+                        RESULT = ((MyParser) parser).DoUnaryOp(new AddressOfOp("&"), _1);
                     :}
     |               UnarySign:_2 Designator:_1
                     {:
-			            RESULT = ((MyParser) parser).DoUnaryOp(_2, _1);
+                        RESULT = ((MyParser) parser).DoUnaryOp(_2, _1);
                     :}
     |               T_NOT Designator:_1
                     {:
-			            RESULT = ((MyParser) parser).DoUnaryOp(new NotOp("!"), _1);
+                        RESULT = ((MyParser) parser).DoUnaryOp(new NotOp("!"), _1);
                     :}
     |               T_SIZEOF T_LPAREN Designator:_2 T_RPAREN
                     {:
-			            RESULT = ((MyParser) parser).DoSizeOf(_2, null);
+                        RESULT = ((MyParser) parser).DoSizeOf(_2, null);
                     :}
     |               T_SIZEOF T_LPAREN Type:_2 T_RPAREN
                     {:
-			            RESULT = ((MyParser) parser).DoSizeOf(null, _2);
+                        RESULT = ((MyParser) parser).DoSizeOf(null, _2);
                     :}
     |               T_LPAREN Type:_1 T_RPAREN Designator:_2
                     {:
-			            RESULT = ((MyParser) parser).DoTypeCast(_1, _2);
+                        RESULT = ((MyParser) parser).DoTypeCast(_1, _2);
                     :}
     |               IncDecOp:_1 Designator:_2
                     {:
                         ((MyParser) parser).DoPost(_1, false);
-			            RESULT = ((MyParser) parser).DoUnaryOp(_1, _2);
+                        RESULT = ((MyParser) parser).DoUnaryOp(_1, _2);
                     :}
     |               Designator2:_1 
                     {:
@@ -1049,7 +1046,7 @@ Designator2 ::=     Designator2:_1 T_DOT T_ID:_3
     |               Designator2:_1 IncDecOp:_2
                     {:
                         ((MyParser) parser).DoPost(_2, true);
-			            RESULT = ((MyParser) parser).DoUnaryOp(_2, _1);
+                        RESULT = ((MyParser) parser).DoUnaryOp(_2, _1);
                     :}
     |               Designator2:_1 T_LPAREN OptExprList:_2 T_RPAREN
                     {:
