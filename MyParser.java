@@ -1252,6 +1252,8 @@ class MyParser extends parser
             m_errors.print(ErrorMsg.error12_Break);
             ERROR = true;
         }
+        
+        if(!ERROR) m_codegen.DoBreakStmt(m_whileLevel);
     }
 
     //----------------------------------------------------------------
@@ -1265,6 +1267,8 @@ class MyParser extends parser
             m_errors.print(ErrorMsg.error12_Continue);
             ERROR = true;
         }
+        
+        if(!ERROR) m_codegen.DoContinueStmt(m_whileLevel);
     }
 
     void whileLevelUp()

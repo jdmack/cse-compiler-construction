@@ -1310,7 +1310,7 @@ public class AssemblyCodeGenerator {
     	decreaseIndent();
         String ifElseLabel = stackIfLabel.peek();
         String jumpTo = ifElseLabel + ".end";
-        System.out.println(jumpTo);
+        //System.out.println(jumpTo);
         // write an Always branch to if else end for when the condition is true
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Skip over to if.else.end");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
@@ -1358,8 +1358,30 @@ public class AssemblyCodeGenerator {
     public void DoWhileCodeBlock()
     {
     	// write while.end label
-    	String label = stackWhileLabel.pop();
+    	String label = stackWhileLabel.peek();
     	writeAssembly(SparcInstr.LABEL, label+".end");
+    }
+    
+    //-------------------------------------------------------------------------
+    //      DoBreakStmt
+    //-------------------------------------------------------------------------
+    public void DoBreakStmt(int level)
+    {
+    	String jumpTo = ".while."+ level+".end";
+        // write an Always branch to if else end for when the condition is true
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Jump to the corresponding while.end");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+    }
+    
+    //-------------------------------------------------------------------------
+    //      DoContinueStmt
+    //-------------------------------------------------------------------------
+    public void DoContinueStmt(int level)
+    {
+    	String jumpTo = ".while."+ level;
+        // write an Always branch to if else end for when the condition is true
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Jump to the corresponding while");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
     }
     
     //-------------------------------------------------------------------------
