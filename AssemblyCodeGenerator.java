@@ -167,7 +167,6 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void writeComment(String comment)
     {
-        writeAssembly(SparcInstr.BLANK_LINE);
         // ! Comment
         writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + " " + comment);
     }
