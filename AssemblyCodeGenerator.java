@@ -14,6 +14,8 @@ public class AssemblyCodeGenerator {
     private Stack<StoPair> globalInitStack;
     private Stack<String> stackIfLabel;
     private Vector<StackRecord> stackValues;
+    private boolean skipElse = false;
+    private boolean hasElse = false;
 
     // Error Messages
     private static final String ERROR_IO_CLOSE     = "Unable to close fileWriter";
@@ -1281,23 +1283,21 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoIf(STO condition)
     {
-        // !----if <condition>----
-        writeComment("if " + condition.getName());
-        
-        // create if label, increment the count and add to stack
-        String ifLabel = ".ifL_" + ifLabel_count;
-        ifLabel_count++;
-        stackIfLabel.add(ifLabel);
-        
+    	writeComment("if" + condition.getName());
+        String label = ".if." + ifLabel_count;
+
+    	ifLabel_count++;
+    	stackIfLabel.add(label);
+    	
         // Load condition into %l0 for comparison
         LoadSto(condition, SparcInstr.REG_LOCAL0);
 
-        // cmp %l0, %g0
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
-        // be IfL1! Opposite logic
-        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, ifLabel);
-        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-        increaseIndent();
+    	// cmp %l0, %g0
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
+    	// be IfL1! Opposite logic
+    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, label);
+    	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+    	increaseIndent();
     }
     
     //-------------------------------------------------------------------------
@@ -1305,11 +1305,26 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoIfCodeBlock()
     {
-        decreaseIndent();
-        String label = stackIfLabel.pop();
-        writeAssembly(SparcInstr.LABEL, label);
+    	decreaseIndent();
+    	// simple if statement
+    	String label = stackIfLabel.pop();
+    	writeAssembly(SparcInstr.LABEL, label);
+    	
+    	skipElse = true;
     }
     
+    public void DoIfElseCodeBlock()
+    {
+    	String label = stackIfLabel.pop();
+    	writeAssembly(SparcInstr.LABEL, label+".end");
+    	DoIncrementIfElseCount();
+    	
+    }
+    
+    public void DoIncrementIfElseCount()
+    {
+    	ifLabel_count++;
+    }
     //-------------------------------------------------------------------------
     //      DoInput
     //-------------------------------------------------------------------------
@@ -1334,4 +1349,5 @@ public class AssemblyCodeGenerator {
             StoreValueIntoSto(reg, sto);
         }
     }
+    
 }
