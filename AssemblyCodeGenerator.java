@@ -434,9 +434,21 @@ public class AssemblyCodeGenerator {
         for(int i = 0; i < params.size(); i++) {
             ParamSTO thisParam = params.elementAt(i);
 
+            // 5. [PASS] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
             AllocateSto(thisParam);
-            thisParam.store(SparcInstr.PARAM_REGS[i], String.valueOf(0));
-            LoadSto(thisParam, SparcInstr.PARAM_REGS[i]);
+            StoreValueIntoSto(SparcInstr.PARAM_REGS[i], thisParam);
+    
+            // 1. [PASS] value param as value arg         - put in out register (ex. %o0)
+            // 2. [PASS] value param as reference param     - store in param location (ex. %fp + 68)
+            // 3. [PASS] reference param as value arg       - load from address into out register (ex. %o0)
+            // 4. [PASS] reference param as reference arg - put address in register (ex. %o0)
+            // 6. [PASS] local variable as reference arg    - load address of location (ex. %fp - 4) into register (ex. %o0) 
+            // 7. [PASS] global variable as value arg       - load value from it's location (ex. %g0 + local)
+            // 8. [PASS] global variable as reference arg - load address of location into register (ex. %o0)
+
+            //AllocateSto(thisParam);
+            //thisParam.store(SparcInstr.PARAM_REGS[i], String.valueOf(0));
+            //LoadSto(thisParam, SparcInstr.PARAM_REGS[i]);
         }
 
 
@@ -500,9 +512,10 @@ public class AssemblyCodeGenerator {
             // 5. [PASS] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
             // 7. [PASS] global variable as value arg       - load value from it's location (ex. %g0 + local)
             LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
-            StoreValueIntoSto(SparcInstr.ARG_REGS[i], thisParam);
-/*
+            //StoreValueIntoSto(SparcInstr.ARG_REGS[i], thisParam);
+        }
 
+/*
             // Non-pointer
             if(!thisArg.getType().isPointer()) {
 
@@ -530,8 +543,6 @@ public class AssemblyCodeGenerator {
             // 4. [PASS] reference param as reference arg - put address in register (ex. %o0)
             // 6. [PASS] local variable as reference arg    - load address of location (ex. %fp - 4) into register (ex. %o0) 
             // 8. [PASS] global variable as reference arg - load address of location into register (ex. %o0)
-
-        }
 
         //  3. [Caller] Save registers use by the calling subroutine (if Caller-Save convention) - TODO:
         //  4. [Caller] Subroutine call - DONE
