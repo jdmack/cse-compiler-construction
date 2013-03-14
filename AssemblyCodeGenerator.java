@@ -1357,8 +1357,9 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoWhileCodeBlock()
     {
+    	decreaseIndent();
     	// write while.end label
-    	String label = stackWhileLabel.peek();
+    	String label = stackWhileLabel.pop();
     	writeAssembly(SparcInstr.LABEL, label+".end");
     }
     
@@ -1367,6 +1368,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoBreakStmt(int level)
     {
+    	System.out.println("Breaking on :" + level);
     	String jumpTo = ".while."+ level+".end";
         // write an Always branch to if else end for when the condition is true
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Jump to the corresponding while.end");

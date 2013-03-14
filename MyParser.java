@@ -1093,8 +1093,8 @@ class MyParser extends parser
             return (new ErrorSTO("DoWhile error"));
         }
         
-        whileLevelUp();
     	if(!ERROR) m_codegen.DoWhile(stoExpr);
+    	whileLevelUp();
         
         return stoExpr;
     }
@@ -1253,7 +1253,7 @@ class MyParser extends parser
             ERROR = true;
         }
         
-        if(!ERROR) m_codegen.DoBreakStmt(m_whileLevel);
+        if(!ERROR) m_codegen.DoBreakStmt(m_whileLevel - 1);
     }
 
     //----------------------------------------------------------------
@@ -1268,7 +1268,7 @@ class MyParser extends parser
             ERROR = true;
         }
         
-        if(!ERROR) m_codegen.DoContinueStmt(m_whileLevel);
+        if(!ERROR) m_codegen.DoContinueStmt(m_whileLevel - 1);
     }
 
     void whileLevelUp()
