@@ -340,7 +340,6 @@ public class AssemblyCodeGenerator {
 
         // set 1, %l1 ! Branch delay slot
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL1, "Set .init to 1, indicating it has been done");
-        writeAssembly(SparcInstr.BLANK_LINE);
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0), "Store value into .init mem location");
         writeAssembly(SparcInstr.BLANK_LINE);
 
@@ -759,7 +758,7 @@ public class AssemblyCodeGenerator {
             String valueReg = SparcInstr.REG_LOCAL0;
 
             // If constant is float
-            if(valueSto.getType().isFloat()) {
+            if(destSto.getType().isFloat()) {
 
                 valueReg = SparcInstr.REG_FLOAT0;
 
@@ -768,6 +767,10 @@ public class AssemblyCodeGenerator {
 
                 // Load float into valueReg
                 LoadValueFromLabel(floatLabel, valueReg);
+
+                // Check for int promotion
+                if(destSto.getType().isFloat() && valueSto.getType().isInt()) {
+                    writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, valueReg, valueReg, "Promoting to float");
             }
 
             // Not float
@@ -867,7 +870,7 @@ public class AssemblyCodeGenerator {
     public void StoreValueIntoAddr(String valueReg, String destReg)
     {
         writeComment("Store value in " + valueReg + " into " + destReg);
-
+        
         // STORE VALUE IN valueReg INTO destReg
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, valueReg, bracket(destReg), "Store value in " + valueReg  + " into " + destReg);
     }
