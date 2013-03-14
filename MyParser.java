@@ -1040,6 +1040,14 @@ class MyParser extends parser
         // Use UnaryOp.checkOperand() to perform error checks
         STO resultSTO = op.checkOperand(operand);
 
+        // If operands are constants, do the op
+        if((!resultSTO.isError()) && (resultSTO.isConst())) {
+            resultSTO = op.doOperation((ConstSTO)operand, resultSTO.getType());
+        }
+    
+        // DON'T REFACTOR UNLESS YOU RUN PROJECT1 TESTS
+        // THIS CODE IS IN THIS ORDER FOR A VERY SPECIFIC REASON
+
         // Process/Print errors
         if(resultSTO.isError()) {
             m_nNumErrors++;
@@ -1048,19 +1056,21 @@ class MyParser extends parser
             return resultSTO;
         }
 
+        // And better to have all the codegen code at the end of the function
+
         // If operand is a constant, do the op
-        if((!resultSTO.isError()) && (resultSTO.isConst())) {
-            resultSTO =  op.doOperation((ConstSTO)operand, resultSTO.getType());
+        if(resultSTO.isConst()) {
             if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
         else {
-            if(op.isPost()) {
-                endStmtOps.push(new StoOpPair(operand, op));
-            }
+            if(!ERROR) {
+                if(op.isPost()) {
+                    endStmtOps.push(new StoOpPair(operand, op));
+                }
 
-            if(!ERROR) m_codegen.DoUnaryOp(op, operand, resultSTO);
+                m_codegen.DoUnaryOp(op, operand, resultSTO);
+            }
         }
-        
         
         return resultSTO;
     }
@@ -1454,10 +1464,10 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoPost(Operator op, boolean isPost) 
     {
-    	if (op.getName().equals("++")) {
+    	if (op.isIncOp()) {
     		((IncOp)op).setPost(isPost);
     	}
-    	else if(op.getName().equals("--")) {
+    	else if(op.isDecOp()) {
     		((DecOp)op).setPost(isPost);
     	}
     }
@@ -1479,8 +1489,10 @@ class MyParser extends parser
             STO thisSto = thisStoOpPair.getSto();
             Operator thisOp = thisStoOpPair.getOp();
 
+
             if(thisOp.isPost()) { 
-                m_codegen.DoUnaryOp((UnaryOp) thisOp, thisSto, thisSto);
+                ((UnaryOp) thisOp).setPost(false);
+                DoUnaryOp((UnaryOp) thisOp, thisSto);
             }
         }
     }
