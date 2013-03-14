@@ -5,7 +5,7 @@ import java.util.*;
 
 public class AssemblyCodeGenerator {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private final String COMPILER_IDENT = "WRC 1.0";
     private int indent_level = 0;
@@ -619,7 +619,7 @@ public class AssemblyCodeGenerator {
             LoadSto(sto, SparcInstr.REG_LOCAL0);
             String ifLabel = ".ifL_" + ifLabel_count;
             String elseLabel = ".elseL_" + ifLabel_count;
-    	    ifLabel_count++;
+            ifLabel_count++;
 
             // If the condition is true, don't branch and load "true", if false, branch to end of if and load "false"
             // value == 0
@@ -663,43 +663,43 @@ public class AssemblyCodeGenerator {
         // String literal
         else if (sto.getType().isString()) {
 
-        	// .section ".rodata"
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.RODATA_SEC);
+            // .section ".rodata"
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.RODATA_SEC);
 
-        	// str_(str_count): .asciz "string literal" 
-        	writeAssembly(SparcInstr.RO_DEFINE, ".str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(sto.getName()));
+            // str_(str_count): .asciz "string literal" 
+            writeAssembly(SparcInstr.RO_DEFINE, ".str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(sto.getName()));
 
-        	// .section ".text"
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+            // .section ".text"
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
 
             // .align 4
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
 
-        	// set _strFmt, %o0
-        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.STRFMT, "%o0");
+            // set _strFmt, %o0
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.STRFMT, "%o0");
 
-        	// set str_(str_count), %o1
-        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".str_"+str_count, "%o1");
+            // set str_(str_count), %o1
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".str_"+str_count, "%o1");
 
             // call printf
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
-        	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-        	
-        	// increment str count
-        	str_count++;
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
+            writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            
+            // increment str count
+            str_count++;
         }
 
         // endl
         else if (sto.getType().isVoid()) {
 
-        	// set _strFmt %o0
-        	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.STRFMT, "%o0");
-        	// set _endl, %o1
+            // set _strFmt %o0
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.STRFMT, "%o0");
+            // set _endl, %o1
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.ENDL, "%o1");
 
             // call printf
-        	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
-        	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
+            writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         }
     }
 
@@ -823,6 +823,8 @@ public class AssemblyCodeGenerator {
 
         // STORE VALUE IN valueReg INTO destSto (which has addr in %l6)
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, valueReg, bracket(SparcInstr.REG_LOCAL7), "Store value in " + valueReg  + " into sto " + destSto.getName());
+
+        //System.out.println("Storing " + destSto.getName() + " to: " + destSto.load());
     }
 
     //-------------------------------------------------------------------------
@@ -1078,82 +1080,77 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public String LoadString(String string)
     {
-    	// .section ".rodata"
-    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.RODATA_SEC);
+        // .section ".rodata"
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.RODATA_SEC);
 
-    	// str_(str_count): .asciz "string literal" 
-    	writeAssembly(SparcInstr.RO_DEFINE, ".str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(string));
+        // str_(str_count): .asciz "string literal" 
+        writeAssembly(SparcInstr.RO_DEFINE, ".str_"+str_count, SparcInstr.ASCIZ_DIR, quoted(string));
 
-    	// .section ".text"
-    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+        // .section ".text"
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
 
         // .align 4
-    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
-    	
-    	return ".str_"+str_count++;
-    	// increment str count
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+        
+        return ".str_"+str_count++;
+        // increment str count
     }
 
     //-------------------------------------------------------------------------
     //      DoUnaryOp
     //-------------------------------------------------------------------------
-    public void DoUnaryOp(UnaryOp op, STO operand, STO resultSTO)
+    public void DoUnaryOp(UnaryOp op, STO operand, STO resultSto)
     {
-    	String operation = "";
+        String operation = "";
+        String regOp = SparcInstr.REG_LOCAL0;
+        //String comment = "Perform %s operation";
+        String comment = "Perform operation ";
 
-    	if(op.getName().equals("-")){
-    		operation = SparcInstr.NEG_OP;
-    		//operand.store(SparcInstr.REG_FRAME, getNextOffset(operand.getType().getSize()));
-    		LoadSto(operand, SparcInstr.REG_OUTPUT0);
-    		writeAssembly(SparcInstr.TWO_PARAM, operation, SparcInstr.REG_OUTPUT0, SparcInstr.REG_OUTPUT0);
-    		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-    		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
-    		StoreValueIntoSto(SparcInstr.REG_OUTPUT0, resultSTO);
-    	}
-    	else if(op.getName().equals("++")){
-    		operation = SparcInstr.INC_OP;
-    		// load value to l0
-    		LoadSto(operand, SparcInstr.REG_LOCAL0);
-    		/*
-    		//TODO
-    		if(((IncOp)op).isPost()) {
-  			// backup unincremented value to l1
-        		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.MOV_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, "Backup un-incremented value");
-        		// increment l0 value
-        		writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, "Increment the value");
-        		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-        		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
-        		StoreValueIntoSto(SparcInstr.REG_LOCAL1, resultSTO);
-    		}
-    		*/
-    		// increment l0 value
-    		writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, "Increment the value");
-    		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-    		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
-    		StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
-    	}
-    	else if(op.getName().equals("--")){
-    		operation = SparcInstr.DEC_OP;
-    		LoadSto(operand, SparcInstr.REG_LOCAL0);
-/*
-    		//TODO
-    		if(((DecOp)op).isPost()) {
-    			// backup undecremented value to l1
-        		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.MOV_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1, "Backup un-incremented value");
-        		// increment l0 value
-        		writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, "Increment the value");
-        		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-        		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
-        		StoreValueIntoSto(SparcInstr.REG_LOCAL1, resultSTO);
+        if(op.isUnMinusOp()) {
+            operation = SparcInstr.NEG_OP;
 
-    		}
-    		*/
-    		// decrement l0 value
-    		writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, SparcInstr.REG_LOCAL0, "Decrement the value");
-    		resultSTO.store(SparcInstr.REG_FRAME, getNextOffset(resultSTO.getType().getSize()));
-    		stackValues.addElement(new StackRecord(currentFunc.peek().getName(), resultSTO.getName(), resultSTO.load()));
-    		StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSTO);
-    	}
+            if(operand.getType().isFloat()) {
+                operation = SparcInstr.FNEGS_OP;
+                regOp = SparcInstr.REG_FLOAT0;
+            }
+
+            // Perform operation
+            LoadSto(operand, regOp);
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, operation, regOp, regOp, "Perform UnarySign Op");
+
+            // Store Result
+            AllocateSto(resultSto);
+            StoreValueIntoSto(regOp, resultSto);
+        }
+
+        else {
+
+            if(op.isIncOp()) {
+                operation = SparcInstr.INC_OP;
+                //String.format(comment, "Increment");
+                comment = comment + "Increment";
+            }
+            else {
+                operation = SparcInstr.DEC_OP;
+                comment = comment + "Decrement";
+                //String.format(comment, "Decrement");
+            }
+
+            // Load operand into regOp
+            LoadSto(operand, regOp);
+
+            // perform the operation
+            writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, regOp, comment);
+
+            // Store Result In Operand
+            if(!op.isPost()) {
+                StoreValueIntoSto(regOp, operand);
+            }
+
+            // Store Result in ResultSTO
+            AllocateSto(resultSto);
+            StoreValueIntoSto(regOp, resultSto);
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -1161,7 +1158,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoBinaryOp(BinaryOp op, STO operand1, STO operand2, STO resultSto)
     {
-    	String binaryOp = "";
+        String binaryOp = "";
         String regOp1 = SparcInstr.REG_LOCAL0;
         String regOp2 = SparcInstr.REG_LOCAL1;
         String comment = operand1.getName() + " and " + operand2.getName();
@@ -1177,10 +1174,10 @@ public class AssemblyCodeGenerator {
             
 /*            // Check if operand needs promotion
             if (operand1.getType().isFloat() && operand2.getType().isInt()) {
-            	promoteOperand2 = true;
+                promoteOperand2 = true;
             }
             else if (operand1.getType().isInt() && operand2.getType().isFloat()) {
-            	promoteOperand1 = true;
+                promoteOperand1 = true;
             }*/
         }
         
@@ -1249,10 +1246,10 @@ public class AssemblyCodeGenerator {
 
         // Promote int operand to float
 /*        if(promoteOperand1) {
-        	writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, regOp1, regOp1, "Promoting Operand 1");
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, regOp1, regOp1, "Promoting Operand 1");
         }
         else if(promoteOperand2) {
-        	writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, regOp2, regOp2, "Promoting Operand 2");
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, regOp2, regOp2, "Promoting Operand 2");
         }
         */
         // Call Operator
@@ -1339,24 +1336,24 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoCin(STO sto) 
     {
-    	if(sto.isModLValue()) {
-    		String reg = "";
-    		String function = "";
-    		
-    		if(sto.getType().isInt()) {
-    			reg = SparcInstr.REG_ARG0;
-    			function = SparcInstr.INPUTINT;
-    		}
-    		else if(sto.getType().isFloat()) {
-    			reg = SparcInstr.REG_FLOAT0;
-    			function = SparcInstr.INPUTFLOAT;
-    		}
+        if(sto.isModLValue()) {
+            String reg = "";
+            String function = "";
+            
+            if(sto.getType().isInt()) {
+                reg = SparcInstr.REG_ARG0;
+                function = SparcInstr.INPUTINT;
+            }
+            else if(sto.getType().isFloat()) {
+                reg = SparcInstr.REG_FLOAT0;
+                function = SparcInstr.INPUTFLOAT;
+            }
 
-    		LoadSto(sto, reg);
-        	writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, function, "Inputing");
-        	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-        	StoreValueIntoSto(reg, sto);
-    	}
+            LoadSto(sto, reg);
+            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, function, "Inputing");
+            writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            StoreValueIntoSto(reg, sto);
+        }
     }
     
 }

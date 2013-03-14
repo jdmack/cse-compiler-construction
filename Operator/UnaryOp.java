@@ -29,4 +29,15 @@ class UnaryOp extends Operator
     {
         return true;
     }
+    
+    public boolean getPost()
+    {
+        return false;
+    }
+
+    public void setPost(boolean value)
+    {
+        // do nothing
+    }
+
 }

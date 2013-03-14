@@ -237,7 +237,8 @@ class SparcInstr
     //-----------------------------------------------------------------------------
     //      Negating/2's Complement
     //-----------------------------------------------------------------------------
-    public static final String NEG_OP = "neg";
+    public static final String NEG_OP   = "neg";
+    public static final String FNEGS_OP = "fnegs";
 
     //-----------------------------------------------------------------------------
     //      Clear Register

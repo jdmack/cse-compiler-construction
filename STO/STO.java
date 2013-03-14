@@ -151,6 +151,9 @@ abstract class STO
     // Load and store just do a get and set for both at same time
     public String load() throws NumberFormatException
     {
+        //System.out.println(getName());
+        //System.out.println("offset: " + m_offset);
+        //System.out.println("base: " + m_base);
         if(isGlobal()) {
             return m_offset;
         }
