@@ -1,0 +1,4 @@
+Local
+x: should be 5  5
+y: should be 1  1
+((x+y)-y)-10: should be -5-5

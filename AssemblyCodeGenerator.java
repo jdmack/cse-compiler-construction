@@ -31,9 +31,11 @@ public class AssemblyCodeGenerator {
     
     // Output file headerstackWhileLabel
     private static final String FILE_HEADER = 
-        "/*\n" +
-        " * Generated %s\n" + 
-        " */\n\n";
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!n\n" + 
+        "!!\n" +
+        "!!      Generated %s\n" + 
+        "!!\n" +
+        "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!n\n";
     
     private int str_count = 0;
     private int float_count = 0;
@@ -167,7 +169,6 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void writeComment(String comment)
     {
-        writeAssembly(SparcInstr.BLANK_LINE);
         // ! Comment
         writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + " " + comment);
     }
@@ -175,9 +176,9 @@ public class AssemblyCodeGenerator {
     public void writeCommentHeader(String comment)
     {
         writeAssembly(SparcInstr.BLANK_LINE);
-        writeComment("!!-------------------------------------------------------------------------");
-        writeComment("!!      " + comment);
-        writeComment("!!-------------------------------------------------------------------------");
+        writeComment("|-------------------------------------------------------------------------");
+        writeComment("|      " + comment);
+        writeComment("|-------------------------------------------------------------------------");
         writeAssembly(SparcInstr.BLANK_LINE);
     }
 
@@ -262,6 +263,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoGlobalDecl(STO varSto, STO valueSto)
     {
+        writeComment("Declare Global: " + varSto.getName());
 
         // .global <id>
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.GLOBAL_DIR, varSto.getName());
@@ -272,15 +274,18 @@ public class AssemblyCodeGenerator {
         // .align 4
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
 
-
         // <id>: .skip 4
         decreaseIndent();
         writeAssembly(SparcInstr.GLOBAL_DEFINE, varSto.getName(), SparcInstr.SKIP_DIR, String.valueOf(4));
         increaseIndent();
 
-
         // set the base and offset to the sto
         varSto.store(SparcInstr.REG_GLOBAL0, varSto.getName());
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        // If valueSto is Null, create a 0 sto for it (we're in bss, auto init to 0)
+        if(valueSto.isNull())
+            valueSto = new ConstSTO("0", new IntType(), 0.0);
 
         // Push these for later to initialize when main() starts
         globalInitStack.push(new StoPair(varSto, valueSto));
@@ -294,7 +299,7 @@ public class AssemblyCodeGenerator {
     public void MakeGlobalInitGuard()
     {
         // !----Create .init for global init guard----
-        writeCommentHeader("Create .init for global init guard");
+        writeComment("Create .init for global init guard");
 
         // .section ".bss"
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.BSS_SEC);
@@ -303,7 +308,9 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, String.valueOf(4));
 
         // .init: .skip 4
+        decreaseIndent();
         writeAssembly(SparcInstr.GLOBAL_DEFINE, ".init", SparcInstr.SKIP_DIR, String.valueOf(4));
+        increaseIndent();
 
         writeAssembly(SparcInstr.BLANK_LINE);
     }
@@ -318,25 +325,23 @@ public class AssemblyCodeGenerator {
 
         // Do Init Guard
 
-        writeComment("Check if init is already done");
+        writeComment("Check if init has been completed previously");
         // set .init, %l0
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".init", SparcInstr.REG_LOCAL0);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, ".init", SparcInstr.REG_LOCAL0, "Set .init label into %l0");
 
         // ld [%l0], %l1
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_LOCAL1);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_LOCAL1, "Load .init value into %l1");
 
         // cmp %l1, %g0
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL1, SparcInstr.REG_GLOBAL0);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL1, SparcInstr.REG_GLOBAL0, "Compare .init to 0");
 
         // bne .init_done ! Global initialization guard
-        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BNE_OP, ".init_done");
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BNE_OP, ".init_done", "If init has been done, skip init");
 
         // set 1, %l1 ! Branch delay slot
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL1);
-
-        writeComment("Set init flag to 1 now that we're about to do the init");
-        // st %l1, [%l0] ! Mark .init = 1
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0));
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL1, "Set .init to 1, indicating it has been done");
+        writeAssembly(SparcInstr.BLANK_LINE);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0), "Store value into .init mem location");
         writeAssembly(SparcInstr.BLANK_LINE);
 
         // Perform Initializations
@@ -348,9 +353,18 @@ public class AssemblyCodeGenerator {
             STO varSto = stopair.getVarSto();
             STO valueSto = stopair.getValueSto();
 
-            writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
 
-            DoAssignExpr(varSto, valueSto);
+            if(!valueSto.isNull()) {
+                if(valueSto.isConst() && ((ConstSTO) valueSto).getIntValue() == 0) {
+                    // Do nothing, auto initialized to 0 on bss
+                }
+
+                // Initialize the vlaue
+                else {
+                    writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
+                    DoAssignExpr(varSto, valueSto);
+                }
+            }
         }
 
         // .init_done:
@@ -397,6 +411,11 @@ public class AssemblyCodeGenerator {
         // save %sp, %g1, %sp
         writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.SAVE_OP, SparcInstr.REG_STACK, SparcInstr.REG_GLOBAL1, SparcInstr.REG_STACK);
         writeAssembly(SparcInstr.BLANK_LINE);
+
+        // Do global inits if doing main
+        if(funcSto.getName().equals("main")) {
+            DoGlobalInit();
+        }
 
         // TODO: Receive and store values transferred via param registers
 
@@ -733,8 +752,6 @@ public class AssemblyCodeGenerator {
     {
         writeComment("Assigning " + destSto.getName() + " = " + valueSto.getName());
 
-        // Load Address of destSto into %l0
-        LoadStoAddr(destSto, SparcInstr.REG_LOCAL0);
 
         // If valueSto is a constant and not already in memory, then set the value directly
         if((valueSto.isConst()) && (!valueSto.isInMemory())) {
@@ -743,13 +760,14 @@ public class AssemblyCodeGenerator {
 
             // If constant is float
             if(valueSto.getType().isFloat()) {
+
                 valueReg = SparcInstr.REG_FLOAT0;
 
                 // Put float literal into memory
-                String floatAddr = PutFloatInMem(((ConstSTO) valueSto).getFloatValue());
+                String floatLabel = PutFloatInMem(((ConstSTO) valueSto).getFloatValue());
 
                 // Load float into valueReg
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(floatAddr), valueReg);
+                LoadValueFromLabel(floatLabel, valueReg);
             }
 
             // Not float
@@ -757,9 +775,14 @@ public class AssemblyCodeGenerator {
                 // Set the value (integer) into valueReg
                 writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
             }
+
+            StoreValueIntoSto(valueReg, destSto);
         }
         // Not a constant that isn't in memory, do the load/store method to assign
         else {
+            // Load Address of destSto into %l0
+            LoadStoAddr(destSto, SparcInstr.REG_LOCAL0);
+
             // Store value in valueSto into destSto, using appropriate type register
             if(destSto.getType().isFloat())
                 StoreSto(valueSto, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
@@ -805,16 +828,23 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      LoadValueFromLabel - Loads a value into a register via a label - uses %l7 as temp
+    //-------------------------------------------------------------------------
+    public void LoadValueFromLabel(String label, String reg)
+    {
+        // PUT ADDRESS OF STO INTO <reg>
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, label, SparcInstr.REG_LOCAL7, "Put label " + label + " address into " + SparcInstr.REG_LOCAL7);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value from address in  " + SparcInstr.REG_LOCAL7 + " into reg");
+    }
+
+    //-------------------------------------------------------------------------
     //      LoadStoAddr - Sets the address value of a sto into register
     //-------------------------------------------------------------------------
     public void LoadStoAddr(STO sto, String reg)
     {
-        writeComment("Load address of " + sto.getName() + " into " + reg);
         // PUT ADDRESS OF STO INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), reg, "Put the offset/name of " + sto.getName() + " into " + reg);
-
         writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), reg, reg, "Add offset/name to base reg " + reg);
-        writeAssembly(SparcInstr.BLANK_LINE);
     }
 
     //-------------------------------------------------------------------------
@@ -832,9 +862,9 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      StoreValue
+    //      StoreValueIntoAddr - Stores the value in valueReg into the address in destReg
     //-------------------------------------------------------------------------
-    public void StoreValue(String valueReg, String destReg)
+    public void StoreValueIntoAddr(String valueReg, String destReg)
     {
         writeComment("Store value in " + valueReg + " into " + destReg);
 
@@ -847,8 +877,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void StoreValueIntoSto(String valueReg, STO destSto)
     {
+        writeAssembly(SparcInstr.BLANK_LINE); 
         writeComment("Store value in " + valueReg + " into sto " + destSto.getName());
-        
         // Load sto addr into %l7
         LoadStoAddr(destSto, SparcInstr.REG_LOCAL7);
 
@@ -881,7 +911,14 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
 
             // float<xxx>: .single 0r5.75 
+            decreaseIndent();
             writeAssembly(SparcInstr.RO_DEFINE, floatLabel, SparcInstr.SINGLEP, "0r" + (String.valueOf(value)));
+            increaseIndent();
+            writeAssembly(SparcInstr.BLANK_LINE);
+
+            // .section ".text"
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
             writeAssembly(SparcInstr.BLANK_LINE);
 
             float_count++;

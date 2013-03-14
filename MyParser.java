@@ -514,9 +514,6 @@ class MyParser extends parser
 
         if(!ERROR) m_codegen.DoFuncStart(sto);
 
-        if(id.equals("main"))
-            if(!ERROR) m_codegen.DoGlobalInit();
-
         return sto;
     }
 

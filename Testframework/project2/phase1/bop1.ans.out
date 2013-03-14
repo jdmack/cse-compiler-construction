@@ -1,0 +1,4 @@
+Global
+x: should be     5  5
+y: should be     1  1
+x + y: should be 6  6
