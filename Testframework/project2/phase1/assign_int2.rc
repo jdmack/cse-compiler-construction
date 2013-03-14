@@ -1,9 +1,0 @@
-function: void main() {
-    int x = 1;
-    int y = x;
-
-    x = 2;
-
-    cout << "x: " << x << endl;
-    cout << "y: " << y << endl;
-}

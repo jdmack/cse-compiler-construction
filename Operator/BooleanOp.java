@@ -30,10 +30,10 @@ class BooleanOp extends BinaryOp
         }
 
         if(operand1.isConst() && operand2.isConst()) {
-            resultSTO = new ConstSTO("NEqualToOp.checkOperands() Result", new BoolType());
+            resultSTO = new ConstSTO(getName() + " result", new BoolType());
         }
         else {
-            resultSTO = new ExprSTO("NEqualToOp.checkOperands() Result", new BoolType());
+            resultSTO = new ExprSTO(getName() + "result", new BoolType());
         }
 
         return resultSTO;

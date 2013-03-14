@@ -1,8 +1,9 @@
-function : int main() {
+function : void main() {
+
+    cout << "Local" << endl;
     int x = 5;
-    cout << "int x = "<< x << endl;
+    cout << "x: should be 5  " << x << endl;
     int y = 1;
-    cout << "int y = "<< y << endl;
-    cout << "Local ((x+y)-y)-10 = " << ((x+y)-y)-10 << endl;
-    return 0;
+    cout << "y: should be 1  " << y << endl;
+    cout << "((x+y)-y)-10: should be -5" << ((x+y)-y)-10 << endl;
 }
