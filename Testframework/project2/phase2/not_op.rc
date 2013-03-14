@@ -1,15 +1,16 @@
 function: void main() {
-   
     cout << "Literals" << endl;
-    cout << "! true:   " << ! true << endl;
-    cout << "! false:  " << ! false << endl;
+    cout << "! true: should be true  " << ! true << endl;
+    cout << "! false: should be false " << ! false << endl;
 
     bool a = true;
-    
+    bool b = false;
 
     cout << endl << "Locals" << endl;
     cout << "! a: should be false     " << ! a << endl;
-    cout << "! false: should be true  " << ! b << endl;
+    cout << "! b: should be true  " << ! b << endl;
+    cout << "b = ! b: should be true  " << b = ! b << endl;
+    cout << "b: should be true  " << b << endl;
 
     cout << endl << "More complex" << endl;
     cout << "!(2 > 3): should be true  " << !(2 > 3) << endl;

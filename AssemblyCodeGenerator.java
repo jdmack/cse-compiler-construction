@@ -1203,14 +1203,17 @@ public class AssemblyCodeGenerator {
 
             // It was false, set 0
             writeComment("It was false, set 0");
-            MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
+            MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL1);
 
             // Print label, this label facilitates "true"
             decreaseIndent();
             writeAssembly(SparcInstr.LABEL, compLabel);
             increaseIndent();
-            
             writeAssembly(SparcInstr.BLANK_LINE);
+
+            AllocateSto(resultSto);
+            StoreValueIntoSto(SparcInstr.REG_LOCAL1, resultSto);
+
             return;
         }
 
