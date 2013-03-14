@@ -93,9 +93,12 @@ for f in $tests; do
             mytemp="`dirname $f`/mytemp"
             myans="`dirname $f`/myans"
             if [[ -e $ans ]]; then
-                mydiff="`dirname $f`/mydiff"
-                $($differ -uw $myans $mytemp > $mydiff)
-                if [[ ! -s $mydiff || "$(head -n 1 $mydiff)" == *No* ]]; then 
+                # mydiff="`dirname $f`/mydiff"
+                # $($differ -uw $myans $mytemp > $mydiff)
+                # if [[ ! -s $mydiff || "$(head -n 1 $mydiff)" == *No* ]]; then 
+                # diff=$($differ -w $myans $mytemp)
+                diff=$($differ -uw $myans $mytemp | awk '{ if ($1 != "No") print; }')
+                if [[ -z $diff ]]; then
                     msg=$pass
                     let pass_count=pass_count+1
                 else
@@ -111,10 +114,11 @@ for f in $tests; do
     echo -en $msg
     echo " $f"
     if [[ -n $prog_out ]]; then echo "$prog_out"; fi
-    if [[ "$(head -n 1 $mydiff)" != *No* ]]; then cat "$mydiff"; fi 
-    #if [[ -s $mydiff && $mydiff != *No* ]]; then cat "$mydiff"; fi
+    if [[ -n $diff ]]; then echo "$diff"; fi
+    #if [[ "$(head -n 1 $mydiff)" != *No* ]]; then cat "$mydiff"; fi 
+
     if [[ -n $my ]]; then rm $my; fi
-    if [[ -n $mydiff ]]; then rm $mydiff; fi
+    #if [[ -n $mydiff ]]; then rm $mydiff; fi
     if [[ -n $mytemp ]]; then rm $mytemp; fi
     if [[ -n $myans ]]; then rm $myans; fi
 done
