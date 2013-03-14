@@ -1,7 +1,9 @@
 function: void main() {
+
+// Thought it was done but I guess not
     cout << "Literals" << endl;
-    cout << "! true: should be true  " << ! true << endl;
-    cout << "! false: should be false " << ! false << endl;
+    cout << "! true: should be false  " << ! true << endl;
+    cout << "! false: should be true " << ! false << endl;
 
     bool a = true;
     bool b = false;
@@ -14,5 +16,6 @@ function: void main() {
 
     cout << endl << "More complex" << endl;
     cout << "!(2 > 3): should be true  " << !(2 > 3) << endl;
+    cout << "! ! b: should be true  " << ! ! b << endl;
 
 }
