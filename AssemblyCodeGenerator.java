@@ -11,7 +11,6 @@ public class AssemblyCodeGenerator {
     private int indent_level = 0;
     private Stack<FuncSTO> currentFunc;
     private Stack<Integer> stackPointer;
-    private Stack<StoPair> globalInitStack;
     private Stack<String> stackIfLabel;
     private Stack<String> stackWhileLabel;
     private Vector<StackRecord> stackValues;
@@ -55,7 +54,6 @@ public class AssemblyCodeGenerator {
 
         currentFunc = new Stack<FuncSTO>();
         stackPointer = new Stack<Integer>();
-        globalInitStack = new Stack<StoPair>();
         stackIfLabel = new Stack<String>();
         stackWhileLabel = new Stack<String>();
         stackValues = new Vector<StackRecord>();
@@ -272,11 +270,30 @@ public class AssemblyCodeGenerator {
         increaseIndent();
 
         // Push these for later to initialize when main() starts
-        if(!valueSto.isNull())
-            globalInitStack.push(new StoPair(varSto, valueSto));    
 
         // set the base and offset to the sto
         varSto.store(SparcInstr.REG_GLOBAL0, varSto.getName());
+
+        if(!valueSto.isNull()) {
+            String valueReg = SparcInstr.REG_LOCAL0;
+
+            if(valueSto.getType().isFloat()) {
+                valueReg = SparcInstr.REG_FLOAT0;
+
+                // Put float literal into memory
+                String floatAddr = PutFloatInMem(((ConstSTO) valueSto).getFloatValue());
+
+                // Load that float label into a valueReg
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(floatAddr), valueReg);
+            }
+            else {
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
+            }
+            
+            // Store value in %valueReg into sto 
+            StoreValueIntoSto(valueReg, varSto);
+        }
+
         stackValues.addElement(new StackRecord("global", varSto.getName(), varSto.load()));
     }
 
@@ -847,6 +864,28 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      PutFloatInMem -  store float literal in rodata section
+    //-------------------------------------------------------------------------
+    public String PutFloatInMem(float value)
+    {
+            String floatLabel = ".float_" + String.valueOf(float_count);
+
+            // .section ".data"
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
+
+            // .align 4
+            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
+            // float<xxx>: .single 0r5.75 
+            writeAssembly(SparcInstr.RO_DEFINE, floatLabel, SparcInstr.SINGLEP, "0r" + (String.valueOf(value)));
+            writeAssembly(SparcInstr.BLANK_LINE);
+
+            float_count++;
+
+            return floatLabel;
+    }
+
+    //-------------------------------------------------------------------------
     //      DoLiteral
     //-------------------------------------------------------------------------
     public void DoLiteral(ConstSTO sto)
@@ -857,6 +896,7 @@ public class AssemblyCodeGenerator {
         String offset = getNextOffset(sto.getType().getSize());
 
         writeComment("Put literal onto stack");
+
         if(sto.getType().isInt() || sto.getType().isBool()) {
             // put the literal in memory            
             // set <value>, %l0
@@ -867,24 +907,10 @@ public class AssemblyCodeGenerator {
         }
 
         else if(sto.getType().isFloat()) {
-            // store literal in rodata section
-            // .section ".data"
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.DATA_SEC);
-            // .align 4
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
-
-            // float<xxx>: .single 0r5.75 
-            writeAssembly(SparcInstr.RO_DEFINE, ".float_" + String.valueOf(float_count), SparcInstr.SINGLEP, "0r" + (String.valueOf(((ConstSTO) sto).getFloatValue())));
-            writeAssembly(SparcInstr.BLANK_LINE);
-
-            // .section ".text"
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
-
-            // .align 4
-            writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+            String floatAddr = PutFloatInMem(sto.getFloatValue());
 
             // set label, %l0
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, ".float_" + String.valueOf(float_count), SparcInstr.REG_LOCAL0);
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, floatAddr, SparcInstr.REG_LOCAL0);
 
             // ld [%l0], %f0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_FLOAT0);
@@ -892,8 +918,6 @@ public class AssemblyCodeGenerator {
             // st %f0, [%fp-offset]
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, bracket(SparcInstr.REG_FRAME + offset));
             writeAssembly(SparcInstr.BLANK_LINE);
-
-            float_count++;
         }
 
         // store the address on sto
@@ -963,6 +987,13 @@ public class AssemblyCodeGenerator {
             else
                 branchOp = SparcInstr.BE_OP;
         }
+        // NEqualToOp
+        else if(op.isNEqualToOp()) {
+            if(isFloatOp)
+                branchOp = SparcInstr.FBNE_OP;
+            else
+                branchOp = SparcInstr.BNE_OP;
+        }
         // GreaterThanEqualOp
         else if(op.isGreaterThanEqualOp()) {
             if(isFloatOp)
@@ -991,13 +1022,6 @@ public class AssemblyCodeGenerator {
             else
                 branchOp = SparcInstr.BL_OP;
         }
-        // NEqualToOp
-        else if(op.isNEqualToOp()) {
-            if(isFloatOp)
-                branchOp = SparcInstr.FBNE_OP;
-            else
-                branchOp = SparcInstr.BNE_OP;
-        }
 
         // Get label ready
         String compLabel = ".compL_" + compLabel_count;
@@ -1009,11 +1033,12 @@ public class AssemblyCodeGenerator {
 
         // %l0 is going to hold our boolean result of the comparison
         // We initialize it to 1 (true) and branch over the %l0 = 0 (false) statement if the comparison is true
+        // TODO: Change this to 1.00 for float comparisons
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL0, "Init result to true");
 
         // Perform comparison, branch if true, if false, fall through and set 0 (false)
         writeAssembly(SparcInstr.TWO_PARAM_COMM, cmpOp, regOp1, regOp2, "operand1 <cond> operand2");
-        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, compLabel, "if the result is true, branch and do nothing");
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, branchOp, compLabel, "if the result is true, branch and do nothing");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         writeAssembly(SparcInstr.BLANK_LINE);
 
