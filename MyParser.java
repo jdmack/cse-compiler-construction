@@ -306,6 +306,7 @@ class MyParser extends parser
             if (errorFlag == false) {
                 size = ((ConstSTO)indexSTO).getIntValue();
             }
+            
         }
         return new ArrayType(type, size);
     }
