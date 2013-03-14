@@ -1,12 +1,12 @@
 function: int main() {
 
     if(false) {
-        cout << "should not print" << endl;
+        cout << "In if branch. Should not print" << endl;
     }
     else {
-        cout << "else is working" << endl;
+        cout << "In else branch. Should print" << endl;
         if(true) {
-            cout << "nested if " << endl;
+            cout << "In nested if1. Should print" << endl;
         }
     }
     cout << "This is after ifelse statement" << endl;
