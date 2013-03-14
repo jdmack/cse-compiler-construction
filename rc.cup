@@ -682,6 +682,7 @@ WhileStmt ::=       T_WHILE Expr:_1
                     :}
                     CodeBlock
                     {:
+                        ((MyParser) parser).DoWhileCodeBlock();
                         ((MyParser) parser).whileLevelDown();
                     :}
     ;

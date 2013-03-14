@@ -1,0 +1,15 @@
+function: int main() {
+
+    int x = 0; 
+
+    while(true) {
+        cout << "While. Should print" << endl;
+        
+        if(x == 3){
+            break;
+        }
+        x++;
+    }
+    cout << "After while loop" << endl; 
+    return 0;
+}

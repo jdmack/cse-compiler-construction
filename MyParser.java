@@ -1083,12 +1083,21 @@ class MyParser extends parser
             ERROR = true;
             return (new ErrorSTO("DoWhile error"));
         }
-
+        
         whileLevelUp();
-
+    	if(!ERROR) m_codegen.DoWhile(stoExpr);
+        
         return stoExpr;
     }
-
+    
+    //----------------------------------------------------------------
+    //      DoWhileCodeBlock
+    //----------------------------------------------------------------
+    void DoWhileCodeBlock()
+    {
+    	if(!ERROR) m_codegen.DoWhileCodeBlock();
+    }
+    
     //----------------------------------------------------------------
     //      DoIfExpr
     //----------------------------------------------------------------
@@ -1234,6 +1243,8 @@ class MyParser extends parser
             m_errors.print(ErrorMsg.error12_Break);
             ERROR = true;
         }
+        
+        if(!ERROR) m_codegen.DoBreakStmt(m_whileLevel);
     }
 
     //----------------------------------------------------------------
@@ -1247,6 +1258,8 @@ class MyParser extends parser
             m_errors.print(ErrorMsg.error12_Continue);
             ERROR = true;
         }
+        
+        if(!ERROR) m_codegen.DoContinueStmt(m_whileLevel);
     }
 
     void whileLevelUp()

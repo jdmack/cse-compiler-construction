@@ -1,0 +1,24 @@
+function: int main() {
+
+    if(true) {
+        cout << "In if branch. Should print" << endl;
+        if(false) {
+            cout << "In nested if1. Should not print" << endl;
+        } else {
+            if(false) {
+                cout << "In nested nested if2 branch. Should not print" << endl;
+            }
+            else {
+                cout << "In nested nested else2 branch. Should print" << endl;
+            }
+        }
+    }
+    else {
+        cout << "In else branch. Should not print" << endl;
+        if(true) {
+            cout << "In nested if1. should not print" << endl;
+        }
+    }
+    cout << "This is after ifelse statement" << endl;
+    return 0;
+}
