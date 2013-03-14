@@ -1147,6 +1147,36 @@ public class AssemblyCodeGenerator {
         String operation = "";
         String regOp = SparcInstr.REG_LOCAL0;
 
+        if(op.isNotOp()) {
+            // Get label ready
+            String compLabel = ".compL_" + compLabel_count;
+            compLabel_count++;
+            
+            // Load the operands
+            LoadSto(operand, regOp);
+
+            // Set to true initially
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL1, "Init result to true");
+
+            // Perform comparison, branch if true, if false, fall through and set 0 (false)
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, SparcInstr.REG_GLOBAL0, regOp, "not operand");
+            writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, compLabel, "if the result is true, branch and do nothing");
+            writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
+
+            // It was false, set 0
+            writeComment("It was false, set 0");
+            MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
+
+            // Print label, this label facilitates "true"
+            decreaseIndent();
+            writeAssembly(SparcInstr.LABEL, compLabel);
+            increaseIndent();
+            
+            writeAssembly(SparcInstr.BLANK_LINE);
+            return;
+        }
+
         if(operand.getType().isFloat()) {
             if(op.isUnMinusOp()) {
                 operation = SparcInstr.FNEGS_OP;

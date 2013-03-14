@@ -1,0 +1,6 @@
+function: void main() {
+    
+    cout << "b = 2 > 5: should be false   " << b = 2 > 5 << endl;
+    cout << "b:  should be false   " << b << endl;
+
+}
