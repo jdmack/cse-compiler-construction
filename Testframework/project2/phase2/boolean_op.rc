@@ -1,6 +1,7 @@
 function: void main() {
 
-
+// Short circuit doesn't work, I have to do something in the rc file
+// I know what to do, can do it first thing
     cout << "Basic Literals" << endl << "----------------" << endl;
     cout << "true && true:   should be true   " << true && true << endl;
     cout << "true && false:  should be false  " << true && false << endl;
