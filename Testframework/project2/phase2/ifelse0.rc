@@ -1,0 +1,11 @@
+function: int main() {
+
+    if(false) {
+        cout << "should not print" << endl;
+    }
+    else {
+        cout << "else is working" << endl;
+    }
+    cout << "This is after ifelse statement" << endl;
+    return 0;
+}

@@ -1443,8 +1443,24 @@ class MyParser extends parser
     		((DecOp)op).setPost(isPost);
     	}
     }
-    
-    void DoCin(STO sto) {
+    //----------------------------------------------------------------
+    //      DoCin
+    //----------------------------------------------------------------
+    void DoCin(STO sto) 
+    {
     	if(!ERROR) m_codegen.DoCin(sto);
+    }
+    
+    //----------------------------------------------------------------
+    //      DoIfElseCodeBlock
+    //----------------------------------------------------------------
+    void DoIfElseCodeBlock() 
+    {
+        if(!ERROR) m_codegen.DoIfElseCodeBlock();
+    }
+    
+    void DoIncrementIfElseCount()
+    {
+    	if(!ERROR) m_codegen.DoIncrementIfElseCount();
     }
 }
