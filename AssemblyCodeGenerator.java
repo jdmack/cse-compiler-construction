@@ -20,6 +20,7 @@ public class AssemblyCodeGenerator {
     private Stack<String>       stackWhileLabel;
     private Stack<StoPair>      globalInitStack;
     private Vector<StackRecord> stackValues;
+    private HashMap<Float, String> storedFloats;
 
     // Error Messages
     private static final String ERROR_IO_CLOSE     = "Unable to close fileWriter";
@@ -66,6 +67,7 @@ public class AssemblyCodeGenerator {
         stackWhileLabel = new Stack<String>();
         globalInitStack = new Stack<StoPair>();
         stackValues     = new Vector<StackRecord>();
+        storedFloats    = new HashMap<Float, String>();
     }
 
     //-------------------------------------------------------------------------
@@ -767,10 +769,6 @@ public class AssemblyCodeGenerator {
 
                 // Load float into valueReg
                 LoadValueFromLabel(floatLabel, valueReg);
-
-                // Check for int promotion
-                if(destSto.getType().isFloat() && valueSto.getType().isInt()) {
-                    writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, valueReg, valueReg, "Promoting to float");
             }
 
             // Not float
@@ -799,7 +797,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      setParamAddr  - Puts the stack param memory address for param i into register
     //-------------------------------------------------------------------------
-    public String setParamAddre(int i, String reg)
+    public String setParamAddr(int i, String reg)
     {
         writeComment("Set param address for param" + i + " into " + reg);
 
@@ -903,8 +901,15 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      PutFloatInMem -  store float literal in rodata section
     //-------------------------------------------------------------------------
-    public String PutFloatInMem(float value)
+    public String PutFloatInMem(float floatValue)
     {
+            // Check if it's already allocated
+            String floatAddr;
+            if((floatAddr = storedFloats.get(floatValue)) != null) {
+
+                return floatAddr;
+            }
+
             String floatLabel = ".float_" + String.valueOf(float_count);
 
             // .section ".data"
@@ -915,7 +920,7 @@ public class AssemblyCodeGenerator {
 
             // float<xxx>: .single 0r5.75 
             decreaseIndent();
-            writeAssembly(SparcInstr.RO_DEFINE, floatLabel, SparcInstr.SINGLEP, "0r" + (String.valueOf(value)));
+            writeAssembly(SparcInstr.RO_DEFINE, floatLabel, SparcInstr.SINGLEP, "0r" + (String.valueOf(floatValue)));
             increaseIndent();
             writeAssembly(SparcInstr.BLANK_LINE);
 
@@ -923,8 +928,11 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
             writeAssembly(SparcInstr.BLANK_LINE);
-
+        
             float_count++;
+            
+            // Store in Sto and add float to HashMap so we can use it in the future without allocating
+            storedFloats.put(floatValue, floatLabel);
 
             return floatLabel;
     }
@@ -1315,6 +1323,9 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoBinaryOp(BinaryOp op, STO operand1, STO operand2, STO resultSto)
     {
+
+        writeCommentHeader("Performing " + operand1.getName() + " " + op.getName() + " " + operand2.getName());
+
         String binaryOp = "";
         String regOp1 = SparcInstr.REG_LOCAL0;
         String regOp2 = SparcInstr.REG_LOCAL1;
