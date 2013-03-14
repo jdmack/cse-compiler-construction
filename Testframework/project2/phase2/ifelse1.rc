@@ -5,6 +5,9 @@ function: int main() {
     }
     else {
         cout << "In else branch. Should print" << endl;
+        if(true) {
+            cout << "In nested if1. Should print" << endl;
+        }
     }
     cout << "This is after ifelse statement" << endl;
     return 0;
