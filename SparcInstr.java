@@ -105,12 +105,12 @@ class SparcInstr
     //-----------------------------------------------------------------------------
     //      Constants
     //-----------------------------------------------------------------------------
-    public static final String ENDL    = "_endl";
-    public static final String INTFMT  = "_intFmt";
-    public static final String BOOLFMT = "_boolFmt";
-    public static final String BOOLT   = "_boolT";
-    public static final String BOOLF   = "_boolF";
-    public static final String STRFMT  = "_strFmt";
+    public static final String ENDL    = ".endl";
+    public static final String INTFMT  = ".intFmt";
+    public static final String BOOLFMT = ".boolFmt";
+    public static final String BOOLT   = ".boolT";
+    public static final String BOOLF   = ".boolF";
+    public static final String STRFMT  = ".strFmt";
 
     //-----------------------------------------------------------------------------
     //      Comment
@@ -288,7 +288,7 @@ class SparcInstr
 
     public static final String SAVE_FUNC     = SAVE_WORD + ".%s = -(%s + %s) & -8\n";
     public static final String RO_DEFINE     = "%s:" + SEPARATOR + "%s" + SEPARATOR + "%s\n";
-    public static final String GLOBAL_DEFINE = "%s:" + SEPARATOR + "%s" + SEPARATOR + "%s\n";
+    public static final String GLOBAL_DEFINE = "%s:  %s" + SEPARATOR + "%s\n";
 
 
 }

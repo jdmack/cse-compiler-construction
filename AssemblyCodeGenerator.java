@@ -31,9 +31,9 @@ public class AssemblyCodeGenerator {
     
     // Output file headerstackWhileLabel
     private static final String FILE_HEADER = 
-        "/*\n" +
-        " * Generated %s\n" + 
-        " */\n\n";
+        "////////////////////////////////////////////////////////////////////////////////\n" +
+        "//      Generated %s\n" + 
+        "////////////////////////////////////////////////////////////////////////////////\n\n";
     
     private int str_count = 0;
     private int float_count = 0;
@@ -174,9 +174,9 @@ public class AssemblyCodeGenerator {
     public void writeCommentHeader(String comment)
     {
         writeAssembly(SparcInstr.BLANK_LINE);
-        writeComment("!!-------------------------------------------------------------------------");
-        writeComment("!!      " + comment);
-        writeComment("!!-------------------------------------------------------------------------");
+        writeComment("|-------------------------------------------------------------------------");
+        writeComment("|      " + comment);
+        writeComment("|-------------------------------------------------------------------------");
         writeAssembly(SparcInstr.BLANK_LINE);
     }
 
@@ -261,6 +261,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoGlobalDecl(STO varSto, STO valueSto)
     {
+        writeComment("Declare Global: " + varSto.getName());
 
         // .global <id>
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.GLOBAL_DIR, varSto.getName());
@@ -270,7 +271,6 @@ public class AssemblyCodeGenerator {
 
         // .align 4
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
-
 
         // <id>: .skip 4
         decreaseIndent();
@@ -293,7 +293,7 @@ public class AssemblyCodeGenerator {
     public void MakeGlobalInitGuard()
     {
         // !----Create .init for global init guard----
-        writeCommentHeader("Create .init for global init guard");
+        writeComment("Create .init for global init guard");
 
         // .section ".bss"
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.BSS_SEC);
@@ -302,7 +302,9 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, String.valueOf(4));
 
         // .init: .skip 4
+        decreaseIndent();
         writeAssembly(SparcInstr.GLOBAL_DEFINE, ".init", SparcInstr.SKIP_DIR, String.valueOf(4));
+        increaseIndent();
 
         writeAssembly(SparcInstr.BLANK_LINE);
     }
@@ -391,6 +393,12 @@ public class AssemblyCodeGenerator {
         // Move the saved offset for this function into %g1 and then execute the save instruction that shifts the stack
         // set SAVE.<funcName>, %g1
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.SAVE_WORD + "." + funcSto.getName(), SparcInstr.REG_GLOBAL1);
+
+
+        // Do global inits if doing main
+        if(funcSto.getName().equals("main")) {
+            m_codegen.DoGlobalInit();
+        }
 
         //  5. [Callee] Allocate space for local variables (adjust stack pointer) - DONE
         // save %sp, %g1, %sp
