@@ -1,0 +1,17 @@
+function: int main() {
+
+    if(true) {
+        cout << "should not print" << endl;
+        if(true) {
+            cout << "nested if1" << endl;
+        }
+    }
+    else {
+        cout << "else is working" << endl;
+        if(true) {
+            cout << "nested if2" << endl;
+        }
+    }
+    cout << "This is after ifelse statement" << endl;
+    return 0;
+}
