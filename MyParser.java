@@ -1490,9 +1490,4 @@ class MyParser extends parser
     {
         if(!ERROR) m_codegen.DoIfElseCodeBlock();
     }
-    
-    void DoIncrementIfElseCount()
-    {
-    	if(!ERROR) m_codegen.DoIncrementIfElseCount();
-    } 
 }
