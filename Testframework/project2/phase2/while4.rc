@@ -1,0 +1,16 @@
+function: int main() {
+    while(true) {
+        cout << "While0. Should print" << endl;
+        while(true){
+            cout << "While1. Should print" << endl;
+            while(true){
+                cout << "While2. Should print" << endl;
+                break;
+            }
+            break;
+        }
+        break;
+    }
+    cout << "After while loop" << endl; 
+    return 0;
+}
