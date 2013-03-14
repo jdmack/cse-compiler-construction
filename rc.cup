@@ -116,7 +116,8 @@ non terminal
     Stmt,
     CodeBlock,
     IfStmt,
-    OptElse,
+    IfOnlyStmt,
+    IfElseStmt,
     ForStmt,
     WhileStmt,
     BreakStmt,
@@ -647,21 +648,31 @@ ArrElemsList ::=    Expr:_1
                     :}
     ;
 
-IfStmt ::=          T_IF Expr:_1 
+IfStmt ::=          IfOnlyStmt
+    |               IfElseStmt
+    ;
+
+IfOnlyStmt ::=          T_IF Expr:_1 
                     {:
-                        RESULT = ((MyParser) parser).DoIfExpr(_1);
+                            RESULT = ((MyParser) parser).DoIfExpr(_1);
                     :}
-                    CodeBlock 
+                    CodeBlock
                     {:
                         ((MyParser) parser).DoIfCodeBlock();
                     :}
-                    OptElse
+    ;
+
+IfElseStmt ::=          T_IF Expr:_1 
+                    {:
+                            RESULT = ((MyParser) parser).DoIfExpr(_1);
+                    :}
+                    CodeBlock T_ELSE CodeBlock
+                    {:
+                        ((MyParser) parser).DoIfCodeBlock();
+                    :}
     ;
 
 
-OptElse ::=         T_ELSE CodeBlock
-    |               /* empty */
-    ;
 
 WhileStmt ::=       T_WHILE Expr:_1 
                     {:
