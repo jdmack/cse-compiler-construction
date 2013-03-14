@@ -26,10 +26,10 @@ class UnMinusOp extends UnaryOp
         }
 
         if(operand.isConst()) {
-            resultSTO = new ConstSTO("UnMinus.checkOperand() Result", new IntType());
+            resultSTO = new ConstSTO("UnMinus.checkOperand() Result", operand.getType());
         }
         else {
-            resultSTO = new ExprSTO("UnMinus.checkOperand() Result", new IntType());
+            resultSTO = new ExprSTO("UnMinus.checkOperand() Result", operand.getType());
         }
 
         return resultSTO;

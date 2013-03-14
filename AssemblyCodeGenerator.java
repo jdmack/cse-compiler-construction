@@ -525,6 +525,7 @@ public class AssemblyCodeGenerator {
         //  4. [Caller] Subroutine call - DONE
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, funcSto.getName()); 
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
 
 
         // Now we can write the code for after the return, which is store the return value to stack
@@ -609,6 +610,7 @@ public class AssemblyCodeGenerator {
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
         }
         
         else if(sto.getType().isBool()) {
@@ -626,12 +628,14 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0, "Compare boolean value " + sto.getName() + " to 0");
             writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, ifLabel, "If <cond> is true, don't branch, if false, branch");
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
 
             // If Code: Load "true" into %o1 here
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.BOOLT, SparcInstr.REG_ARG1);
             // Branch to end of else block
             writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, elseLabel, "Did if code, branch always to bottom of else");
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
 
             // Print label
             decreaseIndent();
@@ -649,6 +653,7 @@ public class AssemblyCodeGenerator {
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
         }
 
         else if(sto.getType().isFloat()) {
@@ -658,6 +663,7 @@ public class AssemblyCodeGenerator {
             // call printFloat
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
         }
 
         // String literal
@@ -684,6 +690,7 @@ public class AssemblyCodeGenerator {
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
             
             // increment str count
             str_count++;
@@ -700,6 +707,7 @@ public class AssemblyCodeGenerator {
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
         }
     }
 
@@ -784,6 +792,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), reg, "Put the offset/name of " + sto.getName() + " into " + reg);
 
         writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), reg, reg, "Add offset/name to base reg " + reg);
+        writeAssembly(SparcInstr.BLANK_LINE);
     }
 
     //-------------------------------------------------------------------------
@@ -865,6 +874,7 @@ public class AssemblyCodeGenerator {
 
             // float<xxx>: .single 0r5.75 
             writeAssembly(SparcInstr.RO_DEFINE, ".float_" + String.valueOf(float_count), SparcInstr.SINGLEP, "0r" + (String.valueOf(((ConstSTO) sto).getFloatValue())));
+            writeAssembly(SparcInstr.BLANK_LINE);
 
             // .section ".text"
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.TEXT_SEC);
@@ -880,6 +890,7 @@ public class AssemblyCodeGenerator {
 
             // st %f0, [%fp-offset]
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_FLOAT0, bracket(SparcInstr.REG_FRAME + offset));
+            writeAssembly(SparcInstr.BLANK_LINE);
 
             float_count++;
         }
@@ -912,6 +923,7 @@ public class AssemblyCodeGenerator {
         // call exit
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.EXIT);
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
     }
 
     //-------------------------------------------------------------------------
@@ -1002,6 +1014,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.TWO_PARAM_COMM, cmpOp, regOp1, regOp2, "operand1 <cond> operand2");
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BE_OP, compLabel, "if the result is true, branch and do nothing");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
 
         // It was false, set 0
         writeComment("It was false, set 0");
@@ -1103,16 +1116,53 @@ public class AssemblyCodeGenerator {
     {
         String operation = "";
         String regOp = SparcInstr.REG_LOCAL0;
-        //String comment = "Perform %s operation";
-        String comment = "Perform operation ";
 
-        if(op.isUnMinusOp()) {
-            operation = SparcInstr.NEG_OP;
-
-            if(operand.getType().isFloat()) {
+        if(operand.getType().isFloat()) {
+            if(op.isUnMinusOp()) {
                 operation = SparcInstr.FNEGS_OP;
-                regOp = SparcInstr.REG_FLOAT0;
             }
+            else if(op.isIncOp()) {
+                operation = SparcInstr.FADDS_OP; 
+            }
+            else if(op.isDecOp()) {
+                operation = SparcInstr.FSUBS_OP;
+            }
+
+            // Create a STO with 1.00 for incrementing
+            ConstSTO one = new ConstSTO("1.00", new FloatType(), 1.00);
+            DoLiteral(one);
+            LoadSto(one, SparcInstr.REG_FLOAT1);
+
+            regOp = SparcInstr.REG_FLOAT0;
+        }
+
+        else {
+            if(op.isUnMinusOp()) {
+                operation = SparcInstr.NEG_OP;
+            }
+            else if(op.isIncOp()) {
+                operation = SparcInstr.INC_OP; 
+            }
+            else if(op.isDecOp()) {
+                operation = SparcInstr.DEC_OP;
+            }
+        }
+
+        // Load operand into regOp
+        LoadSto(operand, regOp);
+
+        if(op.isUnPlusOp())
+        {
+            writeCommentHeader("Do Unary Minus Operation on " + operand.getType().getName());
+
+            // Store Result
+            AllocateSto(resultSto);
+            StoreValueIntoSto(regOp, resultSto);
+
+        }
+
+        else if(op.isUnMinusOp()) {
+            writeCommentHeader("Do Unary Minus Operation on " + operand.getType().getName());
 
             // Perform operation
             LoadSto(operand, regOp);
@@ -1125,19 +1175,6 @@ public class AssemblyCodeGenerator {
 
         else {
 
-            if(op.isIncOp()) {
-                operation = SparcInstr.INC_OP;
-                //String.format(comment, "Increment");
-                comment = comment + "Increment";
-            }
-            else {
-                operation = SparcInstr.DEC_OP;
-                comment = comment + "Decrement";
-                //String.format(comment, "Decrement");
-            }
-
-            // Load operand into regOp
-            LoadSto(operand, regOp);
 
             // Store un-incremented, un-decremented value into result if it's pre
             if(op.isPost()) {
@@ -1146,7 +1183,19 @@ public class AssemblyCodeGenerator {
             }
 
             // perform the operation
-            writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, regOp, comment);
+            if(operand.getType().isFloat()) {
+                writeCommentHeader("Do Inc/Dec Operation on " + operand.getType().getName());
+
+                // Perform operation
+                writeAssembly(SparcInstr.THREE_PARAM_COMM, operation, regOp, SparcInstr.REG_FLOAT1, regOp, "Perform float inc/dec op");
+            }
+            else {
+
+                writeCommentHeader("Do Inc/Dec Operation on " + operand.getType().getName());
+
+                // Perform operation
+                writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, regOp, "Perform int " + operation + "op");
+            }
 
             // Store incremented, decremented value into result if not post op
             if(!op.isPost()) {
@@ -1267,6 +1316,7 @@ public class AssemblyCodeGenerator {
 
             writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, binaryOp, comment);
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
 
             // If not Float, store result in regOp1
             if(!isFloatOp) {
@@ -1303,6 +1353,7 @@ public class AssemblyCodeGenerator {
     	// be IfL1! Opposite logic
     	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, label);
     	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
     	increaseIndent();
     }
     
@@ -1318,6 +1369,7 @@ public class AssemblyCodeGenerator {
         // write an Always branch to if else end for when the condition is true
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Skip over to if.else.end");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
         	
         // write ifelse label
     	writeAssembly(SparcInstr.LABEL, ifElseLabel);
@@ -1357,6 +1409,8 @@ public class AssemblyCodeGenerator {
             LoadSto(sto, reg);
             writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, function, "Inputing");
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+            writeAssembly(SparcInstr.BLANK_LINE);
+
             StoreValueIntoSto(reg, sto);
         }
     }

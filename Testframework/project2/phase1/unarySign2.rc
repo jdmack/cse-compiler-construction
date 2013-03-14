@@ -1,8 +1,0 @@
-function : int main() {
-    int x = 5;
-    int y = -x;
-    cout << "int x = " << x << endl;
-    
-    cout << "should print -5: "<< y << endl;
-    return 0;
-}
