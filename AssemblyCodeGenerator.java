@@ -13,9 +13,8 @@ public class AssemblyCodeGenerator {
     private Stack<Integer> stackPointer;
     private Stack<StoPair> globalInitStack;
     private Stack<String> stackIfLabel;
+    private Stack<String> stackWhileLabel;
     private Vector<StackRecord> stackValues;
-    private boolean skipElse = false;
-    private boolean hasElse = false;
 
     // Error Messages
     private static final String ERROR_IO_CLOSE     = "Unable to close fileWriter";
@@ -25,7 +24,7 @@ public class AssemblyCodeGenerator {
     // FileWriter
     private FileWriter fileWriter;
     
-    // Output file header
+    // Output file headerstackWhileLabel
     private static final String FILE_HEADER = 
         "/*\n" +
         " * Generated %s\n" + 
@@ -34,6 +33,7 @@ public class AssemblyCodeGenerator {
     private int str_count = 0;
     private int float_count = 0;
     private int ifLabel_count = 0;
+    private int whileLabel_count = 0;
     private int compLabel_count = 0;
         
     //-------------------------------------------------------------------------
@@ -57,6 +57,7 @@ public class AssemblyCodeGenerator {
         stackPointer = new Stack<Integer>();
         globalInitStack = new Stack<StoPair>();
         stackIfLabel = new Stack<String>();
+        stackWhileLabel = new Stack<String>();
         stackValues = new Vector<StackRecord>();
     }
 
@@ -1313,24 +1314,54 @@ public class AssemblyCodeGenerator {
         // write an Always branch to if else end for when the condition is true
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Skip over to if.else.end");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-        	
+
         // write ifelse label
     	writeAssembly(SparcInstr.LABEL, ifElseLabel);
-   
     }
     
+    //-------------------------------------------------------------------------
+    //      DoIfElseCodeBlock
+    //-------------------------------------------------------------------------
     public void DoIfElseCodeBlock()
     {
     	String label = stackIfLabel.pop();
     	writeAssembly(SparcInstr.LABEL, label+".end");
-    	DoIncrementIfElseCount();
-    	
     }
     
-    public void DoIncrementIfElseCount()
+    //-------------------------------------------------------------------------
+    //      DoWhile
+    //-------------------------------------------------------------------------
+    public void DoWhile(STO condition)
     {
-    	ifLabel_count++;
+    	// stackWhileLabel
+    	String whileLabel = ".while."+whileLabel_count;
+    	whileLabel_count++;
+    	stackWhileLabel.add(whileLabel);
+    	
+    	// write while label before logic check
+    	writeAssembly(SparcInstr.LABEL, whileLabel);
+    	
+    	// Load condition into %l0 for comparison
+        LoadSto(condition, SparcInstr.REG_LOCAL0);
+
+    	// cmp %l0, %g0
+    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
+    	// be IfL1! Opposite logic
+    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, whileLabel+".end");
+    	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+    	increaseIndent();
     }
+    
+    //-------------------------------------------------------------------------
+    //      DoWhileCodeBlock
+    //-------------------------------------------------------------------------
+    public void DoWhileCodeBlock()
+    {
+    	// write while.end label
+    	String label = stackWhileLabel.pop();
+    	writeAssembly(SparcInstr.LABEL, label+".end");
+    }
+    
     //-------------------------------------------------------------------------
     //      DoInput
     //-------------------------------------------------------------------------

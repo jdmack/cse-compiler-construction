@@ -1092,12 +1092,21 @@ class MyParser extends parser
             ERROR = true;
             return (new ErrorSTO("DoWhile error"));
         }
-
+        
         whileLevelUp();
-
+    	if(!ERROR) m_codegen.DoWhile(stoExpr);
+        
         return stoExpr;
     }
-
+    
+    //----------------------------------------------------------------
+    //      DoWhileCodeBlock
+    //----------------------------------------------------------------
+    void DoWhileCodeBlock()
+    {
+    	if(!ERROR) m_codegen.DoWhileCodeBlock();
+    }
+    
     //----------------------------------------------------------------
     //      DoIfExpr
     //----------------------------------------------------------------
@@ -1486,11 +1495,7 @@ class MyParser extends parser
     {
         if(!ERROR) m_codegen.DoIfElseCodeBlock();
     }
-    
-    void DoIncrementIfElseCount()
-    {
-    	if(!ERROR) m_codegen.DoIncrementIfElseCount();
-    } 
+
 
     //----------------------------------------------------------------
     //      DoStmtEnd
