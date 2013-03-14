@@ -15,41 +15,36 @@ abstract class STO
     private boolean m_staticInit;
     private String  m_base;
     private String  m_offset;
+    private boolean m_isInMemory;
 
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
+    public STO(String strName, Type type, boolean isModLvalue)
+    {
+        this(strName, type);
+        setIsModLValue(isModLvalue);
+    }
 
-    public STO(String strName, Type typ)
+    public STO(String strName, Type type, boolean addressable, boolean modifiable)
+    {
+        this(strName, type);
+        setIsAddressable(addressable);
+        setIsModifiable(modifiable);
+    }
+
+    public STO(String strName, Type type)
     {
         setName(strName);
-        setType(typ);
+        setType(type);
+        setOffset("");
+        setBase("");
         setIsAddressable(false);
         setIsModifiable(false);
         setIsGlobal(false);
         setIsStatic(false);
         setStaticInit(false);
-    }
-    
-    public STO(String strName, Type typ, boolean addressable, boolean modifiable)
-    {
-        setName(strName);
-        setType(typ);
-        setIsAddressable(addressable);
-        setIsModifiable(modifiable);
-        setIsGlobal(false);
-        setIsStatic(false);
-        setStaticInit(false);
-    }
-
-    public STO(String strName, Type typ, boolean isModLvalue)
-    {
-        setName(strName);
-        setType(typ);
-        setIsModLValue(isModLvalue);
-        setIsGlobal(false);
-        setIsStatic(false);
-        setStaticInit(false);
+        setIsInMemory(false);
     }
 
     //---------------------------------------------------------------------
@@ -174,6 +169,19 @@ abstract class STO
     {
         m_base = base;
         m_offset = offset;
+    }
+
+    public boolean isInMemory()
+    {
+        if(getOffset().isEmpty() || getBase().isEmpty())
+            return false;
+        else
+            return true;
+    }
+
+    public void setIsInMemory(boolean value)
+    {
+        m_isInMemory = value;
     }
 
     public boolean isGlobal()

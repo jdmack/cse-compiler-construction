@@ -1,4 +1,8 @@
-
+//-------------------------------------------------------------------------
+//
+//      AssemblyCodeGenerator
+//
+//-------------------------------------------------------------------------
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -9,10 +13,12 @@ public class AssemblyCodeGenerator {
 
     private final String COMPILER_IDENT = "WRC 1.0";
     private int indent_level = 0;
-    private Stack<FuncSTO> currentFunc;
-    private Stack<Integer> stackPointer;
-    private Stack<String> stackIfLabel;
-    private Stack<String> stackWhileLabel;
+
+    private Stack<FuncSTO>      currentFunc;
+    private Stack<Integer>      stackPointer;
+    private Stack<String>       stackIfLabel;
+    private Stack<String>       stackWhileLabel;
+    private Stack<StoPair>      globalInitStack;
     private Vector<StackRecord> stackValues;
 
     // Error Messages
@@ -52,11 +58,12 @@ public class AssemblyCodeGenerator {
             System.exit(1);
         }
 
-        currentFunc = new Stack<FuncSTO>();
-        stackPointer = new Stack<Integer>();
-        stackIfLabel = new Stack<String>();
+        currentFunc     = new Stack<FuncSTO>();
+        stackPointer    = new Stack<Integer>();
+        stackIfLabel    = new Stack<String>();
         stackWhileLabel = new Stack<String>();
-        stackValues = new Vector<StackRecord>();
+        globalInitStack = new Stack<StoPair>();
+        stackValues     = new Vector<StackRecord>();
     }
 
     //-------------------------------------------------------------------------
@@ -160,6 +167,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void writeComment(String comment)
     {
+        writeAssembly(SparcInstr.BLANK_LINE);
         // ! Comment
         writeAssembly(SparcInstr.LINE, SparcInstr.COMMENT + " " + comment);
     }
@@ -167,8 +175,10 @@ public class AssemblyCodeGenerator {
     public void writeCommentHeader(String comment)
     {
         writeAssembly(SparcInstr.BLANK_LINE);
-        // !----Comment----
-        writeComment("----" + comment + "----");
+        writeComment("!!-------------------------------------------------------------------------");
+        writeComment("!!      " + comment);
+        writeComment("!!-------------------------------------------------------------------------");
+        writeAssembly(SparcInstr.BLANK_LINE);
     }
 
     public void writeStackValues()
@@ -262,37 +272,18 @@ public class AssemblyCodeGenerator {
         // .align 4
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
 
-        decreaseIndent();
 
         // <id>: .skip 4
+        decreaseIndent();
         writeAssembly(SparcInstr.GLOBAL_DEFINE, varSto.getName(), SparcInstr.SKIP_DIR, String.valueOf(4));
-
         increaseIndent();
 
-        // Push these for later to initialize when main() starts
 
         // set the base and offset to the sto
         varSto.store(SparcInstr.REG_GLOBAL0, varSto.getName());
 
-        if(!valueSto.isNull()) {
-            String valueReg = SparcInstr.REG_LOCAL0;
-
-            if(valueSto.getType().isFloat()) {
-                valueReg = SparcInstr.REG_FLOAT0;
-
-                // Put float literal into memory
-                String floatAddr = PutFloatInMem(((ConstSTO) valueSto).getFloatValue());
-
-                // Load that float label into a valueReg
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(floatAddr), valueReg);
-            }
-            else {
-                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
-            }
-            
-            // Store value in %valueReg into sto 
-            StoreValueIntoSto(valueReg, varSto);
-        }
+        // Push these for later to initialize when main() starts
+        globalInitStack.push(new StoPair(varSto, valueSto));
 
         stackValues.addElement(new StackRecord("global", varSto.getName(), varSto.load()));
     }
@@ -348,35 +339,18 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0));
         writeAssembly(SparcInstr.BLANK_LINE);
 
-        // Setup Stack iteration
-        Stack stk = new Stack();
-        StoPair stopair;
-        STO varSto;
-        STO valueSto;
-
-        stk.addAll(globalInitStack);
-        Collections.reverse(stk);
+        // Perform Initializations
 
         // Loop through all the initialization pairs on the stack
-        for(Enumeration<StoPair> e = stk.elements(); e.hasMoreElements(); ) {
-            stopair = e.nextElement();
-            varSto = stopair.getVarSto();
-            valueSto = stopair.getValueSto();
+        for(Enumeration<StoPair> e = globalInitStack.elements(); e.hasMoreElements(); ) {
 
-            if(valueSto.isConst())
-                DoLiteral((ConstSTO) valueSto);
+            StoPair stopair = e.nextElement();
+            STO varSto = stopair.getVarSto();
+            STO valueSto = stopair.getValueSto();
 
             writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
-            DoAssignExpr(varSto, valueSto);
-        /*
-            // ld [<value>], %l1
-            LoadSto(valueSto, SparcInstr.REG_LOCAL1);
-            LoadStoAddr(varSto, SparcInstr.REG_LOCAL0);
 
-            // st %l1, [%l0]
-            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0));
-            writeAssembly(SparcInstr.BLANK_LINE);
-        */
+            DoAssignExpr(varSto, valueSto);
         }
 
         // .init_done:
@@ -753,15 +727,45 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      DoAssignExpr - Stores value in stoValue into stoVar
+    //      DoAssignExpr - Sets destSto = valueSto
     //-------------------------------------------------------------------------
-    public void DoAssignExpr(STO stoVar, STO stoValue)
+    public void DoAssignExpr(STO destSto, STO valueSto)
     {
-        LoadStoAddr(stoVar, SparcInstr.REG_LOCAL0);
-        if(stoVar.getType().isFloat())
-            StoreSto(stoValue, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
-        else
-            StoreSto(stoValue, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+        writeComment("Assigning " + destSto.getName() + " = " + valueSto.getName());
+
+        // Load Address of destSto into %l0
+        LoadStoAddr(destSto, SparcInstr.REG_LOCAL0);
+
+        // If valueSto is a constant and not already in memory, then set the value directly
+        if((valueSto.isConst()) && (!valueSto.isInMemory())) {
+
+            String valueReg = SparcInstr.REG_LOCAL0;
+
+            // If constant is float
+            if(valueSto.getType().isFloat()) {
+                valueReg = SparcInstr.REG_FLOAT0;
+
+                // Put float literal into memory
+                String floatAddr = PutFloatInMem(((ConstSTO) valueSto).getFloatValue());
+
+                // Load float into valueReg
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(floatAddr), valueReg);
+            }
+
+            // Not float
+            else {
+                // Set the value (integer) into valueReg
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
+            }
+        }
+        // Not a constant that isn't in memory, do the load/store method to assign
+        else {
+            // Store value in valueSto into destSto, using appropriate type register
+            if(destSto.getType().isFloat())
+                StoreSto(valueSto, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
+            else
+                StoreSto(valueSto, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+        }
 
         writeAssembly(SparcInstr.BLANK_LINE);
     }
