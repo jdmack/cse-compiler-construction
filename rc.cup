@@ -492,7 +492,14 @@ OptStmtList ::=     StmtList
 
 
 StmtList ::=        Stmt
+                    {:
+                        //(MyParser) parser).DoStmtEnd()
+                    :}
     |               StmtList Stmt
+                    {:
+                        //System.out.println("Statement");
+                        //(MyParser) parser).DoStmtEnd()
+                    :}
     ;
 
 

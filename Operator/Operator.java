@@ -158,4 +158,8 @@ abstract class Operator
     {
         return false;
     }
+    public boolean isPost()
+    {
+        return false;
+    }
 }
