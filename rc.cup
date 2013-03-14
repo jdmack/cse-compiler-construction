@@ -657,20 +657,23 @@ ArrElemsList ::=    Expr:_1
 
 IfStmt ::=          T_IF Expr:_1 
                     {:
-                        //RESULT = ((MyParser) parser).DoIfExpr(_1);
+                        RESULT = ((MyParser) parser).DoIfExpr(_1);
                     :}
-                    CodeBlock OptElse
+                    CodeBlock 
                     {:
-                        //((MyParser) parser).DoIfCodeBlock();
+                        ((MyParser) parser).DoIfCodeBlock();
                     :}
+                    OptElse
     ;
 
 
 OptElse ::=         T_ELSE CodeBlock
                     {:
+                        ((MyParser) parser).DoIfElseCodeBlock();
                         RESULT = true;
                     :}
     |               {:
+                        ((MyParser) parser).DoIfElseCodeBlock();
                         RESULT = false;
                     :}
     ;

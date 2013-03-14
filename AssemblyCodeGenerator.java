@@ -1281,14 +1281,15 @@ public class AssemblyCodeGenerator {
         StoreValueIntoSto(regOp1, resultSto);
     }
 
-    //--------------------------------e-----------------------------------------
+    //-------------------------------------------------------------------------
     //      DoIf
     //-------------------------------------------------------------------------
     public void DoIf(STO condition)
     {
-    	writeComment("if" + condition.getName());
-        String label = ".if." + ifLabel_count;
+    	writeComment("ifelse " + condition.getName());
+    	String label = ".if.else." + ifLabel_count; // Will branch to this label if false
 
+    	// Has to increment in this function in order to handle nested if's / ifelse's
     	ifLabel_count++;
     	stackIfLabel.add(label);
     	
@@ -1309,11 +1310,16 @@ public class AssemblyCodeGenerator {
     public void DoIfCodeBlock()
     {
     	decreaseIndent();
-    	// simple if statement
-    	String label = stackIfLabel.pop();
-    	writeAssembly(SparcInstr.LABEL, label);
-    	
-    	skipElse = true;
+        String ifElseLabel = stackIfLabel.peek();
+        String jumpTo = ifElseLabel + ".end";
+        System.out.println(jumpTo);
+        // write an Always branch to if else end for when the condition is true
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Skip over to if.else.end");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        	
+        // write ifelse label
+    	writeAssembly(SparcInstr.LABEL, ifElseLabel);
+   
     }
     
     public void DoIfElseCodeBlock()

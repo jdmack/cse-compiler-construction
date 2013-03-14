@@ -1446,7 +1446,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoIfCodeBlock() 
     {
-        if(!ERROR) m_codegen.DoIfCodeBlock();
+        if(!ERROR) m_codegen.DoIfCodeBlock(hasElse);
     }
     
     //----------------------------------------------------------------
