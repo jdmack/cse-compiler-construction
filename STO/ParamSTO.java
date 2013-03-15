@@ -35,6 +35,17 @@ class ParamSTO extends STO
     private void setPassByReference(boolean passByRef)
     {
         m_passByReference = passByRef;
+        setIsReference(passByRef);
+    }
+
+    public boolean isReference()
+    {
+        return super.isReference();
+    }
+
+    public void setIsReference(boolean ref)
+    {
+        super.setIsReference(ref);
     }
 
     public boolean isParam()
