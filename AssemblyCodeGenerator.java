@@ -18,6 +18,7 @@ public class AssemblyCodeGenerator {
     private Stack<Integer>      stackPointer;
     private Stack<String>       stackIfLabel;
     private Stack<String>       stackWhileLabel;
+    private Stack<String>       stackBoolLabel;
     private Stack<StoPair>      globalInitStack;
     private Vector<StackRecord> stackValues;
     private HashMap<Float, String> storedFloats;
@@ -43,6 +44,7 @@ public class AssemblyCodeGenerator {
     private int ifLabel_count = 0;
     private int whileLabel_count = 0;
     private int compLabel_count = 0;
+    private int boolLabel_count = 0;
         
     //-------------------------------------------------------------------------
     //      Constructors
@@ -65,6 +67,7 @@ public class AssemblyCodeGenerator {
         stackPointer    = new Stack<Integer>();
         stackIfLabel    = new Stack<String>();
         stackWhileLabel = new Stack<String>();
+        stackBoolLabel; = new Stack<String>();
         globalInitStack = new Stack<StoPair>();
         stackValues     = new Vector<StackRecord>();
         storedFloats    = new HashMap<Float, String>();
@@ -1462,29 +1465,58 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      DoBooleanOp
+    //      DoBooleanOp1
     //-------------------------------------------------------------------------
-    public void DoBooleanOp(BooleanOp op, STO operand1, STO operand2, STO resultSto)
+    public void DoBooleanOp1(BooleanOp op, STO operand, STO resultSto)
     {
-        String regOp1 = SparcInstr.REG_LOCAL1;
-        String regOp2 = SparcInstr.REG_LOCAL2;
+        String regOp = SparcInstr.REG_LOCAL1;
         String branchOp = "";  
         String returnReg = SparcInstr.REG_LOCAL3;
 
-        // Load operands into registers
-        LoadStoValue(operand1, regOp1);
-        LoadStoValue(operand2, regOp2);
+        // Load operand into register
+        LoadStoValue(operand, regOp1);
 
         // Get label ready
-        String compLabel = ".compL_" + compLabel_count;
-        compLabel_count++;
+        String boolLabel = ".boolL_" + boolLabel_count;
+        stackBoolLabel.push(boolLabel);
+        boolLabel_count++;
+
+        // &&
+        if(op.isAndOp()) {
+            branchOp = SparcInstr.BE_OP; 
+        }
+        // ||
+        else {
+            branchOp = SparcInstr.BNE_OP; 
+        }
+
+        // Perform first condition, branch if true, if false, fall through and check second condition
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, regOp1, SparcInstr.REG_GLOBAL0);
+        writeAssembly(SparcInstr.ONE_PARAM, branchOp, boolLabel);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
+    }
+
+    //-------------------------------------------------------------------------
+    //      DoBooleanOp2
+    //-------------------------------------------------------------------------
+    public void DoBooleanOp2(BooleanOp op, STO operand, STO resultSto)
+    {
+        String regOp = SparcInstr.REG_LOCAL1;
+        String branchOp = "";  
+        String returnReg = SparcInstr.REG_LOCAL3;
+
+        // Load operand into register
+        LoadStoValue(operand, regOp1);
+
+        // Get label ready
+        String boolLabel = stackBoolLabel.pop();
 
         // &&
         if(op.isAndOp()) {
             // %l0 is going to hold our boolean result of the comparison
             MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
             branchOp = SparcInstr.BE_OP; 
-
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, String.valueOf(1), SparcInstr.REG_LOCAL3);
         }
 
@@ -1494,14 +1526,7 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL0);
             branchOp = SparcInstr.BNE_OP; 
             MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL3);
-
         }
-
-        // Perform first condition, branch if true, if false, fall through and check second condition
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, regOp1, SparcInstr.REG_GLOBAL0);
-        writeAssembly(SparcInstr.ONE_PARAM, branchOp, compLabel);
-        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-        writeAssembly(SparcInstr.BLANK_LINE);
 
         // Perform second condition, branch if true, if false, fall through and set return
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, regOp2, SparcInstr.REG_GLOBAL0);
@@ -1514,9 +1539,8 @@ public class AssemblyCodeGenerator {
 
         // Print label
         decreaseIndent();
-        writeAssembly(SparcInstr.LABEL, compLabel);
+        writeAssembly(SparcInstr.LABEL, boolLabel);
         increaseIndent();
-        
         writeAssembly(SparcInstr.BLANK_LINE);
 
         // Comparison done, result is in %l0, store it in the resultSto

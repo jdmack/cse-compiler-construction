@@ -826,14 +826,12 @@ Expr0 ::=           Expr0:_1 T_OR Expr1:_2
                     :}
     ;
 
+                    // _1: ExprSTO containing a bool value from first comparison
+                    // _2: ExprSTO containing a bool value from second comparison
 
-Expr1 ::=           Expr1:_1 T_AND Expr2:_2
+Expr1 ::=           Expr1:_1 T_AND Expr1:_2
                     {:
                         RESULT = ((MyParser) parser).DoBinaryOp(new AndOp("&&"), _1, _2);
-                    :}
-    |               Expr2:_1
-                    {:
-                        RESULT = _1;
                     :}
     ;
 
