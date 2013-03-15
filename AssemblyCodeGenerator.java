@@ -537,7 +537,7 @@ public class AssemblyCodeGenerator {
                 // 2. [PASS] value param as reference param     - store in param location (ex. %fp + 68)
                 else if{
                     String offset = setParamAddr(i, SparcInstr.REG_LOCAL0);
-                    StoreSto(thisArg, SparcInstr.REG_LOCAL0);
+                    StoreStoValueIntoAddr(thisArg, SparcInstr.REG_LOCAL0);
                     thisParam.store(SparcInstr.REG_FRAME, offset);
                 }
             }
@@ -805,9 +805,9 @@ public class AssemblyCodeGenerator {
 
             // Store value in valueSto into destSto, using appropriate type register
             if(destSto.getType().isFloat())
-                StoreSto(valueSto, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
+                StoreStoValueIntoAddr(valueSto, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
             else
-                StoreSto(valueSto, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+                StoreStoValueIntoAddr(valueSto, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
         }
 
         writeAssembly(SparcInstr.BLANK_LINE);
@@ -868,9 +868,9 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      StoreSto - Stores a sto's value into address in destReg - "puts into memory"
+    //      StoreStoValueIntoAddr - Stores a sto's value into address in destReg - "puts into memory"
     //-------------------------------------------------------------------------
-    public void StoreSto(STO valueSto, String tmpReg, String destReg)
+    public void StoreStoValueIntoAddr(STO valueSto, String tmpReg, String destReg)
     {
         writeComment("Store " + valueSto.getName() + " into " + destReg);
 
@@ -999,6 +999,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      isFloatReg
     //-------------------------------------------------------------------------
+    M
     public boolean isFloatReg(String reg)
     {
         if(reg.contains("%f"))
@@ -1130,13 +1131,18 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      DoAddressOf - return address of somethingSto
+    //      DoAddressOf - put address of operandSto into resultSto for MyParser
     //-------------------------------------------------------------------------
-    public STO DoAddressOf(STO sto)
+    public STO DoAddressOf(STO operandSto, STO resultSto)
     {
         STO resultSto;              // will store the address requested here 
 
-         
+        String reg = SparcInstr.REG_LOCAL0 ;
+        // Load address of the sto into %l0
+        LoadStoAddr(operandSto, reg);
+        
+        // Store the value (which is the address) into the STO
+        StoreValueIntoSto(reg, resultSto);
     }
 
     //-------------------------------------------------------------------------
