@@ -1,4 +1,3 @@
-
 public class IdValueTuple
 {
 
@@ -20,7 +19,7 @@ public class IdValueTuple
 
     public IdValueTuple(String ID, STO value, STO arrayIndex)
     {
-        this(ID, value, null, null);
+        this(ID, value, arrayIndex, null);
     }
 
     public IdValueTuple(String ID, STO value, STO arrayIndex, Type pointer)

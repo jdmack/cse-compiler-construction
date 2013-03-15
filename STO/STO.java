@@ -16,6 +16,7 @@ abstract class STO
     private String  m_base;
     private String  m_offset;
     private boolean m_isInMemory;
+    private boolean m_isReference;
 
     //---------------------------------------------------------------------
     //      Constructors
@@ -45,6 +46,7 @@ abstract class STO
         setIsStatic(false);
         setStaticInit(false);
         setIsInMemory(false);
+        setIsReference(false);
     }
 
     //---------------------------------------------------------------------
@@ -194,9 +196,19 @@ abstract class STO
         m_isGlobal = global;
     }
     
-    public boolean isStatic()
+    public boolean isReference()
     {
-        return m_isStatic;
+        return m_isReference;
+    }
+
+    public void setIsReference(boolean isReference)
+    {
+        m_isReference = isReference;
+    }
+
+    public boolean getIsStatic()
+    {
+        return m_staticInit;
     }
 
     public void setIsStatic(boolean isStatic)
