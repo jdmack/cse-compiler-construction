@@ -344,7 +344,7 @@ class MyParser extends parser
     			else if(eleType.isPointer()){
     				ele = new ConstSTO("null", new NullPtrType());
     			}
-    			ele.store(id, String.valueOf(i * eleType.getSize()));
+    			ele.store("%g0", String.valueOf(i * eleType.getSize()));
     			eles.add(ele);
     		}
     	} 
@@ -379,7 +379,7 @@ class MyParser extends parser
         			else if(eleType.isPointer()){
         				ele = new ConstSTO("null", new NullPtrType());
         			}
-        			ele.store(id, String.valueOf(i * eleType.getSize()));
+        			ele.store("%g0", String.valueOf(i * eleType.getSize()));
         			eles.add(ele);
     			}
     		}

@@ -1839,8 +1839,8 @@ public class AssemblyCodeGenerator {
     		else if(ele.getType().isFloat()) {
     			//TODO
     		}*/
-    		//DoAssignExpr(ele, ele);
-    		
+    		DoAssignExpr(sto, ele);
+/*    		
             String valueReg = SparcInstr.REG_LOCAL0;
 
             // If constant is float
@@ -1854,14 +1854,14 @@ public class AssemblyCodeGenerator {
                 // Load float into valueReg
                 LoadValueFromLabel(floatLabel, valueReg);
             }
-
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.ADD_OP, SparcInstr.GLOBAL_DIR)
             // Not float
             else {
                 // Set the value (integer) into valueReg
                 writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) ele).getIntValue()), valueReg);
             }
 
-            StoreValueIntoSto(valueReg, ele);
+            StoreValueIntoSto(valueReg, ele);*/
     	}
     
     }
