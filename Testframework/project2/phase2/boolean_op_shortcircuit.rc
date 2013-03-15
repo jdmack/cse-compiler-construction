@@ -1,0 +1,28 @@
+function: void main() {
+
+    cout << "Short Circuits" << endl << "----------------" << endl;
+
+    bool a = true;
+    bool b = false;
+
+    cout << "((a = 3 < 2) && (b = 3 > 2)): should be false  " << ((a = 3 < 2) && (b = 3 > 2)) << endl;
+    cout << "a: should be false  " << a << endl;
+    cout << "b: should be false  " << b << endl;
+    cout << endl;
+
+    cout << "((a = 3 > 2) && (b = 3 > 2)): should be true   " << ((a = 3 > 2) && (b = 3 > 2)) << endl;
+    cout << "a: should be true  " << a << endl;
+    cout << "b: should be true  " << b << endl;
+    cout << endl;
+
+    a = false;
+    cout << "((a = 3 > 2) || (b = 3 < 2)): should be true  " << ((a = 3 > 2) || (b = 3 < 2)) << endl;
+    cout << "a: should be true  " << a << endl;
+    cout << "b: should be true  " << b << endl;
+    cout << endl;
+
+    cout << "((a = 3 < 2) || (b = 3 < 2)): should be false  " << ((a = 3 < 2) || (b = 3 < 2)) << endl;
+    cout << "a: should be false  " << a << endl;
+    cout << "b: should be false  " << b << endl;
+    cout << endl;
+}

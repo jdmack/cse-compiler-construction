@@ -40,6 +40,31 @@ class BooleanOp extends BinaryOp
 
     }
 
+    public STO checkOperand(STO operand)
+    {
+        STO resultSTO;
+
+        // Check #1 - Or, And - Operand is bool
+        // Check operand
+        if(!operand.getType().isBool()) {
+            return(new ErrorSTO(Formatter.toString(ErrorMsg.error1w_Expr, operand.getType().getName(), this.getName(), "bool")));
+        }
+
+        // TODO: Figure out constant folding for these exprs
+        /*
+        if(operand.isConst() && operand2.isConst()) {
+            resultSTO = new ConstSTO(getName() + " result", new BoolType());
+        }
+        else {
+            resultSTO = new ExprSTO(getName() + "result", new BoolType());
+        }
+        */
+        resultSTO = new ExprSTO(getName() + "result", new BoolType());
+
+        return resultSTO;
+
+    }
+
     public boolean isBooleanOp()
     {
         return true;
