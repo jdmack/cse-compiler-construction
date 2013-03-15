@@ -1572,9 +1572,9 @@ public class AssemblyCodeGenerator {
     }
     
     //-------------------------------------------------------------------------
-    //      DoWhile
+    //      DoWhileStart
     //-------------------------------------------------------------------------
-    public void DoWhile(STO condition)
+    public void DoWhileStart()
     {
     	// stackWhileLabel
     	String whileLabel = ".while."+whileLabel_count;
@@ -1584,13 +1584,20 @@ public class AssemblyCodeGenerator {
     	// write while label before logic check
     	writeAssembly(SparcInstr.LABEL, whileLabel);
     	
+    }
+    
+    //-------------------------------------------------------------------------
+    //      DoWhile
+    //-------------------------------------------------------------------------
+    public void DoWhile(STO condition)
+    {
     	// Load condition into %l0 for comparison
         LoadStoValue(condition, SparcInstr.REG_LOCAL0);
 
     	// cmp %l0, %g0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
     	// be IfL1! Opposite logic
-    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, whileLabel+".end");
+    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, stackWhileLabel.peek()+".end");
     	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
     	increaseIndent();
     }
@@ -1600,6 +1607,12 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoWhileCodeBlock()
     {
+        String jumpTo = stackWhileLabel.peek();
+        // write an always branch to beginning of while loop
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Go back to the beginning of the while loop");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
+        
     	decreaseIndent();
     	// write while.end label
     	String label = stackWhileLabel.pop();
@@ -1611,7 +1624,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoBreakStmt(int level)
     {
-    	System.out.println("Breaking on :" + level);
+    	//System.out.println("Breaking on :" + level);
     	String jumpTo = ".while."+ level+".end";
         // write an Always branch to if else end for when the condition is true
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Jump to the corresponding while.end");

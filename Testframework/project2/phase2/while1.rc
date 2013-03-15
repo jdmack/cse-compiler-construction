@@ -4,12 +4,16 @@ function: int main() {
 
     while(true) {
         cout << "While. Should print" << endl;
-        
+        cout << "Value of x: " << x << endl; 
+
         if(x == 3){
+            cout << "breaking" << endl;
             break;
         }
+        
         x++;
     }
+    cout << "x should be 3: " << x << endl;
     cout << "After while loop" << endl; 
     return 0;
 }
