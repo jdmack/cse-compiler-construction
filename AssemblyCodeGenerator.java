@@ -448,7 +448,7 @@ public class AssemblyCodeGenerator {
 
             //AllocateSto(thisParam);
             //thisParam.store(SparcInstr.PARAM_REGS[i], String.valueOf(0));
-            //LoadSto(thisParam, SparcInstr.PARAM_REGS[i]);
+            //LoadStoValue(thisParam, SparcInstr.PARAM_REGS[i]);
         }
 
 
@@ -519,7 +519,7 @@ public class AssemblyCodeGenerator {
             // Local and global variables as value args
             // 5. [PASS] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
             // 7. [PASS] global variable as value arg       - load value from it's location (ex. %g0 + local)
-            LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
+            LoadStoValue(thisArg, SparcInstr.ARG_REGS[i]);
             //StoreValueIntoSto(SparcInstr.ARG_REGS[i], thisParam);
         }
 
@@ -529,7 +529,7 @@ public class AssemblyCodeGenerator {
 
                 // 1. [PASS] value param as value arg         - put in out register (ex. %o0)
                 if(!thisParam.isPassByReference()) {
-                    LoadSto(thisArg, SparcInstr.ARG_REGS[i]);
+                    LoadStoValue(thisArg, SparcInstr.ARG_REGS[i]);
                     thisParam.store(ARG_REGS[i], String.valueOf(0));
                 }
 
@@ -611,10 +611,10 @@ public class AssemblyCodeGenerator {
             else { 
                 // If return type is float, put into %f0 (possibly fitos)
                 if(funcSto.getReturnType().isFloat())
-                    LoadSto(returnSto, SparcInstr.REG_FLOAT0);
+                    LoadStoValue(returnSto, SparcInstr.REG_FLOAT0);
                 // return type is not float, store into %i0
                 else
-                    LoadSto(returnSto, SparcInstr.REG_SET_RETURN);
+                    LoadStoValue(returnSto, SparcInstr.REG_SET_RETURN);
             }
         }
 
@@ -636,7 +636,7 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.INTFMT, SparcInstr.REG_ARG0);
 
             // ld [<value>], %o1
-            LoadSto(sto, SparcInstr.REG_ARG1);
+            LoadStoValue(sto, SparcInstr.REG_ARG1);
 
             // call printf
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTF);
@@ -649,7 +649,7 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.BOOLFMT, SparcInstr.REG_ARG0);
 
             // Set the condition STO into LOCAL0
-            LoadSto(sto, SparcInstr.REG_LOCAL0);
+            LoadStoValue(sto, SparcInstr.REG_LOCAL0);
             String ifLabel = ".ifL_" + ifLabel_count;
             String elseLabel = ".elseL_" + ifLabel_count;
             ifLabel_count++;
@@ -689,7 +689,7 @@ public class AssemblyCodeGenerator {
 
         else if(sto.getType().isFloat()) {
             // ld [sto] %f0
-            LoadSto(sto, SparcInstr.REG_FLOAT0);
+            LoadStoValue(sto, SparcInstr.REG_FLOAT0);
 
             // call printFloat
             writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.PRINTFLOAT);
@@ -831,7 +831,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      LoadSto - Load value of sto into reg - Uses %l7 as a temp - "takes out of memory"
     //-------------------------------------------------------------------------
-    public void LoadSto(STO sto, String reg)
+    public void LoadStoValue(STO sto, String reg)
     {
         writeComment("Load " + sto.getName() + " into " + reg);
         // PUT ADDRESS OF STO INTO tmpReg
@@ -875,7 +875,7 @@ public class AssemblyCodeGenerator {
         writeComment("Store " + valueSto.getName() + " into " + destReg);
 
         // Load value into tmpReg
-        LoadSto(valueSto, tmpReg);
+        LoadStoValue(valueSto, tmpReg);
 
         // STORE VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, tmpReg, bracket(destReg), "Store value of " + valueSto.getName() + " into " + destReg);
@@ -1014,7 +1014,7 @@ public class AssemblyCodeGenerator {
     {
         // sto can only be int
         // load sto into %o0
-        LoadSto(sto, SparcInstr.REG_ARG0);
+        LoadStoValue(sto, SparcInstr.REG_ARG0);
 
         // call exit
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, SparcInstr.EXIT);
@@ -1099,8 +1099,8 @@ public class AssemblyCodeGenerator {
         compLabel_count++;
         
         // Load the operands
-        LoadSto(operand1, regOp1);
-        LoadSto(operand2, regOp2);
+        LoadStoValue(operand1, regOp1);
+        LoadStoValue(operand2, regOp2);
 
         // %l0 is going to hold our boolean result of the comparison
         // We initialize it to 1 (true) and branch over the %l0 = 0 (false) statement if the comparison is true
@@ -1130,11 +1130,13 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      functionName443
+    //      DoAddressOf - return address of somethingSto
     //-------------------------------------------------------------------------
-    public void functionName445()
+    public STO DoAddressOf(STO sto)
     {
+        STO resultSto;              // will store the address requested here 
 
+         
     }
 
     //-------------------------------------------------------------------------
@@ -1220,7 +1222,7 @@ public class AssemblyCodeGenerator {
             compLabel_count++;
             
             // Load the operands
-            LoadSto(operand, regOp);
+            LoadStoValue(operand, regOp);
 
             // Set to true initially
             writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL1, "Init result to true");
@@ -1261,7 +1263,7 @@ public class AssemblyCodeGenerator {
             // Create a STO with 1.00 for incrementing
             ConstSTO one = new ConstSTO("1.00", new FloatType(), 1.00);
             DoLiteral(one);
-            LoadSto(one, SparcInstr.REG_FLOAT1);
+            LoadStoValue(one, SparcInstr.REG_FLOAT1);
 
             regOp = SparcInstr.REG_FLOAT0;
         }
@@ -1279,7 +1281,7 @@ public class AssemblyCodeGenerator {
         }
 
         // Load operand into regOp
-        LoadSto(operand, regOp);
+        LoadStoValue(operand, regOp);
 
         if(op.isUnPlusOp())
         {
@@ -1295,7 +1297,7 @@ public class AssemblyCodeGenerator {
             writeCommentHeader("Do Unary Minus Operation on " + operand.getType().getName());
 
             // Perform operation
-            LoadSto(operand, regOp);
+            LoadStoValue(operand, regOp);
             writeAssembly(SparcInstr.TWO_PARAM_COMM, operation, regOp, regOp, "Perform UnarySign Op");
 
             // Store Result
@@ -1419,8 +1421,8 @@ public class AssemblyCodeGenerator {
         }
 
         // Load operands into registers
-        LoadSto(operand1, regOp1);
-        LoadSto(operand2, regOp2);
+        LoadStoValue(operand1, regOp1);
+        LoadStoValue(operand2, regOp2);
 
         // Call Operator
         if(isCallOp) {
@@ -1460,8 +1462,8 @@ public class AssemblyCodeGenerator {
         String returnReg = SparcInstr.REG_LOCAL3;
 
         // Load operands into registers
-        LoadSto(operand1, regOp1);
-        LoadSto(operand2, regOp2);
+        LoadStoValue(operand1, regOp1);
+        LoadStoValue(operand2, regOp2);
 
         // Get label ready
         String compLabel = ".compL_" + compLabel_count;
@@ -1525,7 +1527,7 @@ public class AssemblyCodeGenerator {
     	stackIfLabel.add(label);
     	
         // Load condition into %l0 for comparison
-        LoadSto(condition, SparcInstr.REG_LOCAL0);
+        LoadStoValue(condition, SparcInstr.REG_LOCAL0);
 
     	// cmp %l0, %g0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
@@ -1577,7 +1579,7 @@ public class AssemblyCodeGenerator {
     	writeAssembly(SparcInstr.LABEL, whileLabel);
     	
     	// Load condition into %l0 for comparison
-        LoadSto(condition, SparcInstr.REG_LOCAL0);
+        LoadStoValue(condition, SparcInstr.REG_LOCAL0);
 
     	// cmp %l0, %g0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
@@ -1647,7 +1649,7 @@ public class AssemblyCodeGenerator {
                 function = SparcInstr.INPUTFLOAT;
             }
 
-            LoadSto(sto, reg);
+            LoadStoValue(sto, reg);
             writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.CALL_OP, function, "Inputing");
             writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
             writeAssembly(SparcInstr.BLANK_LINE);
