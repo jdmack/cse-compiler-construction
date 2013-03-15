@@ -418,7 +418,10 @@ public class AssemblyCodeGenerator {
         // set SAVE.<funcName>, %g1
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, SparcInstr.SAVE_WORD + "." + funcSto.getName(), SparcInstr.REG_GLOBAL1);
 
+        //////////////////////////////////////////////////////////////////////////////// 
         //  5. [Callee] Allocate space for local variables (adjust stack pointer) - DONE
+        //////////////////////////////////////////////////////////////////////////////// 
+
         // save %sp, %g1, %sp
         writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.SAVE_OP, SparcInstr.REG_STACK, SparcInstr.REG_GLOBAL1, SparcInstr.REG_STACK);
         writeAssembly(SparcInstr.BLANK_LINE);
@@ -442,11 +445,46 @@ public class AssemblyCodeGenerator {
         }
 
         for(int i = 0; i < params.size(); i++) {
-            ParamSTO thisParam = params.elementAt(i);
+            ParamSTO paramSto = params.elementAt(i);
+                
+            AllocateSto(paramSto);
 
-            // 5. [PASS] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
-            AllocateSto(thisParam);
-            StoreValueIntoSto(SparcInstr.PARAM_REGS[i], thisParam);
+            // 1. [PASS] value param as value arg
+            if(!paramSto.isPassByReference()) {
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+            }
+            // 2. [PASS] value param as reference arg
+            if(paramSto.isPassByReference()) {
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+            }
+            // 3. [PASS] reference param as value arg
+            if(!paramSto.isPassByReference()) {
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+            }
+            // 4. [PASS] reference param as reference arg
+            if(paramSto.isPassByReference()) {
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+            }
+            // 7. [PASS] global variable as value arg
+            if(!paramSto.isPassByReference()) {
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+            }
+            // 8. [PASS] global variable as reference arg
+            if(paramSto.isPassByReference()) {
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+            }
+            // 5. [PASS] local variable as value arg
+            if(!paramSto.isPassByReference()) {
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+            }
+
+            // 6. [PASS] local variable as reference arg
+            if(!paramSto.isPassByReference()) {
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+            }
+
+
+
     
             // 1. [PASS] value param as value arg         - put in out register (ex. %o0)
             // 2. [PASS] value param as reference param     - store in param location (ex. %fp + 68)
@@ -462,9 +500,17 @@ public class AssemblyCodeGenerator {
         }
 
 
+        //////////////////////////////////////////////////////////////////////////////// 
         //  6. [Callee] Save registers used by called subroutine (if Callee-Save convention) - DONE - have caller do it
+        //////////////////////////////////////////////////////////////////////////////// 
+
+        //////////////////////////////////////////////////////////////////////////////// 
         //  7. [Callee] Change the frame pointer to refer to the new stack frame - DONE auto
+        //////////////////////////////////////////////////////////////////////////////// 
+
+        //////////////////////////////////////////////////////////////////////////////// 
         //  8. [Callee] Execute initialization code for local vars/objects that are initialized
+        //////////////////////////////////////////////////////////////////////////////// 
 
     }
 
@@ -476,10 +522,21 @@ public class AssemblyCodeGenerator {
         // Perform return/restore
         writeAssembly(SparcInstr.BLANK_LINE);
 
+        //////////////////////////////////////////////////////////////////////////////// 
         // 10. [Callee] Execute any finalization code for any local objects - DONE
+        //////////////////////////////////////////////////////////////////////////////// 
+
+        //////////////////////////////////////////////////////////////////////////////// 
         // 11. [Callee] Deallocate the local variables / restore the stack pointer - DONE
+        //////////////////////////////////////////////////////////////////////////////// 
+
+        //////////////////////////////////////////////////////////////////////////////// 
         // 12. [Callee] Restore other saved registers / restore the frame pointer - DONE
+        //////////////////////////////////////////////////////////////////////////////// 
+
+        //////////////////////////////////////////////////////////////////////////////// 
         // 13. [Callee] Restore the program counter from saved return address (return/rts) - DONE
+        //////////////////////////////////////////////////////////////////////////////// 
 
         // Also executed in DoReturn()
         if(funcSto.getReturnType().isVoid()) {
@@ -519,27 +576,73 @@ public class AssemblyCodeGenerator {
             System.out.println("numOfArgs: " + args.size());
             System.out.println("getParameters.size(): " + params.size());
         }
-        
+        //////////////////////////////////////////////////////////////////////////////// 
         //  1. [Caller] Allocate space for and copy arguments - TODO:
-        for(int i = 0; i < args.size(); i++) {
-            STO thisArg = args.elementAt(i);
-            ParamSTO thisParam = params.elementAt(i);
+        //////////////////////////////////////////////////////////////////////////////// 
 
-            LoadStoValue(thisArg, SparcInstr.ARG_REGS[i]);
+        for(int i = 0; i < args.size(); i++) {
+            STO argSto = args.elementAt(i);
+            ParamSTO paramSto = params.elementAt(i);
+
+
+
+            ///////// Load a value STO
+            // LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);               // Load Value from stack location (that is in a sto)
+
+            ///////// Load a reference STO
+            // LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);                // Load the address from a Sto
+
+            ///////// Load a reference STO as a reference
+            // LoadStoAddr(argSto, SparcInstr.REG_LOCAL0);                 // loads the address of the reference into register
+            // LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i])        // loads the address stored in the address into register
+                
+
+
+            // 1. [PASS] value param as value arg
+            if(argSto.isParam() && !paramSto.isPassByReference()) {
+                LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);
+
+            }
+            // 2. [PASS] value param as reference arg
+            if(argSto.isParam() && paramSto.isPassByReference()) {
+                LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);               // Load the address from the sto into %o0
+            }
+            // 3. [PASS] reference param as value arg
+            if(argSto.isParam() && !((ParamSTO) argSto).isPassByReference() && paramSto.isPassByReference()) {
+                LoadStoValue(argSto, SparcInstr.REG_LOCAL0);                    // loads the value (which is an address) from the Sto
+                LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);       // loads the value stored address contained in %l0 into %o0
+            }
+            // 4. [PASS] reference param as reference arg
+            if(argSto.isParam() && ((ParamSTO) argSto).isPassByReference() && paramSto.isPassByReference()) {
+                LoadStoValue(argSto, SparcInstr.REG_LOCAL0);                    // loads the value (which is an address) from the Sto
+                LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);      // loads the value stored address contained in %l0 into %o0
+            }
+            // 7. [PASS] global variable as value arg
+            if(argSto.isGlobal() && !paramSto.isPassByReference()) {
+                LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);
+            }
+            // 8. [PASS] global variable as reference arg
+            if(argSto.isGlobal() && paramSto.isPassByReference()) {
+                LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
+            }
+            // 5. [PASS] local variable as value arg
+            if(!paramSto.isPassByReference()) {
+                LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);    
+            }
+
+            // 6. [PASS] local variable as reference arg
+            if(!paramSto.isPassByReference()) {
+                LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
+            }
         }
 
-            // 1. [PASS] value param as value arg         - put in out register (ex. %o0)
-            // 2. [PASS] value param as reference param     - store in param location (ex. %fp + 68)
-            // 3. [PASS] reference param as value arg       - load from address into out register (ex. %o0)
-            // 4. [PASS] reference param as reference arg - put address in register (ex. %o0)
-            // 5. [PASS] local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
-            // 6. [PASS] local variable as reference arg    - load address of location (ex. %fp - 4) into register (ex. %o0) 
-            // 7. [PASS] global variable as value arg       - load value from it's location (ex. %g0 + local)
-            // 8. [PASS] global variable as reference arg - load address of location into register (ex. %o0)
-
-
+        //////////////////////////////////////////////////////////////////////////////// 
         //  3. [Caller] Save registers use by the calling subroutine (if Caller-Save convention) - TODO:
+        //////////////////////////////////////////////////////////////////////////////// 
+
+        //////////////////////////////////////////////////////////////////////////////// 
         //  4. [Caller] Subroutine call - DONE
+        //////////////////////////////////////////////////////////////////////////////// 
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.CALL_OP, funcSto.getName()); 
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         writeAssembly(SparcInstr.BLANK_LINE);
@@ -548,12 +651,18 @@ public class AssemblyCodeGenerator {
         // Now we can write the code for after the return, which is store the return value to stack
         // If the return type isn't void, save the return value
 
+        //////////////////////////////////////////////////////////////////////////////// 
         // 14. [Caller] Copy return value out of return value location - DONE
+        //////////////////////////////////////////////////////////////////////////////// 
+
         if(!returnSto.getType().isVoid()) {
 
             writeComment("Save return from " + funcSto.getName() + " onto stack");
 
+            //////////////////////////////////////////////////////////////////////////////// 
             //  2. [Caller] Allocate space for return value (if on the stack) - DONE
+            //////////////////////////////////////////////////////////////////////////////// 
+
             String offset = getNextOffset(returnSto.getType().getSize());
             returnSto.store(SparcInstr.REG_FRAME, offset);
             stackValues.addElement(new StackRecord(currentFunc.peek().getName(), returnSto.getName(), returnSto.load()));
@@ -574,7 +683,9 @@ public class AssemblyCodeGenerator {
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////// 
         // 15. [Caller] Deallocate argument space and return value location (if on the stack) - TODO:
+        //////////////////////////////////////////////////////////////////////////////// 
     }
 
     
@@ -585,7 +696,9 @@ public class AssemblyCodeGenerator {
     {
         writeCommentHeader("Set return value (if needed) and return");
 
+        //////////////////////////////////////////////////////////////////////////////// 
         //  9. [Callee] Place return value into return value location - DONE
+        //////////////////////////////////////////////////////////////////////////////// 
 
         // Load the return value into the return register
         if(!returnSto.getType().isVoid()) {
@@ -834,13 +947,22 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      LoadValueFromLabel - Loads a value into a register via a label - uses %l7 as temp
+    //      LoadValueFromAddr - Loads a value into a register via an address stored in addrReg
+    //-------------------------------------------------------------------------
+    public void LoadValueFromAddr(String addrReg, String reg)
+    {
+        // Address is in addrReg, so load value from that address into reg
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "Load value from address in  " + reg + " into " + reg);
+    }
+
+    //-------------------------------------------------------------------------
+    //      LoadValueFromLabel - Loads a value into a register via a label
     //-------------------------------------------------------------------------
     public void LoadValueFromLabel(String label, String reg)
     {
-        // PUT ADDRESS OF STO INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, label, SparcInstr.REG_LOCAL7, "Put label " + label + " address into " + SparcInstr.REG_LOCAL7);
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value from address in  " + SparcInstr.REG_LOCAL7 + " into reg");
+        // Set label to %l0, then load value from the label as an address into reg
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, label, reg, "Put label " + label + " address into " + reg);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "Load value from address in  " + reg + " into " + reg);
     }
 
     //-------------------------------------------------------------------------
