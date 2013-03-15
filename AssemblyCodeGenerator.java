@@ -276,7 +276,7 @@ public class AssemblyCodeGenerator {
         // .align 4
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
 
-        // <id>: .skip 4
+        // <id>: .skip size of type of varSto
         decreaseIndent();
         writeAssembly(SparcInstr.GLOBAL_DEFINE, varSto.getName(), SparcInstr.SKIP_DIR, String.valueOf(varSto.getType().getSize()));
         increaseIndent();
@@ -288,7 +288,7 @@ public class AssemblyCodeGenerator {
         // If valueSto is Null, create a 0 sto for it (we're in bss, auto init to 0)
         if(valueSto.isNull())
             valueSto = new ConstSTO("0", new IntType(), 0.0);
-
+        
         // Push these for later to initialize when main() starts
         globalInitStack.push(new StoPair(varSto, valueSto));
 
@@ -363,7 +363,14 @@ public class AssemblyCodeGenerator {
                 // Initialize the vlaue
                 else {
                     writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
-                    DoAssignExpr(varSto, valueSto);
+                    if(varSto.getType().isArray()) {
+                    	// if it's array, do array ele init
+                    	DoArrayEleInit(varSto);
+                    } 
+                    else {    
+                    	// do normal var init
+                    	DoAssignExpr(varSto, valueSto);
+                    }
                 }
             }
         }
@@ -1645,6 +1652,111 @@ public class AssemblyCodeGenerator {
     public void DoDeclArray(Type type, int size)
     {
     	
+    }
+    
+    public STO DoArrayAccess(STO desSTO, STO indexSTO, STO resultSTO)
+    {
+    	int index;
+    	//STO resultSTO;
+    	if(desSTO.isGlobal()) {
+    		String reg0 = SparcInstr.REG_LOCAL0;
+    		String reg1 = SparcInstr.REG_LOCAL1;
+    		if(indexSTO.isConst()){
+    			index = ((ConstSTO) indexSTO).getIntValue();
+    			writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(index), reg0, "Set const index to reg0");
+/*    			ArrEleSTO arrEles = ((ArrayType)desSTO.getType()).getElementList();
+    			Vector<STO> eles = arrEles.getArrayElements();
+    			resultSTO = eles.get(index);*/
+    		}
+    		else if(indexSTO.isVar()){
+    			LoadStoValue(indexSTO, reg0);
+    		}
+    		writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.SLL_OP, reg0, "2", reg0, "reg0 * 4 -> scaled offset");
+    		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(desSTO.getName()), reg1, "set base address");
+    		writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, reg1, reg0, reg0, "base + offset");
+    		StoreValueIntoSto(reg0, resultSTO);
+    	}
+    	return resultSTO;
+    }
+    //-------------------------------------------------------------------------
+    //      DoArrayEle
+    //-------------------------------------------------------------------------
+    public void DoArrayEleInit(STO sto)
+    {
+    	ArrayType arrType = ((ArrayType) sto.getType());
+    	Type eleType = arrType.getElementType();
+    	ArrEleSTO arrEles = arrType.getElementList();
+    	
+    	String intInitValue = "0";
+    	String floatInitValue = "0.0";
+    	String boolInitValue = "0";
+    	//String ptrInitValue = "nullptr";
+    	
+    	Vector<STO> eles = new Vector<STO>();
+    	
+    	if (arrEles == null){
+    		// The array is declared with no init
+    		
+    		// for global and static
+    		// for # of dimension size, init array with corresponding element type
+			// i.e. int[5] x; -> int[5] x = {0, 0, 0, 0, 0};
+    		for(int i = 0; i < arrType.getDimensionSize(); i++){
+    			ConstSTO ele = null;
+    			if(eleType.isInt()){
+    				ele = new ConstSTO(intInitValue, new IntType(), intInitValue);
+    			}
+    			else if(eleType.isFloat()){
+    				ele = new ConstSTO(floatInitValue, new FloatType(), floatInitValue);
+    			}
+    			else if(eleType.isBool()){
+    				ele = new ConstSTO("false", new BoolType(), boolInitValue);
+    			}
+    			else if(eleType.isPointer()){
+    				ele = new ConstSTO("null", new NullPtrType());
+    			}
+    			ele.store(sto.getName(), String.valueOf(i * eleType.getSize()));
+    			eles.add(ele);
+    		}
+    	} 
+    	else {
+    		// The array is declared with init
+    		Vector<STO> existingEles = arrEles.getArrayElements();
+    		
+    		// set address for existing ele
+    		for(int i = 0; i < existingEles.size(); i++){
+    			existingEles.get(i).store(sto.getName(), String.valueOf(i * eleType.getSize()));
+    		}
+    		eles.addAll(existingEles);
+
+    		// for global and static
+    		// if array dimension size is greater than number initialized elements
+    		// fill remaining slots with corresponding default init type
+    		// i.e. int[5] x = {1, 2, 3} -> int[5] x = {1, 2, 3, 0, 0}
+    		if(existingEles.size() < arrType.getDimensionSize()){
+    			
+    			int diff = arrType.getDimensionSize() - existingEles.size();
+    			for(int i = diff; i < arrType.getDimensionSize(); i++){
+        			ConstSTO ele = null;
+        			if(eleType.isInt()){
+        				ele = new ConstSTO(intInitValue, new IntType(), intInitValue);
+        			}
+        			else if(eleType.isFloat()){
+        				ele = new ConstSTO(floatInitValue, new FloatType(), floatInitValue);
+        			}
+        			else if(eleType.isBool()){
+        				ele = new ConstSTO("false", new BoolType(), boolInitValue);
+        			}
+        			else if(eleType.isPointer()){
+        				ele = new ConstSTO("null", new NullPtrType());
+        			}
+        			ele.store(sto.getName(), String.valueOf(i * eleType.getSize()));
+        			eles.add(ele);
+    			}
+    		}
+    	}
+    	
+    	// Update the elementlist of the type of the sto
+    	((ArrayType) sto.getType()).setElementList(new ArrEleSTO(eles));
     }
     
     //-------------------------------------------------------------------------

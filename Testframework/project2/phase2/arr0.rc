@@ -1,0 +1,9 @@
+int[3] x = {1,2,3};
+function: int main() {
+
+    cout << "x[0] should be = 1: "<< x[0] << endl;
+    cout << "x[1] should be = 2: "<< x[1] << endl;
+    cout << "x[2] should be = 3: "<< x[2] << endl;
+
+    return 0;
+}
