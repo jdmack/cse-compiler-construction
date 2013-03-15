@@ -1,0 +1,24 @@
+Locals
+--------------------------------
+(1 == 2) false	false
+(1 == 1) true	true
+
+(1 != 2) true	true
+(1 != 1) false	false
+
+(1 >= 2) false	false
+(1 >= 1) true	true
+(3 >= 1) true	true
+
+(1  > 2) false	false
+(1  > 1) false	false
+(3  > 1) true	true
+
+(1 <= 2) true	true
+(1 <= 1) true	true
+(3 <= 1) false	false
+
+(1  < 2) true	true
+(1  < 1) false	false
+(3  < 1) false	false
+

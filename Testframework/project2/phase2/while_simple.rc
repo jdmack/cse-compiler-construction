@@ -1,0 +1,12 @@
+function: void main() {
+    int x = 3;
+    int y = 10;
+
+    cout << "Loop Start" << endl;
+
+    while(x != y) {
+        cout << "Loop " << x << endl;    
+        x++;
+    }
+    cout << "Loop End" << endl;
+}

@@ -1,0 +1,7 @@
+function: void main() {
+    bool a = true; 
+    bool b = true; 
+
+    a && b;
+    //a || a;
+}

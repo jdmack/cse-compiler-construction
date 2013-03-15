@@ -1014,9 +1014,6 @@ class MyParser extends parser
                 if(op.isComparisonOp()) {
                     m_codegen.DoComparisonOp((ComparisonOp) op, operand1, operand2, resultSTO);
                 }
-                else if (op.isBooleanOp()) {
-                    m_codegen.DoBooleanOp((BooleanOp) op, operand1, operand2, resultSTO);
-                } 
                 else {
                     m_codegen.DoBinaryOp(op, operand1, operand2, resultSTO);
                 }
@@ -1057,16 +1054,75 @@ class MyParser extends parser
 
         // And better to have all the codegen code at the end of the function
 
-        // If operand is a constant, do the op
-        if(resultSTO.isConst()) {
-            if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
-        }
-        else {
-            if(!ERROR) m_codegen.DoUnaryOp(op, operand, resultSTO);
+        // Do Operation assembly code
+        if(!ERROR) {
+        // If operand is a constant, it was folded in it's OpClass, just allocate the result on stack
+            if(resultSTO.isConst()) {
+                m_codegen.DoLiteral((ConstSTO)resultSTO);
+            }
+            // If it's addressOf op, call that function
+            else if(op.isAddressOfOp()) {
+                m_codegen.DoAddressOf(operand, resultSTO);
+            }
+            // Otherwise, call generic DoUnaryOp
+            else {
+                m_codegen.DoUnaryOp(op, operand, resultSTO);
+            }
         }
         
         return resultSTO;
     }
+    //----------------------------------------------------------------
+    //      DoBooleanOp
+    //----------------------------------------------------------------
+    STO DoBooleanOp(BooleanOp op, STO operand, boolean isStart)
+    {
+        // Check for previous errors in line and short circuit
+        if(operand.isError()) {
+            return operand;
+        }
+
+        // Use UnaryOp.checkOperand() to perform error checks
+        STO resultSTO = op.checkOperand(operand);
+
+        // TODO: constant folding for these things
+        // If operands are constants, do the op
+        //if((!resultSTO.isError()) && (resultSTO.isConst())) {
+            //resultSTO = op.doOperation((ConstSTO)operand, resultSTO.getType());
+        //}
+    
+        // DON'T REFACTOR UNLESS YOU RUN PROJECT1 TESTS
+        // THIS CODE IS IN THIS ORDER FOR A VERY SPECIFIC REASON
+
+        // Process/Print errors
+        if(resultSTO.isError()) {
+            m_nNumErrors++;
+            m_errors.print(resultSTO.getName());
+            ERROR = true;
+            return resultSTO;
+        }
+
+        // And better to have all the codegen code at the end of the function
+
+        // Do Boolean assembly code
+        if(!ERROR) {
+        // If operand is a constant, it was folded in it's OpClass, just allocate the result on stack
+            //if(resultSTO.isConst()) {
+            //    m_codegen.DoLiteral((ConstSTO)resultSTO);
+            //}
+            if(isStart) {
+                m_codegen.DoBooleanOp1(op, operand);
+            }
+            else {
+                m_codegen.DoBooleanOp2(op, operand, resultSTO);
+            }
+        }
+        
+        return resultSTO;
+    }
+
+
+
     //----------------------------------------------------------------
     //      DoWhileStart
     //----------------------------------------------------------------
@@ -1074,6 +1130,7 @@ class MyParser extends parser
     {
     	if(!ERROR) m_codegen.DoWhileStart();
     }
+
     //----------------------------------------------------------------
     //      DoWhileExpr
     //----------------------------------------------------------------

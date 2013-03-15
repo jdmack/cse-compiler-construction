@@ -18,6 +18,7 @@ public class AssemblyCodeGenerator {
     private Stack<Integer>      stackPointer;
     private Stack<String>       stackIfLabel;
     private Stack<String>       stackWhileLabel;
+    private Stack<String>       stackBoolLabel;
     private Stack<StoPair>      globalInitStack;
     private Vector<StackRecord> stackValues;
     private HashMap<Float, String> storedFloats;
@@ -43,6 +44,7 @@ public class AssemblyCodeGenerator {
     private int ifLabel_count = 0;
     private int whileLabel_count = 0;
     private int compLabel_count = 0;
+    private int boolLabel_count = 0;
         
     //-------------------------------------------------------------------------
     //      Constructors
@@ -65,6 +67,7 @@ public class AssemblyCodeGenerator {
         stackPointer    = new Stack<Integer>();
         stackIfLabel    = new Stack<String>();
         stackWhileLabel = new Stack<String>();
+        stackBoolLabel  = new Stack<String>();
         globalInitStack = new Stack<StoPair>();
         stackValues     = new Vector<StackRecord>();
         storedFloats    = new HashMap<Float, String>();
@@ -334,7 +337,7 @@ public class AssemblyCodeGenerator {
         // ld [%l0], %l1
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_LOCAL1, "Load .init value into %l1");
 
-        // cmp %l1, %g0
+        //  %l1, %g0
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL1, SparcInstr.REG_GLOBAL0, "Compare .init to 0");
 
         // bne .init_done ! Global initialization guard
@@ -1040,7 +1043,7 @@ public class AssemblyCodeGenerator {
         String branchOp = "";
         String regOp1 = SparcInstr.REG_LOCAL1;
         String regOp2 = SparcInstr.REG_LOCAL2;
-        String cmpOp = SparcInstr.CMP_OP;
+        String Op = SparcInstr.CMP_OP;
         boolean isFloatOp = false;
         
         // If either is float, then we'll use float registers
@@ -1048,7 +1051,7 @@ public class AssemblyCodeGenerator {
             regOp1 = SparcInstr.REG_FLOAT0;
             regOp2 = SparcInstr.REG_FLOAT1;
             isFloatOp = true;
-            cmpOp = SparcInstr.FCMPS_OP;
+            Op = SparcInstr.FCMPS_OP;
         }
 
         // Determine operator to set branch, regular or float version
@@ -1115,7 +1118,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL0, "Init result to true");
 
         // Perform comparison, branch if true, if false, fall through and set 0 (false)
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, cmpOp, regOp1, regOp2, "operand1 <cond> operand2");
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, Op, regOp1, regOp2, "operand1 <cond> operand2");
         writeAssembly(SparcInstr.ONE_PARAM_COMM, branchOp, compLabel, "if the result is true, branch and do nothing");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         writeAssembly(SparcInstr.BLANK_LINE);
@@ -1141,11 +1144,18 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoAddressOf(STO operandSto, STO resultSto)
     {
+        writeCommentHeader("Do Address Of Operation");
+
+        // Allocate resultSto (i.e. get it an address and 4 bytes of space on stack to store into
+        AllocateSto(resultSto);
+
         String reg = SparcInstr.REG_LOCAL0 ;
         // Load address of the sto into %l0
+        writeComment("Put address of " + operandSto.getName() + " into " + reg);
         LoadStoAddr(operandSto, reg);
         
         // Store the value (which is the address) into the STO
+        writeComment("Store address " + operandSto.getName() + " (which is in " + reg + " into " + resultSto);
         StoreValueIntoSto(reg, resultSto);
     }
 
@@ -1336,7 +1346,7 @@ public class AssemblyCodeGenerator {
                 writeCommentHeader("Do Inc/Dec Operation on " + operand.getType().getName());
 
                 // Perform operation
-                writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, regOp, "Perform int " + operation + "op");
+                writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, regOp, "Perform inc " + operation + "op");
             }
 
             // Store incremented, decremented value into result if not post op
@@ -1462,29 +1472,58 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      DoBooleanOp
+    //      DoBooleanOp1
     //-------------------------------------------------------------------------
-    public void DoBooleanOp(BooleanOp op, STO operand1, STO operand2, STO resultSto)
+    public void DoBooleanOp1(BooleanOp op, STO operand)
     {
-        String regOp1 = SparcInstr.REG_LOCAL1;
-        String regOp2 = SparcInstr.REG_LOCAL2;
+        String regOp = SparcInstr.REG_LOCAL1;
         String branchOp = "";  
         String returnReg = SparcInstr.REG_LOCAL3;
 
-        // Load operands into registers
-        LoadStoValue(operand1, regOp1);
-        LoadStoValue(operand2, regOp2);
+        // Load operand into register
+        LoadStoValue(operand, regOp);
 
         // Get label ready
-        String compLabel = ".compL_" + compLabel_count;
-        compLabel_count++;
+        String boolLabel = ".boolL_" + boolLabel_count;
+        stackBoolLabel.push(boolLabel);
+        boolLabel_count++;
+
+        // &&
+        if(op.isAndOp()) {
+            branchOp = SparcInstr.BE_OP; 
+        }
+        // ||
+        else {
+            branchOp = SparcInstr.BNE_OP; 
+        }
+
+        // Perform first condition, branch if true, if false, fall through and check second condition
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, regOp, SparcInstr.REG_GLOBAL0);
+        writeAssembly(SparcInstr.ONE_PARAM, branchOp, boolLabel);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
+    }
+
+    //-------------------------------------------------------------------------
+    //      DoBooleanOp2
+    //-------------------------------------------------------------------------
+    public void DoBooleanOp2(BooleanOp op, STO operand, STO resultSto)
+    {
+        String regOp = SparcInstr.REG_LOCAL1;
+        String branchOp = "";  
+        String returnReg = SparcInstr.REG_LOCAL3;
+
+        // Load operand into register
+        LoadStoValue(operand, regOp);
+
+        // Get label ready
+        String boolLabel = stackBoolLabel.pop();
 
         // &&
         if(op.isAndOp()) {
             // %l0 is going to hold our boolean result of the comparison
             MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
             branchOp = SparcInstr.BE_OP; 
-
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.MOV_OP, String.valueOf(1), SparcInstr.REG_LOCAL3);
         }
 
@@ -1494,18 +1533,11 @@ public class AssemblyCodeGenerator {
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL0);
             branchOp = SparcInstr.BNE_OP; 
             MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL3);
-
         }
 
-        // Perform first condition, branch if true, if false, fall through and check second condition
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, regOp1, SparcInstr.REG_GLOBAL0);
-        writeAssembly(SparcInstr.ONE_PARAM, branchOp, compLabel);
-        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-        writeAssembly(SparcInstr.BLANK_LINE);
-
         // Perform second condition, branch if true, if false, fall through and set return
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, regOp2, SparcInstr.REG_GLOBAL0);
-        writeAssembly(SparcInstr.ONE_PARAM, branchOp, compLabel);
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, regOp, SparcInstr.REG_GLOBAL0);
+        writeAssembly(SparcInstr.ONE_PARAM, branchOp, boolLabel);
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         writeAssembly(SparcInstr.BLANK_LINE);
 
@@ -1514,9 +1546,8 @@ public class AssemblyCodeGenerator {
 
         // Print label
         decreaseIndent();
-        writeAssembly(SparcInstr.LABEL, compLabel);
+        writeAssembly(SparcInstr.LABEL, boolLabel);
         increaseIndent();
-        
         writeAssembly(SparcInstr.BLANK_LINE);
 
         // Comparison done, result is in %l0, store it in the resultSto
@@ -1539,7 +1570,7 @@ public class AssemblyCodeGenerator {
         // Load condition into %l0 for comparison
         LoadStoValue(condition, SparcInstr.REG_LOCAL0);
 
-    	// cmp %l0, %g0
+    	//  %l0, %g0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
     	// be IfL1! Opposite logic
     	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, label);
@@ -1598,7 +1629,7 @@ public class AssemblyCodeGenerator {
     	// Load condition into %l0 for comparison
         LoadStoValue(condition, SparcInstr.REG_LOCAL0);
 
-    	// cmp %l0, %g0
+    	//  %l0, %g0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
     	// be IfL1! Opposite logic
     	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, stackWhileLabel.peek()+".end");

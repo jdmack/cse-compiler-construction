@@ -1,0 +1,13 @@
+function: void main() {
+int x = 5;
+int y = 10;
+bool b = true;
+
+
+    if((x > y) && !b) {
+        cout << "expression was true" << endl;
+}
+else {
+    cout << "expression was false" << endl;
+}
+}

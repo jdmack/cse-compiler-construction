@@ -25,9 +25,9 @@ class AddressOfOp extends UnaryOp
             return(new ErrorSTO(Formatter.toString(ErrorMsg.error21_AddressOf, operand.getType().getName())));
         }
 
-        /* Don't need to worry about constant foldin */
+        /* Don't need to worry about constant folding */
 
-        resultSTO = new ExprSTO("&" + operand.getName(), new PointerType(operand.getType()));
+        resultSTO = new ExprSTO("&" + operand.getName() + " result", new IntType());
 
 
         return resultSTO;
