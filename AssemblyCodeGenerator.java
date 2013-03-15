@@ -502,6 +502,14 @@ public class AssemblyCodeGenerator {
         writeCommentHeader("Function Call: " + funcSto.getName());
 
         Vector<ParamSTO> params = ((FuncPtrType) funcSto.getType()).getParameters();
+
+        if(DEBUG) {
+            System.out.println("AssemblyCodeGenerator.DoFuncCall()");
+            System.out.println("Function: " + funcSto.getName());
+            System.out.println("numOfArgs: " + args.size());
+            System.out.println("getParameters.size(): " + params.size());
+        }
+
         
         //  1. [Caller] Allocate space for and copy arguments - TODO:
         for(int i = 0; i < args.size(); i++) {

@@ -513,8 +513,6 @@ class MyParser extends parser
         // Set the function's level
         sto.setLevel(m_symtab.getLevel());
 
-        if(!ERROR) m_codegen.DoFuncStart(sto);
-
         return sto;
     }
 
@@ -565,7 +563,7 @@ class MyParser extends parser
         funcSto.setParameters(params);
 
         if(DEBUG) {
-            System.out.println("MyParser.DoFuncCall()");
+            System.out.println("MyParser.DoFormalParameters()");
             System.out.println("---------------------");
             System.out.println("Function: " + funcSto.getName());
             System.out.println("numOfParams: " + funcSto.getNumOfParams());
@@ -579,6 +577,8 @@ class MyParser extends parser
             m_symtab.insert(thisParam);         // This is only for checking the code
                                                 // Need to add params to scope for function calls
         }
+
+        if(!ERROR) m_codegen.DoFuncStart(funcSto);
     }
 
     //----------------------------------------------------------------
