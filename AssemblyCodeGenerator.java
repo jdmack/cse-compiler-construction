@@ -278,7 +278,7 @@ public class AssemblyCodeGenerator {
 
         // <id>: .skip 4
         decreaseIndent();
-        writeAssembly(SparcInstr.GLOBAL_DEFINE, varSto.getName(), SparcInstr.SKIP_DIR, String.valueOf(4));
+        writeAssembly(SparcInstr.GLOBAL_DEFINE, varSto.getName(), SparcInstr.SKIP_DIR, String.valueOf(varSto.getType().getSize()));
         increaseIndent();
 
         // set the base and offset to the sto
