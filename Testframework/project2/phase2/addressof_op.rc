@@ -1,0 +1,16 @@
+function: void main() {
+
+    int localIntX = 6;
+    float localFloatY = 12.0;
+    bool localBoolB = true;
+    
+    int addr1, addr2;
+
+    cout << "Variable\t\t& Result\t\t\tActual Address\t\t\tTest Result" << endl;
+    cout << "========\t\t========\t\t\t==============\t\t\t===========" << endl;
+
+    cout << "localIntX\t" << addr1 = &localIntX << "\t\t" << addr2 = computeAddr(localIntX) << "\t\t" << addr1 == addr2 << endl;
+    cout << "localFloatY\t" << addr1 = &localFloatY << "\t\t" << addr2 = computeAddr(localFloatY) << "\t\t" << addr1 == addr2 << endl;
+    cout << "localBoolB\t" << addr1 = &localBoolB << "\t\t" << addr2 = computeAddr(localBoolB) << "\t\t" << addr1 == addr2 << endl;
+
+}
