@@ -7,6 +7,7 @@ function: int main() {
         cout << "Value of x: " << x << endl; 
 
         if(x == 3){
+            cout << "breaking" << endl;
             break;
         }
         
