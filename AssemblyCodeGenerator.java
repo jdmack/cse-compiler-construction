@@ -1772,17 +1772,19 @@ public class AssemblyCodeGenerator {
     	}
     	// codegen
     	for(STO ele : eles) {
-    		if(ele.getType().isInt() || ele.getType().isBool() || ele.getType().isPointer()) {
+/*    		if(ele.getType().isInt() || ele.getType().isBool() || ele.getType().isPointer()) {
     			// load base + offset to l0
     			LoadStoAddr(ele, SparcInstr.REG_LOCAL0);
     			// set {value} l1
+    			System.out.println(String.valueOf(((ConstSTO)ele).getIntValue()));
     			writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(((ConstSTO)ele).getIntValue()), SparcInstr.REG_LOCAL1, "Setting String.valueOf(((ConstSTO)ele).getIntValue()) to l1");
     			// Load l1 to l0
     			StoreValueIntoAddr(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
     		}
     		else if(ele.getType().isFloat()) {
     			//TODO
-    		}
+    		}*/
+    		DoAssignExpr(ele, ele);
     	}
     	// Update the elementlist of the type of the sto
     	((ArrayType) sto.getType()).setElementList(new ArrEleSTO(eles));
