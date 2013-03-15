@@ -63,6 +63,7 @@ function: void main() {
     // 2. value param as reference param     - store in param location (ex. %fp + 68)
     // 3. reference param as value arg       - load from address into out register (ex. %o0)
     // 4. reference param as reference arg - put address in register (ex. %o0)
+    // 5. local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
     // 6. local variable as reference arg    - load address of location (ex. %fp - 4) into register (ex. %o0) 
     // 7. global variable as value arg       - load value from it's location (ex. %g0 + local)
     // 8. global variable as reference arg - load address of location into register (ex. %o0)
