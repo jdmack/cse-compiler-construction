@@ -1775,8 +1775,10 @@ public class AssemblyCodeGenerator {
     		if(ele.getType().isInt() || ele.getType().isBool() || ele.getType().isPointer()) {
     			// load base + offset to l0
     			LoadStoAddr(ele, SparcInstr.REG_LOCAL0);
-    			// Load sto value to 
-    			StoreValueIntoAddr(String.valueOf(((ConstSTO)ele).getIntValue()), SparcInstr.REG_LOCAL0);
+    			// set {value} l1
+    			writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(((ConstSTO)ele).getIntValue()), SparcInstr.REG_LOCAL1, "Setting String.valueOf(((ConstSTO)ele).getIntValue()) to l1");
+    			// Load l1 to l0
+    			StoreValueIntoAddr(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
     		}
     		else if(ele.getType().isFloat()) {
     			//TODO
