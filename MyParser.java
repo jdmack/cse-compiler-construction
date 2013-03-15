@@ -1074,7 +1074,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //      DoBooleanOp
     //----------------------------------------------------------------
-    void BooleanOp(BooleanOp op, STO operand, boolean isStart)
+    STO DoBooleanOp(BooleanOp op, STO operand, boolean isStart)
     {
         // Check for previous errors in line and short circuit
         if(operand.isError()) {
@@ -1110,7 +1110,7 @@ class MyParser extends parser
             //    m_codegen.DoLiteral((ConstSTO)resultSTO);
             //}
             if(isStart) {
-                m_codegen.DoBooleanOp1(op, operand, resultSTO);
+                m_codegen.DoBooleanOp1(op, operand);
             }
             else {
                 m_codegen.DoBooleanOp2(op, operand, resultSTO);
