@@ -1869,23 +1869,6 @@ public class AssemblyCodeGenerator {
     
     
     //-------------------------------------------------------------------------
-    //      DoArrayDecl
-    //-------------------------------------------------------------------------
-    /*
-    public void DoArrayDecl(STO arraySto, ArrEleSTO elements)
-    {
-        
-    	ArrayType type = ((ArrayType) sto.getType());
-
-    	Vector<STO> eles = type.getElementList().getArrayElements();
-        for(STO ele : eles) {
-    		
-            DoAssignExpr(sto, ele);
-    	}
-    
-    }
-   */ 
-    //-------------------------------------------------------------------------
     //      DoInput
     //-------------------------------------------------------------------------
     public void DoCin(STO sto) 
