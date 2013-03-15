@@ -999,7 +999,6 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      isFloatReg
     //-------------------------------------------------------------------------
-    M
     public boolean isFloatReg(String reg)
     {
         if(reg.contains("%f"))
@@ -1133,10 +1132,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      DoAddressOf - put address of operandSto into resultSto for MyParser
     //-------------------------------------------------------------------------
-    public STO DoAddressOf(STO operandSto, STO resultSto)
+    public void DoAddressOf(STO operandSto, STO resultSto)
     {
-        STO resultSto;              // will store the address requested here 
-
         String reg = SparcInstr.REG_LOCAL0 ;
         // Load address of the sto into %l0
         LoadStoAddr(operandSto, reg);
