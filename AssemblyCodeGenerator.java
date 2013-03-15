@@ -1692,86 +1692,19 @@ public class AssemblyCodeGenerator {
     	}
     	return resultSTO;
     }
+    
+    
+    
     //-------------------------------------------------------------------------
     //      DoArrayEle
     //-------------------------------------------------------------------------
     public void DoArrayEleInit(STO sto)
     {
-    	writeComment("Initializing array " + sto.getName());
-    	
-    	ArrayType arrType = ((ArrayType) sto.getType());
-    	Type eleType = arrType.getElementType();
-    	ArrEleSTO arrEles = arrType.getElementList();
-    	
-    	String intInitValue = "0";
-    	String floatInitValue = "0.0";
-    	String boolInitValue = "0";
-    	//String ptrInitValue = "nullptr";
-    	
-    	Vector<STO> eles = new Vector<STO>();
-    	
-    	if (arrEles == null){
-    		// The array is declared with no init
-    		
-    		// for global and static
-    		// for # of dimension size, init array with corresponding element type
-			// i.e. int[5] x; -> int[5] x = {0, 0, 0, 0, 0};
-    		for(int i = 0; i < arrType.getDimensionSize(); i++){
-    			ConstSTO ele = null;
-    			if(eleType.isInt()){
-    				ele = new ConstSTO(intInitValue, new IntType(), intInitValue);
-    			}
-    			else if(eleType.isFloat()){
-    				ele = new ConstSTO(floatInitValue, new FloatType(), floatInitValue);
-    			}
-    			else if(eleType.isBool()){
-    				ele = new ConstSTO("false", new BoolType(), boolInitValue);
-    			}
-    			else if(eleType.isPointer()){
-    				ele = new ConstSTO("null", new NullPtrType());
-    			}
-    			ele.store(sto.getName(), String.valueOf(i * eleType.getSize()));
-    			eles.add(ele);
-    		}
-    	} 
-    	else {
-    		// The array is declared with init
-    		Vector<STO> existingEles = arrEles.getArrayElements();
-    		
-    		// set address for existing ele
-    		for(int i = 0; i < existingEles.size(); i++){
-    			existingEles.get(i).store(sto.getName(), String.valueOf(i * eleType.getSize()));
-    		}
-    		eles.addAll(existingEles);
-
-    		// for global and static
-    		// if array dimension size is greater than number initialized elements
-    		// fill remaining slots with corresponding default init type
-    		// i.e. int[5] x = {1, 2, 3} -> int[5] x = {1, 2, 3, 0, 0}
-    		if(existingEles.size() < arrType.getDimensionSize()){
-    			
-    			int diff = arrType.getDimensionSize() - existingEles.size();
-    			for(int i = diff; i < arrType.getDimensionSize(); i++){
-        			ConstSTO ele = null;
-        			if(eleType.isInt()){
-        				ele = new ConstSTO(intInitValue, new IntType(), intInitValue);
-        			}
-        			else if(eleType.isFloat()){
-        				ele = new ConstSTO(floatInitValue, new FloatType(), floatInitValue);
-        			}
-        			else if(eleType.isBool()){
-        				ele = new ConstSTO("false", new BoolType(), boolInitValue);
-        			}
-        			else if(eleType.isPointer()){
-        				ele = new ConstSTO("null", new NullPtrType());
-        			}
-        			ele.store(sto.getName(), String.valueOf(i * eleType.getSize()));
-        			eles.add(ele);
-    			}
-    		}
-    	}
-    	// codegen
-    	for(STO ele : eles) {
+        
+    	ArrayType type = ((ArrayType) sto.getType());
+    	//Type eleType = type.getElementType();
+    	Vector<STO> eles = type.getElementList().getArrayElements();
+        for(STO ele : eles) {
 /*    		if(ele.getType().isInt() || ele.getType().isBool() || ele.getType().isPointer()) {
     			// load base + offset to l0
     			LoadStoAddr(ele, SparcInstr.REG_LOCAL0);
@@ -1784,10 +1717,31 @@ public class AssemblyCodeGenerator {
     		else if(ele.getType().isFloat()) {
     			//TODO
     		}*/
-    		DoAssignExpr(ele, ele);
+    		//DoAssignExpr(ele, ele);
+    		
+            String valueReg = SparcInstr.REG_LOCAL0;
+
+            // If constant is float
+            if(ele.getType().isFloat()) {
+
+                valueReg = SparcInstr.REG_FLOAT0;
+
+                // Put float literal into memory
+                String floatLabel = PutFloatInMem(((ConstSTO) ele).getFloatValue());
+
+                // Load float into valueReg
+                LoadValueFromLabel(floatLabel, valueReg);
+            }
+
+            // Not float
+            else {
+                // Set the value (integer) into valueReg
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) ele).getIntValue()), valueReg);
+            }
+
+            StoreValueIntoSto(valueReg, ele);
     	}
-    	// Update the elementlist of the type of the sto
-    	((ArrayType) sto.getType()).setElementList(new ArrEleSTO(eles));
+    
     }
     
     //-------------------------------------------------------------------------
