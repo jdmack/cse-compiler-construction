@@ -1592,6 +1592,12 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoWhileCodeBlock()
     {
+        String jumpTo = stackWhileLabel.peek();
+        // write an always branch to beginning of while loop
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Go back to the beginning of the while loop");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
+        
     	decreaseIndent();
     	// write while.end label
     	String label = stackWhileLabel.pop();
