@@ -221,7 +221,7 @@ class MyParser extends parser
                         ArrEleSTO elements = (ArrEleSTO) value;
                         Vector<STO> stos = elements.getArrayElements();
                         // # elements not exceed array size
-                        if(stos.size() >= ((ConstSTO) arrayIndex).getIntValue()) {
+                        if(stos.size() > ((ConstSTO) arrayIndex).getIntValue()) {
                             m_nNumErrors++;
                             m_errors.print(ErrorMsg.error11_TooManyInitExpr);
                             ERROR = true;
@@ -245,7 +245,6 @@ class MyParser extends parser
                         }
                         // Add it array
                         arrType.setElementList(elements);
-                    
                     }
                 }
                 // Override type with new arrayType that encompasses the value stored in finalType
@@ -868,7 +867,8 @@ class MyParser extends parser
     {
         // desSTO: the identifier
         // indexSTO: the expression inside the []
-
+    	STO resultSTO = null;
+    	
         if(desSTO.isError()) {
             return desSTO;
         }
@@ -905,14 +905,15 @@ class MyParser extends parser
         
         // Checks are complete, now we need to return a VarSTO with the type of the array elements - VarSTO because result of [] operation is a modLVal
         if(desSTO.getType().isArray()) {
-            desSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
+        	resultSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
         } 
 
         else if (desSTO.getType().isPointer()){
-            desSTO = new VarSTO(((PointerType)desSTO.getType()).getPointsToType().getName(),((PointerType)desSTO.getType()).getPointsToType());
+        	resultSTO = new VarSTO(((PointerType)desSTO.getType()).getPointsToType().getName(),((PointerType)desSTO.getType()).getPointsToType());
         }
-
-        return desSTO;
+        //desSTO = m_symtab.access(desSTO.getName());
+        if(!ERROR) m_codegen.DoArrayAccess(desSTO, indexSTO, resultSTO);
+        return resultSTO;
     }
 
     //----------------------------------------------------------------
