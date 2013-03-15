@@ -1697,6 +1697,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoArrayEleInit(STO sto)
     {
+    	writeComment("Initializing array " + sto.getName());
+    	
     	ArrayType arrType = ((ArrayType) sto.getType());
     	Type eleType = arrType.getElementType();
     	ArrEleSTO arrEles = arrType.getElementList();
@@ -1768,7 +1770,18 @@ public class AssemblyCodeGenerator {
     			}
     		}
     	}
-    	
+    	// codegen
+    	for(STO ele : eles) {
+    		if(ele.getType().isInt() || ele.getType().isBool() || ele.getType().isPointer()) {
+    			// load base + offset to l0
+    			LoadStoAddr(ele, SparcInstr.REG_LOCAL0);
+    			// Load sto value to 
+    			StoreValueIntoAddr(String.valueOf(((ConstSTO)ele).getIntValue()), SparcInstr.REG_LOCAL0);
+    		}
+    		else if(ele.getType().isFloat()) {
+    			//TODO
+    		}
+    	}
     	// Update the elementlist of the type of the sto
     	((ArrayType) sto.getType()).setElementList(new ArrEleSTO(eles));
     }
