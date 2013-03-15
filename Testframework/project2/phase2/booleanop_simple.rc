@@ -2,6 +2,6 @@ function: void main() {
     bool a = true; 
     bool b = true; 
 
-    a && b;
-    //a || a;
+    cout << "a && b\t\t" << a << " && " << b << "\t\t" << a && b << "\t\ttrue" << endl;
+    cout << "a || b\t\t" << a << " || " << b << "\t\t" << a || b << "\t\ttrue" << endl;
 }
