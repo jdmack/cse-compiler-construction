@@ -1676,11 +1676,17 @@ public class AssemblyCodeGenerator {
     			resultSTO = eles.get(index);*/
     		}
     		else if(indexSTO.isVar()){
+    			
     			LoadStoValue(indexSTO, reg0);
     		}
+    		// index * 4 -> scaled offset
     		writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.SLL_OP, reg0, "2", reg0, "reg0 * 4 -> scaled offset");
+    		// set {arraylabel} reg1
     		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(desSTO.getName()), reg1, "set base address");
+    		// add reg1, reg0, reg0
     		writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, reg1, reg0, reg0, "base + offset");
+    		// ld [reg0], reg0
+    		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg0), reg0, "Load reg0 value");
     		AllocateSto(resultSTO);
     		StoreValueIntoSto(reg0, resultSTO);
     	}
@@ -1691,6 +1697,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoArrayEleInit(STO sto)
     {
+    	writeComment("Initializing array " + sto.getName());
+    	
     	ArrayType arrType = ((ArrayType) sto.getType());
     	Type eleType = arrType.getElementType();
     	ArrEleSTO arrEles = arrType.getElementList();
@@ -1762,7 +1770,22 @@ public class AssemblyCodeGenerator {
     			}
     		}
     	}
-    	
+    	// codegen
+    	for(STO ele : eles) {
+/*    		if(ele.getType().isInt() || ele.getType().isBool() || ele.getType().isPointer()) {
+    			// load base + offset to l0
+    			LoadStoAddr(ele, SparcInstr.REG_LOCAL0);
+    			// set {value} l1
+    			System.out.println(String.valueOf(((ConstSTO)ele).getIntValue()));
+    			writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(((ConstSTO)ele).getIntValue()), SparcInstr.REG_LOCAL1, "Setting String.valueOf(((ConstSTO)ele).getIntValue()) to l1");
+    			// Load l1 to l0
+    			StoreValueIntoAddr(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+    		}
+    		else if(ele.getType().isFloat()) {
+    			//TODO
+    		}*/
+    		DoAssignExpr(ele, ele);
+    	}
     	// Update the elementlist of the type of the sto
     	((ArrayType) sto.getType()).setElementList(new ArrEleSTO(eles));
     }
