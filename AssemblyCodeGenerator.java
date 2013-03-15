@@ -1705,6 +1705,7 @@ public class AssemblyCodeGenerator {
     		writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.SLL_OP, reg0, "2", reg0, "reg0 * 4 -> scaled offset");
     		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(desSTO.getName()), reg1, "set base address");
     		writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, reg1, reg0, reg0, "base + offset");
+    		AllocateSto(resultSTO);
     		StoreValueIntoSto(reg0, resultSTO);
     	}
     	return resultSTO;
