@@ -27,7 +27,7 @@ class AddressOfOp extends UnaryOp
 
         /* Don't need to worry about constant folding */
 
-        resultSTO = new ExprSTO("&" + operand.getName() " result", new IntType());
+        resultSTO = new ExprSTO("&" + operand.getName() + " result", new IntType());
 
 
         return resultSTO;

@@ -1,16 +1,48 @@
+int globalIntX = 6;
+float globalFloatY = 12.0;
+bool globalBoolB = true;
+
 function: void main() {
 
     int localIntX = 6;
     float localFloatY = 12.0;
     bool localBoolB = true;
+
+    const int constIntX = 6;
+    const float constFloatY = 12.0;
+    const bool constBoolB = true;
     
-    int addr1, addr2;
+    cout << "Variable\t& Result\t\tOffset From Previous" << endl;
+    cout << "========\t========\t\t====================" << endl << endl;
 
-    cout << "Variable\t\t& Result\t\t\tActual Address\t\t\tTest Result" << endl;
-    cout << "========\t\t========\t\t\t==============\t\t\t===========" << endl;
+    cout << "Globals\n=======" << endl;
+    cout << "globalIntX\t" << &globalIntX << "\t\t\tundef" << endl;
+    cout << "globalFloatY\t" << &globalFloatY << "\t\t\t" << &globalFloatY - &globalIntX << endl;
+    cout << "globalBoolB\t" << &globalBoolB << "\t\t\t" <<  &globalBoolB - &globalFloatY << endl;
 
-    cout << "localIntX\t" << addr1 = &localIntX << "\t\t" << addr2 = computeAddr(localIntX) << "\t\t" << addr1 == addr2 << endl;
-    cout << "localFloatY\t" << addr1 = &localFloatY << "\t\t" << addr2 = computeAddr(localFloatY) << "\t\t" << addr1 == addr2 << endl;
-    cout << "localBoolB\t" << addr1 = &localBoolB << "\t\t" << addr2 = computeAddr(localBoolB) << "\t\t" << addr1 == addr2 << endl;
+    cout << "Locals\n======"<< endl;
+    cout << "localIntX\t" << &localIntX << "\t\tundef" << endl;
+    cout << "localFloatY\t" << &localFloatY << "\t\t" << &localFloatY - &localIntX << endl;
+    cout << "localBoolB\t" << &localBoolB << "\t\t" <<  &localBoolB - &localFloatY << endl;
+
+
+    cout << "Consts\n======" << endl;
+    cout << "constIntX\t" << &constIntX << "\t\t" << &constIntX - &localBoolB << endl;
+    cout << "constFloatY\t" << &constFloatY << "\t\t" << &constFloatY - &constIntX << endl;
+    cout << "constBoolB\t" << &constBoolB << "\t\t" <<  &constBoolB - &constFloatY << endl;
+
+    // TODO: Add section for statics
+
+    // TODO: Add section for externs
+
+    // TODO: Add section for structs
+
+    // TODO: Add section for arrays
+
+    // TODO: Add section for pointers
+
+    // TODO: Add section for function pointers
+
+
 
 }

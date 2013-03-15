@@ -1134,11 +1134,18 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoAddressOf(STO operandSto, STO resultSto)
     {
+        writeCommentHeader("Do Address Of Operation");
+
+        // Allocate resultSto (i.e. get it an address and 4 bytes of space on stack to store into
+        AllocateSto(resultSto);
+
         String reg = SparcInstr.REG_LOCAL0 ;
         // Load address of the sto into %l0
+        writeComment("Put address of " + operandSto.getName() + " into " + reg);
         LoadStoAddr(operandSto, reg);
         
         // Store the value (which is the address) into the STO
+        writeComment("Store address " + operandSto.getName() + " (which is in " + reg + " into " + resultSto);
         StoreValueIntoSto(reg, resultSto);
     }
 
@@ -1329,7 +1336,7 @@ public class AssemblyCodeGenerator {
                 writeCommentHeader("Do Inc/Dec Operation on " + operand.getType().getName());
 
                 // Perform operation
-                writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, regOp, "Perform int " + operation + "op");
+                writeAssembly(SparcInstr.ONE_PARAM_COMM, operation, regOp, "Perform inc " + operation + "op");
             }
 
             // Store incremented, decremented value into result if not post op

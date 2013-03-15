@@ -1056,12 +1056,20 @@ class MyParser extends parser
 
         // And better to have all the codegen code at the end of the function
 
-        // If operand is a constant, do the op
-        if(resultSTO.isConst()) {
-            if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
-        }
-        else {
-            if(!ERROR) m_codegen.DoUnaryOp(op, operand, resultSTO);
+        // Do Operation assembly code
+        if(!ERROR) {
+        // If operand is a constant, it was folded in it's OpClass, just allocate the result on stack
+            if(resultSTO.isConst()) {
+                m_codegen.DoLiteral((ConstSTO)resultSTO);
+            }
+            // If it's addressOf op, call that function
+            else if(op.isAddressOfOp()) {
+                m_codegen.DoAddressOf(operand, resultSTO);
+            }
+            // Otherwise, call generic DoUnaryOp
+            else {
+                m_codegen.DoUnaryOp(op, operand, resultSTO);
+            }
         }
         
         return resultSTO;

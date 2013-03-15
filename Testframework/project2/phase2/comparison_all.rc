@@ -1,36 +1,36 @@
 function: void compareIntInt(int x, int y) {
     cout << "(int,int): " << x << " == " << y << " = " << (x == y) << endl;
-    cout << "(int,int): " << x << " >= " << y << " = " << (x == y) << endl;
-    cout << "(int,int): " << x << "  > " << y << " = " << (x == y) << endl;
-    cout << "(int,int): " << x << " <= " << y << " = " << (x == y) << endl;
-    cout << "(int,int): " << x << "  < " << y << " = " << (x == y) << endl;
-    cout << "(int,int): " << x << " != " << y << " = " << (x == y) << endl;
+    cout << "(int,int): " << x << " != " << y << " = " << (x != y) << endl;
+    cout << "(int,int): " << x << " >= " << y << " = " << (x >= y) << endl;
+    cout << "(int,int): " << x << "  > " << y << " = " << (x  > y) << endl;
+    cout << "(int,int): " << x << " <= " << y << " = " << (x <= y) << endl;
+    cout << "(int,int): " << x << "  < " << y << " = " << (x  < y) << endl;
     cout << endl;
 }
 
 function: void compareFloatFloat(float x, float y) {
     cout << "(float,float): " << x << " == " << y << " = " << (x == y) << endl;
-    cout << "(float,float): " << x << " >= " << y << " = " << (x == y) << endl;
-    cout << "(float,float): " << x << "  > " << y << " = " << (x == y) << endl;
-    cout << "(float,float): " << x << " <= " << y << " = " << (x == y) << endl;
-    cout << "(float,float): " << x << "  < " << y << " = " << (x == y) << endl;
-    cout << "(float,float): " << x << " != " << y << " = " << (x == y) << endl;
+    cout << "(float,float): " << x << " != " << y << " = " << (x != y) << endl;
+    cout << "(float,float): " << x << " >= " << y << " = " << (x >= y) << endl;
+    cout << "(float,float): " << x << "  > " << y << " = " << (x  > y) << endl;
+    cout << "(float,float): " << x << " <= " << y << " = " << (x <= y) << endl;
+    cout << "(float,float): " << x << "  < " << y << " = " << (x  < y) << endl;
     cout << endl;
 }
 
 function: void compareIntFloat(int x, float y) {
     cout << "(int,float): " << x << " == " << y << " = " << (x == y) << endl;
-    cout << "(int,float): " << x << " >= " << y << " = " << (x == y) << endl;
-    cout << "(int,float): " << x << "  > " << y << " = " << (x == y) << endl;
-    cout << "(int,float): " << x << " <= " << y << " = " << (x == y) << endl;
-    cout << "(int,float): " << x << "  < " << y << " = " << (x == y) << endl;
-    cout << "(int,float): " << x << " != " << y << " = " << (x == y) << endl;
+    cout << "(int,float): " << x << " != " << y << " = " << (x != y) << endl;
+    cout << "(int,float): " << x << " >= " << y << " = " << (x >= y) << endl;
+    cout << "(int,float): " << x << "  > " << y << " = " << (x  > y) << endl;
+    cout << "(int,float): " << x << " <= " << y << " = " << (x <= y) << endl;
+    cout << "(int,float): " << x << "  < " << y << " = " << (x  < y) << endl;
     cout << endl;
 }
 
 function: void compareBool(bool x, bool y) {
     cout << "(bool,bool): " << x << " == " << y << " = " << (x == y) << endl;
-    cout << "(bool,bool): " << x << " != " << y << " = " << (x == y) << endl;
+    cout << "(bool,bool): " << x << " != " << y << " = " << (x != y) << endl;
     cout << endl;
 }
 

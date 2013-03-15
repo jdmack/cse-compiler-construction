@@ -3,7 +3,7 @@ function: int main() {
     int x = 0; 
 
     while(x == 3) {
-        cout << "While. Should not print" << endl;
+        cout << "While. Should print" << endl;
         x++;
     }
     cout << "After while loop" << endl; 
