@@ -1,3 +1,6 @@
+// This is a template to use to build the other tests
+
+
 // 5. local variable as value arg        - load from it's location (ex. %fp - 4) into register (ex. %o0)
 
 function: void foo6(int x, int y, float z, float a, bool b, bool c) {
