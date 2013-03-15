@@ -1676,12 +1676,17 @@ public class AssemblyCodeGenerator {
     			resultSTO = eles.get(index);*/
     		}
     		else if(indexSTO.isVar()){
+    			
     			LoadStoValue(indexSTO, reg0);
     		}
+    		// index * 4 -> scaled offset
     		writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.SLL_OP, reg0, "2", reg0, "reg0 * 4 -> scaled offset");
+    		// set {arraylabel} reg1
     		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(desSTO.getName()), reg1, "set base address");
+    		// add reg1, reg0, reg0
     		writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, reg1, reg0, reg0, "base + offset");
-    		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, reg0, reg0, "Load reg0 value");
+    		// ld [reg0], reg0
+    		writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg0), reg0, "Load reg0 value");
     		AllocateSto(resultSTO);
     		StoreValueIntoSto(reg0, resultSTO);
     	}
