@@ -218,36 +218,33 @@ class MyParser extends parser
                 if (arrType != null) {
                     // Check 11b
                     if(value.isArrEle()) {
-                        ArrEleSTO elements = (ArrEleSTO) value;
-                        Vector<STO> stos = elements.getArrayElements();
+                        Vector<STO> elements = ((ArrEleSTO) value).getArrayElements();
                         // # elements not exceed array size
-                        if(stos.size() > ((ConstSTO) arrayIndex).getIntValue()) {
+                        if(elements.size() > ((ConstSTO) arrayIndex).getIntValue()) {
                             m_nNumErrors++;
                             m_errors.print(ErrorMsg.error11_TooManyInitExpr);
                             ERROR = true;
                             break;
                         }
                         
-                        for(STO sto : stos) {
-                            if (!sto.isConst()) {
+                        for(STO thisElement : elements) {
+                            if (!thisElement.isConst()) {
                                 m_nNumErrors++;
                                 m_errors.print(ErrorMsg.error11_NonConstInitExpr);
                                 ERROR = true;
                                 break;
                             }
                             
-                            if (!sto.getType().isAssignable(type)) {
+                            if (!thisElement.getType().isAssignable(type)) {
                                 m_nNumErrors++;
-                                m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, sto.getType().getName(), type.getName()));
+                                m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, thisElement.getType().getName(), type.getName()));
                                 ERROR = true;
                                 break;
                             }
                         }
                         // Add it array
                         arrType.setElementList(elements);
-                        
-                    }
-                    DoArrayInit(arrType, id);
+                    }        
                 }
                 // Override type with new arrayType that encompasses the value stored in finalType
                 finalType = arrType;
@@ -312,81 +309,6 @@ class MyParser extends parser
         return new ArrayType(type, size);
     }
     
-    void DoArrayInit(ArrayType type, String id) {
-    	//ArrayType type = ((ArrayType) sto.getType());
-    	Type eleType = type.getElementType();
-    	ArrEleSTO arrEles = type.getElementList();
-    	
-    	String intInitValue = "0";
-    	String floatInitValue = "0.0";
-    	String boolInitValue = "0";
-    	//String ptrInitValue = "nullptr";
-    	
-    	Vector<STO> eles = new Vector<STO>();
-    	
-    	if (arrEles == null){
-    		// The array is declared with no init
-    		
-    		// for global and static
-    		// for # of dimension size, init array with corresponding element type
-			// i.e. int[5] x; -> int[5] x = {0, 0, 0, 0, 0};
-    		for(int i = 0; i < type.getDimensionSize(); i++){
-    			ConstSTO ele = null;
-    			if(eleType.isInt()){
-    				ele = new ConstSTO(intInitValue, new IntType(), intInitValue);
-    			}
-    			else if(eleType.isFloat()){
-    				ele = new ConstSTO(floatInitValue, new FloatType(), floatInitValue);
-    			}
-    			else if(eleType.isBool()){
-    				ele = new ConstSTO("false", new BoolType(), boolInitValue);
-    			}
-    			else if(eleType.isPointer()){
-    				ele = new ConstSTO("null", new NullPtrType());
-    			}
-    			ele.store("%g0", String.valueOf(i * eleType.getSize()));
-    			eles.add(ele);
-    		}
-    	} 
-    	else {
-    		// The array is declared with init
-    		Vector<STO> existingEles = arrEles.getArrayElements();
-    		
-    		// set address for existing ele
-    		for(int i = 0; i < existingEles.size(); i++){
-    			existingEles.get(i).store(id, String.valueOf(i * eleType.getSize()));
-    		}
-    		eles.addAll(existingEles);
-
-    		// for global and static
-    		// if array dimension size is greater than number initialized elements
-    		// fill remaining slots with corresponding default init type
-    		// i.e. int[5] x = {1, 2, 3} -> int[5] x = {1, 2, 3, 0, 0}
-    		if(existingEles.size() < type.getDimensionSize()){
-    			
-    			int diff = type.getDimensionSize() - existingEles.size();
-    			for(int i = diff; i < type.getDimensionSize(); i++){
-        			ConstSTO ele = null;
-        			if(eleType.isInt()){
-        				ele = new ConstSTO(intInitValue, new IntType(), intInitValue);
-        			}
-        			else if(eleType.isFloat()){
-        				ele = new ConstSTO(floatInitValue, new FloatType(), floatInitValue);
-        			}
-        			else if(eleType.isBool()){
-        				ele = new ConstSTO("false", new BoolType(), boolInitValue);
-        			}
-        			else if(eleType.isPointer()){
-        				ele = new ConstSTO("null", new NullPtrType());
-        			}
-        			ele.store("%g0", String.valueOf(i * eleType.getSize()));
-        			eles.add(ele);
-    			}
-    		}
-    	}
-    	// Update the elementlist of the type of the sto
-    	type.setElementList(new ArrEleSTO(eles));
-    }
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
@@ -941,40 +863,40 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
-    STO DoDesignator2_Array(STO desSTO, STO indexSTO)
+    STO DoDesignator2_Array(STO arraySto, STO indexSto)
     {
-        // desSTO: the identifier
-        // indexSTO: the expression inside the []
-    	STO resultSTO = null;
+        // arraySto: the identifier
+        // indexSto: the expression inside the []
+    	STO resultSto = null;
     	
-        if(desSTO.isError()) {
-            return desSTO;
+        if(arraySto.isError()) {
+            return arraySto;
         }
 
         // Check #11a
-        // bullet 1 - desSTO is not array or pointer type
-        if((!desSTO.getType().isArray()) && (!desSTO.getType().isPointer())) {
+        // bullet 1 - arraySto is not array or pointer type
+        if((!arraySto.getType().isArray()) && (!arraySto.getType().isPointer())) {
             m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error11t_ArrExp, desSTO.getType().getName()));
+            m_errors.print(Formatter.toString(ErrorMsg.error11t_ArrExp, arraySto.getType().getName()));
             ERROR = true;
             return new ErrorSTO("Desig2_Array() - Not array or ptr");
         }
 
         // bullet 2 - index expression type is not equiv to int
-        if(!indexSTO.getType().isEquivalent(new IntType())) {
+        if(!indexSto.getType().isEquivalent(new IntType())) {
             m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.error11i_ArrExp, indexSTO.getType().getName()));
+            m_errors.print(Formatter.toString(ErrorMsg.error11i_ArrExp, indexSto.getType().getName()));
             ERROR = true;
             return new ErrorSTO("Desig2_Array() - index not equiv to int");
         }
 
         // bullet 3 - index expr is constant, error if indexExpr outside bounds of array dimension
-        //              except when desSTO is pointer type
-        if(indexSTO.isConst()) {
-            if(desSTO.getType().isArray()) {
-                if(((ConstSTO)indexSTO).getIntValue() >= (((ArrayType)desSTO.getType()).getDimensionSize()) || ((ConstSTO)indexSTO).getIntValue() < 0) {
+        //              except when arraySto is pointer type
+        if(indexSto.isConst()) {
+            if(arraySto.getType().isArray()) {
+                if(((ConstSTO)indexSto).getIntValue() >= (((ArrayType)arraySto.getType()).getDimensionSize()) || ((ConstSTO)indexSto).getIntValue() < 0) {
                     m_nNumErrors++;
-                    m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstSTO)indexSTO).getIntValue(), ((ArrayType)desSTO.getType()).getDimensionSize()));
+                    m_errors.print(Formatter.toString(ErrorMsg.error11b_ArrExp, ((ConstSTO)indexSto).getIntValue(), ((ArrayType)arraySto.getType()).getDimensionSize()));
                     ERROR = true;
                     return new ErrorSTO("Desig2_Array() - index is constant, out of bounds");
                 }
@@ -982,16 +904,17 @@ class MyParser extends parser
         }
         
         // Checks are complete, now we need to return a VarSTO with the type of the array elements - VarSTO because result of [] operation is a modLVal
-        if(desSTO.getType().isArray()) {
-        	resultSTO = new VarSTO(((ArrayType)desSTO.getType()).getElementType().getName(),((ArrayType)desSTO.getType()).getElementType());
+        if(arraySto.getType().isArray()) {
+        	resultSto = new VarSTO(((ArrayType)arraySto.getType()).getElementType().getName(),((ArrayType)arraySto.getType()).getElementType());
         } 
 
-        else if (desSTO.getType().isPointer()){
-        	resultSTO = new VarSTO(((PointerType)desSTO.getType()).getPointsToType().getName(),((PointerType)desSTO.getType()).getPointsToType());
+        else if (arraySto.getType().isPointer()){
+        	resultSto = new VarSTO(((PointerType)arraySto.getType()).getPointsToType().getName(),((PointerType)arraySto.getType()).getPointsToType());
         }
-        //desSTO = m_symtab.access(desSTO.getName());
-        if(!ERROR) m_codegen.DoArrayAccess(desSTO, indexSTO, resultSTO);
-        return resultSTO;
+        //arraySto = m_symtab.access(arraySto.getName());
+        if(!ERROR) m_codegen.DoArrayAccess(arraySto, indexSto, resultSto);
+
+        return resultSto;
     }
 
     //----------------------------------------------------------------

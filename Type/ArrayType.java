@@ -2,28 +2,27 @@
 //
 //---------------------------------------------------------------------
 
+import java.util.Vector;
+
 class ArrayType extends CompositeType
 {
     Type elementType;
     Integer dimensionSize;
-    ArrEleSTO elementList;
+    Vector<STO> elementList;
 
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-    public ArrayType(Type elementType, Integer dimenionSize)
+    public ArrayType(Type elementType, Integer size)
     {
-        super(elementType.getName()+"["+dimenionSize+"]", elementType.getSize() * dimenionSize);
-        setElementType(elementType);
-        setDimensionSize(dimenionSize);
-
+        this(elementType, size, new Vector<STO>());
     }
 
-    public ArrayType(Type elementType, Integer dimenionSize, ArrEleSTO eleList)
+    public ArrayType(Type elementType, Integer size, Vector<STO> eleList)
     {
-        super(elementType.getName()+"["+dimenionSize+"]", elementType.getSize() * dimenionSize);
+        super(elementType.getName()+"[" + size + "]", elementType.getSize() * size);
         setElementType(elementType);
-        setDimensionSize(dimenionSize);
+        setDimensionSize(size);
         setElementList(eleList);
 
     }
@@ -56,12 +55,12 @@ class ArrayType extends CompositeType
         dimensionSize = dimenionSize;
     }
 
-    public ArrEleSTO getElementList()
+    public Vector<STO> getElementList()
     {
         return elementList;
     }
 
-    public void setElementList(ArrEleSTO eleList)
+    public void setElementList(Vector<STO> eleList)
     {
         elementList = eleList;
     }
