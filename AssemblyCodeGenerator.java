@@ -1564,9 +1564,9 @@ public class AssemblyCodeGenerator {
     }
     
     //-------------------------------------------------------------------------
-    //      DoWhile
+    //      DoWhileStart
     //-------------------------------------------------------------------------
-    public void DoWhile(STO condition)
+    public void DoWhileStart()
     {
     	// stackWhileLabel
     	String whileLabel = ".while."+whileLabel_count;
@@ -1576,13 +1576,20 @@ public class AssemblyCodeGenerator {
     	// write while label before logic check
     	writeAssembly(SparcInstr.LABEL, whileLabel);
     	
+    }
+    
+    //-------------------------------------------------------------------------
+    //      DoWhile
+    //-------------------------------------------------------------------------
+    public void DoWhile(STO condition)
+    {
     	// Load condition into %l0 for comparison
         LoadSto(condition, SparcInstr.REG_LOCAL0);
 
     	// cmp %l0, %g0
     	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
     	// be IfL1! Opposite logic
-    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, whileLabel+".end");
+    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, stackWhileLabel.peek()+".end");
     	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
     	increaseIndent();
     }
