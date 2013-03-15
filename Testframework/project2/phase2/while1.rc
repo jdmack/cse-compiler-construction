@@ -5,6 +5,7 @@ function: int main() {
     while(true) {
         cout << "While. Should print" << endl;
         cout << "Value of x: " << x << endl; 
+
         if(x == 3){
             break;
         }
