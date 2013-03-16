@@ -469,6 +469,8 @@ class MyParser extends parser
             for(STO sto : fieldList) {
                 if(sto.isFunc()) continue;
                 size += sto.getType().getSize();
+                sto.store(id, String.valueOf(size));
+               // sto.setOffset(String.valueOf(size));
             }
             
             // get TypedefSTO of StructType 
@@ -798,7 +800,7 @@ class MyParser extends parser
                 return new ErrorSTO("Struct Error - field not found in type");
             }
         }
-
+        if(!ERROR) m_codegen.DoStructAccess(sto, returnSTO);
         return returnSTO;
     }
 

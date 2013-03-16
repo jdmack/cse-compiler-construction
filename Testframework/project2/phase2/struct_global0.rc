@@ -3,5 +3,7 @@ structdef REC {
 };
 
 function : void main() {
-    cout << REC.r << endl; 
+    REC e;
+    cout << e.r << endl; 
+//    e.r;
 }
