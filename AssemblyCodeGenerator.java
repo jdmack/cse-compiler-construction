@@ -2264,6 +2264,31 @@ public class AssemblyCodeGenerator {
         StoreValueIntoSto(offsetReg, resultSto);
     }
     
+    public void DoStructAccess(STO struct, STO resultSto) {
+        //writeCommentHeader("Accessing index " + ((ConstSTO) indexSto).getIntValue() + " of " + arraySto.getName());
+
+    	String offsetReg = SparcInstr.REG_LOCAL0;
+        String reg = SparcInstr.REG_LOCAL1;
+
+        LoadStoValue(resultSto, offsetReg);
+
+        // multiple the offsetReg by sizeof which is 4
+        //writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.SLL_OP, offsetReg, String.valueOf(2), offsetReg, "index * 4 -> scaled offset");
+
+        // put offset into %l1
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(resultSto.getOffset()), reg, "set offset into " + reg);
+
+        // add base, offsetReg, offsetReg
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, offsetReg, reg, offsetReg, "base + offset");
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, struct.getBase(), offsetReg, offsetReg, "base + offset");
+
+        // offset reg now has address of the elemnt
+
+        LoadValueFromAddr(offsetReg, offsetReg);
+
+        AllocateSto(resultSto);
+        StoreValueIntoSto(offsetReg, resultSto);
+    }
     
     //-------------------------------------------------------------------------
     //      DoInput
