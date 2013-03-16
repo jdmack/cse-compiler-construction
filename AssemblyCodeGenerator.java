@@ -1304,6 +1304,10 @@ public class AssemblyCodeGenerator {
 
         // LOAD VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Value of " + sto.getName() + " now in " + reg);
+        
+        if(sto.isReference()) {
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "");
+        }
 
         if(isFloatReg(reg) && sto.getType().isInt()) {
             writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, reg,reg, "Promoting int to float");
@@ -1342,13 +1346,13 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      LoadValueFromLabel - Loads a value into a register via a label
+    //      LoadValueFromLabel - Loads a value into a register via a label - usees %l7 as tmp
     //-------------------------------------------------------------------------
     public void LoadValueFromLabel(String label, String reg)
     {
         // Set label to %l0, then load value from the label as an address into reg
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, label, reg, "Put label " + label + " address into " + reg);
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "Load value from address in  " + reg + " into " + reg);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, label, SparcInstr.REG_LOCAL7, "Put label " + label + " address into " + SparcInstr.REG_LOCAL7);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value from address in  " + reg + " into " + reg);
     }
 
     //-------------------------------------------------------------------------
@@ -1476,6 +1480,7 @@ public class AssemblyCodeGenerator {
 
             // set label, %l0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, floatAddr, SparcInstr.REG_LOCAL0);
+            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, floatAddr, SparcInstr.REG_LOCAL0);
 
             // ld [%l0], %f0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_FLOAT0);

@@ -8,7 +8,6 @@ class ParamSTO extends STO
     //      Instance Variables
     //---------------------------------------------------------------------
     private boolean m_passByReference;
-    private STO m_valueSto;
 
     //---------------------------------------------------------------------
     //      Constructors
@@ -17,7 +16,6 @@ class ParamSTO extends STO
     {
         super(strName, type, true);
         setPassByReference(passByRef);
-        setValueSto(null);
     }
 
     //---------------------------------------------------------------------
@@ -32,12 +30,11 @@ class ParamSTO extends STO
     private void setPassByReference(boolean passByRef)
     {
         m_passByReference = passByRef;
-        setIsReference(passByRef);
     }
 
     public boolean isReference()
     {
-        return super.isReference();
+        return isPassByReference();
     }
 
     public void setIsReference(boolean ref)
@@ -50,14 +47,5 @@ class ParamSTO extends STO
         return true;
     }
 
-    public STO getValueSto()
-    {
-        return m_valueSto;
-    }
-
-    public void setValueSto(STO value)
-    {
-        m_valueSto = value;
-    }
 
 }
