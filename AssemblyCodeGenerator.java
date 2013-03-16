@@ -23,6 +23,7 @@ public class AssemblyCodeGenerator {
     private Stack<StoPair> 		localStaticInitStack;
     private Vector<StackRecord> stackValues;
     private HashMap<Float, String> storedFloats;
+    private HashMap<String, Stack<Vector<STO>>> funcArgs;
 
     // Error Messages
     private static final String ERROR_IO_CLOSE     = "Unable to close fileWriter";
@@ -73,6 +74,7 @@ public class AssemblyCodeGenerator {
         localStaticInitStack = new Stack<StoPair>();
         stackValues     = new Vector<StackRecord>();
         storedFloats    = new HashMap<Float, String>();
+        funcArgs        = new HashMap<String, Stack<Vector<STO>>>();
     }
 
     //-------------------------------------------------------------------------
@@ -607,6 +609,7 @@ public class AssemblyCodeGenerator {
     {
         currentFunc.push(funcSto);
         stackPointer.push(0);
+        
 
         // !----Function: <funcName>----
         writeCommentHeader("Function: " + funcSto.getName());
@@ -663,6 +666,7 @@ public class AssemblyCodeGenerator {
             writeComment("parameter: " + paramSto.getName() + " is: " + paramSto.getClass().getName());
             AllocateSto(paramSto);
 
+            /*
             // 1. [PASS] value param as value arg
             if(!paramSto.isPassByReference()) {
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
@@ -696,21 +700,7 @@ public class AssemblyCodeGenerator {
             else if(!paramSto.isPassByReference()) {
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
-
-
-
-    
-            // 1. [PASS] value param as value arg         - put in out register (ex. %o0)
-            // 2. [PASS] value param as reference param     - store in param location (ex. %fp + 68)
-            // 3. [PASS] reference param as value arg       - load from address into out register (ex. %o0)
-            // 4. [PASS] reference param as reference arg - put address in register (ex. %o0)
-            // 6. [PASS] local variable as reference arg    - load address of location (ex. %fp - 4) into register (ex. %o0) 
-            // 7. [PASS] global variable as value arg       - load value from it's location (ex. %g0 + local)
-            // 8. [PASS] global variable as reference arg - load address of location into register (ex. %o0)
-
-            //AllocateSto(thisParam);
-            //thisParam.store(SparcInstr.PARAM_REGS[i], String.valueOf(0));
-            //LoadStoValue(thisParam, SparcInstr.PARAM_REGS[i]);
+*/
         }
 
 
@@ -784,6 +774,14 @@ public class AssemblyCodeGenerator {
 
         Vector<ParamSTO> params = ((FuncPtrType) funcSto.getType()).getParameters();
 
+        if(funcArgs.containsKey(funcSto.getName())) {
+            funcArgs.get(funcSto.getName()).push(args);
+        }
+        else {
+            funcArgs.put(funcSto.getName(), new Stack<Vector<STO>>()); 
+            funcArgs.get(funcSto.getName()).push(args);
+        } 
+
         if(DEBUG) {
             System.out.println("AssemblyCodeGenerator.DoFuncCall()");
             System.out.println("Function: " + funcSto.getName());
@@ -797,7 +795,10 @@ public class AssemblyCodeGenerator {
         for(int i = 0; i < args.size(); i++) {
             STO argSto = args.elementAt(i);
             ParamSTO paramSto = params.elementAt(i);
-
+            
+            if(!argSto.isInMemory()) {
+                AllocateSto(argSto);
+            }
 
 
             ///////// Load a value STO
@@ -812,7 +813,7 @@ public class AssemblyCodeGenerator {
                 
 
 
-            // 1. [PASS] value param as value arg
+/*            // 1. [PASS] value param as value arg
             if(argSto.isParam() && !paramSto.isPassByReference()) {
                 LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);
                 
@@ -820,9 +821,9 @@ public class AssemblyCodeGenerator {
             // 2. [PASS] value param as reference arg
             else if(argSto.isParam() && paramSto.isPassByReference()) {
                 LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);               // Load the address from the sto into %o0
-                paramSto.setIsReference(true);
             }
             // 3. [PASS] reference param as value arg
+            
             else if(argSto.isParam() && !((ParamSTO) argSto).isPassByReference() && paramSto.isPassByReference()) {
                 LoadStoValue(argSto, SparcInstr.REG_LOCAL0);                    // loads the value (which is an address) from the Sto
                 LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);       // loads the value stored address contained in %l0 into %o0
@@ -831,7 +832,6 @@ public class AssemblyCodeGenerator {
             else if(argSto.isParam() && ((ParamSTO) argSto).isPassByReference() && paramSto.isPassByReference()) {
                 LoadStoValue(argSto, SparcInstr.REG_LOCAL0);                    // loads the value (which is an address) from the Sto
                 LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);      // loads the value stored address contained in %l0 into %o0
-                paramSto.setIsReference(true);
             }
             // 7. [PASS] global variable as value arg
             else if(argSto.isGlobal() && !paramSto.isPassByReference()) {
@@ -840,18 +840,18 @@ public class AssemblyCodeGenerator {
             // 8. [PASS] global variable as reference arg
             else if(argSto.isGlobal() && paramSto.isPassByReference()) {
                 LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
-                paramSto.setIsReference(true);
             }
+            */
             // 5. [PASS] local variable as value arg
             else if(!paramSto.isPassByReference()) {
                 LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);    
             }
-
+/*
             // 6. [PASS] local variable as reference arg
             else if(!paramSto.isPassByReference()) {
                 LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
-                paramSto.setIsReference(true);
             }
+            */
         }
 
         //////////////////////////////////////////////////////////////////////////////// 

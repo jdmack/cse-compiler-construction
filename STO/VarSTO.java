@@ -7,10 +7,10 @@ class VarSTO extends STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
-/*    public VarSTO(String strName)
+    public VarSTO(STO copySto)
     {
-        super(strName, null, true);
-    }*/
+        super(copySto);
+    }
 
     public VarSTO(String strName, Type type)
     {

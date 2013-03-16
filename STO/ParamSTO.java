@@ -55,7 +55,7 @@ class ParamSTO extends STO
         return m_valueSto;
     }
 
-    private void setValueSto(STO value)
+    public void setValueSto(STO value)
     {
         m_valueSto = value;
     }

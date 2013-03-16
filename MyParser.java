@@ -680,6 +680,8 @@ class MyParser extends parser
 
         boolean error_flag = false;
 
+        Vector<STO> passArgs = new Vector<STO>();
+
         for(int i = 0; i < args.size(); i++) {
             // For readability and shorter lines
             ParamSTO thisParam = funcType.getParameters().elementAt(i);
@@ -715,9 +717,22 @@ class MyParser extends parser
                 }
             }
 
-            if(!error_flag)
-                m_symtab.insert(thisParam);
-                thisParam.setValueSto(thisArg);
+            // Setup argument for function call
+            if(!error_flag) {
+
+                // If it's pass by reference, add the actual STO
+                if(thisParam.isPassByReference()) {
+                    passArgs.addElement(thisArg);
+                    thisArg.setIsReference(true);
+                }
+                // Create a copy of the STO
+                else {
+                    passArgs.addElement(new VarSTO(thisArg));
+                }
+
+                m_symtab.insert(thisArg);
+
+            }
         }
 
         STO returnSto;
@@ -734,7 +749,7 @@ class MyParser extends parser
                 returnSto = new ExprSTO(sto.getName() + "Return", funcType.getReturnType());
         }
 
-        if(!ERROR) m_codegen.DoFuncCall(sto, args, returnSto);
+        if(!ERROR) m_codegen.DoFuncCall(sto, passArgs, returnSto);
 
         m_symtab.closeScope();
 
