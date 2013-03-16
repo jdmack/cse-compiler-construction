@@ -326,12 +326,12 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.BLANK_LINE);
 
         // If valueSto is Null, create a 0 sto for it (we're in bss, auto init to 0)
-        if(valueSto.isNull())
-            if(varSto.getType().isArray() && valueSto.isArrEle()) {
+        //if(valueSto.isNull())
+            //if(varSto.getType().isArray() && valueSto.isArrEle()) {
                 // this should never happen, non-inited arrays go to BuildType() 
-            }
+            //}
 
-            valueSto = new ConstSTO("0", new IntType(), 0.0);
+            //valueSto = new ConstSTO("0", new IntType(), 0.0);
         
         // Push these for later to initialize when main() starts
         globalInitStack.push(new StoPair(varSto, valueSto));
@@ -542,15 +542,38 @@ public class AssemblyCodeGenerator {
 
                     // If array, then do array stuff yo
                     if(varSto.getType().isArray()) {
+
+                        writeComment("Initializing Array: " + varSto.getName());
                         ArrayType arrayType = (ArrayType) varSto.getType();
 
+                        // 
                         if(valueSto.isArrEle()) {
                             // if it's array, do array ele init
                             Vector<STO> varElements = arrayType.getElementList();
                             Vector<STO> valueElements = ((ArrEleSTO)valueSto).getArrayElements();
 
+                             String indexReg = SparcInstr.REG_LOCAL6;
+                             String addrReg = SparcInstr.REG_LOCAL4; 
+                             MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
+                             //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), indexReg, "Use %l5 for incrementing counter by 1");
+                             writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
+                             
                             for(int i = 0; i < valueElements.size(); i++) {
-                                DoAssignExpr(varElements.elementAt(i), valueElements.elementAt(i));
+                                    writeCommentHeader("Initializing " + varSto.getName() + "[" + i + "]");
+                                    ConstSTO value = null;
+                                if(valueElements.elementAt(i).isConst()) {
+                                    value = (ConstSTO) valueElements.elementAt(i);
+                                }
+                                //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
+
+                                DoLiteral(value);
+
+                                MoveRegToReg(indexReg, addrReg);
+                                
+                                // TODO NEED TO ACCOUNT FOR FLOATS
+                                GetArrayElementAddr(varSto, addrReg);
+                                StoreStoValueIntoAddr(valueElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
+                                writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
                             }
                         }
                         else {
@@ -1062,6 +1085,54 @@ public class AssemblyCodeGenerator {
     //      DoAssignExpr - Sets destSto = valueSto
     //-------------------------------------------------------------------------
     public void DoAssignExpr(STO destSto, STO valueSto)
+    {
+        writeComment("Assigning " + destSto.getName() + " = " + valueSto.getName());
+
+
+        // If valueSto is a constant and not already in memory, then set the value directly
+        if((valueSto.isConst()) && (!valueSto.isInMemory())) {
+
+            String valueReg = SparcInstr.REG_LOCAL0;
+
+            // If constant is float
+            if(destSto.getType().isFloat()) {
+
+                valueReg = SparcInstr.REG_FLOAT0;
+
+                // Put float literal into memory
+                String floatLabel = PutFloatInMem(((ConstSTO) valueSto).getFloatValue());
+
+                // Load float into valueReg
+                LoadValueFromLabel(floatLabel, valueReg);
+            }
+
+            // Not float
+            else {
+                // Set the value (integer) into valueReg
+                writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
+            }
+
+            StoreValueIntoSto(valueReg, destSto);
+        }
+        // Not a constant that isn't in memory, do the load/store method to assign
+        else {
+            // Load Address of destSto into %l0
+            LoadStoAddr(destSto, SparcInstr.REG_LOCAL0);
+
+            // Store value in valueSto into destSto, using appropriate type register
+            if(destSto.getType().isFloat())
+                StoreStoValueIntoAddr(valueSto, SparcInstr.REG_FLOAT0, SparcInstr.REG_LOCAL0);
+            else
+                StoreStoValueIntoAddr(valueSto, SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+        }
+
+        writeAssembly(SparcInstr.BLANK_LINE);
+    }
+
+    //-------------------------------------------------------------------------
+    //      DoArrayAssignExpr - Sets destSto = valueSto
+    //-------------------------------------------------------------------------
+    public void DoArrayAssignExpr(STO arraySto, STO destSto, STO valueSto)
     {
         writeComment("Assigning " + destSto.getName() + " = " + valueSto.getName());
 
@@ -1997,10 +2068,88 @@ public class AssemblyCodeGenerator {
     {
     	
     }
+
+
     
+        /*
+
+    //-------------------------------------------------------------------------
+    //      DoArrayInit
+    //-------------------------------------------------------------------------
+    public void DoArrayEleAssign(STO arraySto, STO indexSto);
+    {
+
+        String counterReg = SparcInstr.REG_LOCAL0;
+        String sizeReg = SparcInstr.REG_LOCAL1;
+        String whileLabel = "." + arraySto.getName() + "while";
+
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, SparcInstr.REG_GLOBAL0, counterReg, "init loop counter to 0");
+        LoadStoValue(indexSto, sizeReg);        // Init counter to array size
+        
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, whileLabel);
+        increaseIndent();
+
+        // Compare loop counter to size
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, counterReg, sizeReg, "Compare counter to size");
+
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, whileLabel);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        
+        // Set the base and offset for this reg 
+        String reg = SparcInstr.REG_LOCAL2;
+
+        LoadStoValue(indexSto, sizeReg);
+
+        // multiple the sizeReg by sizeof which is 4
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.SLL_OP, sizeReg, String.valueOf(2), sizeReg, "index * 4 -> scaled offset");
+
+        // put offset into %l1
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(arraySto.getOffset()), reg, "set offset into " + reg);
+
+        // add base, sizeReg, sizeReg
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sizeReg, reg, sizeReg, "base + offset");
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, arraySto.getBase(), sizeReg, sizeReg, "base + offset");
+
+        // offset reg now has address of the elemnt
+
+        LoadValueFromAddr(sizeReg, reg);
+
+        AllocateSto(resultSto);
+        StoreValueIntoSto(reg, resultSto);
+    }
+    */
+    
+    //-------------------------------------------------------------------------
+    //      GetArrayElementAddr - puts the address of an array element in the given register - uses %l7 as temp
+    //-------------------------------------------------------------------------
+    public void GetArrayElementAddr(STO arraySto, String addrReg)
+    {
+        writeComment("GETTING ADDRESS OF ELEMENT");
+        // addrReg contains the index to get address for
+        String tmpReg = SparcInstr.REG_LOCAL7;
+
+        // multiple the addrReg by sizeof which is 4
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.SLL_OP, addrReg, String.valueOf(2), addrReg, "index * 4 -> scaled offset");
+
+        // put offset into tmpReg
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(arraySto.getOffset()), tmpReg, "set offset into " + tmpReg);
+
+        // add base, addrReg, addrReg
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, addrReg, tmpReg, addrReg, "base + offset");
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, arraySto.getBase(), addrReg, addrReg, "base + offset");
+
+        // addrReg tmpReg now has address of the elemnt
+
+    }
+
+    //-------------------------------------------------------------------------
+    //      DoArrayAccess
+    //-------------------------------------------------------------------------
     public void DoArrayAccess(STO arraySto, STO indexSto, STO resultSto)
     {
 
+        writeCommentHeader("Accessing index " + ((ConstSTO) indexSto).getIntValue() + " of " + arraySto.getName());
         String offsetReg = SparcInstr.REG_LOCAL0;
         String reg = SparcInstr.REG_LOCAL1;
 
@@ -2018,7 +2167,7 @@ public class AssemblyCodeGenerator {
 
         // offset reg now has address of the elemnt
 
-        LoadValueFromAddr(offsetReg, reg);
+        LoadValueFromAddr(offsetReg, offsetReg);
 
         AllocateSto(resultSto);
         StoreValueIntoSto(reg, resultSto);
