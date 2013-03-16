@@ -559,11 +559,11 @@ public class AssemblyCodeGenerator {
                              writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
                              
                             for(int i = 0; i < varElements.size(); i++) {
-                                    writeCommentHeader("Initializing " + varSto.getName() + "[" + i + "]");
                                     ConstSTO value = null;
                                 if(varElements.elementAt(i).isConst()) {
                                     value = (ConstSTO) varElements.elementAt(i);
                                 }
+                                    writeCommentHeader("Initializing " + varSto.getName() + "[" + i + "] - " + value.getName() + " - " + value.getIntValue() );
                                 //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
 
                                 DoLiteral(value);
@@ -573,6 +573,7 @@ public class AssemblyCodeGenerator {
                                 // TODO NEED TO ACCOUNT FOR FLOATS
                                 GetArrayElementAddr(varSto, addrReg);
                                 StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
+                                stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
                                 writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
                             }
                         }
@@ -2136,9 +2137,9 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(arraySto.getOffset()), tmpReg, "set offset into " + tmpReg);
 
         // add base, addrReg, addrReg
-        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, addrReg, tmpReg, addrReg, "base + offset");
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, tmpReg,addrReg,  addrReg, "base + offset");
         writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, arraySto.getBase(), addrReg, addrReg, "base + offset");
-
+        writeComment("Bottom of GetArrayElementAddr");
         // addrReg tmpReg now has address of the elemnt
 
     }
@@ -2170,7 +2171,7 @@ public class AssemblyCodeGenerator {
         LoadValueFromAddr(offsetReg, offsetReg);
 
         AllocateSto(resultSto);
-        StoreValueIntoSto(reg, resultSto);
+        StoreValueIntoSto(offsetReg, resultSto);
     }
     
     
