@@ -21,6 +21,22 @@ abstract class STO
     //---------------------------------------------------------------------
     //      Constructors
     //---------------------------------------------------------------------
+
+    public STO(STO copySto)
+    {
+        setName(copySto.getName());
+        setType(copySto.getType());
+        setOffset("");
+        setBase("");
+        setIsAddressable(true);
+        setIsModifiable(true);
+        setIsGlobal(false);
+        setIsStatic(false);
+        setStaticInit(false);
+        setIsInMemory(false);
+        setIsReference(false);
+    }
+
     public STO(String strName, Type type, boolean isModLvalue)
     {
         this(strName, type);

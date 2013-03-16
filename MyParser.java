@@ -667,6 +667,7 @@ class MyParser extends parser
 
         // We know it's a function, do function call checks
         FuncPtrType funcType = (FuncPtrType) sto.getType();
+        
 
         if(DEBUG) {
             System.out.println("MyParser.DoFuncCall()");
@@ -724,6 +725,8 @@ class MyParser extends parser
                     continue;
                 }
             }
+
+
         }
 
         STO returnSto;

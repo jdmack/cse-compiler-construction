@@ -648,6 +648,7 @@ public class AssemblyCodeGenerator {
     {
         currentFunc.push(funcSto);
         stackPointer.push(0);
+        
 
         // !----Function: <funcName>----
         writeCommentHeader("Function: " + funcSto.getName());
@@ -701,8 +702,10 @@ public class AssemblyCodeGenerator {
 
         for(int i = 0; i < params.size(); i++) {
             ParamSTO paramSto = params.elementAt(i);
-            writeComment("parameter: " + paramSto.getName() + " is: " + paramSto.getClass().getName());
+            //writeComment("parameter: " + paramSto.getName() + " is: " + paramSto.getClass().getName());
+
             AllocateSto(paramSto);
+            StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
 
             // 1. [PASS] value param as value arg
             if(!paramSto.isPassByReference()) {
@@ -716,7 +719,6 @@ public class AssemblyCodeGenerator {
                 writeComment("[PASS] 2 - value param as reference arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
-            /*
             // 3. [PASS] reference param as value arg
             else if(!paramSto.isPassByReference()) {
                 blank();
@@ -754,7 +756,6 @@ public class AssemblyCodeGenerator {
                 writeComment("[PASS] 6 - local variable as reference arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
-            */
         }
 
 
@@ -841,8 +842,13 @@ public class AssemblyCodeGenerator {
         for(int i = 0; i < args.size(); i++) {
             STO argSto = args.elementAt(i);
             ParamSTO paramSto = params.elementAt(i);
+            
+            if(!argSto.isInMemory()) {
+                AllocateSto(argSto);
+            }
 
-            writeComment("paramSto:\tisReference:\t" + paramSto.isReference() + "\tisPassByRef:\t" + paramSto.isPassByReference());
+
+            //writeComment("paramSto:\tisReference:\t" + paramSto.isReference() + "\tisPassByRef:\t" + paramSto.isPassByReference());
 
             ///////// Load a value STO
             // LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);               // Load Value from stack location (that is in a sto)
@@ -857,6 +863,7 @@ public class AssemblyCodeGenerator {
 
 
             // 1. [PASS] value param as value arg
+            /*
             if(argSto.isParam() && !paramSto.isPassByReference()) {
                 blank();
                 writeComment("1. [PASS] value param as value arg");
@@ -868,9 +875,9 @@ public class AssemblyCodeGenerator {
                 blank();
                 writeComment("2. [PASS] value param as reference arg");
                 LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);               // Load the address from the sto into %o0
-                //paramSto.setIsReference(true);
             }
             // 3. [PASS] reference param as value arg
+            
             else if(argSto.isParam() && !((ParamSTO) argSto).isPassByReference() && paramSto.isPassByReference()) {
                 blank();
                 writeComment("3. [PASS] reference param as value arg");
@@ -883,21 +890,25 @@ public class AssemblyCodeGenerator {
                 writeComment("4. [PASS] reference param as reference arg");
                 LoadStoValue(argSto, SparcInstr.REG_LOCAL0);                    // loads the value (which is an address) from the Sto
                 LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);      // loads the value stored address contained in %l0 into %o0
-                //paramSto.setIsReference(true);
             }
-            // 7. [PASS] global variable as value arg
-            else if(argSto.isGlobal() && !paramSto.isPassByReference()) {
+            */
+
+            if(argSto.isGlobal()) {
                 blank();
-                writeComment("7. [PASS] global variable as value arg");
-                LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);
+
+                // 7. [PASS] global variable as value arg
+                if(!paramSto.isPassByReference()) {
+                    writeComment("7. [PASS] global variable as value arg");
+                    LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);
+                }
+                // 8. [PASS] global variable as reference arg
+                else {
+                    writeComment("8. [PASS] global variable as reference arg");
+                    LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
+
+                }
             }
-            // 8. [PASS] global variable as reference arg
-            else if(argSto.isGlobal() && paramSto.isPassByReference()) {
-                blank();
-                writeComment("8. [PASS] global variable as reference arg");
-                LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
-                //paramSto.setIsReference(true);
-            }
+
             // 5. [PASS] local variable as value arg
             else if(!paramSto.isPassByReference()) {
                 blank();
@@ -906,13 +917,11 @@ public class AssemblyCodeGenerator {
             }
 
             // 6. [PASS] local variable as reference arg
-            //else(!paramSto.isPassByReference()) {
             else {
-                blank();
                 writeComment("6. [PASS] local variable as reference arg");
                 LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
-                //paramSto.setIsReference(true);
             }
+
         }
 
         //////////////////////////////////////////////////////////////////////////////// 
@@ -1295,6 +1304,10 @@ public class AssemblyCodeGenerator {
 
         // LOAD VALUE AT ADDRESS INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Value of " + sto.getName() + " now in " + reg);
+        
+        if(sto.isReference()) {
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "");
+        }
 
         if(isFloatReg(reg) && sto.getType().isInt()) {
             writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, reg,reg, "Promoting int to float");
@@ -1333,13 +1346,13 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      LoadValueFromLabel - Loads a value into a register via a label
+    //      LoadValueFromLabel - Loads a value into a register via a label - usees %l7 as tmp
     //-------------------------------------------------------------------------
     public void LoadValueFromLabel(String label, String reg)
     {
         // Set label to %l0, then load value from the label as an address into reg
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, label, reg, "Put label " + label + " address into " + reg);
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "Load value from address in  " + reg + " into " + reg);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, label, SparcInstr.REG_LOCAL7, "Put label " + label + " address into " + SparcInstr.REG_LOCAL7);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value from address in  " + reg + " into " + reg);
     }
 
     //-------------------------------------------------------------------------
@@ -1467,6 +1480,7 @@ public class AssemblyCodeGenerator {
 
             // set label, %l0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, floatAddr, SparcInstr.REG_LOCAL0);
+            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, floatAddr, SparcInstr.REG_LOCAL0);
 
             // ld [%l0], %f0
             writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_FLOAT0);

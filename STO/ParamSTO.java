@@ -18,11 +18,6 @@ class ParamSTO extends STO
         setPassByReference(passByRef);
     }
 
-/*    public ParamSTO(String strName)
-    {
-        super(strName);
-    }*/
-
     //---------------------------------------------------------------------
     //      Methods
     //---------------------------------------------------------------------
@@ -35,12 +30,11 @@ class ParamSTO extends STO
     private void setPassByReference(boolean passByRef)
     {
         m_passByReference = passByRef;
-        setIsReference(passByRef);
     }
 
     public boolean isReference()
     {
-        return super.isReference();
+        return isPassByReference();
     }
 
     public void setIsReference(boolean ref)
@@ -52,4 +46,6 @@ class ParamSTO extends STO
     {
         return true;
     }
+
+
 }
