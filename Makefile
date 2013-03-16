@@ -70,7 +70,6 @@ turnin:
 	rmdir STO 
 	rmdir Type 
 	mv .git ../ 
-	rm info.txt 
 	rm Makefile
 	mv Makefile.orig Makefile
 	make new 
