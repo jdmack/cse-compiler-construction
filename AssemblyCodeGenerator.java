@@ -659,7 +659,7 @@ public class AssemblyCodeGenerator {
 
         for(int i = 0; i < params.size(); i++) {
             ParamSTO paramSto = params.elementAt(i);
-                
+            writeComment("parameter: " + paramSto.getName() + " is: paramSto.getClass().getName()");
             AllocateSto(paramSto);
 
             // 1. [PASS] value param as value arg
