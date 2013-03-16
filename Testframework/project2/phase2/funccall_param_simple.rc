@@ -1,47 +1,54 @@
 int x7 = 7;
 int x8 = 8;
-/*
 
 ////////////////////////////////////////////////////////////////////////////////
 // 1. value param as value arg
 ////////////////////////////////////////////////////////////////////////////////
-function: int foo1_1(int x) {
-    cout << "foo1_1: received: " << x << endl;
-    return x;    
-}
-
 function: int foo1_2(int x) {
     cout << "foo1_2: received: " << x << endl;
+    x = x * 2;
     return x;    
 
 }
+
+function: int foo1_1(int x) {
+    cout << "foo1_1: received: " << x << endl;
+    x = x + 1;
+    foo1_2(x);
+    return x;    
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // 2. value param as reference param
 ////////////////////////////////////////////////////////////////////////////////
-function: int foo2_1(int x) {
-    cout << "foo2_1: received: " << x << endl;
-
+function: int foo2_2(int & x) {
+    cout << "foo2_2: received: " << x << endl;
+    x = x * 2;
     return x;    
 }
 
-function: int foo2_2(int & x) {
-    cout << "foo2_2: received: " << x << endl;
+function: int foo2_1(int x) {
+    cout << "foo2_1: received: " << x << endl;
+    x = x * 2;
+    foo1_2(x);
     return x;    
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // 3. reference param as value arg
 ////////////////////////////////////////////////////////////////////////////////
-function: int foo3_1(int & x) {
-    cout << "foo3_1: received: " << x << endl;
+function: int foo3_2(int x) {
+    cout << "foo3_2: received: " << x << endl;
+    x = x * 2;
     return x;    
 
 }
 
-function: int foo3_2(int x) {
-    cout << "foo3_2: received: " << x << endl;
+function: int foo3_1(int & x) {
+    cout << "foo3_1: received: " << x << endl;
+    x = x * 2;
+    foo3_2(x);
     return x;    
 
 }
@@ -49,18 +56,18 @@ function: int foo3_2(int x) {
 ////////////////////////////////////////////////////////////////////////////////
 // 4. reference param as reference arg
 ////////////////////////////////////////////////////////////////////////////////
+function: int foo4_2(int & x) {
+    cout << "foo4_2: received: " << x << endl;
+
+    return x;    
+}
+
 function: int foo4_1(int & x) {
     cout << "foo4_1: received: " << x << endl;
     return x;    
 
 }
 
-function: int foo4_2(int & x) {
-    cout << "foo4_2: received: " << x << endl;
-
-    return x;    
-}
-*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // 5. local variable as value arg
@@ -80,6 +87,7 @@ function: int foo6(int & x) {
     return x;    
 
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 // 7. global variable as value arg
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,28 +109,30 @@ function: int foo8(int & x) {
 
 function: void main() {
 
-    //int x1 = 1;
-    //int x2 = 2;
-    //int x3 = 3;
-    //int x4 = 4;
+    int x1 = 1;
+    int x2 = 2;
+    int x3 = 3;
+    int x4 = 4;
     int x5 = 5;
     int x6 = 6;
-    cout << "x5 after call: should be  5: " << x5 << endl;
-    cout << "x6 after call: should be 12: " << x6 << endl;
 
-    //foo1_1(x1);   
-    //foo2_1(x2);
+    foo1_1(x1);   
+    foo2_1(x2);
     //foo3_1(x3);
-    //foo4_1(x4);
+    foo4_1(x4);
     foo5(x5);
     foo6(x6);
-//jh    foo7(x7);
-//    foo8(x8);
+    foo7(x7);
+    foo8(x8);
+
+    cout << "x1 after call: should be  1: " << x5 << endl;
+    cout << "x2 after call: should be  4: " << x6 << endl;
+    cout << "x3 after call: should be  3: " << x7 << endl;
+    cout << "x4 after call: should be 16: " << x8 << endl;
 
     cout << "x5 after call: should be  5: " << x5 << endl;
     cout << "x6 after call: should be 12: " << x6 << endl;
     cout << "x7 after call: should be  7: " << x7 << endl;
     cout << "x8 after call: should be 16: " << x8 << endl;
-
 
 }
