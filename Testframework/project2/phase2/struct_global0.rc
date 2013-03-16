@@ -1,0 +1,7 @@
+structdef REC {
+    float r;
+};
+
+function : void main() {
+    cout << REC.r << endl; 
+}
