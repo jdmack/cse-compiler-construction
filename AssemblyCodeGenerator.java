@@ -1986,6 +1986,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoBooleanOp1(BooleanOp op, STO operand)
     {
+        writeCommentHeader("DoBooleanOp1");
         String regOp = SparcInstr.REG_LOCAL1;
         String branchOp = "";  
         String returnReg = SparcInstr.REG_LOCAL3;
@@ -2019,6 +2020,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoBooleanOp2(BooleanOp op, STO operand, STO resultSto)
     {
+        writeCommentHeader("DoBooleanOp2");
         String regOp = SparcInstr.REG_LOCAL1;
         String branchOp = "";  
         String returnReg = SparcInstr.REG_LOCAL3;
