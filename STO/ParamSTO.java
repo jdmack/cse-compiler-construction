@@ -8,6 +8,7 @@ class ParamSTO extends STO
     //      Instance Variables
     //---------------------------------------------------------------------
     private boolean m_passByReference;
+    private STO m_valueSto;
 
     //---------------------------------------------------------------------
     //      Constructors
@@ -16,12 +17,8 @@ class ParamSTO extends STO
     {
         super(strName, type, true);
         setPassByReference(passByRef);
+        setValueSto(null);
     }
-
-/*    public ParamSTO(String strName)
-    {
-        super(strName);
-    }*/
 
     //---------------------------------------------------------------------
     //      Methods
@@ -52,4 +49,15 @@ class ParamSTO extends STO
     {
         return true;
     }
+
+    public STO getValueSto()
+    {
+        return m_valueSto;
+    }
+
+    private void setValueSto(STO value)
+    {
+        m_valueSto = value;
+    }
+
 }
