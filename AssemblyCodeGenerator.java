@@ -165,6 +165,11 @@ public class AssemblyCodeGenerator {
         return stackPointer.peek().toString();
     }
 
+    public void blank()
+    {
+        writeAssembly(SparcInstr.BLANK_LINE);
+    }
+
     //-------------------------------------------------------------------------
     //
     //      Code Generation Functions
@@ -652,10 +657,10 @@ public class AssemblyCodeGenerator {
         Vector<ParamSTO> params = ((FuncPtrType) funcSto.getType()).getParameters();
 
         //if(DEBUG) {
-            writeComment("AssemblyCodeGenerator.DoFuncStart()");
-            writeComment("Function: " + funcSto.getName());
-            writeComment("numOfParams: " + ((FuncPtrType) funcSto.getType()).getNumOfParams());
-            writeComment("getParameters.size(): " + params.size());
+            //writeComment("AssemblyCodeGenerator.DoFuncStart()");
+            //writeComment("Function: " + funcSto.getName());
+            //writeComment("numOfParams: " + ((FuncPtrType) funcSto.getType()).getNumOfParams());
+            //writeComment("getParameters.size(): " + params.size());
         //}
 
         for(int i = 0; i < params.size(); i++) {
@@ -665,52 +670,55 @@ public class AssemblyCodeGenerator {
 
             // 1. [PASS] value param as value arg
             if(!paramSto.isPassByReference()) {
+                blank();
+                writeComment("[PASS] 1 - value param as value arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
             // 2. [PASS] value param as reference arg
             else if(paramSto.isPassByReference()) {
+                blank();
+                writeComment("[PASS] 2 - value param as reference arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
+            /*
             // 3. [PASS] reference param as value arg
             else if(!paramSto.isPassByReference()) {
+                blank();
+                writeComment("[PASS] 3 - reference param as value arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
             // 4. [PASS] reference param as reference arg
             else if(paramSto.isPassByReference()) {
+                blank();
+                writeComment("[PASS] 4 - reference param as reference arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
             // 7. [PASS] global variable as value arg
             else if(!paramSto.isPassByReference()) {
+                blank();
+                writeComment("[PASS] 7 - global variable as value arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
             // 8. [PASS] global variable as reference arg
             else if(paramSto.isPassByReference()) {
+                blank();
+                writeComment("[PASS] 8 - global variable as reference arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
             // 5. [PASS] local variable as value arg
             else if(!paramSto.isPassByReference()) {
+                blank();
+                writeComment("[PASS] 5 - local variable as value arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
 
             // 6. [PASS] local variable as reference arg
             else if(!paramSto.isPassByReference()) {
+                blank();
+                writeComment("[PASS] 6 - local variable as reference arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
-
-
-
-    
-            // 1. [PASS] value param as value arg         - put in out register (ex. %o0)
-            // 2. [PASS] value param as reference param     - store in param location (ex. %fp + 68)
-            // 3. [PASS] reference param as value arg       - load from address into out register (ex. %o0)
-            // 4. [PASS] reference param as reference arg - put address in register (ex. %o0)
-            // 6. [PASS] local variable as reference arg    - load address of location (ex. %fp - 4) into register (ex. %o0) 
-            // 7. [PASS] global variable as value arg       - load value from it's location (ex. %g0 + local)
-            // 8. [PASS] global variable as reference arg - load address of location into register (ex. %o0)
-
-            //AllocateSto(thisParam);
-            //thisParam.store(SparcInstr.PARAM_REGS[i], String.valueOf(0));
-            //LoadStoValue(thisParam, SparcInstr.PARAM_REGS[i]);
+            */
         }
 
 
@@ -798,7 +806,7 @@ public class AssemblyCodeGenerator {
             STO argSto = args.elementAt(i);
             ParamSTO paramSto = params.elementAt(i);
 
-
+            writeComment("paramSto:\tisReference:\t" + paramSto.isReference() + "\tisPassByRef:\t" + paramSto.isPassByReference());
 
             ///////// Load a value STO
             // LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);               // Load Value from stack location (that is in a sto)
@@ -814,43 +822,60 @@ public class AssemblyCodeGenerator {
 
             // 1. [PASS] value param as value arg
             if(argSto.isParam() && !paramSto.isPassByReference()) {
+                blank();
+                writeComment("1. [PASS] value param as value arg");
                 LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);
                 
             }
             // 2. [PASS] value param as reference arg
             else if(argSto.isParam() && paramSto.isPassByReference()) {
+                blank();
+                writeComment("2. [PASS] value param as reference arg");
                 LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);               // Load the address from the sto into %o0
-                paramSto.setIsReference(true);
+                //paramSto.setIsReference(true);
             }
             // 3. [PASS] reference param as value arg
             else if(argSto.isParam() && !((ParamSTO) argSto).isPassByReference() && paramSto.isPassByReference()) {
+                blank();
+                writeComment("3. [PASS] reference param as value arg");
                 LoadStoValue(argSto, SparcInstr.REG_LOCAL0);                    // loads the value (which is an address) from the Sto
                 LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);       // loads the value stored address contained in %l0 into %o0
             }
             // 4. [PASS] reference param as reference arg
             else if(argSto.isParam() && ((ParamSTO) argSto).isPassByReference() && paramSto.isPassByReference()) {
+                blank();
+                writeComment("4. [PASS] reference param as reference arg");
                 LoadStoValue(argSto, SparcInstr.REG_LOCAL0);                    // loads the value (which is an address) from the Sto
                 LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);      // loads the value stored address contained in %l0 into %o0
-                paramSto.setIsReference(true);
+                //paramSto.setIsReference(true);
             }
             // 7. [PASS] global variable as value arg
             else if(argSto.isGlobal() && !paramSto.isPassByReference()) {
+                blank();
+                writeComment("7. [PASS] global variable as value arg");
                 LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);
             }
             // 8. [PASS] global variable as reference arg
             else if(argSto.isGlobal() && paramSto.isPassByReference()) {
+                blank();
+                writeComment("8. [PASS] global variable as reference arg");
                 LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
-                paramSto.setIsReference(true);
+                //paramSto.setIsReference(true);
             }
             // 5. [PASS] local variable as value arg
             else if(!paramSto.isPassByReference()) {
+                blank();
+                writeComment("5. [PASS] local variable as value arg");
                 LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);    
             }
 
             // 6. [PASS] local variable as reference arg
-            else if(!paramSto.isPassByReference()) {
+            //else(!paramSto.isPassByReference()) {
+            else {
+                blank();
+                writeComment("6. [PASS] local variable as reference arg");
                 LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
-                paramSto.setIsReference(true);
+                //paramSto.setIsReference(true);
             }
         }
 
@@ -1198,16 +1223,17 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void LoadStoValue(STO sto, String reg)
     {
-        writeComment("Load " + sto.getName() + " into " + reg);
+        //writeComment("Load " + sto.getName() + " into " + reg);
         // PUT ADDRESS OF STO INTO tmpReg
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), SparcInstr.REG_LOCAL7, "Put the offset/name of " + sto.getName() + " into " + SparcInstr.REG_LOCAL7);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), SparcInstr.REG_LOCAL7, "Loading " + sto.getName() + "<value> into register " + reg);
 
-        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), SparcInstr.REG_LOCAL7, SparcInstr.REG_LOCAL7, "Add offset/name to base reg " + SparcInstr.REG_LOCAL7);
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), SparcInstr.REG_LOCAL7, SparcInstr.REG_LOCAL7, "");
 
         // LOAD VALUE AT ADDRESS INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Load value of " + sto.getName() + " into " + reg);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Value of " + sto.getName() + " now in " + reg);
+
         if(isFloatReg(reg) && sto.getType().isInt()) {
-            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, reg,reg, "Promoting");
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.FITOS_OP, reg,reg, "Promoting int to float");
             // System.out.println("[DEBUG] FITOSing in LoadSto");
         }
     }
