@@ -265,7 +265,10 @@ class MyParser extends parser
                 if(!ERROR) m_codegen.DoVarDecl(stoVar);
 
                 if(!value.isNull()) {
-                    DoAssignExpr(stoVar, value);
+                	if(!finalType.isArray()) {
+
+                		DoAssignExpr(stoVar, value);
+                	}
                 }
             }
 
@@ -472,6 +475,13 @@ class MyParser extends parser
             TypedefSTO sto = (TypedefSTO) m_symtab.accessLocal(id);
             sto.getType().setSize(size);
             ((StructType) sto.getType()).setFields(fieldList);
+            
+            if(!ERROR) {
+            	if(sto.isGlobal()) 
+            		m_codegen.DoGlobalDecl(sto, sto);
+            	else
+            		m_codegen.DoVarDecl(sto);
+            }
         }
         m_inStructdef = false;
     }
