@@ -20,6 +20,7 @@ public class AssemblyCodeGenerator {
     private Stack<String>       stackWhileLabel;
     private Stack<String>       stackBoolLabel;
     private Stack<StoPair>      globalInitStack;
+    private Stack<StoPair> 		localStaticInitStack;
     private Vector<StackRecord> stackValues;
     private HashMap<Float, String> storedFloats;
 
@@ -69,6 +70,7 @@ public class AssemblyCodeGenerator {
         stackWhileLabel = new Stack<String>();
         stackBoolLabel  = new Stack<String>();
         globalInitStack = new Stack<StoPair>();
+        localStaticInitStack = new Stack<StoPair>();
         stackValues     = new Vector<StackRecord>();
         storedFloats    = new HashMap<Float, String>();
     }
@@ -264,6 +266,41 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      DoLocalStaticDecl
+    //-------------------------------------------------------------------------
+    public void DoLocalStaticDecl(STO varSto, STO valueSto)
+    {
+        writeComment("Declare Global: " + varSto.getName());
+        
+        // .section ".bss"
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.BSS_SEC);
+
+        // .align 4
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, "4");
+
+        // <id>: .skip size of type of varSto
+        decreaseIndent();
+        writeAssembly(SparcInstr.GLOBAL_DEFINE, varSto.getName(), SparcInstr.SKIP_DIR, String.valueOf(varSto.getType().getSize()));
+        increaseIndent();
+
+        // set the base and offset to the sto
+        varSto.store(SparcInstr.REG_GLOBAL0, varSto.getName());
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        // If valueSto is Null, create a 0 sto for it (we're in bss, auto init to 0)
+        if(valueSto.isNull())
+            if(varSto.getType().isArray() && valueSto.isArrEle()) {
+                // this should never happen, non-inited arrays go to BuildType() 
+            }
+
+            valueSto = new ConstSTO("0", new IntType(), 0.0);
+        
+        // Push these for later to initialize when main() starts
+        localStaticInitStack.push(new StoPair(varSto, valueSto));
+
+        stackValues.addElement(new StackRecord("local static", varSto.getName(), varSto.load()));
+    }
+    //-------------------------------------------------------------------------
     //      DoGlobalDecl
     //-------------------------------------------------------------------------
     public void DoGlobalDecl(STO varSto, STO valueSto)
@@ -301,7 +338,28 @@ public class AssemblyCodeGenerator {
 
         stackValues.addElement(new StackRecord("global", varSto.getName(), varSto.load()));
     }
+    //-------------------------------------------------------------------------
+    //      MakeLocalStaticInitGuard
+    //-------------------------------------------------------------------------
+    public void MakeLocalStaticInitGuard(String label)
+    {	
+        // !----Create .init for local static init guard----
+        writeComment("Create .init for local static init guard");
 
+        // .section ".bss"
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.SECTION_DIR, SparcInstr.BSS_SEC);
+
+        // .align 4
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.ALIGN_DIR, String.valueOf(4));
+
+        // .init: .skip 4
+        decreaseIndent();
+        writeAssembly(SparcInstr.GLOBAL_DEFINE, label, SparcInstr.SKIP_DIR, String.valueOf(4));
+        writeAssembly(SparcInstr.GLOBAL_DEFINE, label+"_flag", SparcInstr.SKIP_DIR, String.valueOf(4));
+        increaseIndent();
+
+        writeAssembly(SparcInstr.BLANK_LINE);
+    }
     //-------------------------------------------------------------------------
     //      MakeGlobalInitGuard
     //-------------------------------------------------------------------------
@@ -323,7 +381,106 @@ public class AssemblyCodeGenerator {
 
         writeAssembly(SparcInstr.BLANK_LINE);
     }
+    //-------------------------------------------------------------------------
+    //      DoLocalStaticInit
+    //-------------------------------------------------------------------------
+    public void DoLocalStaticInit(String label)
+    {
+    	String flag = label+"_flag";
+        // !----Initialize Local statics----
+        writeCommentHeader("Initialize Local statics");
 
+        // Do Init Guard
+
+        writeComment("Check if init has been completed previously");
+        // set flag, %l0
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, flag, SparcInstr.REG_LOCAL0, "Set " + flag + " label into %l0");
+
+        // ld [%l0], %l1
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL0), SparcInstr.REG_LOCAL1, "Load " + flag +" value into %l1");
+
+        //  %l1, %g0
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL1, SparcInstr.REG_GLOBAL0, "Compare " + flag + " to 0");
+
+        // bne .init_done ! Global initialization guard
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BNE_OP, ".skipInit", "If init has been done, skip init");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        
+/*        // set 1, %l1 ! Branch delay slot
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL1, "Set .init to 1, indicating it has been done");
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0), "Store value into .init mem location");
+        writeAssembly(SparcInstr.BLANK_LINE);*/
+
+        // Perform Initializations
+
+        // Loop through all the initialization pairs on the stack
+        for(Enumeration<StoPair> e = globalInitStack.elements(); e.hasMoreElements(); ) {
+
+            StoPair stopair = e.nextElement();
+            STO varSto = stopair.getVarSto();
+            STO valueSto = stopair.getValueSto();
+
+            if(!valueSto.isNull()) {
+                if(valueSto.isConst() && ((ConstSTO) valueSto).getIntValue() == 0) {
+                    // Do nothing, auto initialized to 0 on bss
+
+                    // But if array, create an empty list of the right size
+                    if(varSto.getType().isArray()) {
+
+                        ArrayType arrayType = (ArrayType) varSto.getType();
+                        Vector<STO> arrayElements = arrayType.getElementList();
+
+                        // Initialize arrayElement Vector with empty varstos
+                        for(int i = 0; i < arrayType.getDimensionSize(); i++) {
+                            arrayElements.addElement(new VarSTO(varSto.getName() + "[" + i + "]", arrayType.getElementType())); 
+                        }
+                    }
+                }
+
+                // Initialize the value
+                else {
+
+                    writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
+
+                    // If array, then do array stuff yo
+                    if(varSto.getType().isArray()) {
+                        ArrayType arrayType = (ArrayType) varSto.getType();
+
+                        if(valueSto.isArrEle()) {
+                            // if it's array, do array ele init
+                            Vector<STO> varElements = arrayType.getElementList();
+                            Vector<STO> valueElements = ((ArrEleSTO)valueSto).getArrayElements();
+
+                            for(int i = 0; i < valueElements.size(); i++) {
+                                DoAssignExpr(varElements.elementAt(i), valueElements.elementAt(i));
+                            }
+                        }
+                        else {
+                            // I don't think this is possible
+                        }
+
+                    } 
+                    else {    
+                    	// do normal var init
+
+                    	DoAssignExpr(varSto, valueSto);
+
+                    }
+                }
+            }
+        }
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL1, "Set .init to 1, indicating it has been done");
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, flag, SparcInstr.REG_LOCAL0, "Set " + flag + " label into %l0");
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, SparcInstr.REG_LOCAL1, bracket(SparcInstr.REG_LOCAL0), "Store value into .init mem location");
+        writeAssembly(SparcInstr.BLANK_LINE);
+        
+        // .init_done:
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, ".skipInit");
+        writeAssembly(SparcInstr.BLANK_LINE);
+        increaseIndent();
+
+    }
     //-------------------------------------------------------------------------
     //      DoGlobalInit
     //-------------------------------------------------------------------------
