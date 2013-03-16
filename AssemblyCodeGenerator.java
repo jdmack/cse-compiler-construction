@@ -551,7 +551,7 @@ public class AssemblyCodeGenerator {
         		// Initialize the value
         		else {
 
-        			writeComment("Initializing: " + varSto.getName() + " = " + valueSto.getName());
+        			writeComment("Initializing: " + varSto.getType() + " " + valueSto.getName());
 
         			// If array, then do array stuff yo
         			if(varSto.getType().isArray()) {
@@ -597,7 +597,6 @@ public class AssemblyCodeGenerator {
         			} 
         			else if(varSto.isStructdef()) {
         				Vector<STO> fields = ((StructType)varSto.getType()).getFields();
-
         				String indexReg = SparcInstr.REG_LOCAL6;
         				String addrReg = SparcInstr.REG_LOCAL4; 
         				MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
