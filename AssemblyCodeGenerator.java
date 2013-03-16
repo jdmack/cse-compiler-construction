@@ -1081,21 +1081,18 @@ public class AssemblyCodeGenerator {
         	writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
 
         	for(int i = 0; i < varElements.size(); i++) {
-        		ConstSTO value = null;
-        		if(varElements.elementAt(i).isConst()) {
-        			value = (ConstSTO) varElements.elementAt(i);
-        		}
+        		ConstSTO value = (ConstSTO) varElements.elementAt(i);
         		writeCommentHeader("Initializing " + sto.getName() + "[" + i + "] - " + value.getName() + " - " + value.getIntValue() );
         		//writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
 
-        		DoLiteral(value);
+        		//DoLiteral(value);
 
         		MoveRegToReg(indexReg, addrReg);
 
         		// TODO NEED TO ACCOUNT FOR FLOATS
         		GetArrayElementAddr(sto, addrReg);
         		StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
-        		stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
+        		//stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
         		writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
         	}
         }
