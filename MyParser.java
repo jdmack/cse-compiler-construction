@@ -655,6 +655,7 @@ class MyParser extends parser
 
         // We know it's a function, do function call checks
         FuncPtrType funcType = (FuncPtrType) sto.getType();
+        
 
         if(DEBUG) {
             System.out.println("MyParser.DoFuncCall()");
@@ -675,6 +676,7 @@ class MyParser extends parser
         }
 
         // Now we check each arg individually, accepting one error per arg
+        m_symtab.openScope();
 
         boolean error_flag = false;
 
@@ -712,6 +714,10 @@ class MyParser extends parser
                     continue;
                 }
             }
+
+            if(!error_flag)
+                m_symtab.insert(thisParam);
+                thisParam.setValueSto(thisArg);
         }
 
         STO returnSto;
@@ -729,6 +735,8 @@ class MyParser extends parser
         }
 
         if(!ERROR) m_codegen.DoFuncCall(sto, args, returnSto);
+
+        m_symtab.closeScope();
 
         return returnSto;
     }
