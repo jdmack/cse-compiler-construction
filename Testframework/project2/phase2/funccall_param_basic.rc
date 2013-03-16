@@ -1,0 +1,12 @@
+
+function: void foo(int x) {
+    cout << "received: " << x << endl;
+}
+
+
+function: void main() {
+
+    int x = 1;
+    foo(x);
+
+}
