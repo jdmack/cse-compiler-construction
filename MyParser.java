@@ -472,7 +472,7 @@ class MyParser extends parser
                 sto.store(id, String.valueOf(size));
                // sto.setOffset(String.valueOf(size));
             }
-            
+
             // get TypedefSTO of StructType 
             TypedefSTO sto = (TypedefSTO) m_symtab.accessLocal(id);
             sto.getType().setSize(size);
