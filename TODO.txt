@@ -1,0 +1,6 @@
+Project 1
+=========
+
+TODO
+----
+- Remove all code related to char type
