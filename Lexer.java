@@ -736,7 +736,6 @@ class Lexer
 
         m_htKeywords.put("bool",        new Integer(sym.T_BOOL));
         m_htKeywords.put("break",       new Integer(sym.T_BREAK));
-        m_htKeywords.put("char",        new Integer(sym.T_CHAR));
         m_htKeywords.put("cin",         new Integer(sym.T_CIN));
         m_htKeywords.put("continue",    new Integer(sym.T_CONTINUE));
         m_htKeywords.put("cout",        new Integer(sym.T_COUT));
@@ -765,6 +764,8 @@ class Lexer
         m_htKeywords.put("void",        new Integer(sym.T_VOID));
         m_htKeywords.put("while",       new Integer(sym.T_WHILE));
         m_htKeywords.put("auto",        new Integer(sym.T_AUTO));
+        m_htKeywords.put("decltype",    new Integer(sym.T_DECLTYPE));
+        m_htKeywords.put("foreach",     new Integer(sym.T_FOREACH));
     }
 
     //----------------------------------------------------------------

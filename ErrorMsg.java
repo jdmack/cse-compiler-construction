@@ -158,6 +158,15 @@ class ErrorMsg
         "Array initialization expression is not a constant expression.";
 
 // Check 12 //
+    public static final String error12a_Foreach =
+      "Type of expression referenced in foreach is not of array type.";
+
+    public static final String error12v_Foreach =
+      "Foreach array element of type %T not assignable to value iteration variable %S, of type %T.";
+
+    public static final String error12r_Foreach =
+      "Foreach array element of type %T not equivalent to reference iteration variable %S, of type %T."
+
 // NOTE!  You don't need to use the formatter with this message
     public static final String error12_Break =
         "Break does not occur in a loop.";

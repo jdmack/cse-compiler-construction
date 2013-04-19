@@ -25,7 +25,6 @@ terminal
     T_BOOL,
     T_BREAK,
     T_CARET,
-    T_CHAR,
     T_CIN,
     T_COLON,
     T_COLONCOLON,
@@ -43,6 +42,7 @@ terminal
     T_FALSE,
     T_FLOAT,
     T_FOR,
+    T_FOREACH,
     T_FUNCPTR,
     T_FUNCTION,
     T_GT,
@@ -81,11 +81,11 @@ terminal
     T_TYPEDEF,
     T_WHILE,
     T_VOID,
-    T_AUTO
+    T_AUTO,
+    T_DECLTYPE
     ;
 
 terminal String
-    T_CHAR_LITERAL,
     T_FLOAT_LITERAL,
     T_INT_LITERAL,
     T_STR_LITERAL,
@@ -118,6 +118,7 @@ non terminal
     IfStmt,
     OptElse,
     ForStmt,
+    ForeachStmt,
     WhileStmt,
     BreakStmt,
     ContinueStmt,
@@ -134,7 +135,8 @@ non terminal
     OptModifierList,
     ModifierList,
     Modifier,
-    OptArrayDef
+    OptArrayDef,
+    IterationVarDecl
     ;
 
 non terminal ParamSTO    
@@ -176,6 +178,7 @@ non terminal Type
     SubType,
     Type,
     UndecoratedType,
+    DeclType,
     ReturnType
     ;
         
@@ -223,7 +226,10 @@ GlobalDecl ::=      ExternDecl
     |               FuncDef
     ;
 
-ExternDecl ::=      T_EXTERN Type:_2 IdList:_3 T_SEMI
+// TODO: This changed
+//ExternDecl ::= T_EXTERN Type IdList:_3 T_SEMI
+ExternDecl ::=      T_EXTERN UndecoratedType IdList:_3 T_SEMI
+
                     {:
                          ((MyParser) parser).DoExternDecl (_2, _3);
                     :}
@@ -299,7 +305,10 @@ FieldsList ::=      FieldList:_1
                     // IdList: Vector<String> of Ids
 
                     // _1: Type - could be null
-FieldList ::=       Type:_1 IdList:_2 T_SEMI
+
+// TODO: This changed
+//FieldList ::=       Type IdList T_SEMI
+FieldList ::=       UndecoratedType IdList T_SEMI
                     {:
                         RESULT = new Vector<STO>();
                         for(String id: (Vector<String>)_2) {
@@ -403,7 +412,13 @@ SubType ::=         QualIdent:_2
                     {:
                         RESULT = _1;
                     :}
+    |               DeclType
     ;
+
+// TODO: This is new
+DeclType ::=        T_DECLTYPE T_LPAREN Expr T_RPAREN
+     ;
+
 
 
 BasicType ::=       T_INT 
@@ -418,7 +433,6 @@ BasicType ::=       T_INT
                     {:
                         RESULT = new BoolType();
                     :}
-    |               T_CHAR
     ;
 
 
@@ -507,6 +521,7 @@ Stmt ::=            VarDecl
     |               IfStmt
     |               WhileStmt
     |               ForStmt
+    |               ForeachStmt
     |               BreakStmt
     |               ContinueStmt
     |               ExitStmt
@@ -560,12 +575,18 @@ OptRef ::=          T_AMPERSAND
     ;
 
 
-IdList ::=          T_ID:_1
+// TODO: This changed
+//IdList ::=          T_ID:_1
+IdList ::=          OptModifierList OptArrayDef T_ID:_1
+
                     {:
                         RESULT = new Vector<String> ();
                         RESULT.addElement (_1);
                     :}
-    |               IdList:_1 T_COMMA T_ID:_3
+// TODO: This changed
+//    |               IdList:_1 T_COMMA T_ID:_3
+    |               IdList:_1 T_COMMA OptModifierList OptArrayDef T_ID:_3
+
                     {:
                         RESULT = _1;
                         RESULT.addElement (_3);
@@ -691,8 +712,32 @@ WhileStmt ::=       T_WHILE
                     :}
     ;
 
+/**** Spring 2013: DO NOT IMPLEMENT THE FOR-LOOP */
 ForStmt ::=         T_FOR T_LPAREN OptExpr T_SEMI OptExpr T_SEMI OptExpr T_RPAREN CodeBlock
     ;
+/**** Spring 2013: DO NOT IMPLEMENT THE FOR-LOOP */
+
+
+// TODO: This is new
+IterationVarDecl ::= Type OptRef T_ID:_1
+                    {:
+                        RESULT = _1;
+                    :}
+    ;
+
+// TODO: This is new
+ForeachStmt ::=     T_FOREACH T_LPAREN IterationVarDecl:_1 T_COLON Expr T_RPAREN
+                    {:
+                        ((MyParser) parser).DoBlockOpen();
+                        ((MyParser) parser).DoIterationVarDecl (_1);
+                    :}
+                    CodeBlock
+                    {:
+                        ((MyParser) parser).DoBlockClose();
+                    :}
+    ;
+
+
 
 BreakStmt ::=       T_BREAK T_SEMI
                     {:
@@ -1083,10 +1128,6 @@ Designator3 ::=     T_LPAREN Expr:_2 T_RPAREN
     |               T_FLOAT_LITERAL:_1
                     {:
                         RESULT = ((MyParser) parser).DoLiteral(new ConstSTO (_1, new FloatType(), _1));
-                    :}
-    |               T_CHAR_LITERAL:_1
-                    {:
-                        RESULT = new ConstSTO (_1);
                     :}
     |               T_STR_LITERAL:_1
                     {:

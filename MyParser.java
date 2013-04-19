@@ -275,6 +275,22 @@ class MyParser extends parser
 
         }
     }
+
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
+    void DoIterationVarDecl(String id)
+    {
+        if (m_symtab.accessLocal(id) != null)
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
+        }
+
+        VarSTO sto = new VarSTO(id);
+        m_symtab.insert(sto);
+    }
+
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
