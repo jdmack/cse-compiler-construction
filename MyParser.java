@@ -28,12 +28,12 @@ class MyParser extends parser
     private SymbolTable  m_symtab;
 
     private boolean      m_inStructdef = false;
-    private String         m_structId;
+    private String       m_structId;
     private Scope        m_currentStructdef;
 
     private int          m_whileLevel;
     
-    private AssemblyCodeGenerator m_codegen;
+    // private AssemblyCodeGenerator m_codegen;
     private boolean ERROR = false;
 
     //----------------------------------------------------------------
@@ -47,7 +47,7 @@ class MyParser extends parser
         m_nNumErrors  = 0;
         m_whileLevel  = 0;
 
-        m_codegen = new AssemblyCodeGenerator(OUTPUT_FILENAME);
+        //m_codegen = new AssemblyCodeGenerator(OUTPUT_FILENAME);
     }
 
     //----------------------------------------------------------------
@@ -76,7 +76,6 @@ class MyParser extends parser
             case sym.T_STR_LITERAL:
             case sym.T_FLOAT_LITERAL:
             case sym.T_INT_LITERAL:
-            case sym.T_CHAR_LITERAL:
                 return (new Symbol(t.GetCode(), t.GetLexeme()));
             default:
                 return (new Symbol(t.GetCode()));
@@ -160,7 +159,7 @@ class MyParser extends parser
         // Opens the global scope.
         m_symtab.openScope();       // Open Global Scope
 
-        if(!ERROR) if(!ERROR) m_codegen.DoProgramStart(GetFile());
+        //if(!ERROR) if(!ERROR) m_codegen.DoProgramStart(GetFile());
     }
 
     //----------------------------------------------------------------
@@ -169,8 +168,8 @@ class MyParser extends parser
     void DoProgramEnd()
     {
         m_symtab.closeScope();      // Close Global Scope
-        if(!ERROR) m_codegen.DoProgramEnd();
-        if(!ERROR) m_codegen.dispose();
+        //if(!ERROR) m_codegen.DoProgramEnd();
+        //if(!ERROR) m_codegen.dispose();
     }
 
     //----------------------------------------------------------------
@@ -259,10 +258,10 @@ class MyParser extends parser
             stoVar = new VarSTO(id, finalType);
             m_symtab.insert(stoVar);
             if(stoVar.isGlobal()) {
-                if(!ERROR) m_codegen.DoGlobalDecl(stoVar, value);
+                //if(!ERROR) m_codegen.DoGlobalDecl(stoVar, value);
             }
             else {
-                if(!ERROR) m_codegen.DoVarDecl(stoVar);
+                //if(!ERROR) m_codegen.DoVarDecl(stoVar);
 
                 if(!value.isNull()) {
                 	if(!finalType.isArray()) {
@@ -287,6 +286,7 @@ class MyParser extends parser
             m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
         }
 
+        // TODO: Creating STO without type (that is, type = null which is bad)
         VarSTO sto = new VarSTO(id);
         m_symtab.insert(sto);
     }
@@ -391,8 +391,8 @@ class MyParser extends parser
 
             STO sto = new ConstSTO(id, type, ((ConstSTO)value).getValue());
             m_symtab.insert(sto);
-            if(!ERROR) m_codegen.DoVarDecl(sto);
-            if(!ERROR) m_codegen.DoAssignExpr(sto, value);
+            //if(!ERROR) m_codegen.DoVarDecl(sto);
+            //if(!ERROR) m_codegen.DoAssignExpr(sto, value);
         }
     }
 
@@ -494,12 +494,14 @@ class MyParser extends parser
             sto.getType().setSize(size);
             ((StructType) sto.getType()).setFields(fieldList);
             
+            /*
             if(!ERROR) {
             	if(sto.isGlobal()) 
             		m_codegen.DoGlobalDecl(sto, sto);
             	else
             		m_codegen.DoVarDecl(sto);
             }
+            */
         }
         m_inStructdef = false;
     }
@@ -567,7 +569,7 @@ class MyParser extends parser
 
         }
 
-        if(!ERROR) m_codegen.DoFuncFinish(stoFunc);
+        //if(!ERROR) m_codegen.DoFuncFinish(stoFunc);
 
         m_symtab.closeScope();
         m_symtab.setFunc(null);
@@ -605,7 +607,7 @@ class MyParser extends parser
                                                 // Need to add params to scope for function calls
         }
 
-        if(!ERROR) m_codegen.DoFuncStart(funcSto);
+        //if(!ERROR) m_codegen.DoFuncStart(funcSto);
     }
 
     //----------------------------------------------------------------
@@ -655,7 +657,7 @@ class MyParser extends parser
             return (new ErrorSTO("DoAssignExpr Error - bad types"));
         }
 
-        if(!ERROR) m_codegen.DoAssignExpr(stoDes, stoValue);
+        //if(!ERROR) m_codegen.DoAssignExpr(stoDes, stoValue);
 
         return stoDes;
     }
@@ -759,7 +761,7 @@ class MyParser extends parser
                 returnSto = new ExprSTO(sto.getName() + "Return", funcType.getReturnType());
         }
 
-        if(!ERROR) m_codegen.DoFuncCall(sto, args, returnSto);
+        //if(!ERROR) m_codegen.DoFuncCall(sto, args, returnSto);
 
         return returnSto;
     }
@@ -816,7 +818,7 @@ class MyParser extends parser
                 return new ErrorSTO("Struct Error - field not found in type");
             }
         }
-        if(!ERROR) m_codegen.DoStructAccess(sto, returnSTO);
+        //if(!ERROR) m_codegen.DoStructAccess(sto, returnSTO);
         return returnSTO;
     }
 
@@ -943,7 +945,7 @@ class MyParser extends parser
         	resultSto = new VarSTO(((PointerType)arraySto.getType()).getPointsToType().getName(),((PointerType)arraySto.getType()).getPointsToType());
         }
         //arraySto = m_symtab.access(arraySto.getName());
-        if(!ERROR) m_codegen.DoArrayAccess(arraySto, indexSto, resultSto);
+        //if(!ERROR) m_codegen.DoArrayAccess(arraySto, indexSto, resultSto);
 
         return resultSto;
     }
@@ -1038,6 +1040,7 @@ class MyParser extends parser
         }
 
         // And better to have all the codegen code at the end of the function
+        /*
         if(resultSTO.isConst()) {
             if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
@@ -1051,6 +1054,7 @@ class MyParser extends parser
                 }
             }
         }
+        */
 
         return resultSTO;
     }
@@ -1087,6 +1091,7 @@ class MyParser extends parser
         // And better to have all the codegen code at the end of the function
 
         // Do Operation assembly code
+        /*
         if(!ERROR) {
         // If operand is a constant, it was folded in it's OpClass, just allocate the result on stack
             if(resultSTO.isConst()) {
@@ -1101,6 +1106,7 @@ class MyParser extends parser
                 m_codegen.DoUnaryOp(op, operand, resultSTO);
             }
         }
+        */
         
         return resultSTO;
     }
@@ -1137,6 +1143,7 @@ class MyParser extends parser
         // And better to have all the codegen code at the end of the function
 
         // Do Boolean assembly code
+        /*
         if(!ERROR) {
         // If operand is a constant, it was folded in it's OpClass, just allocate the result on stack
             //if(resultSTO.isConst()) {
@@ -1149,6 +1156,7 @@ class MyParser extends parser
                 m_codegen.DoBooleanOp2(op, operand, resultSTO);
             }
         }
+        */
         
         return resultSTO;
     }
@@ -1160,7 +1168,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoWhileStart()
     {
-    	if(!ERROR) m_codegen.DoWhileStart();
+    	//if(!ERROR) m_codegen.DoWhileStart();
     }
 
     //----------------------------------------------------------------
@@ -1181,7 +1189,7 @@ class MyParser extends parser
             return (new ErrorSTO("DoWhile error"));
         }
         
-    	if(!ERROR) m_codegen.DoWhile(stoExpr);
+    	//if(!ERROR) m_codegen.DoWhile(stoExpr);
     	whileLevelUp();
         
         return stoExpr;
@@ -1192,7 +1200,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoWhileCodeBlock()
     {
-    	if(!ERROR) m_codegen.DoWhileCodeBlock();
+    	//if(!ERROR) m_codegen.DoWhileCodeBlock();
     }
     
     //----------------------------------------------------------------
@@ -1213,7 +1221,7 @@ class MyParser extends parser
             return (new ErrorSTO("DoIf error"));
         }
         //if(!ERROR) m_codegen.DoIf((ConstSTO) stoExpr);
-        if(!ERROR) m_codegen.DoIf(stoExpr);
+        //if(!ERROR) m_codegen.DoIf(stoExpr);
         return stoExpr;
     }
 
@@ -1246,7 +1254,7 @@ class MyParser extends parser
 
         ExprSTO returnSto = new ExprSTO(stoFunc.getName() + " Return", new VoidType());
 
-        if(!ERROR) m_codegen.DoReturn(stoFunc, returnSto); 
+        //if(!ERROR) m_codegen.DoReturn(stoFunc, returnSto); 
 
         return returnSto;
     }
@@ -1302,7 +1310,7 @@ class MyParser extends parser
             stoFunc.setHasReturnStatement(true);
         }
 
-        if(!ERROR) m_codegen.DoReturn(stoFunc, stoExpr); 
+        //if(!ERROR) m_codegen.DoReturn(stoFunc, stoExpr); 
 
         return stoExpr;
     }
@@ -1324,7 +1332,7 @@ class MyParser extends parser
             ERROR = true;
         }
 
-        if(!ERROR) m_codegen.DoExit(stoExpr);
+        //if(!ERROR) m_codegen.DoExit(stoExpr);
 
         return stoExpr;
     }
@@ -1341,7 +1349,7 @@ class MyParser extends parser
             ERROR = true;
         }
         
-        if(!ERROR) m_codegen.DoBreakStmt(m_whileLevel - 1);
+        //if(!ERROR) m_codegen.DoBreakStmt(m_whileLevel - 1);
     }
 
     //----------------------------------------------------------------
@@ -1356,7 +1364,7 @@ class MyParser extends parser
             ERROR = true;
         }
         
-        if(!ERROR) m_codegen.DoContinueStmt(m_whileLevel - 1);
+        //if(!ERROR) m_codegen.DoContinueStmt(m_whileLevel - 1);
     }
 
     void whileLevelUp()
@@ -1397,7 +1405,7 @@ class MyParser extends parser
         }
         
         constSTO = new ConstSTO("ConstInt", new IntType("int",4), (double)size);
-        if(!ERROR) m_codegen.DoLiteral(constSTO);
+        //if(!ERROR) m_codegen.DoLiteral(constSTO);
         return constSTO;
     }
 
@@ -1539,7 +1547,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoCout(STO exprSto) 
     {
-        if(!ERROR) m_codegen.DoCout(exprSto);
+        //if(!ERROR) m_codegen.DoCout(exprSto);
     }
     
     //----------------------------------------------------------------
@@ -1547,7 +1555,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     STO DoLiteral(ConstSTO sto) 
     {
-        if(!ERROR) m_codegen.DoLiteral(sto);
+        //if(!ERROR) m_codegen.DoLiteral(sto);
 
         return sto;
     }
@@ -1557,7 +1565,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoIfCodeBlock() 
     {
-        if(!ERROR) m_codegen.DoIfCodeBlock();
+        //if(!ERROR) m_codegen.DoIfCodeBlock();
     }
     
     //----------------------------------------------------------------
@@ -1577,7 +1585,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoCin(STO sto) 
     {
-    	if(!ERROR) m_codegen.DoCin(sto);
+    	//if(!ERROR) m_codegen.DoCin(sto);
     }
     
     //----------------------------------------------------------------
@@ -1585,6 +1593,6 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoIfElseCodeBlock() 
     {
-        if(!ERROR) m_codegen.DoIfElseCodeBlock();
+        //if(!ERROR) m_codegen.DoIfElseCodeBlock();
     }
 }
