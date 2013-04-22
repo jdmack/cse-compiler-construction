@@ -5,6 +5,8 @@ TODO
 ----
 - Remove all code related to char type
 - No for loop, check first whether need to remove for loop stuff
+- Verify Printing Types (page 3)
+- Hex/Octal Literals
 
 NEW
 ---
