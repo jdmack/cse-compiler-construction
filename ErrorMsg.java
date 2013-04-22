@@ -165,7 +165,7 @@ class ErrorMsg
       "Foreach array element of type %T not assignable to value iteration variable %S, of type %T.";
 
     public static final String error12r_Foreach =
-      "Foreach array element of type %T not equivalent to reference iteration variable %S, of type %T."
+      "Foreach array element of type %T not equivalent to reference iteration variable %S, of type %T.";
 
 // NOTE!  You don't need to use the formatter with this message
     public static final String error12_Break =
