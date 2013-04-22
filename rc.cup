@@ -228,7 +228,7 @@ GlobalDecl ::=      ExternDecl
 
 // TODO: This changed
 //ExternDecl ::= T_EXTERN Type IdList:_3 T_SEMI
-ExternDecl ::=      T_EXTERN UndecoratedType IdList:_3 T_SEMI
+ExternDecl ::=      T_EXTERN UndecoratedType:_2 IdList:_3 T_SEMI
 
                     {:
                          ((MyParser) parser).DoExternDecl (_2, _3);
@@ -308,7 +308,7 @@ FieldsList ::=      FieldList:_1
 
 // TODO: This changed
 //FieldList ::=       Type IdList T_SEMI
-FieldList ::=       UndecoratedType IdList T_SEMI
+FieldList ::=       UndecoratedType:_1 IdList:_2 T_SEMI
                     {:
                         RESULT = new Vector<STO>();
                         for(String id: (Vector<String>)_2) {
@@ -729,7 +729,7 @@ IterationVarDecl ::= Type OptRef T_ID:_1
 ForeachStmt ::=     T_FOREACH T_LPAREN IterationVarDecl:_1 T_COLON Expr T_RPAREN
                     {:
                         ((MyParser) parser).DoBlockOpen();
-                        ((MyParser) parser).DoIterationVarDecl (_1);
+                        ((MyParser) parser).DoIterationVarDecl ((String) _1);
                     :}
                     CodeBlock
                     {:
