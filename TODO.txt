@@ -7,6 +7,7 @@ TODO
 - No for loop, check first whether need to remove for loop stuff
 - Verify Printing Types (page 3)
 - Hex/Octal Literals
+- Hex/Octal Test Cases
 
 NEW
 ---
