@@ -12,6 +12,11 @@ class VarSTO extends STO
         super(copySto);
     }
 
+    public VarSTO(String strName)
+    {
+        this(strName, null);
+    }
+
     public VarSTO(String strName, Type type)
     {
         super(strName, type, true);
