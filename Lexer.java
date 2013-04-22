@@ -393,9 +393,6 @@ class Lexer
             if(token.GetCode() == sym.T_FLOAT_LITERAL) {
                 m_errors.print("float literal(mantissa) too long");
             }
-            else if(token.GetCode() == sym.T_CHAR_LITERAL) {
-                m_errors.print("character literal too long");
-            }
             else {
                 m_errors.print("integer literal too long");
             }
