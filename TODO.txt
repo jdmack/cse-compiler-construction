@@ -4,3 +4,8 @@ Project 1
 TODO
 ----
 - Remove all code related to char type
+- No for loop, check first whether need to remove for loop stuff
+
+NEW
+---
+- foreach loop
