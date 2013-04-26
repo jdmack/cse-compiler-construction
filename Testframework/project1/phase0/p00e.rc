@@ -1,0 +1,19 @@
+/* Literal Test */
+function: void main()
+{
+    int x;
+
+    x = 42;
+    x = 0x42;
+    x = 0X42;
+    x = 042;
+
+    x = -42;
+    x = 0xFFFFFD6; 
+    x = 037777777726;
+
+    x = -0x2A;
+    x = -052;
+
+
+}
