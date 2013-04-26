@@ -8,7 +8,11 @@ TODO
 - Verify Printing Types (page 3)
 - Hex/Octal Literals
 - Hex/Octal Test Cases
+- auto 
+- Array parameters, page 18
+- Update break/continue to include foreach loops
 
 NEW
 ---
-- foreach loop
+- Check #12a - foreach loop
+- Check #3C - decltype(Expr)
