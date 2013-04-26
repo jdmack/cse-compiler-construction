@@ -412,14 +412,15 @@ SubType ::=         QualIdent:_2
                     {:
                         RESULT = _1;
                     :}
-    |               DeclType
+    |               DeclType:_1
+                    {:
+                        RESULT = _1;
+                    :}
     ;
 
 // TODO: This is new
 DeclType ::=        T_DECLTYPE T_LPAREN Expr:_1 T_RPAREN
                     {:
-                        if(((STO)_1).getType() == null)
-                            System.out.println("Type is Null");
                         RESULT = ((STO)_1).getType();
                     :}
      ;
