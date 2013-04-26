@@ -1,0 +1,7 @@
+function : void main() {
+
+    auto x = 0x10;      // x is a variable of type int
+    decltype(x++) y;    // y is a variable of type int
+
+    y = 2.0;
+}
