@@ -57,7 +57,7 @@ class ConstSTO extends STO
 
             // Check for hex
             if(val.toLowerCase().startsWith("0x")) {
-                str = val.replace("0x", "");
+                str = val.toLowerCase().replace("0x", "");
                 base = 16;
                 //System.out.println("\tIt's hex");
             }
@@ -112,7 +112,7 @@ class ConstSTO extends STO
             }
             setValue(value);
 
-            //System.out.println("\t\t\tFinal Value: " + value);
+            //System.out.println("String value: " + val + "\tconverted value: " + getValue());
         }
 
     }
