@@ -1,0 +1,7 @@
+function: void main()
+{
+    int x = 0x10;
+    decltype(x++) y;
+
+    y = 2.0;
+}

@@ -416,10 +416,13 @@ SubType ::=         QualIdent:_2
     ;
 
 // TODO: This is new
-DeclType ::=        T_DECLTYPE T_LPAREN Expr T_RPAREN
+DeclType ::=        T_DECLTYPE T_LPAREN Expr:_1 T_RPAREN
+                    {:
+                        if(((STO)_1).getType() == null)
+                            System.out.println("Type is Null");
+                        RESULT = ((STO)_1).getType();
+                    :}
      ;
-
-
 
 BasicType ::=       T_INT 
                     {:
