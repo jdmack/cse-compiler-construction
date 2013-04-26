@@ -15,4 +15,13 @@ TODO
 NEW
 ---
 - Check #12a - foreach loop
+
+
+
+
+
+
+
+DONE
+----
 - Check #3C - decltype(Expr)
