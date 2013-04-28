@@ -32,13 +32,13 @@ class DecOp extends UnaryOp
 
         // Passed checks, determine result type
         if(operand.getType().isInt()) {
-            resultSTO = new ExprSTO("IncOp.checkOperand() Result", new IntType());
+            resultSTO = new ExprSTO(operand.getName() +"-- Result", new IntType());
         }
         else if(operand.getType().isFloat()) {
-            resultSTO = new ExprSTO("IncOp.checkOperand() Result", new FloatType());
+            resultSTO = new ExprSTO(operand.getName() +"-- Result", new FloatType());
         }
         else if(operand.getType().isPointer()) {
-            resultSTO = new ExprSTO("IncOp.checkOperand() Result", new PointerType());
+            resultSTO = new ExprSTO(operand.getName() +"-- Result", new PointerType());
         }
         else {
             return(new ErrorSTO("This will never happen, making compiler happy"));

@@ -28,7 +28,7 @@ class AndOp extends BooleanOp
         else
             value = new Double(0);
 
-        return new ConstSTO("AndOp.doOperation Result", resultType, value);
+        return new ConstSTO(operand1.getName() + "&&" + operand2.getName() + " Result", resultType, value);
     }
 
     public boolean isAndOp()

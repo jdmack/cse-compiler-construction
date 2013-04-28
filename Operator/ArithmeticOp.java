@@ -41,7 +41,7 @@ class ArithmeticOp extends BinaryOp
         }
 
         if(operand1.isConst() && operand2.isConst()) {
-            resultSTO = new ConstSTO("ArithmeticOp.checkOperands() Result", resultType);
+            resultSTO = new ConstSTO(operand1.getName() + "+-*/" + operand2.getName() + " Result", resultType);
         }
         else {
             resultSTO = new ExprSTO("ArithmeticOp.checkOperands() Result", resultType);

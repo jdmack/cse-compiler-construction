@@ -31,7 +31,7 @@ class ArrowOp extends UnaryOp
 
         /* Don't need to worry about constant folding because constant pointers WNBT */
 
-        resultSTO = new VarSTO("ArrowOp.checkOperands() Result", ((PointerType)operand.getType()).getPointsToType());
+        resultSTO = new VarSTO(operand1.getName() + "-> Result", ((PointerType)operand.getType()).getPointsToType());
 
         return resultSTO;
     }

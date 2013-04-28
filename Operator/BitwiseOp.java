@@ -30,10 +30,10 @@ class BitwiseOp extends BinaryOp
         }
 
         if(operand1.isConst() && operand2.isConst()) {
-            resultSTO = new ConstSTO("BitwiseOp.checkOperands() Result", new IntType());
+            resultSTO = new ConstSTO(operand1.getName() + "|" + operand2.getName() + " Result", new IntType());
         }
         else {
-            resultSTO = new ExprSTO("BitwiseOp.checkOperands() Result", new IntType());
+            resultSTO = new ExprSTO(operand1.getName() + "|" + operand2.getName() + " Result", new IntType());
         }
 
 

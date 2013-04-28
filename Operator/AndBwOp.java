@@ -20,7 +20,7 @@ class AndBwOp extends BitwiseOp
     {
         Double value = new Double(operand1.getIntValue() & operand2.getIntValue());
 
-        return new ConstSTO("AddBwOp.doOperation Result", resultType, value);
+        return new ConstSTO(operand1.getName() + "&" + operand2.getName() + " Result", resultType, value);
     }
 
 

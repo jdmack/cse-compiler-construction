@@ -27,7 +27,7 @@ class AddOp extends ArithmeticOp
             value = new Double(operand1.getFloatValue() + operand2.getFloatValue());
         }
 
-        return new ConstSTO("AddOp.doOperation Result", resultType, value);
+        return new ConstSTO(operand1.getName() + "+" + operand2.getName() + " Result", resultType, value);
     }
 
     public boolean isAddOp()
