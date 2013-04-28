@@ -331,10 +331,12 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
-    void DoExternDecl(Type type, Vector<String> lstIDs)
+    void DoExternDecl(Type type, Vector<IdValueTuple> lstIDs)
     {
         for(int i = 0; i < lstIDs.size(); i++) {
-            String id = lstIDs.elementAt(i);
+            String id = lstIDs.elementAt(i).getId();
+            Type pointerType = lstIDs.elementAt(i).getPointerType();
+            STO arrayIndex = lstIDs.elementAt(i).getArrayIndex();
 
             if(m_symtab.accessLocal(id) != null) {
                 m_nNumErrors++;
@@ -342,7 +344,8 @@ class MyParser extends parser
                 ERROR = true;
             }
 
-            VarSTO sto = new VarSTO(id, type);
+            Type newType = DoBuildType(type, pointerType, arrayIndex);
+            VarSTO sto = new VarSTO(id, newType);
             m_symtab.insert(sto);
         }
     }
