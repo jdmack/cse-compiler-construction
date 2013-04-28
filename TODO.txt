@@ -11,6 +11,7 @@ TODO
 - auto 
 - Array parameters, page 18
 - Update break/continue to include foreach loops
+- Verify Check 17 code in Equal and NEqual op
 
 NEW
 ---
