@@ -1,0 +1,6 @@
+function: void main() {
+    int[5]  y;
+    foreach(int x: y) {
+        x++;
+    }
+}

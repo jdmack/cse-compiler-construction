@@ -1,0 +1,9 @@
+Error, "project1/phase2/p12j.rc", line 7: 
+  Type of expression referenced in foreach is not of array type.
+Error, "project1/phase2/p12j.rc", line 8: 
+  Foreach array element of type int not assignable to value iteration variable x, of type bool.
+Error, "project1/phase2/p12j.rc", line 10: 
+  Foreach array element of type int not equivalent to reference iteration variable x, of type float.
+Error, "project1/phase2/p12j.rc", line 12: 
+  Foreach array element of type float* not assignable to value iteration variable x, of type float.
+Compile: failure.
