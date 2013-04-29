@@ -210,10 +210,16 @@ class MyParser extends parser
 
             VarSTO stoVar;
 
-            // Do Array checks if type = ArrayType
-            if(arrayIndex != null && type != null) {
+            if(ptrType != null) {
+                ((PointerType) ptrType).setBottomPtrType(finalType);
+                ((PointerType) ptrType).setInitialName();
+                finalType = ptrType;
+            }
+
+            // Do Array checks if finalType = ArrayType
+            if(arrayIndex != null && finalType != null) {
                 // Check 10
-                ArrayType arrType = DoArrayDecl(type, arrayIndex);
+                ArrayType arrType = DoArrayDecl(finalType, arrayIndex);
                 if (arrType != null) {
                     // Check 11b
                     if(value.isArrEle()) {
@@ -234,9 +240,9 @@ class MyParser extends parser
                                 break;
                             }
                             
-                            if (!thisElement.getType().isAssignable(type)) {
+                            if (!thisElement.getType().isAssignable(finalType)) {
                                 m_nNumErrors++;
-                                m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, thisElement.getType().getName(), type.getName()));
+                                m_errors.print(Formatter.toString(ErrorMsg.error3b_Assign, thisElement.getType().getName(), finalType.getName()));
                                 ERROR = true;
                                 break;
                             }
@@ -245,14 +251,8 @@ class MyParser extends parser
                         arrType.setElementList(elements);
                     }        
                 }
-                // Override type with new arrayType that encompasses the value stored in finalType
+                // Override finalType with new arrayType that encompasses the value stored in finalType
                 finalType = arrType;
-            }
-
-            if(ptrType != null) {
-                ((PointerType) ptrType).setBottomPtrType(finalType);
-                ((PointerType) ptrType).setInitialName();
-                finalType = ptrType;
             }
 
             stoVar = new VarSTO(id, finalType);
@@ -1403,15 +1403,15 @@ class MyParser extends parser
     {
         Type returnType = subType;
 
-        // Check if arrayIndex is null - this means it is not an array
-        if(arrayIndex != null) {
-            returnType = DoArrayDecl(subType, arrayIndex);
-        }
-    
         if(ptrType != null) {
             ((PointerType) ptrType).setBottomPtrType(returnType);
             ((PointerType) ptrType).setInitialName();
             returnType = ptrType;
+        }
+
+        // Check if arrayIndex is null - this means it is not an array
+        if(arrayIndex != null) {
+            returnType = DoArrayDecl(returnType, arrayIndex);
         }
             
         return returnType;
