@@ -158,6 +158,7 @@ class ErrorMsg
         "Array initialization expression is not a constant expression.";
 
 // Check 12 //
+// NOTE!  You don't need to use the formatter with this message
     public static final String error12a_Foreach =
       "Type of expression referenced in foreach is not of array type.";
 
