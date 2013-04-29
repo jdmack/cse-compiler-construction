@@ -31,7 +31,7 @@ class MyParser extends parser
     private String       m_structId;
     private Scope        m_currentStructdef;
 
-    private int          m_whileLevel;
+    private int          m_loopLevel;
     
     // private AssemblyCodeGenerator m_codegen;
     private boolean ERROR = false;
@@ -45,7 +45,7 @@ class MyParser extends parser
         m_symtab      = new SymbolTable();
         m_errors      = errors;
         m_nNumErrors  = 0;
-        m_whileLevel  = 0;
+        m_loopLevel   = 0;
 
         //m_codegen = new AssemblyCodeGenerator(OUTPUT_FILENAME);
     }
@@ -273,22 +273,6 @@ class MyParser extends parser
 
 
         }
-    }
-
-    //----------------------------------------------------------------
-    //
-    //----------------------------------------------------------------
-    void DoIterationVarDecl(String id)
-    {
-        if (m_symtab.accessLocal(id) != null)
-        {
-            m_nNumErrors++;
-            m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
-        }
-
-        // TODO: Creating STO without type (that is, type = null which is bad)
-        VarSTO sto = new VarSTO(id);
-        m_symtab.insert(sto);
     }
 
     //----------------------------------------------------------------
@@ -1193,7 +1177,7 @@ class MyParser extends parser
         }
         
     	//if(!ERROR) m_codegen.DoWhile(stoExpr);
-    	whileLevelUp();
+    	loopLevelUp();
         
         return stoExpr;
     }
@@ -1346,13 +1330,13 @@ class MyParser extends parser
     void DoBreakStmt()
     {
         // Check #12 - break statement in while loop
-        if(m_whileLevel <= 0) {
+        if(m_loopLevel <= 0) {
             m_nNumErrors++;
             m_errors.print(ErrorMsg.error12_Break);
             ERROR = true;
         }
         
-        //if(!ERROR) m_codegen.DoBreakStmt(m_whileLevel - 1);
+        //if(!ERROR) m_codegen.DoBreakStmt(m_loopLevel - 1);
     }
 
     //----------------------------------------------------------------
@@ -1361,23 +1345,23 @@ class MyParser extends parser
     void DoContinueStmt()
     {
         // Check #12 - continue statement in while loop
-        if(m_whileLevel <= 0) {
+        if(m_loopLevel <= 0) {
             m_nNumErrors++;
             m_errors.print(ErrorMsg.error12_Continue);
             ERROR = true;
         }
         
-        //if(!ERROR) m_codegen.DoContinueStmt(m_whileLevel - 1);
+        //if(!ERROR) m_codegen.DoContinueStmt(m_loopLevel - 1);
     }
 
-    void whileLevelUp()
+    void loopLevelUp()
     {
-        m_whileLevel++;
+        m_loopLevel++;
     }
 
-    void whileLevelDown()
+    void loopLevelDown()
     {
-        m_whileLevel--;
+        m_loopLevel--;
     }
     
     //----------------------------------------------------------------
@@ -1598,4 +1582,91 @@ class MyParser extends parser
     {
         //if(!ERROR) m_codegen.DoIfElseCodeBlock();
     }
+
+    //----------------------------------------------------------------
+    //
+    //----------------------------------------------------------------
+    STO DoIterationVarDecl(Type type, Boolean isRef, String id)
+    {
+        if (m_symtab.accessLocal(id) != null)
+        {
+            m_nNumErrors++;
+            m_errors.print(Formatter.toString(ErrorMsg.redeclared_id, id));
+        }
+
+        VarSTO sto = new VarSTO(id, type);
+
+        if(isRef) {
+            sto.setIsReference(true);
+        }
+
+        m_symtab.insert(sto);
+
+        return sto;
+    }
+
+
+    //----------------------------------------------------------------
+    //      DoForeachStart
+    //----------------------------------------------------------------
+    void DoForeachStart()
+    {
+    	//if(!ERROR) m_codegen.DoForeachStart();
+    }
+
+    //----------------------------------------------------------------
+    //      DoForeachExpr
+    //----------------------------------------------------------------
+    STO DoForeachExpr(STO iterationSto, STO exprSto)
+    {
+        // Check for previous errors in line and short circuit
+        if(exprSto.isError()) {
+            return exprSto;
+        }
+
+        // Check #12 - foreach loop - type of expr is not an array type
+        if(!exprSto.getType().isArray()) {
+            m_nNumErrors++;
+            m_errors.print(ErrorMsg.error12a_Foreach);
+            ERROR = true;
+            return (new ErrorSTO("DoForeach error"));
+        }
+
+        if(!iterationSto.isReference()) {
+
+            // Check #12 - foreach loop - iterationVar is value, expr not assignable
+            if(!((ArrayType) exprSto.getType()).getElementType().isAssignable(iterationSto.getType())) {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error12v_Foreach, ((ArrayType) exprSto.getType()).getElementType().getName(), iterationSto.getName(), iterationSto.getType().getName()));
+                ERROR = true;
+                return (new ErrorSTO("DoForeach error"));
+            }
+        }
+        else {
+
+            // Check #12 - foreach loop - iterationVar is ref, expr not equivalent
+            if(!((ArrayType) exprSto.getType()).getElementType().isEquivalent(iterationSto.getType())) {
+                m_nNumErrors++;
+                m_errors.print(Formatter.toString(ErrorMsg.error12r_Foreach, ((ArrayType) exprSto.getType()).getElementType().getName(), iterationSto.getName(), iterationSto.getType().getName()));
+                ERROR = true;
+                return (new ErrorSTO("DoForeach error"));
+            }
+        }
+        
+    	//if(!ERROR) m_codegen.DoForeach(exprSto);
+    	loopLevelUp();
+        
+        return exprSto;
+    }
+    
+    //----------------------------------------------------------------
+    //      DoForeachCodeBlock
+    //----------------------------------------------------------------
+    void DoForeachCodeBlock()
+    {
+    	//if(!ERROR) m_codegen.DoForeachCodeBlock();
+    }
+
+
+
 }
