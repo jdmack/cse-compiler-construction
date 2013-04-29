@@ -1,0 +1,21 @@
+/* Check 12 (p12f.rc) */
+
+function : int main() {
+    bool b;
+    bool c;
+    bool [3] d;
+    
+    foreach(bool x: d){
+        foreach(bool y: d){
+            b = false;
+            if(b && c) {
+                break;
+            }
+            continue;
+        }
+        break;
+    }
+    continue;
+    break;
+    return 0;
+}
