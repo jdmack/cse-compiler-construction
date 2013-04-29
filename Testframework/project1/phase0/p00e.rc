@@ -10,7 +10,7 @@ function: void main()
 
     x = -42;
     x = 0xFFFFFD6; 
-    x = 037777777726;
+    x = 03777777726;
 
     x = -0x2A;
     x = -052;
