@@ -1,3 +1,9 @@
+Project 2
+=========
+- Foreach loop, update ForStmt code
+
+
+
 Project 1
 =========
 
@@ -15,7 +21,6 @@ TODO
 
 NEW
 ---
-- Check #12a - foreach loop
 
 
 
@@ -25,4 +30,5 @@ NEW
 
 DONE
 ----
+- Check #12a - foreach loop
 - Check #3C - decltype(Expr)
