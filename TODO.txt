@@ -1,7 +1,7 @@
 Project 2
 =========
 - Foreach loop, update ForStmt code
-
+- Error with increment op, see test.rc line 77 in .s output
 
 
 Project 1

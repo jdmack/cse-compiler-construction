@@ -1,5 +1,0 @@
-function : int main() {
-    cout << "should print 15: " << 5 * 3 << endl;
-    cout << "should print 1: " << 5 / 3 << endl;
-    return 0;
-}
