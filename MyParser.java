@@ -264,10 +264,10 @@ class MyParser extends parser
                 if(!ERROR) m_codegen.DoVarDecl(stoVar);
 
                 if(!value.isNull()) {
-                	if(!finalType.isArray()) {
+                    if(!finalType.isArray()) {
 
-                		DoAssignExpr(stoVar, value);
-                	}
+                        DoAssignExpr(stoVar, value);
+                    }
                 }
             }
 
@@ -483,10 +483,10 @@ class MyParser extends parser
             
             /*
             if(!ERROR) {
-            	if(sto.isGlobal()) 
-            		m_codegen.DoGlobalDecl(sto, sto);
-            	else
-            		m_codegen.DoVarDecl(sto);
+                if(sto.isGlobal()) 
+                    m_codegen.DoGlobalDecl(sto, sto);
+                else
+                    m_codegen.DoVarDecl(sto);
             }
             */
         }
@@ -887,8 +887,8 @@ class MyParser extends parser
     {
         // arraySto: the identifier
         // indexSto: the expression inside the []
-    	STO resultSto = null;
-    	
+        STO resultSto = null;
+        
         if(arraySto.isError()) {
             return arraySto;
         }
@@ -925,11 +925,11 @@ class MyParser extends parser
         
         // Checks are complete, now we need to return a VarSTO with the type of the array elements - VarSTO because result of [] operation is a modLVal
         if(arraySto.getType().isArray()) {
-        	resultSto = new VarSTO(((ArrayType)arraySto.getType()).getElementType().getName(),((ArrayType)arraySto.getType()).getElementType());
+            resultSto = new VarSTO(((ArrayType)arraySto.getType()).getElementType().getName(),((ArrayType)arraySto.getType()).getElementType());
         } 
 
         else if (arraySto.getType().isPointer()){
-        	resultSto = new VarSTO(((PointerType)arraySto.getType()).getPointsToType().getName(),((PointerType)arraySto.getType()).getPointsToType());
+            resultSto = new VarSTO(((PointerType)arraySto.getType()).getPointsToType().getName(),((PointerType)arraySto.getType()).getPointsToType());
         }
         //arraySto = m_symtab.access(arraySto.getName());
         if(!ERROR) m_codegen.DoArrayAccess(arraySto, indexSto, resultSto);
@@ -1160,7 +1160,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoWhileStart()
     {
-    	if(!ERROR) m_codegen.DoWhileStart();
+        if(!ERROR) m_codegen.DoWhileStart();
     }
 
     //----------------------------------------------------------------
@@ -1181,8 +1181,8 @@ class MyParser extends parser
             return (new ErrorSTO("DoWhile error"));
         }
         
-    	if(!ERROR) m_codegen.DoWhile(stoExpr);
-    	loopLevelUp();
+        if(!ERROR) m_codegen.DoWhile(stoExpr);
+        loopLevelUp();
         
         return stoExpr;
     }
@@ -1192,7 +1192,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoWhileCodeBlock()
     {
-    	if(!ERROR) m_codegen.DoWhileCodeBlock();
+        if(!ERROR) m_codegen.DoWhileCodeBlock();
     }
     
     //----------------------------------------------------------------
@@ -1571,19 +1571,19 @@ class MyParser extends parser
     //----------------------------------------------------------------
     void DoPost(Operator op, boolean isPost) 
     {
-    	if (op.isIncOp()) {
-    		((IncOp)op).setPost(isPost);
-    	}
-    	else if(op.isDecOp()) {
-    		((DecOp)op).setPost(isPost);
-    	}
+        if (op.isIncOp()) {
+            ((IncOp)op).setPost(isPost);
+        }
+        else if(op.isDecOp()) {
+            ((DecOp)op).setPost(isPost);
+        }
     }
     //----------------------------------------------------------------
     //      DoCin
     //----------------------------------------------------------------
     void DoCin(STO sto) 
     {
-    	if(!ERROR) m_codegen.DoCin(sto);
+        if(!ERROR) m_codegen.DoCin(sto);
     }
     
     //----------------------------------------------------------------
@@ -1623,7 +1623,7 @@ class MyParser extends parser
     void DoForeachStart()
     {
         // TODO: Update For functions
-    	//if(!ERROR) m_codegen.DoForeachStart();
+        //if(!ERROR) m_codegen.DoForeachStart();
     }
 
     //----------------------------------------------------------------
@@ -1666,8 +1666,8 @@ class MyParser extends parser
         }
         
         // TODO: Update For functions
-    	//if(!ERROR) m_codegen.DoForeach(exprSto);
-    	loopLevelUp();
+        //if(!ERROR) m_codegen.DoForeach(exprSto);
+        loopLevelUp();
         
         return exprSto;
     }
@@ -1678,7 +1678,7 @@ class MyParser extends parser
     void DoForeachCodeBlock()
     {
         // TODO: Update For functions
-    	//if(!ERROR) m_codegen.DoForeachCodeBlock();
+        //if(!ERROR) m_codegen.DoForeachCodeBlock();
     }
 
 

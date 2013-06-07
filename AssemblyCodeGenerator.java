@@ -1088,36 +1088,6 @@ public class AssemblyCodeGenerator {
     {
         AllocateSto(sto);
         
-        // Array (TODO: In Phase 2)
-        if(sto.getType().isArray()){
-        	writeComment("Initializing Array: " + sto.getName());
-        	ArrayType arrayType = (ArrayType) sto.getType();
-        	// if it's array, do array ele init
-        	Vector<STO> varElements = arrayType.getElementList();
-        	//Vector<STO> valueElements = ((ArrEleSTO)valueSto).getArrayElements();
-
-        	String indexReg = SparcInstr.REG_LOCAL6;
-        	String addrReg = SparcInstr.REG_LOCAL4; 
-        	MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
-        	//writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), indexReg, "Use %l5 for incrementing counter by 1");
-        	writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
-
-        	for(int i = 0; i < varElements.size(); i++) {
-        		ConstSTO value = (ConstSTO) varElements.elementAt(i);
-        		writeCommentHeader("Initializing " + sto.getName() + "[" + i + "] - " + value.getName() + " - " + value.getIntValue() );
-        		//writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
-
-        		//DoLiteral(value);
-
-        		MoveRegToReg(indexReg, addrReg);
-
-        		// TODO NEED TO ACCOUNT FOR FLOATS
-        		GetArrayElementAddr(sto, addrReg);
-        		StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
-        		//stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
-        		writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
-        	}
-        }
         // Pointer (TODO: In Phase 3)
     }
 
@@ -1127,9 +1097,9 @@ public class AssemblyCodeGenerator {
     public void AllocateSto(STO sto)
     {
         String offset = getNextOffset(sto.getType().getSize());
+        writeComment("Allocating size: " + sto.getType().getSize());
         sto.store(SparcInstr.REG_FRAME, offset);
         stackValues.addElement(new StackRecord(currentFunc.peek().getName(), sto.getName(), sto.load()));
-        //System.out.println(sto.getName() + " allocated to: " + sto.load());
     }
 
     //-------------------------------------------------------------------------
