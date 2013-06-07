@@ -2239,6 +2239,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoBreakStmt(int level)
     {
+        writeCommentHeader("DoBreakStmt");
     	//System.out.println("Breaking on :" + level);
     	String jumpTo = ".while."+ level+".end";
         // write an Always branch to if else end for when the condition is true
