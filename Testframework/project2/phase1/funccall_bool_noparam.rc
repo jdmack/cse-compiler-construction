@@ -1,7 +1,7 @@
 bool y = false;
 
 int recurse = 5;
-int r = 11;
+int r = 12;
 
 function: bool foo5() {
     recurse = recurse - 1;
@@ -15,7 +15,7 @@ function: bool foo5() {
 }
 
 function: bool bar2() {
-    cout << "11. bar2() - returning true" << endl;
+    cout << "10. bar2() - returning true" << endl;
     return true;
 }
 
@@ -64,9 +64,9 @@ function: void main() {
     cout << " 8. foo4() -  received " << x4 << endl;
 
     bool b = bar1();
-    cout << "10. bar1() -  received " << b << endl;
+    cout << "11. bar1() -  received " << b << endl;
 
-    cout << "11. foo5() - recursive start" << endl;
+    cout << "12. foo5() - recursive start" << endl;
     bool x5 = foo5();
     cout << r = r + 1 << ". foo5() - recursive end - final value: " << x5 << endl;
 }
