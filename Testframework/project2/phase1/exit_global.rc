@@ -3,4 +3,6 @@ int x = 0;
 function: void main() {
     cout << "exit(0) as global" << endl;
     exit(x);
+
+    cout << "SHOULD NOT PRINT" << endl;
 }
