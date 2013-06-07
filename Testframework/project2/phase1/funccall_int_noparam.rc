@@ -1,17 +1,16 @@
 int y = 4;
 
 int recurse = 5;
-int r = 11;
+int r = 12;
 
 function: int foo5() {
     recurse = recurse - 1;
-    r = r + 1;
     if(recurse) {
         int rtn = foo5() + 1;
-        cout << r << ". foo5() - returning " << rtn << endl;
+        cout << r = r + 1 << ". foo5() - returning " << rtn << endl;
         return rtn;
     }
-    cout << r << ". foo5() - returning 1" << endl;
+    cout << r + 1 << ". foo5() - returning 1" << endl;
     return 1;
 }
 
@@ -66,11 +65,11 @@ function: void main() {
     cout << " 8. foo4() -  received " << x4 << endl;
 
     int b = bar1();
-    cout << "10. bar1() -  received " << b << endl;
+    cout << "11. bar1() -  received " << b << endl;
 
-    cout << "11. foo5() - recursive start" << endl;
+    cout << "12. foo5() - recursive start" << endl;
     int x5 = foo5();
-    cout << r << ". foo5() - recursive end - final value: " << x5 << endl;
+    cout << r = r + 1 << ". foo5() - recursive end - final value: " << x5 << endl;
 
 
 }
