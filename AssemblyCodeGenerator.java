@@ -2254,9 +2254,9 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      DoContinueStmt
     //-------------------------------------------------------------------------
-    public void DoContinueStmt(int level)
+    public void DoContinueStmt()
     {
-    	String jumpTo = ".while."+ level;
+    	String jumpTo = ".while."+ stackWhileLabel.peek();
         // write an Always branch to if else end for when the condition is true
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Jump to the corresponding while");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);

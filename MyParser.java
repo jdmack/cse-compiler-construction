@@ -1356,14 +1356,20 @@ class MyParser extends parser
             ERROR = true;
         }
         
-        if(!ERROR) m_codegen.DoContinueStmt(m_loopLevel - 1);
+        if(!ERROR) m_codegen.DoContinueStmt();
     }
 
+    //----------------------------------------------------------------
+    //      loopLevelUp
+    //----------------------------------------------------------------
     void loopLevelUp()
     {
         m_loopLevel++;
     }
 
+    //----------------------------------------------------------------
+    //      loopLevelDown
+    //----------------------------------------------------------------
     void loopLevelDown()
     {
         m_loopLevel--;
