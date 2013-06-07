@@ -1,5 +1,3 @@
-/*
-Project 2 test script doesn't work with this because it fails to compile
 function: void main() {
     
     const int c1 = 2;
@@ -7,4 +5,3 @@ function: void main() {
     int[10] x1;
     cout << (x1[c1 *23 - (c1 + c2)]);
 }
-*/
