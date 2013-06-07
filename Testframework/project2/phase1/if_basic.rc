@@ -1,11 +1,13 @@
 function : void main() {
+    cout << "basic if:        ";
     if(true) {
-        cout << "basic if works" << endl;
+        cout << "works" << endl;
     }
     if(false) {
         cout << "SHOULD NOT SEE THIS" << endl;
     }
 
+    cout << "nested if:       ";
     if(true) {
         if(true) {
             cout << "nested if works" << endl;
@@ -17,6 +19,7 @@ function : void main() {
         }
     }
 
+    cout << "literal if:      ";
     if(2 > 1) {
         cout << "literal if works" << endl;
     }
@@ -26,6 +29,7 @@ function : void main() {
 
     int x = 5;
 
+    cout << "greater than if: ";
     if(x > 4) {
         cout << "variable if works" << endl;
     }
