@@ -3,6 +3,8 @@
 if [[ -n $2 ]]; then
     if [[ $1 == "f" ]]; then
         tests=$2
+    elif [[ $1 == "1" ]]; then
+        tests="Testframework/project2/phase1/$2.rc"
     else
         tests=$(find Testframework/project2/$1 -name "*${2}*.rc" | sort -n)
     fi
