@@ -421,7 +421,15 @@ SubType ::=         QualIdent:_2
     ;
 
 // TODO: This is new
-DeclType ::=        T_DECLTYPE T_LPAREN Expr:_1 T_RPAREN
+DeclType ::=        T_DECLTYPE T_LPAREN 
+                    {:
+                        ((MyParser) parser).DeclTypeOn();
+                    :}
+                    Expr:_1 
+                    {:
+                        ((MyParser) parser).DeclTypeOff();
+                    :}
+                    T_RPAREN
                     {:
                         RESULT = ((STO)_1).getType();
                     :}
