@@ -2197,7 +2197,9 @@ public class AssemblyCodeGenerator {
     	stackWhileLabel.add(whileLabel);
     	
     	// write while label before logic check
+        decreaseIndent();
     	writeAssembly(SparcInstr.LABEL, whileLabel);
+        increaseIndent();
     	
     }
     
@@ -2231,7 +2233,9 @@ public class AssemblyCodeGenerator {
     	decreaseIndent();
     	// write while.end label
     	String label = stackWhileLabel.pop();
+        decreaseIndent();
     	writeAssembly(SparcInstr.LABEL, label+".end");
+        increaseIndent();
     }
     
     //-------------------------------------------------------------------------
