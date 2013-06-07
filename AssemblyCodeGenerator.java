@@ -788,19 +788,6 @@ public class AssemblyCodeGenerator {
             if(!argSto.isInMemory()) {
                 AllocateSto(argSto);
             }
-
-
-            //writeComment("paramSto:\tisReference:\t" + paramSto.isReference() + "\tisPassByRef:\t" + paramSto.isPassByReference());
-
-            ///////// Load a value STO
-            // LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);               // Load Value from stack location (that is in a sto)
-
-            ///////// Load a reference STO
-            // LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);                // Load the address from a Sto
-
-            ///////// Load a reference STO as a reference
-            // LoadStoAddr(argSto, SparcInstr.REG_LOCAL0);                 // loads the address of the reference into register
-            // LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i])        // loads the address stored in the address into register
                 
             // 1. [PASS] value param as value arg
             if(argSto.isParam() && !argSto.isReference() && !paramSto.isPassByReference()) {
@@ -828,7 +815,7 @@ public class AssemblyCodeGenerator {
             else if(argSto.isParam() && argSto.isReference() && !paramSto.isPassByReference()) {
                 blank();
                 writeComment("3. [PASS] reference param as value arg");
-                LoadStoValue(argSto, SparcInstr.REG_LOCAL0);                    // loads the value (which is an address) from the Sto
+                LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);                    // loads the value (which is an address) from the Sto
                 // No longer needed because LoadStoValue does an auto dereference
                 // LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);       // loads the value stored address contained in %l0 into %o0
             }
