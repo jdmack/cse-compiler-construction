@@ -1,9 +1,0 @@
-int x = 5;
-int y = 1;
-
-function : void main() {
-    cout << "Global" << endl;
-    cout << "x: should be     5  " << x << endl;
-    cout << "y: should be     1  " << y << endl;
-    cout << "x + y: should be 6  " << x+y << endl;
-}

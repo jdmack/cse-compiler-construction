@@ -1,7 +1,0 @@
-float x, y;
-function : void main() {
-    x = 94.25;
-    cout << "x: should be 94.25" << x;
-    y = (x + 1)/x;
-    cout << endl <<"(x + 1) / x: should be  1.01" << y;
-}

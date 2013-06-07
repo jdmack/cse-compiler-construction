@@ -1,9 +1,0 @@
-function: void main() {
-    int x = 2;
-    int y = x++;
-
-    cout << y;
-    //cout << x++;
-    //cout << "should print 2: " << x++ << endl;
-
-}

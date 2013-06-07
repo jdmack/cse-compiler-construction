@@ -1,8 +1,0 @@
-function : int main() {
-    cout << "test" << endl;
-    if(2 > 1) {
-        cout << "if works!" << endl;
-    }
-    cout << "after if statement" << endl;
-    return 0;
-}
