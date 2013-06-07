@@ -10,7 +10,7 @@ function: int foo5() {
         cout << r = r + 1 << ". foo5() - returning " << rtn << endl;
         return rtn;
     }
-    cout << r + 1 << ". foo5() - returning 1" << endl;
+    cout << r = r + 1 << ". foo5() - returning 1" << endl;
     return 1;
 }
 

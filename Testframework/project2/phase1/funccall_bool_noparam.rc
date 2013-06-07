@@ -5,13 +5,12 @@ int r = 11;
 
 function: bool foo5() {
     recurse = recurse - 1;
-    r = r + 1;
     if(recurse) {
         bool rtn = foo5();
-        cout << r << ". foo5() - returning " << rtn << endl;
+        cout << r = r + 1 << ". foo5() - returning " << rtn << endl;
         return rtn;
     }
-    cout << r << ". foo5() - returning true" << endl;
+    cout << r = r + 1 << ". foo5() - returning true" << endl;
     return true;
 }
 
@@ -69,5 +68,5 @@ function: void main() {
 
     cout << "11. foo5() - recursive start" << endl;
     bool x5 = foo5();
-    cout << r << ". foo5() - recursive end - final value: " << x5 << endl;
+    cout << r = r + 1 << ". foo5() - recursive end - final value: " << x5 << endl;
 }
