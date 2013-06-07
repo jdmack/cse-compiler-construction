@@ -1,6 +1,6 @@
 function: void main()
 {
-    auto x = 0x10;
+    int x = 16;
     decltype(x++) y;
 
     cout << "x (should be 16): " << x << endl;
