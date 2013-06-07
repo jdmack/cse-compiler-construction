@@ -1,7 +1,0 @@
-function: void main() {
-    bool a = true; 
-    bool b = true; 
-
-    cout << "a && b\t\t" << a << " && " << b << "\t\t" << a && b << "\t\ttrue" << endl;
-    cout << "a || b\t\t" << a << " || " << b << "\t\t" << a || b << "\t\ttrue" << endl;
-}

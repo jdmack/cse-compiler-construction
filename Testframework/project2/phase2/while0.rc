@@ -1,8 +1,0 @@
-function: int main() {
-    while(true) {
-        cout << "While. Should print once" << endl;
-        break;
-    }
-    cout << "After while loop" << endl; 
-    return 0;
-}

@@ -20,10 +20,10 @@ function : void main() {
     // Globals
     cout << endl << "Locals" << endl << "-----------------------" << endl;
     cout << "should print  5.00:  "<< +g << endl;
-    cout << "should print -5.00: "<< -g << endl;
+    cout << "should print -5.00: " << -g << endl;
 
     g = +g; 
-    cout << "should print  5.00:  "<< +g << endl;
+    cout << "should print  5.00:  " << +g << endl;
 
     g = -g; 
     cout << "should print -5.00: "<< g << endl;

@@ -34,6 +34,17 @@ function: void compareBool(bool x, bool y) {
     cout << endl;
 }
 
+function: void compareAssign(int x, int y) {
+    bool b;
+
+    cout << "b = " << x << " == " << y << ":\t" << (b = x == y) << "\tb:\t" << b << endl;
+    cout << "b = " << x << " != " << y << ":\t" << (b = x != y) << "\tb:\t" << b << endl;
+    cout << "b = " << x << " >= " << y << ":\t" << (b = x >= y) << "\tb:\t" << b << endl;
+    cout << "b = " << x << "  > " << y << ":\t" << (b = x  > y) << "\tb:\t" << b << endl;
+    cout << "b = " << x << " <= " << y << ":\t" << (b = x <= y) << "\tb:\t" << b << endl;
+    cout << "b = " << x << "  < " << y << ":\t" << (b = x  < y) << "\tb:\t" << b << endl;
+}
+
 int i3g = 3;
 int i7g = 7;
 float f3g = 3.0;
@@ -75,4 +86,12 @@ function: void main() {
     compareBool(bTl, bFc);
     compareBool(bTc, true);
     compareBool(false, false);
+
+    compareAssign(i3g, i3l);
+    compareAssign(i7c, 3);
+    compareAssign(10, 10);
+    compareAssign(i7l, i3g);
+
 }
+
+
