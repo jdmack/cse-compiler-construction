@@ -39,6 +39,7 @@ function: void main() {
         if(false) {
             cout << "DOES NOT WORK " << endl;
         } else {
+            cout << "works ";
             if(false) {
                 cout << "DOES NOT WORK " << endl;
             }

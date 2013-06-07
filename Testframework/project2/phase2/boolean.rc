@@ -20,38 +20,45 @@ function: void main() {
     bool b = false;
 
     // && locals
-    cout << "true && true:   should be true   " << a && a << endl;  // issue 562
-    cout << "true && false:  should be false  " << a && b << endl;  // issue 626
-    cout << "false && false: should be false  " << b && b << endl;  // issue 690
+    cout << "true  && true:  should be true   " << a && a << endl;  
+    cout << "true  && false: should be false  " << a && b << endl;  
+    cout << "false && false: should be false  " << b && b << endl;  
     cout << endl;
 
     // || locals
-    cout << "true  || true:  should be true   " << a || a << endl;  // issue 764
-    cout << "true  || false: should be true   " << a || b << endl;  // issue 828
-    cout << "false || false: should be false  " << b || b << endl;  // issue 892
+    cout << "true  || true:  should be true   " << a || a << endl;  
+    cout << "true  || false: should be true   " << a || b << endl;  
+    cout << "false || false: should be false  " << b || b << endl;  
     cout << endl;
 
     
     cout << "Short Circuits" << endl << "----------------" << endl;
 
     // short circuits
-    cout << "((a = 3 < 2) && (b = 3 > 2)): should be false  " << ((a = 3 < 2) && (b = 3 > 2)) << endl;  // issue 1050
+    a = true;
+    b = false;
+    cout << "((a = 3 < 2) && (b = 3 > 2)): should be false  " << ((a = 3 < 2) && (b = 3 > 2)) << endl;
     cout << "                           a: should be false  " << a << endl;
     cout << "                           b: should be false  " << b << endl;
     cout << endl;
 
-    cout << "((a = 3 > 2) && (b = 3 > 2)): should be true   " << ((a = 3 > 2) && (b = 3 > 2)) << endl;  // issue 1254
+    a = false;
+    b = false;
+    cout << "((a = 3 > 2) && (b = 3 > 2)): should be true  " << ((a = 3 > 2) && (b = 3 > 2)) << endl;
     cout << "                           a: should be true  " << a << endl;
     cout << "                           b: should be true  " << b << endl;
     cout << endl;
 
     a = false;
-    cout << "((a = 3 > 2) || (b = 3 < 2)): should be true  " << ((a = 3 > 2) || (b = 3 < 2)) << endl;   // issue 1470
+    b = true;
+    cout << "((a = 3 > 2) || (b = 3 < 2)): should be true  " << ((a = 3 > 2) || (b = 3 < 2)) << endl; 
     cout << "                           a: should be true  " << a << endl;
     cout << "                           b: should be true  " << b << endl;
     cout << endl;
 
-    cout << "((a = 3 < 2) || (b = 3 < 2)): should be false  " << ((a = 3 < 2) || (b = 3 < 2)) << endl;  // issue 1674
+    a = true;
+    b = true;
+    cout << "((a = 3 < 2) || (b = 3 < 2)): should be false  " << ((a = 3 < 2) || (b = 3 < 2)) << endl;
     cout << "                           a: should be false  " << a << endl;
     cout << "                           b: should be false  " << b << endl;
     cout << endl;
