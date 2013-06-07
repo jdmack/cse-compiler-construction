@@ -1341,7 +1341,7 @@ class MyParser extends parser
             ERROR = true;
         }
         
-        if(!ERROR) m_codegen.DoBreakStmt(m_loopLevel - 1);
+        if(!ERROR) m_codegen.DoBreakStmt();
     }
 
     //----------------------------------------------------------------
