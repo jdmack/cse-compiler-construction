@@ -7,7 +7,7 @@ function: void main() {
     bool b4, b5;
 
     b1 = true;
-    cout << "b1: should be: true  " << b1 << endl;
+    cout << "b1: should be: true     " << b1 << endl;
 
     b2 = b1;
     b1 = false;
