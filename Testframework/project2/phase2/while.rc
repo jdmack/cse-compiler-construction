@@ -88,6 +88,6 @@ function: void main() {
         x++;
         y++;
     }
-    cout << "x: should be 1\t\t" << x == 1 << endl;
+    cout << "x: should be 1\t\t" << x << "\t" << x == 1 << endl;
 
 }
