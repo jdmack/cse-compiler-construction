@@ -1064,7 +1064,7 @@ public class AssemblyCodeGenerator {
                     LoadStoValue(returnSto, SparcInstr.REG_FLOAT0);
                 // return type is not float, store into %i0
                 else
-                    LoadStoForceValue(returnSto, SparcInstr.REG_SET_RETURN);
+                    LoadStoValue(returnSto, SparcInstr.REG_SET_RETURN);
             }
         }
 
