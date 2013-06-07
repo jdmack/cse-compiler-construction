@@ -13,11 +13,11 @@ function: void main() {
     f1 = 2.0;
     f5 = f4 = f2;
 
-    cout << "f1: should be: 2.00  " << f1 << endl;
-    cout << "f2: should be: 1.00  " << f2 << endl;
-    cout << "f3: should be: 0.00  " << f3 << endl;
-    cout << "f4: should be: 1.00  " << f4 << endl;
-    cout << "f5: should be: 1.00  " << f5 << endl;
+    cout << "f1: should be: 2.00    " << f1 << endl;
+    cout << "f2: should be: 1.00    " << f2 << endl;
+    cout << "f3: should be: 0.00    " << f3 << endl;
+    cout << "f4: should be: 1.00    " << f4 << endl;
+    cout << "f5: should be: 1.00    " << f5 << endl;
 
     const float x = 0;
     const float y = 1;
@@ -26,10 +26,10 @@ function: void main() {
 
     float z = y;
 
-    cout << "x: should be 0.00 " << x << endl;
-    cout << "y: should be 1.00 " << y << endl;
-    cout << "a: should be 1.00 " << a << endl;
-    cout << "b: should be 2.00 " << b << endl;
-    cout << "c: should be 5.00 " << c << endl;
-    cout << "z: should be 1.00 " << z << endl;
+    cout << " x: should be: 0.00    " << x << endl;
+    cout << " y: should be: 1.00    " << y << endl;
+    cout << " a: should be: 1.00    " << a << endl;
+    cout << " b: should be: 2.00    " << b << endl;
+    cout << " c: should be: 5.00    " << c << endl;
+    cout << " z: should be: 1.00    " << z << endl;
 }

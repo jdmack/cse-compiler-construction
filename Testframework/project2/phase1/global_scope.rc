@@ -3,6 +3,6 @@ int x = 1;
 function: void main() {
     int x = 2;
 
-    cout << "x: should be 2 " << x << endl;
-    cout << "::x: should be 1 " << ::x << endl;
+    cout << "  x: should be 2    " << x << endl;
+    cout << "::x: should be 1    " << ::x << endl;
 }
