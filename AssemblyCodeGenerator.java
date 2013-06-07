@@ -703,8 +703,33 @@ public class AssemblyCodeGenerator {
             //writeComment("parameter: " + paramSto.getName() + " is: " + paramSto.getClass().getName());
 
             // 1. [PASS] value param as value arg
-            AllocateSto(paramSto);
-            StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+            if(!paramSto.isPassByReference()) {
+                writeComment("1. [PASS] value param as value arg");
+                AllocateSto(paramSto);
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+                blank();
+            }
+            
+            // 2. [PASS] value param as reference arg
+            else if(paramSto.isPassByReference()) {
+                blank();
+                writeComment("2. [PASS] value param as reference arg");
+                // address of value is in %i0
+                //paramSto.store(SparcInstr.REG_FRAME, 68 + (i * 4));
+                AllocateSto(paramSto);
+                StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
+
+
+
+
+                // Copy value from stack location to param location
+                // Put address of param location into %l0
+                //setParamAddr(i, SparcInstr.REG_LOCAL0);
+                // Load value from sto into %l1
+                //LoadStoValue(argSto, SparcInstr.REG_LOCAL1);
+                // Copy value from %l1 into the address in %l0
+                //StoreValueIntoAddr(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+            }
 
             // 2. [PASS] value param as reference arg
 
@@ -1412,7 +1437,17 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
-    //      LoadStoAddr - Sets the address value of a sto into register
+    //      LoadStoForceAddr - Sets the address value of a sto into register - no auto deref
+    //-------------------------------------------------------------------------
+    public void LoadStoForceAddr(STO sto, String reg)
+    {
+        // PUT ADDRESS OF STO INTO <reg>
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), reg, "Put the offset/name of " + sto.getName() + " into " + reg);
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), reg, reg, "Add offset/name to base reg " + reg);
+    }
+
+    //-------------------------------------------------------------------------
+    //      LoadStoAddr - Sets the address value of a sto into register - auto deref
     //-------------------------------------------------------------------------
     public void LoadStoAddr(STO sto, String reg)
     {
@@ -1458,7 +1493,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.BLANK_LINE); 
         writeComment("Store value in " + valueReg + " into sto " + destSto.getName());
         // Load sto addr into %l7
-        LoadStoAddr(destSto, SparcInstr.REG_LOCAL7);
+        LoadStoForceAddr(destSto, SparcInstr.REG_LOCAL7);
 
         // STORE VALUE IN valueReg INTO destSto (which has addr in %l6)
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, valueReg, bracket(SparcInstr.REG_LOCAL7), "Store value in " + valueReg  + " into sto " + destSto.getName());
