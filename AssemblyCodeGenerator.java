@@ -663,10 +663,8 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.GLOBAL_DIR, funcSto.getName());
         writeAssembly(SparcInstr.BLANK_LINE);
 
-        // Write the function label
+        // Write the function label    <funcName>: 
         decreaseIndent();
-
-        // <funcName>: 
         writeAssembly(SparcInstr.LABEL, funcSto.getName());
         increaseIndent();
 
@@ -711,6 +709,9 @@ public class AssemblyCodeGenerator {
             // 3. [PASS] reference param as value arg
             // 5. [PASS] local variable as value arg
             // 7. [PASS] global variable as value arg
+
+            /*
+
             if(!paramSto.isPassByReference()) {
                 blank();
                 writeComment("[PASS] 1,3,5,7 - as value arg");
@@ -727,6 +728,9 @@ public class AssemblyCodeGenerator {
                // writeComment("[PASS] 2 - value param as reference arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
+
+            */
+
             /*
             else if(!paramSto.isPassByReference()) {
                 blank();
@@ -867,12 +871,14 @@ public class AssemblyCodeGenerator {
 
 
             // 1. [PASS] value param as value arg
-            if(argSto.isParam() && !paramSto.isPassByReference()) {
+            if(!paramSto.isPassByReference()) {
                 blank();
                 writeComment("1. [PASS] value param as value arg");
                 LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);
-                
             }
+            
+            /*
+
             // 2. [PASS] value param as reference arg
             else if(argSto.isParam() && paramSto.isPassByReference()) {
                 blank();
@@ -924,6 +930,7 @@ public class AssemblyCodeGenerator {
                 LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);
             }
 
+            */
         }
 
         //////////////////////////////////////////////////////////////////////////////// 
@@ -962,11 +969,11 @@ public class AssemblyCodeGenerator {
                 // LoadStoAddr(returnSto, SparcInstr.REG_SET_RETURN);
             }
             else { 
-                // If return type is float, put into %f0 (possibly fitos)
+                // If return type is float, store into allocated space from %f0
                 if(((FuncPtrType) funcSto.getType()).getReturnType().isFloat()) {
                     StoreValueIntoSto(SparcInstr.REG_FLOAT0, returnSto);
                 }
-                // return type is not float, store into %i0 from %o0
+                // return type is not float, store into allocated space from %o0
                 else {
                     StoreValueIntoSto(SparcInstr.REG_GET_RETURN, returnSto);
                 }
