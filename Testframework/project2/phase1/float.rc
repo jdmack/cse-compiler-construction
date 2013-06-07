@@ -7,7 +7,7 @@ function: void main() {
     float f4, f5;
 
     f1 = 1.0;
-    cout << "f1: should be: 1.00  " << f1 << endl;
+    cout << "f1: should be: 1.00    " << f1 << endl;
 
     f2 = f1;
     f1 = 2.0;
