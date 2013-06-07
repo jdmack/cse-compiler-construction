@@ -869,6 +869,7 @@ public class AssemblyCodeGenerator {
             // LoadStoAddr(argSto, SparcInstr.REG_LOCAL0);                 // loads the address of the reference into register
             // LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i])        // loads the address stored in the address into register
                 
+            System.out.println("Calling function: " + funcSto.getName() + "\tParameter: " + paramSto.getName() + "\tArgument: " + argSto.getName());
             System.out.println("argSto.isParam() " + argSto.isParam());
             System.out.println("argSto.isReference() " + argSto.isReference());
             System.out.println("paramSto.isPassByReference() " + paramSto.isPassByReference());
@@ -891,6 +892,9 @@ public class AssemblyCodeGenerator {
                 LoadStoValue(argSto, SparcInstr.REG_LOCAL1);
                 // Copy value from %l1 into the address in %l0
                 StoreValueIntoAddr(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+
+                // Put address of param location into out register
+                MoveRegToReg(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);
             }
 
             /*
