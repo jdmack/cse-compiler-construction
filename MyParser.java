@@ -269,8 +269,6 @@ class MyParser extends parser
                     }
                 }
             }
-
-
         }
     }
 
