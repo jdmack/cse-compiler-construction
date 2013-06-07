@@ -2245,7 +2245,7 @@ public class AssemblyCodeGenerator {
     {
         writeCommentHeader("DoBreakStmt");
     	//System.out.println("Breaking on :" + level);
-    	String jumpTo = stackWhileLabel.pop() + ".end";
+    	String jumpTo = stackWhileLabel.peek() + ".end";
         // write an Always branch to if else end for when the condition is true
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Jump to the corresponding while.end");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
