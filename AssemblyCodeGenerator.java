@@ -869,7 +869,9 @@ public class AssemblyCodeGenerator {
             // LoadStoAddr(argSto, SparcInstr.REG_LOCAL0);                 // loads the address of the reference into register
             // LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i])        // loads the address stored in the address into register
                 
-
+            System.out.println("argSto.isParam() " + argSto.isParam());
+            System.out.println("argSto.isReference() " + argSto.isReference());
+            System.out.println("paramSto.isPassByReference() " + paramSto.isPassByReference());
 
             // 1. [PASS] value param as value arg
             if(!paramSto.isPassByReference()) {
