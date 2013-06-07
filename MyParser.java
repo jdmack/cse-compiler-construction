@@ -1027,7 +1027,6 @@ class MyParser extends parser
         }
 
         // And better to have all the codegen code at the end of the function
-        /*
         if(resultSTO.isConst()) {
             if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
@@ -1041,7 +1040,6 @@ class MyParser extends parser
                 }
             }
         }
-        */
 
         return resultSTO;
     }
