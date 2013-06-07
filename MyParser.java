@@ -1026,7 +1026,7 @@ class MyParser extends parser
             return resultSTO;
         }
 
-        // And better to have all the codegen code at the end of the function
+        // Code gen
         if(resultSTO.isConst()) {
             if(!ERROR) m_codegen.DoLiteral((ConstSTO)resultSTO);
         }
@@ -1096,15 +1096,24 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //      DoBooleanOp
     //----------------------------------------------------------------
-    STO DoBooleanOp(BooleanOp op, STO operand, boolean isStart)
+    STO DoBooleanOp(BooleanOp op, STO operand1, STO operand2)
     {
         // Check for previous errors in line and short circuit
-        if(operand.isError()) {
-            return operand;
+        if(operand1.isError()) {
+            return operand1;
+        }
+        if(operand2.isError()) {
+            return operand2;
         }
 
+        STO resultSTO;
         // Use UnaryOp.checkOperand() to perform error checks
-        STO resultSTO = op.checkOperand(operand);
+        if(op.isNotOp()) {
+            resultSTO = op.checkOperand(operand1);
+        }
+        else {
+            resultSTO = op.checkOperands(operand1, operand2);
+        }
 
         // TODO: constant folding for these things
         // If operands are constants, do the op
@@ -1123,20 +1132,22 @@ class MyParser extends parser
             return resultSTO;
         }
 
-        // And better to have all the codegen code at the end of the function
-
-        // Do Boolean assembly code
+        // Code gen
         if(!ERROR) {
         // If operand is a constant, it was folded in it's OpClass, just allocate the result on stack
             //if(resultSTO.isConst()) {
             //    m_codegen.DoLiteral((ConstSTO)resultSTO);
             //}
+            m_codegen.DoBooleanOp(op, operand1, operand2, resultSTO);
+
+            /*
             if(isStart) {
-                m_codegen.DoBooleanOp1(op, operand);
+                m_codegen.DoBooleanOp1(op, operand1);
             }
             else {
-                m_codegen.DoBooleanOp2(op, operand, resultSTO);
+                m_codegen.DoBooleanOp2(op, operand2, resultSTO);
             }
+            */
         }
         
         return resultSTO;

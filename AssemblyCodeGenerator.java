@@ -1983,6 +1983,73 @@ public class AssemblyCodeGenerator {
     }
 
     //-------------------------------------------------------------------------
+    //      DoBooleanOp
+    //-------------------------------------------------------------------------
+    public void DoBooleanOp(BooleanOp op, STO operand1, STO operand2, STO resultSto)
+    {
+        writeCommentHeader("DoBooleanOp");
+        String operandReg = SparcInstr.REG_LOCAL1;
+        String branchOp = "";  
+
+        // Load operand1 into register
+        LoadStoValue(operand1, operandReg);
+
+        // Get label ready
+        String boolLabel = ".boolL_" + boolLabel_count;
+        //stackBoolLabel.push(boolLabel);
+        boolLabel_count++;
+
+        // %l3 holds the value we swap to
+
+        // &&
+        if(op.isAndOp()) {
+            // %l0 is going to hold our boolean result of the comparison
+            MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL0);
+            branchOp = SparcInstr.BE_OP; 
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL3);
+        }
+
+        // ||
+        else {
+            // %l0 is going to hold our boolean result of the comparison
+            writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL0);
+            branchOp = SparcInstr.BNE_OP; 
+            MoveRegToReg(SparcInstr.REG_GLOBAL0, SparcInstr.REG_LOCAL3);
+        }
+
+        // Perform first condition, branch if true, if false, fall through and check second condition
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, operandReg, SparcInstr.REG_GLOBAL0);
+        writeAssembly(SparcInstr.ONE_PARAM, branchOp, boolLabel);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        // Load operand2 into register
+        LoadStoValue(operand2, operandReg);
+
+        // Get label ready
+        //String boolLabel = stackBoolLabel.pop();
+
+        // Perform second condition, branch if true, if false, fall through and set return
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, operandReg, SparcInstr.REG_GLOBAL0);
+        writeAssembly(SparcInstr.ONE_PARAM, branchOp, boolLabel);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        writeComment("Swap return value since we never branched");
+        MoveRegToReg(SparcInstr.REG_LOCAL3, SparcInstr.REG_LOCAL0);
+
+        // Print label
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, boolLabel);
+        increaseIndent();
+        writeAssembly(SparcInstr.BLANK_LINE);
+
+        // Comparison done, result is in %l0, store it in the resultSto
+        AllocateSto(resultSto);
+        StoreValueIntoSto(SparcInstr.REG_LOCAL0, resultSto);
+    }
+
+    //-------------------------------------------------------------------------
     //      DoBooleanOp1
     //-------------------------------------------------------------------------
     public void DoBooleanOp1(BooleanOp op, STO operand)
