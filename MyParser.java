@@ -1126,7 +1126,6 @@ class MyParser extends parser
         // And better to have all the codegen code at the end of the function
 
         // Do Boolean assembly code
-        /*
         if(!ERROR) {
         // If operand is a constant, it was folded in it's OpClass, just allocate the result on stack
             //if(resultSTO.isConst()) {
@@ -1139,7 +1138,6 @@ class MyParser extends parser
                 m_codegen.DoBooleanOp2(op, operand, resultSTO);
             }
         }
-        */
         
         return resultSTO;
     }
