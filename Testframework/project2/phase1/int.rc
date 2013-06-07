@@ -26,10 +26,10 @@ function: void main() {
 
     int w = c;
 
-    cout << "x: should be 0 " << x << endl;
-    cout << "y: should be 1 " << y << endl;
-    cout << "a: should be 1 " << a << endl;
-    cout << "b: should be 2 " << b << endl;
-    cout << "c: should be 4 " << c << endl;
-    cout << "w: should be 4 " << w << endl;
+    cout << "x:   should be 0     " << x << endl;
+    cout << "y:   should be 1     " << y << endl;
+    cout << "a:   should be 1     " << a << endl;
+    cout << "b:   should be 2     " << b << endl;
+    cout << "c:   should be 4     " << c << endl;
+    cout << "w:   should be 4     " << w << endl;
 }

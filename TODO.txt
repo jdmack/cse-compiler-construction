@@ -4,6 +4,10 @@ Project 2
 - Error with increment op, see test.rc line 77 in .s output
 - Manual Test case: Compile time array access bounds check
 
+TODO
+-----
+Decltype test cases
+
 Project 1
 =========
 
