@@ -264,10 +264,7 @@ class MyParser extends parser
                 if(!ERROR) m_codegen.DoVarDecl(stoVar);
 
                 if(!value.isNull()) {
-                    if(!finalType.isArray()) {
-
-                        DoAssignExpr(stoVar, value);
-                    }
+                    DoAssignExpr(stoVar, value);
                 }
             }
 
