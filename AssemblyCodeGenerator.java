@@ -702,10 +702,12 @@ public class AssemblyCodeGenerator {
             ParamSTO paramSto = params.elementAt(i);
             //writeComment("parameter: " + paramSto.getName() + " is: " + paramSto.getClass().getName());
 
+            // 1. [PASS] value param as value arg
             AllocateSto(paramSto);
             StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
 
-            // 1. [PASS] value param as value arg
+            // 2. [PASS] value param as reference arg
+
             // 3. [PASS] reference param as value arg
             // 5. [PASS] local variable as value arg
             // 7. [PASS] global variable as value arg
@@ -718,7 +720,6 @@ public class AssemblyCodeGenerator {
                 //writeComment("[PASS] 1 - value param as value arg");
                 StoreValueIntoSto(SparcInstr.PARAM_REGS[i], paramSto);
             }
-            // 2. [PASS] value param as reference arg
             // 4. [PASS] reference param as reference arg
             // 6. [PASS] local variable as reference arg
             // 8. [PASS] global variable as reference arg
@@ -877,14 +878,20 @@ public class AssemblyCodeGenerator {
                 LoadStoValue(argSto, SparcInstr.ARG_REGS[i]);
             }
             
-            /*
-
             // 2. [PASS] value param as reference arg
-            else if(argSto.isParam() && paramSto.isPassByReference()) {
+            else if(argSto.isParam() && !argSto.isReference() && paramSto.isPassByReference()) {
                 blank();
                 writeComment("2. [PASS] value param as reference arg");
-                LoadStoAddr(argSto, SparcInstr.ARG_REGS[i]);               // Load the address from the sto into %o0
+                // Copy value from stack location to param location
+                // Put address of param location into %l0
+                setParamAddr(i, SparcInstr.REG_LOCAL0);
+                // Load value from sto into %l1
+                LoadStoValue(argSto, SparcInstr.REG_LOCAL1);
+                // Copy value from %l1 into the address in %l0
+                StoreValueIntoAddr(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
             }
+
+            /*
             // 3. [PASS] reference param as value arg
             
             else if(argSto.isParam() && ((ParamSTO) argSto).isPassByReference() && !paramSto.isPassByReference()) {
@@ -947,6 +954,23 @@ public class AssemblyCodeGenerator {
 
         // Now we can write the code for after the return, which is store the return value to stack
         // If the return type isn't void, save the return value
+
+
+        // Go through params/args again, for any value params as reference args, copy value from param location
+        // back into stack location
+        for(int i = 0; i < args.size(); i++) {
+            STO argSto = args.elementAt(i);
+            ParamSTO paramSto = params.elementAt(i);
+            
+            if(argSto.isParam() && !argSto.isReference() && paramSto.isReference()) {
+                // Load value from param location (e.g. %fp + 68) into %l0
+                setParamAddr(i, SparcInstr.REG_LOCAL0);
+
+                // Store value in %l0 into the address in %l1
+                StoreValueIntoSto(SparcInstr.REG_LOCAL0, argSto);
+            }
+        
+        }
 
         //////////////////////////////////////////////////////////////////////////////// 
         // 14. [Caller] Copy return value out of return value location - DONE
@@ -1405,7 +1429,7 @@ public class AssemblyCodeGenerator {
         LoadStoValue(valueSto, tmpReg);
 
         // STORE VALUE AT ADDRESS INTO <reg>
-        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, tmpReg, bracket(destReg), "Store value of " + valueSto.getName() + " into " + destReg);
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, tmpReg, bracket(destReg), "Store value of " + valueSto.getName() + " into address in " + destReg);
     }
 
     //-------------------------------------------------------------------------

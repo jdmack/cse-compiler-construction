@@ -30,6 +30,7 @@ class ParamSTO extends STO
     private void setPassByReference(boolean passByRef)
     {
         m_passByReference = passByRef;
+        setIsReference(passByRef);
     }
 
     public boolean isReference()
