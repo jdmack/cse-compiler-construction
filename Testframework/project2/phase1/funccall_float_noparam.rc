@@ -7,10 +7,10 @@ function: float foo5() {
     recurse = recurse - 1;
     if(recurse) {
         float rtn = foo5() + 1;
-        cout << r << ". foo5() - returning " << rtn << endl;
+        cout << r = r + 1 << ". foo5() - returning " << rtn << endl;
         return rtn;
     }
-    cout << r  = r + 1<< ". foo5() - returning 1" << endl;
+    cout << r = r + 1 << ". foo5() - returning 1" << endl;
     return 1;
 }
 
@@ -69,6 +69,6 @@ function: void main() {
 
     cout << "11. foo5() - recursive start" << endl;
     float x5 = foo5();
-    cout << r  = r + 1<< ". foo5() - recursive end - final value: " << x5 << endl;
+    cout << r = r + 1 << ". foo5() - recursive end - final value: " << x5 << endl;
     cout << "All 1.00 for recursive returns is correct until float arithmatic works" << endl;
 }
