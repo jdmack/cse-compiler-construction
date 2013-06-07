@@ -185,17 +185,23 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //
     //----------------------------------------------------------------
-    void DoAutoDecl(boolean isStatic, boolean isConst, String id, STO expr)
+    void DoAutoDecl(boolean isStatic, boolean isConst, String id, STO exprSto)
     {
         STO resultSTO;
         if(isConst) {
-            resultSTO = new ConstSTO(id, expr.getType(), ((ConstSTO)expr).getValue());
+            resultSTO = new ConstSTO(id, exprSto.getType(), ((ConstSTO)exprSto).getValue());
         }
         else {
-            resultSTO = new VarSTO(id, expr.getType());
+            resultSTO = new VarSTO(id, exprSto.getType());
         }
         resultSTO.setIsStatic(isStatic);
         m_symtab.insert(resultSTO);
+
+        if(GenerateCode()) m_codegen.DoVarDecl(resultSTO);
+
+        if(!exprSto.isNull()) {
+            DoAssignExpr(resultSTO, exprSto);
+        }
     }
     
     //----------------------------------------------------------------
