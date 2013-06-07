@@ -995,7 +995,7 @@ public class AssemblyCodeGenerator {
             if(argSto.isParam() && !argSto.isReference() && paramSto.isReference()) {
                 // Load value from param location (e.g. %fp + 68) into %l0
                 setParamAddr(i, SparcInstr.REG_LOCAL0);
-
+                LoadValueFromAddr(SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL0);
                 // Store value in %l0 into the address in %l1
                 StoreValueIntoSto(SparcInstr.REG_LOCAL0, argSto);
             }
