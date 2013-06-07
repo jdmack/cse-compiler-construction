@@ -892,9 +892,6 @@ public class AssemblyCodeGenerator {
                 LoadStoValue(argSto, SparcInstr.REG_LOCAL1);
                 // Copy value from %l1 into the address in %l0
                 StoreValueIntoAddr(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
-
-                // Put address of param location into out register
-                MoveRegToReg(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);
             }
 
             /*
@@ -1422,6 +1419,10 @@ public class AssemblyCodeGenerator {
         // PUT ADDRESS OF STO INTO <reg>
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, sto.getOffset(), reg, "Put the offset/name of " + sto.getName() + " into " + reg);
         writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), reg, reg, "Add offset/name to base reg " + reg);
+
+        if(sto.isReference()) {
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "");
+        }
     }
 
     //-------------------------------------------------------------------------
