@@ -1090,7 +1090,7 @@ public class AssemblyCodeGenerator {
         
         // Array (TODO: In Phase 2)
         if(sto.getType().isArray()){
-        	writeComment("Initializing Array: " + sto.getName());
+        	writeCommentHeader("Initializing Array: " + sto.getName());
 
         	ArrayType arrayType = (ArrayType) sto.getType();
         	Vector<STO> varElements = arrayType.getElementList();
@@ -1103,15 +1103,14 @@ public class AssemblyCodeGenerator {
         	writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
 
         	for(int i = 0; i < varElements.size(); i++) {
+                // Value is already in memory from DoLiteral
         		ConstSTO value = (ConstSTO) varElements.elementAt(i);
-        		writeCommentHeader("Initializing " + sto.getName() + "[" + i + "] - " + value.getName() + " - " + value.getIntValue() );
-        		//writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
 
-        		//DoLiteral(value);
+        		writeComment("Initializing " + sto.getName() + "[" + i + "] - " + value.getName() + " - " + value.getIntValue() );
 
         		MoveRegToReg(indexReg, addrReg);
 
-        		// TODO NEED TO ACCOUNT FOR FLOATS
+        		// TODO: NEED TO ACCOUNT FOR FLOATS
         		GetArrayElementAddr(sto, addrReg);
         		StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
         		//stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
