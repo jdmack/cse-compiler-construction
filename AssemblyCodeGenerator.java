@@ -917,6 +917,8 @@ public class AssemblyCodeGenerator {
                 LoadStoValue(argSto, SparcInstr.REG_LOCAL1);
                 // Copy value from %l1 into the address in %l0
                 StoreValueIntoAddr(SparcInstr.REG_LOCAL1, SparcInstr.REG_LOCAL0);
+                // Place address of param location into ARG_REG
+                MoveRegToReg(SparcInstr.REG_LOCAL0, SparcInstr.ARG_REGS[i]);
             }
 
             /*
@@ -1387,7 +1389,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(SparcInstr.REG_LOCAL7), reg, "Value of " + sto.getName() + " now in " + reg);
         
         if(sto.isReference()) {
-            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "");
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "auto deref");
         }
 
         if(isFloatReg(reg) && sto.getType().isInt()) {
@@ -1456,7 +1458,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, sto.getBase(), reg, reg, "Add offset/name to base reg " + reg);
 
         if(sto.isReference()) {
-            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "");
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.LOAD_OP, bracket(reg), reg, "auto deref");
         }
     }
 
