@@ -179,7 +179,7 @@ class MyParser extends parser
     //----------------------------------------------------------------
     boolean GenerateCode()
     {
-        return (ERROR || DECLTYPE);
+        return !(ERROR || DECLTYPE);
     }
 
     //----------------------------------------------------------------
