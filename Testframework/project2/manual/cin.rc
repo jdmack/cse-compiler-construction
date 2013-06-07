@@ -8,17 +8,17 @@ function: void main() {
 
     cout << "Enter an int (local): ";
     cin >> x;
-    cout << endl << "You entered: " << x << endl;
+    cout << "You entered: " << x << endl << endl;
 
     cout << "Enter an int (global): ";
     cin >> x_global;
-    cout << endl << "You entered: " << x_global << endl;
+    cout << "You entered: " << x_global << endl << endl;
 
     cout << "Enter a float (local): ";
     cin >> y;
-    cout << endl << "You entered: " << y << endl;
+    cout << "You entered: " << y << endl << endl;
 
     cout << "Enter a float (global): ";
     cin >> y_global;
-    cout << endl << "You entered: " << y_global << endl;
+    cout << "You entered: " << y_global << endl << endl;
 }

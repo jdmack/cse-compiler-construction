@@ -22,7 +22,7 @@ function: void main() {
         x++;
     }
 
-    cout << "x: should be 1\t" << x << "\t" << x == 1 << endl;
+    cout << "x: should be 0\t" << x << "\t" << x == 0 << endl;
 
 /////////////
 
@@ -48,13 +48,15 @@ function: void main() {
 /////////////
 
     x = 0;
-    while(x <= 4) {
-        if(x != 3) {
+    y = 0;
+    while(y <= 4) {
+        y++;
+        if(y != 3) {
             continue;
         }
         x++;
     }
-    cout << "x: should be 3\t" << x << "\t" << x == 3 << endl;
+    cout << "x: should be 1\t" << x << "\t" << x == 1 << endl;
 
 /////////////
 

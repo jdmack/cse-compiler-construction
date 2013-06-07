@@ -1,6 +1,6 @@
 function: void main() {
 
-    cout << "simple: ";
+    cout << "simple:       ";
     if(false) {
         cout << "DOES NOT WORK " << endl;
     }
@@ -8,6 +8,7 @@ function: void main() {
         cout << "works " << endl;
     }
 
+    cout << "else if:      ";
     if(false) {
         cout << "DOES NOT WORK  " << endl;
     }
@@ -18,6 +19,7 @@ function: void main() {
         }
     }
 
+    cout << "if if:        ";
     if(true) {
         cout << "works ";
         if(true) {
@@ -31,6 +33,7 @@ function: void main() {
         }
     }
 
+    cout << "if else else: ";
     if(true) {
         cout << "works ";
         if(false) {
