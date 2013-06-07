@@ -2338,7 +2338,7 @@ public class AssemblyCodeGenerator {
         StoreValueIntoSto(offsetReg, resultSto);
     }
     
-    public void DoStructAccess(STO struct, STO resultSto) {
+    public void DoStructAccess(STO structSto, STO resultSto) {
         //writeCommentHeader("Accessing index " + ((ConstSTO) indexSto).getIntValue() + " of " + arraySto.getName());
 
     	String offsetReg = SparcInstr.REG_LOCAL0;
@@ -2354,7 +2354,7 @@ public class AssemblyCodeGenerator {
 
         // add base, offsetReg, offsetReg
         writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, offsetReg, reg, offsetReg, "base + offset");
-        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, struct.getBase(), offsetReg, offsetReg, "base + offset");
+        writeAssembly(SparcInstr.THREE_PARAM_COMM, SparcInstr.ADD_OP, structSto.getBase(), offsetReg, offsetReg, "base + offset");
 
         // offset reg now has address of the elemnt
 
