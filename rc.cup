@@ -765,6 +765,7 @@ ForeachStmt ::=     T_FOREACH
                     CodeBlock
                     {:
                         ((MyParser) parser).DoBlockClose();
+                        ((MyParser) parser).DoForeachCodeBlock();
                         ((MyParser) parser).loopLevelDown();
                     :}
     ;
