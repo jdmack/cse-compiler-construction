@@ -570,7 +570,7 @@ public class AssemblyCodeGenerator {
                             String addrReg = SparcInstr.REG_LOCAL4; 
                             MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
                             //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), indexReg, "Use %l5 for incrementing counter by 1");
-                            //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
+                            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
 
                             for(int i = 0; i < varElements.size(); i++) {
                                 ConstSTO value = null;
@@ -588,7 +588,7 @@ public class AssemblyCodeGenerator {
                                 GetArrayElementAddr(varSto, addrReg);
                                 StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
                                 //stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
-                                //writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
+                                writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
                             }
                         }
                         else {
@@ -602,7 +602,7 @@ public class AssemblyCodeGenerator {
                         String addrReg = SparcInstr.REG_LOCAL4; 
                         MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
                         //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), indexReg, "Use %l5 for incrementing counter by 1");
-                        //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
+                        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
 
                         for(int i = 0; i < fields.size(); i++) {
                             VarSTO value = null;
@@ -620,7 +620,7 @@ public class AssemblyCodeGenerator {
                             GetArrayElementAddr(varSto, addrReg);
                             StoreStoValueIntoAddr(fields.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
                             //stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
-                            //writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
+                            writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
                         }
                     }
                     else {    
@@ -1100,7 +1100,7 @@ public class AssemblyCodeGenerator {
 
             MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
 
-            //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
+            writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
 
             for(int i = 0; i < varElements.size(); i++) {
                 // Value is already in memory from DoLiteral
@@ -1114,7 +1114,7 @@ public class AssemblyCodeGenerator {
                 GetArrayElementAddr(sto, addrReg);
                 StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
                 //stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
-                //writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
+                writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
             }
         }
         // Pointer (TODO: In Phase 3)
@@ -2229,7 +2229,7 @@ public class AssemblyCodeGenerator {
 
 
         // Load condition into %l0 for comparison
-        LoadStoValue(condition, SparcInstr.REG_LOCAL0);
+        //LoadStoValue(condition, SparcInstr.REG_LOCAL0);
 
         //  %l0, %g0
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
