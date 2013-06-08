@@ -2392,7 +2392,7 @@ public class AssemblyCodeGenerator {
     public void DoArrayAccess(STO arraySto, STO indexSto, STO resultSto)
     {
 
-        writeCommentHeader("Accessing index " + ((ConstSTO) indexSto).getIntValue() + " of " + arraySto.getName());
+        //writeCommentHeader("Accessing index " + ((ConstSTO) indexSto).getIntValue() + " of " + arraySto.getName());
         String offsetReg = SparcInstr.REG_LOCAL0;
         String reg = SparcInstr.REG_LOCAL1;
 
