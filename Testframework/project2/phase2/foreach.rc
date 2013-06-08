@@ -1,0 +1,39 @@
+function: void main()
+{
+    int[10] x = {9, 7, 5, 3, 1, 10, 8, 6, 4, 2};
+    float[10] y = {9.00, 7.00, 5.00, 3.00, 1.00, 10.00, 8.00, 6.00, 4.00, 2.00};
+    bool[10] b = {true, true, true, false, false, true, true, false, true, false};
+
+    foreach(int var: x) {
+        cout << var << endl;
+    }
+
+    cout << endl;
+    foreach(float var: y) {
+        cout << var << endl;
+    }
+
+    cout << endl;
+    foreach(bool var: b) {
+        cout << var << endl;
+    }
+
+    cout << endl;
+    foreach(int var: x) {
+        cout << var << endl;
+
+        if(var == 10) {
+            break;
+        }
+    }
+
+    cout << endl;
+    foreach(bool var: b) {
+        cout << var << endl;
+        if(var == true) {
+            continue;
+        }
+        break;
+    }
+
+}
