@@ -1385,7 +1385,7 @@ public class AssemblyCodeGenerator {
         // Load sto addr into %l7
         LoadStoForceAddr(destSto, SparcInstr.REG_LOCAL7);
 
-        // STORE VALUE IN valueReg INTO destSto (which has addr in %l6)
+        // STORE VALUE IN valueReg INTO destSto (which has addr in %l7)
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.STORE_OP, valueReg, bracket(SparcInstr.REG_LOCAL7), "Store value in " + valueReg  + " into sto " + destSto.getName());
 
         //System.out.println("Storing " + destSto.getName() + " to: " + destSto.load());
@@ -2203,6 +2203,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     //      DoForeachStart
     //-------------------------------------------------------------------------
+    /*
     public void DoForeachStart()
     {
         // stackWhileLabel
@@ -2214,29 +2215,55 @@ public class AssemblyCodeGenerator {
         decreaseIndent();
         writeAssembly(SparcInstr.LABEL, whileLabel);
         increaseIndent();
-        
     }
+    */
     
     //-------------------------------------------------------------------------
     //      DoForeach
     //-------------------------------------------------------------------------
-    public void DoForeach(STO iterationSto, STO exprSto)
+    public void DoForeach(STO iterationSto, STO arraySto)
     {
-        // need two things:
-        //  1. STO holding current counter
-        //  2. array size
+        STO counterSto = new VarSTO("Foreach Counter", new IntType());
+        AllocateSto(counterSto);
+        StoreValueIntoSto(SparcInstr.REG_GLOBAL0, counterSto);
 
+        // setup loop label
+        // stackWhileLabel
+        String whileLabel = ".while."+whileLabel_count;
+        whileLabel_count++;
+        stackWhileLabel.add(whileLabel);
+        
+        // write while label before logic check
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, whileLabel);
+        increaseIndent();
 
+        // Load counter into %l0 for comparison
+        LoadStoValue(counterSto, SparcInstr.REG_LOCAL0);
 
+<<<<<<< HEAD
         // Load condition into %l0 for comparison
         //LoadStoValue(condition, SparcInstr.REG_LOCAL0);
+=======
+        // Set the array size inot %l1
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(((ArrayType) arraySto.getType()).getDimensionSize()), SparcInstr.REG_LOCAL1, "Put array size in %l1");
 
-        //  %l0, %g0
-        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
-        // be IfL1! Opposite logic
+        //  %l0, %l1 - compare current index to size
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1);
+>>>>>>> f19e32707158ebdb072bf3ce93a1872b6523af85
+
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, stackWhileLabel.peek()+".end");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         increaseIndent();
+
+        // increment counter for next run
+        writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
+        writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL5, SparcInstr.REG_LOCAL0, "Increment index counter");
+        StoreValueIntoSto(SparcInstr.REG_LOCAL0, counterSto);
+
+        // change the value of iterationVar to be the new index of the array
+        DoArrayAccess(arraySto, counterSto, iterationSto);
+
     }
     
     //-------------------------------------------------------------------------

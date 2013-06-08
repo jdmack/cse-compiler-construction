@@ -1633,11 +1633,13 @@ class MyParser extends parser
     //----------------------------------------------------------------
     //      DoForeachStart
     //----------------------------------------------------------------
+    /*
     void DoForeachStart()
     {
         // TODO: Update For functions
         if(GenerateCode()) m_codegen.DoForeachStart();
     }
+    */
 
     //----------------------------------------------------------------
     //      DoForeachExpr
@@ -1679,7 +1681,7 @@ class MyParser extends parser
         }
         
         // TODO: Update For functions
-        //if(GenerateCode()) m_codegen.DoForeach(exprSto);
+        if(GenerateCode()) m_codegen.DoForeach(iterationSto, exprSto);
         loopLevelUp();
         
         return exprSto;
