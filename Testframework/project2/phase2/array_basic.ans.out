@@ -1,0 +1,95 @@
+int global
+x_int_g[0] should be = 0: 0
+x_int_g[1] should be = 0: 0
+x_int_g[2] should be = 0: 0
+
+y_int_g[0] should be = 1: 1
+y_int_g[1] should be = 2: 2
+y_int_g[2] should be = 3: 3
+
+z_int_g[0] should be = 1: 1
+z_int_g[1] should be = 2: 2
+z_int_g[2] should be = 3: 3
+z_int_g[3] should be = 0: 0
+z_int_g[4] should be = 0: 0
+
+
+float global
+x_float_g[0] should be = 0.0: 0.00
+x_float_g[1] should be = 0.0: 0.00
+x_float_g[2] should be = 0.0: 0.00
+
+y_float_g[0] should be = 1.0: 1.00
+y_float_g[1] should be = 2.0: 2.00
+y_float_g[2] should be = 3.0: 3.00
+
+z_float_g[0] should be = 1.0: 1.00
+z_float_g[1] should be = 2.0: 2.00
+z_float_g[2] should be = 3.0: 3.00
+z_float_g[3] should be = 0.0: 0.00
+z_float_g[4] should be = 0.0: 0.00
+
+
+bool global
+x_bool_g[0] should be = false: false
+x_bool_g[1] should be = false: false
+x_bool_g[2] should be = false: false
+
+y_bool_g[0] should be = true: true
+y_bool_g[1] should be = true: true
+y_bool_g[2] should be = true: true
+
+z_bool_g[0] should be = true: true
+z_bool_g[1] should be = true: true
+z_bool_g[2] should be = true: true
+z_bool_g[3] should be = false: false
+z_bool_g[4] should be = false: false
+
+
+int local
+x_int_l[0] should be = ?: 0
+x_int_l[1] should be = ?: 0
+x_int_l[2] should be = ?: 0
+
+y_int_l[0] should be = 1: 1
+y_int_l[1] should be = 2: 2
+y_int_l[2] should be = 3: 3
+
+z_int_l[0] should be = 1: 1
+z_int_l[1] should be = 2: 2
+z_int_l[2] should be = 3: 3
+z_int_l[3] should be = ?: 0
+z_int_l[4] should be = ?: 3579
+
+
+float local
+x_float_l[0] should be = ?: 0.00
+x_float_l[1] should be = ?: 0.00
+x_float_l[2] should be = ?: -NaN
+
+y_float_l[0] should be = 1.0: 1.00
+y_float_l[1] should be = 2.0: 2.00
+y_float_l[2] should be = 3.0: 3.00
+
+z_float_l[0] should be = 1.0: 1.00
+z_float_l[1] should be = 2.0: 2.00
+z_float_l[2] should be = 3.0: 3.00
+z_float_l[3] should be = ?: -244597584596920855431270880030828265472.00
+z_float_l[4] should be = ?: -244597584596920855431270880030828265472.00
+
+
+bool local
+x_bool_l[0] should be = ?: false
+x_bool_l[1] should be = ?: true
+x_bool_l[2] should be = ?: true
+
+y_bool_l[0] should be = true: true
+y_bool_l[1] should be = true: true
+y_bool_l[2] should be = true: true
+
+z_bool_l[0] should be = true: true
+z_bool_l[1] should be = true: true
+z_bool_l[2] should be = true: true
+z_bool_l[3] should be = ?: false
+z_bool_l[4] should be = ?: false
+
