@@ -2252,15 +2252,14 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         increaseIndent();
 
+        // change the value of iterationVar to be the new index of the array
+        DoArrayAccess(arraySto, counterSto, iterationSto);
+
         // increment counter for next run
         writeComment("increment the loop counter (array index)");
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
         writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL5, SparcInstr.REG_LOCAL0, "Increment index counter");
         StoreValueIntoSto(SparcInstr.REG_LOCAL0, counterSto);
-
-        // change the value of iterationVar to be the new index of the array
-        DoArrayAccess(arraySto, counterSto, iterationSto);
-
     }
     
     //-------------------------------------------------------------------------
