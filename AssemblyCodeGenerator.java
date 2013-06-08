@@ -2241,16 +2241,11 @@ public class AssemblyCodeGenerator {
         // Load counter into %l0 for comparison
         LoadStoValue(counterSto, SparcInstr.REG_LOCAL0);
 
-<<<<<<< HEAD
-        // Load condition into %l0 for comparison
-        //LoadStoValue(condition, SparcInstr.REG_LOCAL0);
-=======
         // Set the array size inot %l1
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(((ArrayType) arraySto.getType()).getDimensionSize()), SparcInstr.REG_LOCAL1, "Put array size in %l1");
 
         //  %l0, %l1 - compare current index to size
         writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL1);
->>>>>>> f19e32707158ebdb072bf3ce93a1872b6523af85
 
         writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, stackWhileLabel.peek()+".end");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
