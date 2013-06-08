@@ -82,9 +82,9 @@ function: void main() {
     cout << endl;
 
     cout << "int local" << endl;
-    cout << "x_int_l[0] should be = 0: "<< x_int_l[0] << endl;
-    cout << "x_int_l[1] should be = 0: "<< x_int_l[1] << endl;
-    cout << "x_int_l[2] should be = 0: "<< x_int_l[2] << endl;
+    cout << "x_int_l[0] should be = ?: "<< x_int_l[0] << endl;
+    cout << "x_int_l[1] should be = ?: "<< x_int_l[1] << endl;
+    cout << "x_int_l[2] should be = ?: "<< x_int_l[2] << endl;
     cout << endl;
 
     cout << "y_int_l[0] should be = 1: "<< y_int_l[0] << endl;
@@ -95,16 +95,16 @@ function: void main() {
     cout << "z_int_l[0] should be = 1: "<< z_int_l[0] << endl;
     cout << "z_int_l[1] should be = 2: "<< z_int_l[1] << endl;
     cout << "z_int_l[2] should be = 3: "<< z_int_l[2] << endl;
-    cout << "z_int_l[3] should be = 0: "<< z_int_l[3] << endl;
-    cout << "z_int_l[4] should be = 0: "<< z_int_l[4] << endl;
+    cout << "z_int_l[3] should be = ?: "<< z_int_l[3] << endl;
+    cout << "z_int_l[4] should be = ?: "<< z_int_l[4] << endl;
     cout << endl;
     cout << endl;
 
 
     cout << "float local" << endl;
-    cout << "x_float_l[0] should be = 0.0: "<< x_float_l[0] << endl;
-    cout << "x_float_l[1] should be = 0.0: "<< x_float_l[1] << endl;
-    cout << "x_float_l[2] should be = 0.0: "<< x_float_l[2] << endl;
+    cout << "x_float_l[0] should be = ?: "<< x_float_l[0] << endl;
+    cout << "x_float_l[1] should be = ?: "<< x_float_l[1] << endl;
+    cout << "x_float_l[2] should be = ?: "<< x_float_l[2] << endl;
     cout << endl;
 
     cout << "y_float_l[0] should be = 1.0: "<< y_float_l[0] << endl;
@@ -115,15 +115,15 @@ function: void main() {
     cout << "z_float_l[0] should be = 1.0: "<< z_float_l[0] << endl;
     cout << "z_float_l[1] should be = 2.0: "<< z_float_l[1] << endl;
     cout << "z_float_l[2] should be = 3.0: "<< z_float_l[2] << endl;
-    cout << "z_float_l[3] should be = 0.0: "<< z_float_l[3] << endl;
-    cout << "z_float_l[4] should be = 0.0: "<< z_float_l[4] << endl;
+    cout << "z_float_l[3] should be = ?: "<< z_float_l[3] << endl;
+    cout << "z_float_l[4] should be = ?: "<< z_float_l[4] << endl;
     cout << endl;
     cout << endl;
 
     cout << "bool local" << endl;
-    cout << "x_bool_l[0] should be = false: "<< x_bool_l[0] << endl;
-    cout << "x_bool_l[1] should be = false: "<< x_bool_l[1] << endl;
-    cout << "x_bool_l[2] should be = false: "<< x_bool_l[2] << endl;
+    cout << "x_bool_l[0] should be = ?: "<< x_bool_l[0] << endl;
+    cout << "x_bool_l[1] should be = ?: "<< x_bool_l[1] << endl;
+    cout << "x_bool_l[2] should be = ?: "<< x_bool_l[2] << endl;
     cout << endl;
 
     cout << "y_bool_l[0] should be = true: "<< y_bool_l[0] << endl;
@@ -134,7 +134,7 @@ function: void main() {
     cout << "z_bool_l[0] should be = true: "<< z_bool_l[0] << endl;
     cout << "z_bool_l[1] should be = true: "<< z_bool_l[1] << endl;
     cout << "z_bool_l[2] should be = true: "<< z_bool_l[2] << endl;
-    cout << "z_bool_l[3] should be = false: "<< z_bool_l[3] << endl;
-    cout << "z_bool_l[4] should be = false: "<< z_bool_l[4] << endl;
+    cout << "z_bool_l[3] should be = ?: "<< z_bool_l[3] << endl;
+    cout << "z_bool_l[4] should be = ?: "<< z_bool_l[4] << endl;
     cout << endl;
 }

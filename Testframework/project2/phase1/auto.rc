@@ -1,0 +1,11 @@
+function: void main()
+{
+    auto x = 3.0;
+    auto y = 2;
+    auto b = true;
+    
+    cout << "x (should be 3.00): " << x << endl;
+    cout << "y (should be    2): " << y << endl;
+    cout << "b (should be true): " << b << endl;
+
+}
