@@ -1693,7 +1693,7 @@ class MyParser extends parser
     void DoForeachCodeBlock()
     {
         // TODO: Update For functions
-        //if(GenerateCode()) m_codegen.DoForeachCodeBlock();
+        if(GenerateCode()) m_codegen.DoForeachCodeBlock();
     }
 
     //----------------------------------------------------------------
