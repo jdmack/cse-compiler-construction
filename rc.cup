@@ -755,7 +755,7 @@ IterationVarDecl ::= Type:_1 OptRef:_2 T_ID:_3
 // TODO: This is new
 ForeachStmt ::=     T_FOREACH 
                     {:
-                        //((MyParser) parser).DoForeachStart();
+                        ((MyParser) parser).DoForeachStart();
                         ((MyParser) parser).DoBlockOpen();
                     :}
                     T_LPAREN IterationVarDecl:_1 T_COLON Expr:_2 T_RPAREN

@@ -1636,7 +1636,7 @@ class MyParser extends parser
     void DoForeachStart()
     {
         // TODO: Update For functions
-        //if(GenerateCode()) m_codegen.DoForeachStart();
+        if(GenerateCode()) m_codegen.DoForeachStart();
     }
 
     //----------------------------------------------------------------

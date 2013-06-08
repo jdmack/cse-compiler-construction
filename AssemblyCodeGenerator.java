@@ -20,7 +20,7 @@ public class AssemblyCodeGenerator {
     private Stack<String>       stackWhileLabel;
     private Stack<String>       stackBoolLabel;
     private Stack<StoPair>      globalInitStack;
-    private Stack<StoPair> 		localStaticInitStack;
+    private Stack<StoPair>         localStaticInitStack;
     private Vector<StackRecord> stackValues;
     private HashMap<Float, String> storedFloats;
 
@@ -348,7 +348,7 @@ public class AssemblyCodeGenerator {
     //      MakeLocalStaticInitGuard
     //-------------------------------------------------------------------------
     public void MakeLocalStaticInitGuard(String label)
-    {	
+    {    
         // !----Create .init for local static init guard----
         writeComment("Create .init for local static init guard");
 
@@ -392,7 +392,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoLocalStaticInit(String label)
     {
-    	String flag = label+"_flag";
+        String flag = label+"_flag";
         // !----Initialize Local statics----
         writeCommentHeader("Initialize Local statics");
 
@@ -467,9 +467,9 @@ public class AssemblyCodeGenerator {
 
                     } 
                     else {    
-                    	// do normal var init
+                        // do normal var init
 
-                    	DoAssignExpr(varSto, valueSto);
+                        DoAssignExpr(varSto, valueSto);
 
                     }
                 }
@@ -520,117 +520,117 @@ public class AssemblyCodeGenerator {
         // Loop through all the initialization pairs on the stack
         for(Enumeration<StoPair> e = globalInitStack.elements(); e.hasMoreElements(); ) {
 
-        	StoPair stopair = e.nextElement();
-        	STO varSto = stopair.getVarSto();
-        	STO valueSto = stopair.getValueSto();
+            StoPair stopair = e.nextElement();
+            STO varSto = stopair.getVarSto();
+            STO valueSto = stopair.getValueSto();
 
-        	if(!valueSto.isNull()) {
-        		if(valueSto.isConst() && ((ConstSTO) valueSto).getIntValue() == 0) {
-        			// Do nothing, auto initialized to 0 on bss
+            if(!valueSto.isNull()) {
+                if(valueSto.isConst() && ((ConstSTO) valueSto).getIntValue() == 0) {
+                    // Do nothing, auto initialized to 0 on bss
 
-        			// But if array, create an empty list of the right size
-        			if(varSto.getType().isArray()) {
+                    // But if array, create an empty list of the right size
+                    if(varSto.getType().isArray()) {
 
-        				ArrayType arrayType = (ArrayType) varSto.getType();
-        				Vector<STO> arrayElements = arrayType.getElementList();
+                        ArrayType arrayType = (ArrayType) varSto.getType();
+                        Vector<STO> arrayElements = arrayType.getElementList();
 
-        				// Initialize arrayElement Vector with empty varstos
-        				for(int i = 0; i < arrayType.getDimensionSize(); i++) {
-        					arrayElements.addElement(new VarSTO(varSto.getName() + "[" + i + "]", arrayType.getElementType())); 
-        				}
-        			}
-        			else if(varSto.getType().isStruct()){
-        				StructType type = (StructType) varSto.getType();
-        				Vector<STO> fields = type.getFields();
-        				
-        				for(STO sto : fields) {
-        					fields.addElement(new VarSTO(varSto.getName(), sto.getType()));
-        				}
-        			}
-        		}
+                        // Initialize arrayElement Vector with empty varstos
+                        for(int i = 0; i < arrayType.getDimensionSize(); i++) {
+                            arrayElements.addElement(new VarSTO(varSto.getName() + "[" + i + "]", arrayType.getElementType())); 
+                        }
+                    }
+                    else if(varSto.getType().isStruct()){
+                        StructType type = (StructType) varSto.getType();
+                        Vector<STO> fields = type.getFields();
+                        
+                        for(STO sto : fields) {
+                            fields.addElement(new VarSTO(varSto.getName(), sto.getType()));
+                        }
+                    }
+                }
 
-        		// Initialize the value
-        		else {
+                // Initialize the value
+                else {
 
-        			writeComment("Initializing: " + varSto.getType() + " " + valueSto.getName());
+                    writeComment("Initializing: " + varSto.getType() + " " + valueSto.getName());
 
-        			// If array, then do array stuff yo
-        			if(varSto.getType().isArray()) {
+                    // If array, then do array stuff yo
+                    if(varSto.getType().isArray()) {
 
-        				writeComment("Initializing Array: " + varSto.getName());
-        				ArrayType arrayType = (ArrayType) varSto.getType();
+                        writeComment("Initializing Array: " + varSto.getName());
+                        ArrayType arrayType = (ArrayType) varSto.getType();
 
-        				// 
-        				if(valueSto.isArrEle()) {
-        					// if it's array, do array ele init
-        					Vector<STO> varElements = arrayType.getElementList();
-        					//Vector<STO> valueElements = ((ArrEleSTO)valueSto).getArrayElements();
+                        // 
+                        if(valueSto.isArrEle()) {
+                            // if it's array, do array ele init
+                            Vector<STO> varElements = arrayType.getElementList();
+                            //Vector<STO> valueElements = ((ArrEleSTO)valueSto).getArrayElements();
 
-        					String indexReg = SparcInstr.REG_LOCAL6;
-        					String addrReg = SparcInstr.REG_LOCAL4; 
-        					MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
-        					//writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), indexReg, "Use %l5 for incrementing counter by 1");
-        					writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
+                            String indexReg = SparcInstr.REG_LOCAL6;
+                            String addrReg = SparcInstr.REG_LOCAL4; 
+                            MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
+                            //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), indexReg, "Use %l5 for incrementing counter by 1");
+                            //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
 
-        					for(int i = 0; i < varElements.size(); i++) {
-        						ConstSTO value = null;
-        						if(varElements.elementAt(i).isConst()) {
-        							value = (ConstSTO) varElements.elementAt(i);
-        						}
-        						writeCommentHeader("Initializing " + varSto.getName() + "[" + i + "] - " + value.getName() + " - " + value.getIntValue() );
-        						//writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
+                            for(int i = 0; i < varElements.size(); i++) {
+                                ConstSTO value = null;
+                                if(varElements.elementAt(i).isConst()) {
+                                    value = (ConstSTO) varElements.elementAt(i);
+                                }
+                                writeCommentHeader("Initializing " + varSto.getName() + "[" + i + "] - " + value.getName() + " - " + value.getIntValue() );
+                                //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
 
-        						DoLiteral(value);
+                                DoLiteral(value);
 
-        						MoveRegToReg(indexReg, addrReg);
+                                MoveRegToReg(indexReg, addrReg);
 
-        						// TODO NEED TO ACCOUNT FOR FLOATS
-        						GetArrayElementAddr(varSto, addrReg);
-        						StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
-        					//	stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
-        						writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
-        					}
-        				}
-        				else {
-        					// I don't think this is possible
-        				}
+                                // TODO NEED TO ACCOUNT FOR FLOATS
+                                GetArrayElementAddr(varSto, addrReg);
+                                StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
+                                //stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
+                                //writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
+                            }
+                        }
+                        else {
+                            // I don't think this is possible
+                        }
 
-        			} 
-        			else if(varSto.isStructdef()) {
-        				Vector<STO> fields = ((StructType)varSto.getType()).getFields();
-        				String indexReg = SparcInstr.REG_LOCAL6;
-        				String addrReg = SparcInstr.REG_LOCAL4; 
-        				MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
-        				//writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), indexReg, "Use %l5 for incrementing counter by 1");
-        				writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
+                    } 
+                    else if(varSto.isStructdef()) {
+                        Vector<STO> fields = ((StructType)varSto.getType()).getFields();
+                        String indexReg = SparcInstr.REG_LOCAL6;
+                        String addrReg = SparcInstr.REG_LOCAL4; 
+                        MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
+                        //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), indexReg, "Use %l5 for incrementing counter by 1");
+                        //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
 
-        				for(int i = 0; i < fields.size(); i++) {
-        					VarSTO value = null;
-        					if(fields.elementAt(i).isVar()) {
-        						value = (VarSTO) fields.elementAt(i);
-        					}
-        					writeCommentHeader("Initializing " + varSto.getName() + value.getName());
-        					//writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
+                        for(int i = 0; i < fields.size(); i++) {
+                            VarSTO value = null;
+                            if(fields.elementAt(i).isVar()) {
+                                value = (VarSTO) fields.elementAt(i);
+                            }
+                            writeCommentHeader("Initializing " + varSto.getName() + value.getName());
+                            //writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.SET_OP, String.valueOf(((ConstSTO) valueSto).getIntValue()), valueReg);
 
-        					//DoLiteral(value);
+                            //DoLiteral(value);
 
-        					MoveRegToReg(indexReg, addrReg);
+                            MoveRegToReg(indexReg, addrReg);
 
-        					// TODO NEED TO ACCOUNT FOR FLOATS
-        					GetArrayElementAddr(varSto, addrReg);
-        					StoreStoValueIntoAddr(fields.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
-        					//stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
-        					writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
-        				}
-        			}
-        			else {    
-        				// do normal var init
+                            // TODO NEED TO ACCOUNT FOR FLOATS
+                            GetArrayElementAddr(varSto, addrReg);
+                            StoreStoValueIntoAddr(fields.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
+                            //stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
+                            //writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
+                        }
+                    }
+                    else {    
+                        // do normal var init
 
-        				DoAssignExpr(varSto, valueSto);
+                        DoAssignExpr(varSto, valueSto);
 
-        			}
-        		}
-        	}
+                    }
+                }
+            }
         }
 
         // .init_done:
@@ -1090,32 +1090,32 @@ public class AssemblyCodeGenerator {
         
         // Array (TODO: In Phase 2)
         if(sto.getType().isArray()){
-        	writeCommentHeader("Initializing Array: " + sto.getName());
+            writeCommentHeader("Initializing Array: " + sto.getName());
 
-        	ArrayType arrayType = (ArrayType) sto.getType();
-        	Vector<STO> varElements = arrayType.getElementList();
+            ArrayType arrayType = (ArrayType) sto.getType();
+            Vector<STO> varElements = arrayType.getElementList();
 
-        	String indexReg = SparcInstr.REG_LOCAL6;
-        	String addrReg = SparcInstr.REG_LOCAL4; 
+            String indexReg = SparcInstr.REG_LOCAL6;
+            String addrReg = SparcInstr.REG_LOCAL4; 
 
-        	MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
+            MoveRegToReg(SparcInstr.REG_GLOBAL0, indexReg);
 
-        	writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
+            //writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
 
-        	for(int i = 0; i < varElements.size(); i++) {
+            for(int i = 0; i < varElements.size(); i++) {
                 // Value is already in memory from DoLiteral
-        		ConstSTO value = (ConstSTO) varElements.elementAt(i);
+                ConstSTO value = (ConstSTO) varElements.elementAt(i);
 
-        		writeComment("Initializing " + sto.getName() + "[" + i + "] - " + value.getName() + " - " + value.getIntValue() );
+                writeComment("Initializing " + sto.getName() + "[" + i + "] - " + value.getName() + " - " + value.getIntValue() );
 
-        		MoveRegToReg(indexReg, addrReg);
+                MoveRegToReg(indexReg, addrReg);
 
-        		// TODO: NEED TO ACCOUNT FOR FLOATS
-        		GetArrayElementAddr(sto, addrReg);
-        		StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
-        		//stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
-        		writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
-        	}
+                // TODO: NEED TO ACCOUNT FOR FLOATS
+                GetArrayElementAddr(sto, addrReg);
+                StoreStoValueIntoAddr(varElements.elementAt(i), SparcInstr.REG_LOCAL3, addrReg);
+                //stackValues.addElement(new StackRecord("global", value.getName(), value.load()));
+                //writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, indexReg, SparcInstr.REG_LOCAL5, indexReg, "Increment index counter");
+            }
         }
         // Pointer (TODO: In Phase 3)
     }
@@ -2103,23 +2103,23 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoIf(STO condition)
     {
-    	writeComment("ifelse " + condition.getName());
-    	String label = ".if.else." + ifLabel_count; // Will branch to this label if false
+        writeComment("ifelse " + condition.getName());
+        String label = ".if.else." + ifLabel_count; // Will branch to this label if false
 
-    	// Has to increment in this function in order to handle nested if's / ifelse's
-    	ifLabel_count++;
-    	stackIfLabel.add(label);
-    	
+        // Has to increment in this function in order to handle nested if's / ifelse's
+        ifLabel_count++;
+        stackIfLabel.add(label);
+        
         // Load condition into %l0 for comparison
         LoadStoValue(condition, SparcInstr.REG_LOCAL0);
 
-    	//  %l0, %g0
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
-    	// be IfL1! Opposite logic
-    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, label);
-    	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        //  %l0, %g0
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
+        // be IfL1! Opposite logic
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, label);
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         writeAssembly(SparcInstr.BLANK_LINE);
-    	increaseIndent();
+        increaseIndent();
     }
     
     //-------------------------------------------------------------------------
@@ -2127,7 +2127,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoIfCodeBlock()
     {
-    	decreaseIndent();
+        decreaseIndent();
         String ifElseLabel = stackIfLabel.peek();
         String jumpTo = ifElseLabel + ".end";
         //System.out.println(jumpTo);
@@ -2137,7 +2137,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.BLANK_LINE);
 
         // write ifelse label
-    	writeAssembly(SparcInstr.LABEL, ifElseLabel);
+        writeAssembly(SparcInstr.LABEL, ifElseLabel);
     }
     
     //-------------------------------------------------------------------------
@@ -2145,8 +2145,8 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoIfElseCodeBlock()
     {
-    	String label = stackIfLabel.pop();
-    	writeAssembly(SparcInstr.LABEL, label+".end");
+        String label = stackIfLabel.pop();
+        writeAssembly(SparcInstr.LABEL, label+".end");
     }
     
     //-------------------------------------------------------------------------
@@ -2154,16 +2154,16 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoWhileStart()
     {
-    	// stackWhileLabel
-    	String whileLabel = ".while."+whileLabel_count;
-    	whileLabel_count++;
-    	stackWhileLabel.add(whileLabel);
-    	
-    	// write while label before logic check
+        // stackWhileLabel
+        String whileLabel = ".while."+whileLabel_count;
+        whileLabel_count++;
+        stackWhileLabel.add(whileLabel);
+        
+        // write while label before logic check
         decreaseIndent();
-    	writeAssembly(SparcInstr.LABEL, whileLabel);
+        writeAssembly(SparcInstr.LABEL, whileLabel);
         increaseIndent();
-    	
+        
     }
     
     //-------------------------------------------------------------------------
@@ -2171,15 +2171,15 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoWhile(STO condition)
     {
-    	// Load condition into %l0 for comparison
+        // Load condition into %l0 for comparison
         LoadStoValue(condition, SparcInstr.REG_LOCAL0);
 
-    	//  %l0, %g0
-    	writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
-    	// be IfL1! Opposite logic
-    	writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, stackWhileLabel.peek()+".end");
-    	writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
-    	increaseIndent();
+        //  %l0, %g0
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
+        // be IfL1! Opposite logic
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, stackWhileLabel.peek()+".end");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        increaseIndent();
     }
     
     //-------------------------------------------------------------------------
@@ -2193,11 +2193,68 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
         writeAssembly(SparcInstr.BLANK_LINE);
         
-    	decreaseIndent();
-    	// write while.end label
-    	String label = stackWhileLabel.pop();
         decreaseIndent();
-    	writeAssembly(SparcInstr.LABEL, label+".end");
+        // write while.end label
+        String label = stackWhileLabel.pop();
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, label+".end");
+        increaseIndent();
+    }
+    //-------------------------------------------------------------------------
+    //      DoForeachStart
+    //-------------------------------------------------------------------------
+    public void DoForeachStart()
+    {
+        // stackWhileLabel
+        String whileLabel = ".while."+whileLabel_count;
+        whileLabel_count++;
+        stackWhileLabel.add(whileLabel);
+        
+        // write while label before logic check
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, whileLabel);
+        increaseIndent();
+        
+    }
+    
+    //-------------------------------------------------------------------------
+    //      DoForeach
+    //-------------------------------------------------------------------------
+    public void DoForeach(STO iterationSto, STO exprSto)
+    {
+        // need two things:
+        //  1. STO holding current counter
+        //  2. array size
+
+
+
+        // Load condition into %l0 for comparison
+        LoadStoValue(condition, SparcInstr.REG_LOCAL0);
+
+        //  %l0, %g0
+        writeAssembly(SparcInstr.TWO_PARAM, SparcInstr.CMP_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_GLOBAL0);
+        // be IfL1! Opposite logic
+        writeAssembly(SparcInstr.ONE_PARAM, SparcInstr.BE_OP, stackWhileLabel.peek()+".end");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        increaseIndent();
+    }
+    
+    //-------------------------------------------------------------------------
+    //      DoForeachCodeBlock
+    //-------------------------------------------------------------------------
+    public void DoForeachCodeBlock()
+    {
+        String jumpTo = stackWhileLabel.peek();
+        // write an always branch to beginning of while loop
+        writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Go back to the beginning of the while loop");
+        writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
+        writeAssembly(SparcInstr.BLANK_LINE);
+        
+        decreaseIndent();
+        // write while.end label
+        String label = stackWhileLabel.pop();
+        decreaseIndent();
+        writeAssembly(SparcInstr.LABEL, label+".end");
         increaseIndent();
     }
     
@@ -2207,8 +2264,8 @@ public class AssemblyCodeGenerator {
     public void DoBreakStmt()
     {
         writeCommentHeader("DoBreakStmt");
-    	//System.out.println("Breaking on :" + level);
-    	String jumpTo = stackWhileLabel.peek() + ".end";
+        //System.out.println("Breaking on :" + level);
+        String jumpTo = stackWhileLabel.peek() + ".end";
         // write an Always branch to if else end for when the condition is true
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Jump to the corresponding while.end");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
@@ -2219,7 +2276,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoContinueStmt()
     {
-    	String jumpTo = stackWhileLabel.peek();
+        String jumpTo = stackWhileLabel.peek();
         // write an Always branch to if else end for when the condition is true
         writeAssembly(SparcInstr.ONE_PARAM_COMM, SparcInstr.BA_OP, jumpTo, "Jump to the corresponding while");
         writeAssembly(SparcInstr.NO_PARAM, SparcInstr.NOP_OP);
@@ -2230,7 +2287,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoDeclArray(Type type, int size)
     {
-    	
+        
     }
 
 
@@ -2340,7 +2397,7 @@ public class AssemblyCodeGenerator {
     public void DoStructAccess(STO structSto, STO resultSto) {
         //writeCommentHeader("Accessing index " + ((ConstSTO) indexSto).getIntValue() + " of " + arraySto.getName());
 
-    	String offsetReg = SparcInstr.REG_LOCAL0;
+        String offsetReg = SparcInstr.REG_LOCAL0;
         String reg = SparcInstr.REG_LOCAL1;
 
         LoadStoValue(resultSto, offsetReg);
@@ -2390,8 +2447,8 @@ public class AssemblyCodeGenerator {
         }
     }
 
-	public void DoStructdef(TypedefSTO sto) {
-		
-	}
+    public void DoStructdef(TypedefSTO sto) {
+        
+    }
     
 }
