@@ -59,6 +59,6 @@ restore:
 	git reset --hard
 
 CC=cc
-compiler:
+compile:
 	$(CC) rc.s input.c output.s $(LINKOBJ)
 
