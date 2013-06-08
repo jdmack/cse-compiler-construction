@@ -2257,6 +2257,7 @@ public class AssemblyCodeGenerator {
 
         // increment counter for next run
         writeComment("increment the loop counter (array index)");
+        LoadStoValue(counterSto, SparcInstr.REG_LOCAL0);
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
         writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL5, SparcInstr.REG_LOCAL0, "Increment index counter");
         StoreValueIntoSto(SparcInstr.REG_LOCAL0, counterSto);
