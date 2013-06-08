@@ -2238,6 +2238,7 @@ public class AssemblyCodeGenerator {
         writeAssembly(SparcInstr.LABEL, whileLabel);
         increaseIndent();
 
+        writeComment("Setup loop counter (array index) in %l0 and array size in %l1");
         // Load counter into %l0 for comparison
         LoadStoValue(counterSto, SparcInstr.REG_LOCAL0);
 
@@ -2252,6 +2253,7 @@ public class AssemblyCodeGenerator {
         increaseIndent();
 
         // increment counter for next run
+        writeComment("increment the loop counter (array index)");
         writeAssembly(SparcInstr.TWO_PARAM_COMM, SparcInstr.SET_OP, String.valueOf(1), SparcInstr.REG_LOCAL5, "Use %l5 for incrementing counter by 1");
         writeAssembly(SparcInstr.THREE_PARAM, SparcInstr.ADD_OP, SparcInstr.REG_LOCAL0, SparcInstr.REG_LOCAL5, SparcInstr.REG_LOCAL0, "Increment index counter");
         StoreValueIntoSto(SparcInstr.REG_LOCAL0, counterSto);
@@ -2391,7 +2393,7 @@ public class AssemblyCodeGenerator {
     //-------------------------------------------------------------------------
     public void DoArrayAccess(STO arraySto, STO indexSto, STO resultSto)
     {
-
+        blank();
         //writeCommentHeader("Accessing index " + ((ConstSTO) indexSto).getIntValue() + " of " + arraySto.getName());
         String offsetReg = SparcInstr.REG_LOCAL0;
         String reg = SparcInstr.REG_LOCAL1;
