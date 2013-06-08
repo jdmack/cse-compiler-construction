@@ -36,4 +36,15 @@ function: void main()
         break;
     }
 
+    int[5] array1 = {100, 200, 300, 400, 500};
+    int[5] array2 = {10, 20, 30, 40, 50};
+    int[5] array3 = {1, 2, 3, 4, 5};
+
+    foreach(int a1: array1) {
+        foreach(int a2: array2) {
+            foreach(int a3: array3) {
+                cout << a1 + a2 + a3
+            }
+        }
+    }
 }
