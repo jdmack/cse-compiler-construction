@@ -938,7 +938,7 @@ class MyParser extends parser
         
         // Checks are complete, now we need to return a VarSTO with the type of the array elements - VarSTO because result of [] operation is a modLVal
         if(arraySto.getType().isArray()) {
-            resultSto = new VarSTO(((ArrayType)arraySto.getType()).getElementType().getName(),((ArrayType)arraySto.getType()).getElementType());
+            resultSto = new VarSTO(arraySto.getName() + "[" + indexSto.getName() + "]",((ArrayType)arraySto.getType()).getElementType());
         } 
 
         else if (arraySto.getType().isPointer()){
